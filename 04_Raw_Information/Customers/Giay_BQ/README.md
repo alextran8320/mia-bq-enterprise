@@ -1,4 +1,4 @@
-# Hồ Sơ Khách Hàng Giày BQ
+# Ho So Khach Hang Giay BQ
 
 **Status**: Draft
 **Owner**: A01 PM Agent
@@ -6,36 +6,37 @@
 **Last Reviewed By**: -
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-13
+**Last Status Change**: 2026-04-14
 **Source of Truth**: This folder index
 **Blocking Reason**: -
 
 ---
 
-## Mục đích
+## Muc Dich
 
-Thư mục này lưu toàn bộ thông tin thô, research đã cấu trúc, bức tranh stakeholder, landscape hệ thống, và input phục vụ proposal cho khách hàng tiềm năng `Giày BQ`.
+Thu muc nay luu cac ghi chu intake, tai lieu research da cau truc, stakeholder framing, landscape he thong, va cac input ho tro proposal cho case `Giay BQ`.
 
-Đây là `customer pack` ở lớp intake/pre-project, dùng để:
+Day la `customer pack` dang duoc dung trong giai doan intake va pre-project discovery de:
 
-- giữ lại toàn bộ tín hiệu đầu vào đã trao đổi với Business Owner
-- gom research thành một bộ tài liệu có thể tái sử dụng
-- hỗ trợ team đi tiếp sang proposal, workshop discovery, và solution framing
+- giu lai cac requirement signal dang lam viec cung Business Owner
+- gom research thanh bo tai lieu co the tai su dung
+- ho tro architecture framing, workshop planning, va solution scoping
 
-## Thành phần hồ sơ
+## Thanh Phan Ho So
 
-| Tài liệu | Vai trò |
+| Tai lieu | Vai tro |
 |----------|---------|
-| [2026-04-13_BQ_Raw_Notes.md](2026-04-13_BQ_Raw_Notes.md) | Ghi chú thô từ Business Owner và các tín hiệu intake ban đầu |
-| [2026-04-13_BQ_Customer_Research_Pack.md](2026-04-13_BQ_Customer_Research_Pack.md) | Bộ research tổng hợp: business model, pain points, roadmap AI, nhận định chiến lược |
-| [2026-04-13_BQ_SAP_Research.md](2026-04-13_BQ_SAP_Research.md) | Bộ research tổng hợp riêng cho `SAP Business One`: module nghiệp vụ, object groups, hàm ý tích hợp với `MIABOS`, và resource pack |
-| [2026-04-13_BQ_Systems_And_Integration_Landscape.md](2026-04-13_BQ_Systems_And_Integration_Landscape.md) | Bức tranh hệ thống `SAP B1`, `KiotViet`, `Haravan`, `Excel`, `Lark` và hàm ý tích hợp cho chatbot nội bộ |
-| [2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md](2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md) | Bộ câu hỏi khai thác chuyên sâu cho scope chatbot nội bộ |
-| [2026-04-13_BQ_Stakeholder_Map.md](2026-04-13_BQ_Stakeholder_Map.md) | Mapping stakeholder/phòng ban tham gia theo từng phase giải pháp |
-| [2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md](2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md) | Cấu trúc proposal và phân công team nội bộ |
+| [2026-04-13_BQ_Raw_Notes.md](2026-04-13_BQ_Raw_Notes.md) | Ghi chu intake tho tu Business Owner va cac tin hieu ban dau |
+| [2026-04-13_BQ_Customer_Research_Pack.md](2026-04-13_BQ_Customer_Research_Pack.md) | Bo research tong hop ve business model, pain points, roadmap AI, va nhan dinh chien luoc |
+| [2026-04-13_BQ_SAP_Research.md](2026-04-13_BQ_SAP_Research.md) | Tai lieu research rieng cho SAP Business One, gom module nghiep vu, object groups, va ham y tich hop |
+| [2026-04-13_BQ_Systems_And_Integration_Landscape.md](2026-04-13_BQ_Systems_And_Integration_Landscape.md) | Buc tranh he thong hien tai cua SAP B1, KiotViet, Haravan, Excel, va Lark |
+| [2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md](2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md) | Bo cau hoi discovery cho chatbot noi bo |
+| [2026-04-13_BQ_Stakeholder_Map.md](2026-04-13_BQ_Stakeholder_Map.md) | Mapping stakeholder va phong ban tham gia theo roadmap AI |
+| [2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md](2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md) | Cau truc proposal va phan cong team noi bo |
+| [2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md](2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md) | Tai lieu kien truc tich hop tong the, gom mo hinh module, chieu ket noi, tan suat dong bo, data boundary, va discovery questions |
 
-## Ghi chú sử dụng
+## Ghi Chu Su Dung
 
-- Research public footprint phản ánh trạng thái kiểm tra trong giai đoạn 2026-04-11 đến 2026-04-13.
-- Một phần nhận định về phòng ban/chức năng là quan sát trực tiếp từ footprint public; một phần là suy luận nghiệp vụ dựa trên mô hình vận hành và stack hệ thống mà khách đang dùng.
-- Đây chưa phải project workspace chính thức trong `01_Projects/`, mà là hồ sơ intake để chuẩn bị cho proposal và các bước discovery tiếp theo.
+- Customer pack nay van la workspace intake/discovery, chua phai project workspace chinh thuc trong `01_Projects/`.
+- Huong framing hien tai cho BQ nen bat dau tu `chatbot noi bo + integration foundation + knowledge layer`.
+- Cac cau tra loi discovery da duoc xac nhan nen duoc cap nhat nguoc lai vao pack nay de tranh drift khi sang proposal va design.

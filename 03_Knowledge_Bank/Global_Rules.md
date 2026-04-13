@@ -1,0 +1,93 @@
+# Knowledge Bank: Global Rules
+
+Cross-project rules extracted from UAT feedback and project experience.
+**Only [[A01_PM_Agent|PM Agent]] may update this file.**  
+*(MANDATORY: Every new rule added below MUST include `[Source: 02_Sessions/YYYY-MM-DD_Topic.md]` for traceability).*
+
+> **Rule Authority**: This file owns *learned KB rules*  rules discovered from real project experience.  
+> Evergreen OS rules live in [[Global_Rules|`00_Agent_OS/Rules/Global_Rules.md`]].  
+> No concept may appear in both files. See [[RULE_AUTHORITY|`00_Agent_OS/Rules/RULE_AUTHORITY.md`]] for the full governance model.
+
+---
+
+## Non-Functional Context
+
+- This AI team operates as a Solo Entrepreneur's Software House
+- Primary workflow: Raw idea  Clarify  Analyze  Design  Build  Test  Ship
+- All communication with Business Owner goes through [[A01_PM_Agent|PM Agent]] only
+
+---
+
+## Product & Design Rules
+
+_Updated after each project UAT cycle. [[A01_PM_Agent|PM Agent]] extracts from Business Owner feedback._
+
+| #   | Rule | Source | Date |  |
+| --- | ---- | ------ | ---- | - |
+| 1   | AI ([[A01_PM_Agent|PM Agent]]) MUST autonomously generate a Session Log in `02_Sessions/` at the conclusion of every major conversation block, without waiting for user prompting. | [SOURCE LOST — Rule retained as community knowledge. Cite new session when re-verified: YYYY-MM-DD_Topic.md] | 2026-03-15 |  |
+| 2   | Any new OS, Playbook, or Template files created MUST use Clickable Relative Markdown Links when referencing other internal artifacts to maintain the wiki-like ecosystem. | [SOURCE LOST — Rule retained as community knowledge. Cite new session when re-verified: YYYY-MM-DD_Topic.md] | 2026-03-15 |  |
+| 3   | Every UI implementation MUST pass a "Visual Layout Audit" (Agent to prove flexbox/grid alignment via browser screenshots) before closure to prevent broken layouts. | [SOURCE LOST — Rule retained as community knowledge. Cite new session when re-verified: YYYY-MM-DD_Topic.md] | 2026-03-15 |  |
+| 4   | For every calendar day with AI activity, there MUST exist exactly one `YYYY-MM-DD_Daily_Log.md` in `02_Sessions/` summarizing all channels (Claude, Cursor, ChatGPT, internal notes…) and linking to detailed Session Logs. Daily Log creation can never be skipped or delegated to "later". | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-15 |  |
+| 5   | At the start and end of each significant work block, the active Agent MUST perform a "Logging Handshake": (1) verify or create the Daily Log for that date, (2) ensure the Daily Log is linked in `_session_index.md`, and (3) either create or append a detailed Session Log for the specific topic. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-15 |  |
+| 6   | **High-Precision Handoffs (80-100% Rule)**: A06 must provide production-ready specs (CSS, anatomy, animations, assets) before A03 starts code. Failure is a Quality Gate block. | [SOURCE LOST — Rule retained as community knowledge. Cite new session when re-verified: YYYY-MM-DD_Topic.md] | 2026-03-15 |  |
+| 7   | **Framework-First Rule**: A06+A07 MUST select a world-class UI Framework Library (Ant Design 5, shadcn/ui, Mantine, NextUI, MUI) before writing any design tokens. Custom Design Systems from scratch are forbidden. Framework must be approved by Business Owner before Phase B. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-17 |  |
+| 8   | **Color Confirmation Separate from Direction**: After Business Owner picks a design direction, primary brand color is confirmed as a **separate explicit question**. Do not assume color from mockup. Boss often adjusts color independently of the visual direction. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-17 |  |
+| 9   | **Design System = Framework Config + Theme Layer + Component Map**: The `Design/Design_System.md` MUST include: (1) framework ConfigProvider/theme config code, (2) custom CSS glass/theme layer, (3) component mapping table (project component -> Framework component), (4) screen layouts, (5) mockup gallery. A bare token table is NOT a Design System. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-17 |  |
+| 10  | **Start-of-Block Hard Stop**: If today's Daily Log does not exist in `02_Sessions/`, PM Agent MUST create it and update `_session_index.md` before any substantial analysis, planning, or implementation begins. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-18 |  |
+| 11  | **Current Context Anchor**: Maintain `02_Sessions/_current_context.md` as the shortest canonical resume file, containing active topic, current project, current phase, latest session log, and next action. Every AI should read it immediately after `AGENTS.md` when resuming work. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-18 |  |
+| 12  | **No Final Answer Without Log Sync**: PM Agent MUST treat Session Log + Daily Log + Session Index + `_current_context.md` updates as part of the deliverable. If they are incomplete, the Business Owner session is not allowed to close. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-18 |  |
+| 13  | **Stitch-to-Builder Handoff must be 3-layer**: For any Stitch-generated UI, handoff is valid only when it includes (1) screenshot reference, (2) HTML snapshot reference, and (3) implementation spec with component/state/token mapping. HTML-only handoff is not sufficient for production implementation. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-19 |  |
+| 14  | **Stitch Timeout Verification Rule**: If Stitch generation returns timeout, PM must not mark it failed immediately. PM must verify with `list_screens` or `get_screen` before deciding retry/fail, to avoid duplicate generation and artifact drift. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-19 |  |
+| 15  | **Builder Bundle Rule**: A frontend slice is not legal for PB-03 unless its builder bundle names one visual authority and includes layout contract, anatomy contract, state contract, and token/spacing guidance in the same approved handoff path. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-23 |  |
+| 16  | **Frontend Screenshot Gate**: A frontend work block cannot be accepted on build success alone. PM must require screenshot proof for each changed screen, plus a deviation note against the approved visual authority, before treating the block as delivery-complete. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-23 |  |
+| 17  | **UXUI Feature Spec is the sole FE handoff format**: Stitch is removed from the pipeline. A06 must produce a complete 9-section UXUI Feature Spec (T-UXUI-Feature-Spec template) per feature. A03-FE may not start until spec status = `Approved` in `_index.md`. Pencil/Figma screenshots are embedded in §9. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-23 |  |
+| 18  | **FE/BE Builder Split Rule**: The monolithic A03 Builder Agent is deprecated. FE work (React/Ant Design/Lark tokens) goes to A03-FE; BE work (API/DB/events/webhooks) goes to A03-BE. Both run in parallel on the same feature slice. Cross-domain work (e.g. FE touching BE logic) is a process violation  escalate to PM. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-23 |  |
+| 19  | **No Raw Hex in FE Implementation**: A03-FE must use only Lark DS design tokens defined in UXUI Feature Spec §3. Raw hex values in JSX/CSS are a process violation. DevTools spot-check is part of A06 visual audit. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-23 |  |
+| 20  | **Vietnamese Copy Discipline**: All user-facing strings in UI must come from UXUI Feature Spec §6. A03-FE never writes copy independently. English labels in user-facing UI are a process violation. Copy completeness is a Gate 3 requirement. | `[Source removed during 2026-03-27 document cleanup. Rule retained as KB knowledge.]` | 2026-03-23 |  |
+| 21  | **English-First Operating Artifacts**: All canonical workspace artifacts used by AI agents  folders, file names, document bodies, metadata, backlog items, sprint artifacts, and process instructions  must be written in English so different AI models can parse them reliably. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-27 |  |
+| 22  | **Artifact-Triggered Session Logging Only**: Session Logs are required only for work blocks that create, update, delete, or structurally change workspace artifacts. Advice-only or question-only conversations must not create logs. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-27 |  |
+| 23  | **AI Channel Attribution in Logs**: Every Session Log and Daily Log work-block entry must record which AI/channel performed the work (for example Codex, Cursor, Claude, Gemini, ChatGPT) and, when known, the model or environment. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-27 |  |
+| 24  | **Approval-First Proposal Rule**: Unapproved proposal content intended for Business Owner review, such as analysis plans, structure proposals, option documents, or process proposals, must stay in chat until explicit approval is given. This rule does not block writing implementation artifacts that the Business Owner has already approved AI to create or update, such as roadmap, backlog, sprint, or delivery files. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-27 |  |
+| 25  | **Clarify-Before-Action Rule**: If the AI does not clearly understand the Business Owner's intent, scope, or approval boundary, it must ask clarifying questions before creating artifacts or taking substantive action. Acting on an unclear instruction is a process failure. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-27 |  |
+| 26  | **No Design -> No Frontend Code**: A07 must not start or continue UI coding unless the Sprint Backlog design gate is explicitly `PASS`. Existing scaffold code does not count as permission to proceed. Missing mockups, screenshot references, or incomplete task-design detail are hard blockers. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-28 |  |
+| 27  | **FE Subtask Must Carry a Full Task Design Bundle**: Every FE subtask must explicitly define visual authority, layout contract, component contract, state/interaction contract, copy contract, token/spacing contract, responsive scope, evidence to produce, and the hard-stop condition. If any field is missing, the FE subtask is invalid for execution. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-28 |  |
+| 28  | **Text-Only UX Specs Are Not Legal FE Handoffs**: A UXUI spec becomes legal for frontend build only after it contains real mockup or screenshot references for every in-scope screen and critical state, and the same approval state is reflected in the index/control plane. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-28 |  |
+| 29  | **CRUD = Mandatory Logging Trigger**: Any AI/model/channel that creates, updates, renames, moves, deletes, or structurally reorganizes canonical files or folders, or changes canonical metadata/control-plane artifacts, has started an artifact-changing work block and MUST complete the full logging chain before closing: Daily Log, Session Log, `_session_index.md`, `_current_context.md`, and the project Session Timeline when a project was touched. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-30 |  |
+| 30  | **Retroactive Log Repair Before Resume**: If an AI discovers artifact changes made by another model without the required logging chain, it MUST stop normal work and repair the missing logs first. Continuing feature work on top of unlogged changes is a process violation. If some history is unverifiable, the repair log must say so explicitly instead of inventing facts. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-30 |  |
+| 31  | **No Delegated Logging Assumption**: The AI/model/channel that performed or continued an artifact-changing work block may not assume another model, another app, or a later session will create the missing logs. Log completion is part of delivery, not optional follow-up admin. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-30 |  |
+| 32  | **Spec Without Task Flow ⇒ No UI Build**: Any feature spec (PRD, Feature Brief, UXUI Spec) missing a User Task Flow section is not eligible for frontend build. PM Agent must block the gate. A spec that only describes API endpoints or DB fields without documenting 3–5 user task steps per role is incomplete. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-31 |  |
+| 33  | **Form UI Must Be Specced by User Task, Not by DB Schema**: UI field selection, ordering, and grouping must follow the user’s cognitive task sequence, not the database table structure. Exposing raw schema fields without task-based justification is a process violation. Required fields first, optional in collapsible sections, advanced behind progressive disclosure. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-31 |  |
+| 34  | **IA Job-First Rule**: Navigation labels and screen titles must use action-oriented phrases that map to user jobs-to-be-done, not to system module codes or DB collection names. Module codes (M01, M09, etc.), collection names, and config identifiers are internal planning artifacts and are forbidden in any user-visible surface. A06 must validate IA taxonomy during PB-03 before any routes are coded. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-31 |  |
+| 35  | **One Job Per Route**: Each application route has exactly one dominant user goal. A single route that serves multiple unrelated scopes (e.g., settings + monitoring + reports combined) is a PB-03 design violation and must be split into dedicated routes. The dominant goal is declared in §2.1 Task Flow; A06 blocks the FE handoff if the route scope is ambiguous or mixed. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-31 |  |
+| 36  | **Primary Action Visibility Rule**: Every screen must have exactly one primary CTA using primary-color styling, positioned in the standard action zone (top-right or prominent action area). All secondary actions must use secondary or ghost styling. A screen with no visible primary CTA, or with multiple competing primary-styled buttons, fails A06 visual review. Information density above the fold is capped at 5 data widgets; additional data must be deferred to tabs or collapsed sections. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-31 |  |
+| 37  | **Operational Language Rule**: All user-facing UI copy — labels, button text, placeholders, empty-state messages, hint text, and error messages — must use the operational vocabulary of the target user role (agent, supervisor, manager), not system or technical terms. Internal field names, collection names, system IDs, and module codes are forbidden in user-facing copy. A06 maintains a UI Copy Glossary per module in §6 of the UXUI Feature Spec. Any technical term found in user-facing copy is classified as a UX-blocking bug and blocks release. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-31 |  |
+| 38  | **Three Interaction Models Required**: Every operational workflow feature (excluding pure config or admin screens) must document three interaction patterns inside §2.1 of the UXUI Feature Spec: (1) **Quick Action** — most common path completed in ≤3 steps from the relevant list or inbox; (2) **Exception Handling** — what the user sees and does when the normal path fails, errors, or encounters an anomaly; (3) **Bulk Operation** — multi-item processing pattern, or an explicit "N/A + reason" if not applicable to the feature type. Missing any documented pattern blocks the FE handoff. | `[Source removed during 2026-04-13 workspace reset. Rule retained as KB knowledge.]` | 2026-03-31 |  |
+
+---
+
+## Technical Rules
+
+| # | Rule | Source | Date |
+|---|------|--------|------|
+| T1 | All webhook handlers must check idempotency via unique ID (e.g. `call_uuid`) to prevent duplicate processing | System Init | 2026-03-15 |
+
+---
+
+## Removed Rules (Audit Log)
+
+The following rules were removed from this file during the 2026-03-17 OS Hardening session because they duplicate rules already defined in `00_Agent_OS/Rules/Global_Rules.md`. Per the [[RULE_AUTHORITY|Rule Authority Model]], no concept may appear in both files.
+
+| Former # | Rule Summary | Now Owned By |
+| -------- | ------------ | ------------ |
+| 6 | Visual Standards is single source of truth for UI design | OS Rule 14 |
+| 7 | A06 proposes 2 design directions before Design System | OS Rule 15 (updated to 3 directions) |
+| 8 | Mid-Build Visual Checkpoint after first screen | OS Rule 17 |
+| 9 | Beauty Score ≥ 8/10 (separate from Fidelity Score) | OS Rule 19 |
+| 10 | No unstyled HTML defaults | OS Rule 20 |
+| 11 | Auto-Logging Non-Negotiable (A08 + PM enforcement) | OS Rule 22 + 24 |
+| 12 | OS Hardening sessions must be logged | OS Rule 25 |
+| 15 | 3 Directions Rule (superseded OS Rule 15's "2 directions") | **Promoted to OS Rule 15** |
+
+---
+
+_Last updated: 2026-03-31 (UX IA & Interaction Enhancement — added Rules 34-38 for IA job-first, one job per route, primary action visibility, operational language, and three interaction models)_

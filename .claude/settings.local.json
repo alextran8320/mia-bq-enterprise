@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(BASE=\"/Users/tranduchoang/Library/CloudStorage/GoogleDrive-alextran8320@gmail.com/My Drive/MIA Enterprise x OMI x KIOTVIET\"\nmkdir -p \"$BASE/00_Agent_OS/Agents\" && mkdir -p \"$BASE/00_Agent_OS/Playbooks\" && mkdir -p \"$BASE/00_Agent_OS/Templates\" && mkdir -p \"$BASE/00_Agent_OS/Rules\" && mkdir -p \"$BASE/01_Projects/_template/Raw_Input\" && mkdir -p \"$BASE/01_Projects/_template/Analysis\" && mkdir -p \"$BASE/01_Projects/_template/Design\" && mkdir -p \"$BASE/01_Projects/_template/Build\" && mkdir -p \"$BASE/01_Projects/_template/Test\" && mkdir -p \"$BASE/01_Projects/KiotViet_OmiCall/Raw_Input\" && mkdir -p \"$BASE/01_Projects/KiotViet_OmiCall/Analysis\" && mkdir -p \"$BASE/01_Projects/KiotViet_OmiCall/Design\" && mkdir -p \"$BASE/01_Projects/KiotViet_OmiCall/Build\" && mkdir -p \"$BASE/01_Projects/KiotViet_OmiCall/Test\" && mkdir -p \"$BASE/02_Sessions\" && mkdir -p \"$BASE/03_Knowledge_Bank/Vendor_Notes\")",
+      "Bash(BASE=\"/Users/tranduchoang/Library/CloudStorage/GoogleDrive-alextran8320@gmail.com/My Drive/MIA Enterprise x OMI x KIOTVIET\"\necho \"=== NEW STRUCTURE ===\"\nfind \"$BASE/00_Agent_OS\" \"$BASE/01_Projects\" \"$BASE/02_Sessions\" \"$BASE/03_Knowledge_Bank\" \"$BASE/CLAUDE.md\" -type f | sed \"s|$BASE/||\" | sort)",
+      "Bash(cd:*)",
+      "mcp__tavily-search__tavily_search",
+      "WebFetch(domain:momopartners.m-n.associates)",
+      "WebFetch(domain:auduongtuan.com)",
+      "WebFetch(domain:developers.momo.vn)",
+      "WebFetch(domain:notebooklm.google.com)",
+      "WebFetch(domain:www.begroup.vn)",
+      "WebFetch(domain:mobbin.com)",
+      "WebFetch(domain:notebooklm.google)",
+      "WebFetch(domain:momo.vn)",
+      "Bash(node -e \"const p=require\\(''./package.json''\\); console.log\\(''zustand:'', p.dependencies.zustand\\)\")",
+      "Bash(BASE=\"/Users/tranduchoang/Library/CloudStorage/GoogleDrive-alextran8320@gmail.com/My Drive/MIA Enterprise x OMI x KIOTVIET/01_Projects/KiotViet_OmiCall/Build/frontend/src\")",
+      "Bash(mkdir -p \"$BASE/theme\" \"$BASE/styles\" \"$BASE/components/Layout\" \"$BASE/store\" \"$BASE/pages\")",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(cut -d'|' -f2,4,6,7,9)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Read(//Users/tranduchoang/.claude/**)",
+      "Bash(claude mcp:*)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:minimal.cc)",
+      "WebFetch(domain:soradental.com)",
+      "Bash(grep -l \"§2.1\\\\|Task Flow\\\\|Quick Action\\\\|Exception Handling\\\\|Bulk Operation\" \"/Users/tranduchoang/Library/CloudStorage/GoogleDrive-alextran8320@gmail.com/My Drive/MIABOS/01_Projects/MIABOS/Design/UXUI_Features/\"*.md)",
+      "Bash(rm -f '/Users/tranduchoang/Library/CloudStorage/GoogleDrive-alextran8320@gmail.com/My Drive/MIABOS/01_Projects/MIABOS/Build/Screenshots/Checkpoints/*.png')",
+      "Bash(rm -f '/Users/tranduchoang/Library/CloudStorage/GoogleDrive-alextran8320@gmail.com/My Drive/MIABOS/01_Projects/MIABOS/Design/UXUI_Features/*.md')",
+      "Bash(npx tsc:*)",
+      "Bash(python3 \"/Users/tranduchoang/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"B2B SaaS CRM customer management modern international premium\" --design-system -p \"MIABOS\" -f markdown)",
+      "Bash(python3 \"/Users/tranduchoang/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"CRM dashboard metric cards gradient status badge premium\" --domain style -n 3)"
+    ]
+  }
+}

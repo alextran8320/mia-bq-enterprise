@@ -46,9 +46,13 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 19. **Log Only Artifact-Changing Work**: A session log is required only when an AI creates, updates, deletes, restructures, or promotes canonical workspace artifacts. Pure question-answering, explanation-only, brainstorming-only, or advisory exchanges without artifact changes must NOT create a session log.
 20. **Knowledge Compounds**: After each project cycle, extract rules and add to Knowledge Bank. Only [[A01_PM_Agent|PM Agent]] writes to Knowledge Bank.
 21. **Mandatory Design Fidelity**: Every project with a UI component MUST satisfy a `High-Fidelity Design` gate. The [[A03_Builder_Agent|Builder Agent]] is forbidden from writing code until the [[A06_UI_UX_Agent|A06 UI/UX Agent]] and Business Owner sign off on visual mockups. Mockups must meet "Premium" standards defined in [[Visual_Standards]].
-21A. **English-First Workspace Standard**: All folder names, file names, canonical document content, status labels, metadata fields, backlog artifacts, sprint artifacts, and operating instructions MUST be written in English. This is mandatory for AI-agent comprehension and consistency across models.
-21B. **English Naming Convention is Mandatory**: New folders and files MUST use English names in `PascalCase`, `snake_case`, or the canonical template naming patterns already defined by the OS. Non-English file or folder names are forbidden for canonical artifacts.
-21C. **User-Facing Copy Exception**: Product UI copy, campaign copy, chatbot responses, and any customer-facing text may use Vietnamese or other business-required languages, but the governing artifact that specifies them must still be written in English.
+21A. **Vietnamese-First Workspace Standard**: Nội dung tài liệu chuẩn, status descriptions, metadata values, backlog artifacts, sprint artifacts, session-log content, và operating instructions MUST được viết bằng tiếng Việt theo mặc định trừ khi Business Owner yêu cầu rõ một ngôn ngữ khác.
+21B. **English-Safe Naming Convention is Mandatory**: Folder và file mới MUST giữ English-safe names theo `PascalCase`, `snake_case`, hoặc canonical template naming patterns đã được OS định nghĩa. Stable technical identifiers, tên file, và tên folder nên tiếp tục English-safe để bảo toàn interoperability giữa các tool và AI models.
+21C. **Business Language Flexibility**: Product UI copy, campaign copy, chatbot responses, customer-facing text, và proposal/delivery artifacts có thể dùng tiếng Việt hoặc các business-required languages khác. Khi không có yêu cầu ngôn ngữ cụ thể, mặc định dùng tiếng Việt cho nội dung artifact và giữ naming conventions ở mức English-safe.
+
+21D. **Analysis/ Folder Is Mandatory Inside Every Project**: Mỗi project trong `01_Projects/` PHẢI có subfolder `Analysis/` theo đúng cấu trúc template trong `01_Projects/_template/Analysis/`. Toàn bộ tài liệu phân tích của A02 (PO) và A03 (BA) — bao gồm requirements, domain rules, feature specs, SRS, NFR, decision log, personas, assumptions, glossary — PHẢI được lưu trong `[project]/Analysis/`. Nghiêm cấm để analysis artifacts rải rác ở `04_Raw_Information/`, `02_Sessions/`, root project folder, hay bất kỳ folder nào khác ngoài `[project]/Analysis/`.
+
+21E. **Analysis Artifact Traceability Is Mandatory**: Mỗi file trong `[project]/Analysis/` PHẢI có header metadata gồm `Status`, `Author` (agent name), `Date`, và link về source (raw input hoặc PRD). File thiếu traceability metadata không hợp lệ cho gate transitions và sẽ bị PM Agent block.
 
 ## Visual & Design Rules
 
@@ -97,6 +101,6 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 
 ---
 
-_Last updated: 2026-04-10 (preview-first process hardening + no-silent-assumption rule + steel-shield subtask standard)_  
+_Last updated: 2026-04-14 (added Rule 21D & 21E — Analysis/ subfolder mandatory inside every project; PO & BA artifact routing enforced)_  
 _Only [[A01_PM_Agent|PM Agent]] may update this file through the Knowledge Bank update process ([[PB-05_Ship_and_Learn|PB-05]])._  
 _Rule 15 updated: "2 directions" → "3 directions" per KB Rule 15._

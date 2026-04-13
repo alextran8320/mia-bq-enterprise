@@ -1,5 +1,11 @@
 # Session Index
 
+### 2026-04-14
+
+- [[2026-04-14_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-14_OS_Vietnamese_Documentation_Rule_Update|OS Vietnamese Documentation Rule Update]] - Updated the workspace language policy so canonical document bodies now default to Vietnamese while file and folder naming stays English-safe.
+- [[2026-04-14_Analysis_Folder_Creation|Analysis Folder Creation]] - Tạo `05_Analysis/` với subfolder `PO/` và `BA/`; thêm Rule 21D, 21E (OS), Rule 39 (KB) để enforce PO & BA analysis artifact routing.
+
 ### 2026-04-13
 
 - [[2026-04-13_Daily_Log|Daily Log]] - All AI interactions for this day.

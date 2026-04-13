@@ -2,7 +2,7 @@
 
 **Owner**: [[A01_PM_Agent|PM Agent (A01)]]
 **Scope**: Applies to ALL AI working sessions (Claude, Cursor, ChatGPT, Gemini, or any AI tool) related to the Agent OS or any Project.
-**Language**: English (canonical). This file replaces the previous Vietnamese version.
+**Language**: Nội dung tài liệu theo hướng Vietnamese-first. Tên file vẫn giữ canonical English-safe naming pattern.
 
 > **Session Store Authority**: All session logs are stored in `02_Sessions/` ONLY.
 > Project-local `Logs/` folders are NOT valid session stores and must not be used.
@@ -16,7 +16,7 @@
 - **One Session Log per artifact-changing work block**: Create Session Logs only for work blocks that create, update, delete, or structurally change workspace artifacts.
 - **One Current Context Anchor**: `02_Sessions/_current_context.md` must always reflect the latest active topic, latest canonical session log, and the next resume action.
 - **Never wait for the Business Owner to ask**: Logging is the agent's default responsibility. A11 Knowledge Agent logs at the end of every playbook phase. PM Agent enforces it.
-- **English-only operating logs**: Daily Logs, Session Logs, file names, section names, metadata, and action statements in the session store MUST be written in English.
+- **Vietnamese-first operating logs**: Daily Logs và Session Logs nên được viết bằng tiếng Việt theo mặc định. Tên file và stable naming tokens vẫn giữ English-safe để link, parsing rules, và naming conventions tiếp tục ổn định.
 - **AI attribution is mandatory**: Every logged work block must record the AI/channel and, when known, the model or execution environment.
 - **Silent CRUD is invalid work**: If an AI creates, updates, renames, moves, or deletes canonical artifacts and leaves without completing the logging chain, the work block is incomplete and must be repaired before further normal work continues.
 - **Logging cannot be delegated away**: The AI/model/channel closing the work block must ensure the logging chain is complete. "Another model will log later" is not a valid operating assumption.
@@ -39,7 +39,7 @@
 - All dates use the calendar date when work happened (not when the log was written).
 - `ProjectName` uses the project folder name exactly (e.g., `Project_Alpha`).
 - `Topic` is a 2-4 word summary of the work block.
-- `ProjectName` and `Topic` must be English-only.
+- `ProjectName` và `Topic` trong tên file phải giữ ở dạng English-safe slug theo canonical naming pattern.
 - Never store session logs in project-local `Logs/` folders — only in `02_Sessions/`.
 - `_current_context.md` is not a replacement for Session Logs. It is a mandatory resume accelerator pointing to the canonical logs.
 - Do NOT create Session Logs for question-only or explanation-only conversations that do not change artifacts.

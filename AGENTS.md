@@ -9,7 +9,7 @@
 > through structured Product Management, Business Strategy, and Continuous Development pipelines.
 > Read this file FIRST. Then follow the Startup Read Order below. Follow the rules. No freelancing.
 >
-> **Language Rule**: English is the mandatory language for folder names, file names, canonical document content, metadata, sprint artifacts, backlog artifacts, and operating instructions. Only user-facing product copy may use Vietnamese or other required business languages.
+> **Language Rule**: Tiếng Việt là ngôn ngữ mặc định cho nội dung tài liệu chuẩn, metadata, sprint artifacts, backlog artifacts, và operating instructions trừ khi Business Owner yêu cầu rõ một ngôn ngữ khác. Tên folder, tên file, và các stable technical identifiers vẫn phải giữ ở dạng English-safe và tuân theo canonical naming patterns để workspace không bị gãy cấu trúc giữa các tool và model.
 > **Logging Rule**: Create Session Logs only for artifact-changing work. Question-answering, explanation-only, or advisory-only exchanges must not create logs. Every required log must record which AI/channel performed the work.
 > **Critical Logging Compliance**: Any AI/model that performs CRUD on canonical workspace artifacts has started an artifact-changing work block and MUST complete the full logging chain before closing the session: `Daily Log` + `Session Log` + `_session_index.md` + `_current_context.md` + project `_project.md` Session Timeline if a project was touched. Silent CRUD is a process violation.
 > **No Excuses Clause**: "Small edit", "just one file", "folder cleanup", "metadata only", "template tweak", "link fix", "I was only helping", "another model will log later", or "I forgot" are all invalid excuses. If CRUD happened, logging is mandatory.

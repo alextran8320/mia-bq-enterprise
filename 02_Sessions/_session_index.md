@@ -4,6 +4,8 @@
 
 - [[2026-04-14_Daily_Log|Daily Log]] - All AI interactions for this day.
 - [[2026-04-14_MIABOS_BQ_Integration_Architecture_and_Data_Boundary|MIABOS BQ Integration Architecture and Data Boundary]] - Produced the overall BQ integration architecture artifact covering the SAP B1-centered system boundary, MIA data boundary, sync model, API ownership, and open discovery questions.
+- [[2026-04-14_OS_Vietnamese_Documentation_Rule_Update|OS Vietnamese Documentation Rule Update]] - Updated the workspace language policy so canonical document bodies now default to Vietnamese while file and folder naming stays English-safe.
+- [[2026-04-14_Analysis_Folder_Creation|Analysis Folder Creation]] - Tạo `05_Analysis/` với subfolder `PO/` và `BA/`; thêm Rule 21D, 21E (OS), Rule 39 (KB) để enforce PO & BA analysis artifact routing.
 
 ### 2026-04-13
 

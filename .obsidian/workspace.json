@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_SAP_Research.md",
+                "file": "04_Raw_Information/Customers/Giay_BQ/2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-04-13_BQ_SAP_Research"
+              "title": "2026-04-14_BQ_Integration_Architecture_And_Data_Boundary"
             }
           }
         ]
@@ -185,8 +185,21 @@
   },
   "active": "bf366a5798c31d13",
   "lastOpenFiles": [
-    "02_Sessions/2026-04-14_OS_Vietnamese_Documentation_Rule_Update.md",
+    "02_Sessions/2026-04-14_MIABOS_Main_Branch_Merge.md",
+    "01_Projects/MIABOS/Analysis/Features/SRS/F-SAP-INT-001_SAP_B1_Internal_Chatbot_Integration_SRS.md",
+    "01_Projects/MIABOS/Analysis/Features/Briefs/SAP_B1_Internal_Chatbot_Integration_POC.md",
+    "04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Systems_And_Integration_Landscape.md",
+    "04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Stakeholder_Map.md",
+    "04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_SAP_Research.md",
+    "04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Raw_Notes.md",
+    "04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md",
+    "04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md",
+    "04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Customer_Research_Pack.md",
+    "04_Raw_Information/Customers/Giay_BQ/2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md",
+    "02_Sessions/2026-04-14_MIABOS_BQ_Integration_Architecture_and_Data_Boundary.md",
+    "02_Sessions/2026-04-13_OS_Workspace_History_Reset.md",
     "02_Sessions/2026-04-14_Analysis_Folder_Creation.md",
+    "02_Sessions/2026-04-14_OS_Vietnamese_Documentation_Rule_Update.md",
     "01_Projects/MIABOS/Analysis/Features/Briefs/_briefs_placeholder.md",
     "01_Projects/MIABOS/Analysis/Features/SRS/_srs_placeholder.md",
     "01_Projects/MIABOS/Analysis/NFR/Security_Requirements.md",
@@ -198,25 +211,12 @@
     "01_Projects/MIABOS/Analysis/Domain/Role_Permission_Matrix.md",
     "01_Projects/MIABOS/Analysis/Domain/Event_Catalog.md",
     "01_Projects/MIABOS/Analysis/Domain/Error_Catalog.md",
-    "01_Projects/MIABOS/Analysis/Domain/Business_Rules.md",
-    "01_Projects/MIABOS/Analysis/Features/_traceability_matrix.md",
-    "01_Projects/MIABOS/Analysis/Features/_feature_dependency_map.md",
-    "01_Projects/MIABOS/Analysis/Features/_feature_registry.md",
     "01_Projects/MIABOS/Analysis/Features/SRS",
     "01_Projects/MIABOS/Analysis/Features/Briefs",
-    "01_Projects/MIABOS/Analysis/SignOff_Certificate.md",
-    "01_Projects/MIABOS/Analysis/Requirements_Mapping.md",
-    "01_Projects/MIABOS/Analysis/Personas.md",
-    "01_Projects/MIABOS/Analysis/Open_Questions.md",
     "01_Projects/MIABOS/Analysis/NFR",
-    "01_Projects/MIABOS/Analysis/Glossary.md",
     "01_Projects/MIABOS/Analysis/Features",
     "01_Projects/MIABOS/Analysis/Domain",
-    "01_Projects/MIABOS/Analysis/Decision_Log.md",
-    "01_Projects/MIABOS/Analysis/Assumptions_Constraints.md",
     "01_Projects/MIABOS/Analysis",
-    "04_Raw_Information/Customers/Giay_BQ/2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md",
-    "02_Sessions/2026-04-14_MIABOS_BQ_Integration_Architecture_and_Data_Boundary.md",
     "05_Analysis/BA",
     "05_Analysis/PO",
     "05_Analysis",

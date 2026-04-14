@@ -33,7 +33,7 @@ Day la `customer pack` dang duoc dung trong giai doan intake va pre-project disc
 | [2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md](2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md) | Bo cau hoi discovery cho chatbot noi bo |
 | [2026-04-13_BQ_Stakeholder_Map.md](2026-04-13_BQ_Stakeholder_Map.md) | Mapping stakeholder va phong ban tham gia theo roadmap AI |
 | [2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md](2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md) | Cau truc proposal va phan cong team noi bo |
-| [2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md](2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md) | Tai lieu kien truc tich hop tong the, gom mo hinh module, chieu ket noi, tan suat dong bo, data boundary, va discovery questions |
+| [2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md](2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md) | Ban discovery goc. Tai lieu feature chinh da duoc chuan hoa va chuyen sang [SAP_B1_Internal_Chatbot_Integration_POC.md](../../../01_Projects/MIABOS/Analysis/Features/Briefs/SAP_B1_Internal_Chatbot_Integration_POC.md) |
 
 ## Ghi Chu Su Dung
 

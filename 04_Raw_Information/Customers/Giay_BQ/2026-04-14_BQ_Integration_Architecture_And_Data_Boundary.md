@@ -1,16 +1,35 @@
 # Kien Truc Tich Hop va Ranh Gioi Du Lieu BQ
 
-**Status**: Draft
-**Owner**: A05 Tech Lead Agent
+**Status**: Deprecated
+**Owner**: A01 PM Agent
 **Last Updated By**: Codex CLI (GPT-5 Codex)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: Business Owner
 **Approved By**: -
 **Last Status Change**: 2026-04-14
-**Source of Truth**: This document
-**Blocking Reason**: -
+**Source of Truth**: Replaced by `01_Projects/MIABOS/Analysis/Features/Briefs/SAP_B1_Internal_Chatbot_Integration_POC.md`
+**Blocking Reason**: This raw-intake artifact is no longer the canonical working document for the SAP integration feature.
 **Created by**: A05 Tech Lead Agent
 **Date**: 2026-04-14
+
+---
+
+## Trang Thai Tai Lieu
+
+Tai lieu nay duoc giu lai o `04_Raw_Information` nhu mot artifact discovery goc.
+
+Tai lieu feature chinh da duoc chuan hoa va chuyen sang workspace du an tai:
+
+- [SAP_B1_Internal_Chatbot_Integration_POC.md](../../../01_Projects/MIABOS/Analysis/Features/Briefs/SAP_B1_Internal_Chatbot_Integration_POC.md)
+
+Neu can:
+
+- review scope POC
+- chot du lieu can lay
+- chot phong ban nao hoi gi
+- trao doi voi doi trien khai
+
+hay dung tai lieu cap project o duong dan ben tren lam ban chinh.
 
 ---
 

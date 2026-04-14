@@ -1,4 +1,4 @@
-﻿# Feature SRS: F-SAP-INT-001 Tích hợp SAP B1 cho Chatbot Nội bộ và Chatbot Tư vấn Bán hàng
+# Feature SRS: F-SAP-INT-001 Tích hợp SAP B1 cho Chatbot Nội bộ và Chatbot Tư vấn Bán hàng
 
 **Status**: Draft
 **Owner**: A03 BA Agent
@@ -80,17 +80,17 @@ Là người dùng nội bộ của BQ thuộc các nhóm `Sales`, `Logistics`, 
 
 ## 1A. User Task Flow
 
-| Step | User Role | Action | Task Type | Notes |
-|------|-----------|--------|-----------|-------|
-| 1 | Sales / ASM | Mở chatbot nội bộ và nhập câu hỏi về sản phẩm, tồn kho, giá, CTKM | Quick Action | Điểm vào chính |
-| 2 | Sales / ASM | Xem câu trả lời kèm nguồn dữ liệu và thời điểm cập nhật | Quick Action | Bắt buộc có trace để tạo niềm tin |
-| 3 | Sales / ASM | Tạo escalation / ticket nếu dữ liệu chưa rõ hoặc cần xử lý tiếp | Exception Handling | Luồng follow-up |
-| 4 | Logistics | Hỏi về tồn kho theo kho, hàng đang chuyển, ETA hàng về | Quick Action | Luồng nghiệp vụ kho |
-| 5 | Marketing / Trade | Hỏi CTKM theo kênh, loại cửa hàng, nhóm sản phẩm, thời gian hiệu lực | Quick Action | Luồng kiểm tra CTKM |
-| 6 | Finance / Pricing | Hỏi giá cơ sở, giá đang áp dụng, tính hợp lệ của giá / CTKM | Reporting | Luồng đối soát |
-| 7 | Khách hàng / Lead | Chat với AI để được tư vấn mẫu mã, size, nhu cầu, nơi còn hàng trong khu vực | Quick Action | Luồng bán hàng trực tiếp |
-| 8 | AI Sales Chatbot | Thu thập thuộc tính khách hàng, gợi ý sản phẩm, đẩy CTA mua hàng / để lại thông tin | Quick Action | Vai trò thay thế nhân viên tư vấn |
-| 9 | AI Sales / CRM | Gửi nhắc lại, CTKM, chăm sóc sinh nhật, remarketing | Bulk Operation | Luồng CRM / chăm sóc |
+| Step | User Role         | Action                                                                              | Task Type          | Notes                             |
+| ---- | ----------------- | ----------------------------------------------------------------------------------- | ------------------ | --------------------------------- |
+| 1    | Sales / ASM       | Mở chatbot nội bộ và nhập câu hỏi về sản phẩm, tồn kho, giá, CTKM                   | Quick Action       | Điểm vào chính                    |
+| 2    | Sales / ASM       | Xem câu trả lời kèm nguồn dữ liệu và thời điểm cập nhật                             | Quick Action       | Bắt buộc có trace để tạo niềm tin |
+| 3    | Sales / ASM       | Tạo escalation / ticket nếu dữ liệu chưa rõ hoặc cần xử lý tiếp                     | Exception Handling | Luồng follow-up                   |
+| 4    | Logistics         | Hỏi về tồn kho theo kho, hàng đang chuyển, ETA hàng về                              | Quick Action       | Luồng nghiệp vụ kho               |
+| 5    | Marketing / Trade | Hỏi CTKM theo kênh, loại cửa hàng, nhóm sản phẩm, thời gian hiệu lực                | Quick Action       | Luồng kiểm tra CTKM               |
+| 6    | Finance / Pricing | Hỏi giá cơ sở, giá đang áp dụng, tính hợp lệ của giá / CTKM                         | Reporting          | Luồng đối soát                    |
+| 7    | Khách hàng / Lead | Chat với AI để được tư vấn mẫu mã, size, nhu cầu, nơi còn hàng trong khu vực        | Quick Action       | Luồng bán hàng trực tiếp          |
+| 8    | AI Sales Chatbot  | Thu thập thuộc tính khách hàng, gợi ý sản phẩm, đẩy CTA mua hàng / để lại thông tin | Quick Action       | Vai trò thay thế nhân viên tư vấn |
+| 9    | AI Sales / CRM    | Gửi nhắc lại, CTKM, chăm sóc sinh nhật, remarketing                                 | Bulk Operation     | Luồng CRM / chăm sóc              |
 
 ## 2. Business Context
 

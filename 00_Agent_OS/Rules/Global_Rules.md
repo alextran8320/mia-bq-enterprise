@@ -54,6 +54,10 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 
 21E. **Analysis Artifact Traceability Is Mandatory**: Mỗi file trong `[project]/Analysis/` PHẢI có header metadata gồm `Status`, `Author` (agent name), `Date`, và link về source (raw input hoặc PRD). File thiếu traceability metadata không hợp lệ cho gate transitions và sẽ bị PM Agent block.
 
+21F. **`02_Sessions/` Is Log-Only**: `02_Sessions/` chỉ được chứa `Daily Log`, `Session Log`, `_session_index.md`, `_current_context.md`, và các control-plane log artifacts khác. Tuyệt đối không được lưu canonical `PRD`, `Feature SRS`, `UXUI`, `Architecture`, `API Contract`, `NFR`, `QA`, hay bất kỳ delivery artifact nào trong `02_Sessions/`.
+
+21G. **Imported Artifact Canonicalization Is Mandatory**: Sau mọi thao tác `merge`, `pull`, `cherry-pick`, `copy`, hoặc import tài liệu từ branch/tool khác, PM Agent PHẢI audit các file mới xuất hiện. Nếu phát hiện canonical artifact đang nằm sai folder, PM phải relocate về canonical path, sửa links/control-plane liên quan, và hoàn tất log repair trước khi session được phép đóng.
+
 ## Visual & Design Rules
 
 22. **Visual Standards Are Law**: The [[Visual_Standards]] document is the single source of truth for all visual design decisions. All agents must reference it. All design tokens must comply with it unless explicitly overridden by Business Owner.
@@ -101,6 +105,6 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 
 ---
 
-_Last updated: 2026-04-14 (added Rule 21D & 21E — Analysis/ subfolder mandatory inside every project; PO & BA artifact routing enforced)_  
+_Last updated: 2026-04-15 (added Rule 21F & 21G — `02_Sessions/` log-only and imported artifact canonicalization)_  
 _Only [[A01_PM_Agent|PM Agent]] may update this file through the Knowledge Bank update process ([[PB-05_Ship_and_Learn|PB-05]])._  
 _Rule 15 updated: "2 directions" → "3 directions" per KB Rule 15._

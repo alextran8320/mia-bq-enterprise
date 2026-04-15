@@ -9,10 +9,10 @@
 **Last Status Change**: 2026-04-14  
 **Source of Truth**: This document  
 **Blocking Reason**: Chưa chốt phạm vi dữ liệu nào từ Haravan được phép dùng cho chatbot tư vấn bán hàng ngoài trạng thái còn hàng, giá bán, và CTKM online  
-**Module**: MIA-INT  
+**Module**: Integration / Source Spec  
 **Phase**: PB-02 / PB-03  
 **Priority**: High  
-**Document Role**: Tài liệu SRS chuẩn để phân tích nghiệp vụ, thiết kế UXUI, FE Preview, và handoff kỹ thuật tích hợp
+**Document Role**: Integration source specification theo hệ Haravan; dùng làm input cho Integration SRS và MIABOS module SRS
 
 ---
 

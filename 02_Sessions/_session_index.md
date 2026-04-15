@@ -1,5 +1,13 @@
 # Session Index
 
+### 2026-04-15
+
+- [[2026-04-15_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation|MIABOS Portal CRM Module And Sitemap Recommendation]] - Materialize khuyến nghị chính thức về bộ module cần có và sitemap Portal CRM cho Giày BQ sau vòng phản biện chéo.
+- [[2026-04-15_MIABOS_Analysis_Feature_Modularization|MIABOS Analysis Feature Modularization]] - Tái cấu trúc `Analysis/Features` thành `Integration` + `Modules`, relocate 3 source specs, tạo 17 SRS high-level mới, và đồng bộ lại control-plane feature.
+- [[2026-04-15_MIABOS_Analysis_Artifact_Routing_Repair|MIABOS Analysis Artifact Routing Repair]] - Di chuyển hai Feature SRS HAR/KV khỏi `02_Sessions/` sang lớp `Analysis/Features/`, đồng bộ control-plane, và siết rule/gate để `02_Sessions/` chỉ còn log artifacts.
+- [[2026-04-15_MIABOS_Tanh_To_Main_Merge|MIABOS Tanh To Main Merge]] - Hoàn tất merge branch `tanh` vào `main` bằng merge commit, không phát sinh conflict, và giữ nguyên local `.obsidian/workspace.json`.
+
 ### 2026-04-14
 
 - [[2026-04-14_Daily_Log|Daily Log]] - All AI interactions for this day.

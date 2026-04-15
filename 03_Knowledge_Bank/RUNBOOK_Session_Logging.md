@@ -15,6 +15,7 @@
 - **One Daily Log per calendar day**: Every day with artifact-changing AI activity MUST have exactly one `02_Sessions/YYYY-MM-DD_Daily_Log.md`.
 - **One Session Log per artifact-changing work block**: Create Session Logs only for work blocks that create, update, delete, or structurally change workspace artifacts.
 - **One Current Context Anchor**: `02_Sessions/_current_context.md` must always reflect the latest active topic, latest canonical session log, and the next resume action.
+- **`02_Sessions/` is log-only**: Folder này chỉ được chứa Daily Logs, Session Logs, `_session_index.md`, `_current_context.md`, và các control-plane log artifacts. Nếu có canonical artifact khác xuất hiện ở đây, đó là misrouting cần sửa ngay.
 - **Never wait for the Business Owner to ask**: Logging is the agent's default responsibility. A11 Knowledge Agent logs at the end of every playbook phase. PM Agent enforces it.
 - **Vietnamese-first operating logs**: Daily Logs và Session Logs nên được viết bằng tiếng Việt theo mặc định. Tên file và stable naming tokens vẫn giữ English-safe để link, parsing rules, và naming conventions tiếp tục ổn định.
 - **AI attribution is mandatory**: Every logged work block must record the AI/channel and, when known, the model or execution environment.
@@ -41,6 +42,7 @@
 - `Topic` is a 2-4 word summary of the work block.
 - `ProjectName` và `Topic` trong tên file phải giữ ở dạng English-safe slug theo canonical naming pattern.
 - Never store session logs in project-local `Logs/` folders — only in `02_Sessions/`.
+- Do not store canonical analysis, design, architecture, build, or QA artifacts in `02_Sessions/`; if a merge/import introduces such files there, relocate them before closing the session.
 - `_current_context.md` is not a replacement for Session Logs. It is a mandatory resume accelerator pointing to the canonical logs.
 - Do NOT create Session Logs for question-only or explanation-only conversations that do not change artifacts.
 

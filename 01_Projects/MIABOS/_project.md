@@ -1,7 +1,7 @@
 # MIABOS - Project Workspace
 
 **Status**: Active Workspace
-**Last Updated**: 2026-04-14
+**Last Updated**: 2026-04-15
 
 ## Project Identity
 
@@ -58,3 +58,7 @@ The following documentation layers were intentionally removed on 2026-04-13:
 | 2026-04-14 | [2026-04-14_MIABOS_BQ_Integration_Architecture_and_Data_Boundary](../../02_Sessions/2026-04-14_MIABOS_BQ_Integration_Architecture_and_Data_Boundary.md) | Added a more detailed SAP B1 <-> MIA BOS module integration model and a direct module-mapping table so the overall architecture is easier to explain in workshops and implementation planning. |
 | 2026-04-14 | [2026-04-14_MIABOS_BQ_Integration_Architecture_and_Data_Boundary](../../02_Sessions/2026-04-14_MIABOS_BQ_Integration_Architecture_and_Data_Boundary.md) | Restructured the integration view into three cleaner models: SAP-to-MIA module synchronization, MIA modules for the internal chatbot, and MIA modules for the sales/CSKH chatbot. |
 | 2026-04-14 | [2026-04-14_MIABOS_Main_Branch_Merge](../../02_Sessions/2026-04-14_MIABOS_Main_Branch_Merge.md) | Đồng bộ branch `main` với `hien` bằng fast-forward merge để đưa toàn bộ artifact SAP/BQ mới nhất sang nhánh chính mà không phát sinh conflict. |
+| 2026-04-15 | [2026-04-15_MIABOS_Tanh_To_Main_Merge](../../02_Sessions/2026-04-15_MIABOS_Tanh_To_Main_Merge.md) | Đồng bộ branch `main` với `tanh` bằng merge commit để đưa hai artifact SRS HAR và KV sang nhánh chính mà không làm mất local `.obsidian/workspace.json`. |
+| 2026-04-15 | [2026-04-15_MIABOS_Analysis_Artifact_Routing_Repair](../../02_Sessions/2026-04-15_MIABOS_Analysis_Artifact_Routing_Repair.md) | Sửa misrouting sau merge bằng cách chuyển hai Feature SRS HAR/KV từ `02_Sessions/` về `Analysis/Features/` ở lớp analysis canonical, cập nhật feature control-plane, và harden quy trình để `02_Sessions/` chỉ còn log artifacts. |
+| 2026-04-15 | [2026-04-15_MIABOS_Analysis_Feature_Modularization](../../02_Sessions/2026-04-15_MIABOS_Analysis_Feature_Modularization.md) | Tái cấu trúc `Analysis/Features` thành 2 lớp `Integration` + `Modules`, relocate 3 source specs vào `Integration/Source_Specs/`, materialize 5 integration SRS và 12 business-module SRS, và đồng bộ lại feature control-plane. |
+| 2026-04-15 | [2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation](../../02_Sessions/2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation.md) | Materialize khuyến nghị chính thức về final module set và sitemap Portal CRM cho Giày BQ, chốt các module cần giữ, các module cần bổ sung (`I06`, `M13`, `M14`), và packaging product surfaces cho portal. |

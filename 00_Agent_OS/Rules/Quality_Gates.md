@@ -13,6 +13,7 @@ These checks apply before any phase transition or session close involving artifa
 - [ ] The full logging chain is complete for the work block being handed off: Daily Log, Session Log, `_session_index.md`, `_current_context.md`, and project `_project.md` Session Timeline when relevant
 - [ ] The responsible AI/channel is recorded in the logs, with model/environment when known
 - [ ] No agent is relying on "another model will log later" as a handoff assumption
+- [ ] `02_Sessions/` contains only logs/control-plane artifacts; any imported analysis or delivery artifact has been relocated to its canonical folder before session close
 
 ## Gate 1: Start → PB-01
 
@@ -41,6 +42,8 @@ These checks apply before any phase transition or session close involving artifa
 - [ ] Success metrics defined
 - [ ] **PRD User Task Flow section exists for each in-scope feature**
 - [ ] Feature SRS exists for every in-scope story slice entering design
+- [ ] Feature SRS and BA/PO analysis artifacts live under `01_Projects/[project]/Analysis/` and are not misfiled in `02_Sessions/` or raw-input folders
+- [ ] Feature Registry and Traceability Matrix are updated for every in-scope Feature SRS
 - [ ] Feature SRS is `SRS Ready` for every in-scope story slice before canonical UI/UX starts
 - [ ] Each in-scope `User Story` carries planning context directly: problem, trigger, happy path, dependencies, and AC IDs
 - [ ] Any requirement ambiguity affecting scope, behavior, data, permissions, copy, validation, or integration has been explicitly confirmed by PM / Business Owner or is logged as a blocker

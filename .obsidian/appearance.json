@@ -1,6 +1,6 @@
 {
-  "accentColor": "#e6d041",
-  "interfaceFontFamily": "Apple SD Gothic Neo",
-  "textFontFamily": "Apple SD Gothic Neo",
-  "monospaceFontFamily": "AppleGothic"
+  "accentColor": "#e1cc47",
+  "interfaceFontFamily": "Inter,Apple SD Gothic Neo",
+  "textFontFamily": "Inter,Apple SD Gothic Neo",
+  "monospaceFontFamily": "Inter,AppleGothic"
 }

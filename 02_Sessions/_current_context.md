@@ -1,21 +1,23 @@
 # Current Active Context
 
-**Last Updated**: 2026-04-14
-**Active Workspace Topic**: MIABOS repo sync - main branch merged from hien without conflict
+**Last Updated**: 2026-04-15
+**Active Workspace Topic**: MIABOS Portal CRM module set and sitemap recommendation finalized
 **Current Project**: `MIABOS`
-**Current Phase**: `Operational / Repo Sync`
-**Latest Canonical Session Log**: [[2026-04-14_MIABOS_Main_Branch_Merge]]
-**Today's Daily Log**: [[2026-04-14_Daily_Log]]
+**Current Phase**: `PB-03 / Operational Governance`
+**Latest Canonical Session Log**: [[2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation]]
+**Today's Daily Log**: [[2026-04-15_Daily_Log]]
 
 ## Latest Decisions
 
-- Branch `main` đã được fast-forward từ `4fcc274` lên `187c2db`, trùng với head của `hien`.
-- Merge `hien -> main` không phát sinh conflict nên không cần manual conflict resolution.
-- Local thay đổi `.obsidian/workspace.json` được giữ nguyên xuyên suốt quá trình chuyển branch và merge.
-- `main` hiện đang ahead `origin/main` 2 commit và chưa được push remote.
+- `Analysis/Features` đã được tái cấu trúc thành 2 lớp chính: `Integration` và `Modules`.
+- 3 tài liệu `SAP / Haravan / KiotViet` giờ nằm dưới `Integration/Source_Specs/` và được xem là source specs theo hệ ngoài.
+- MIABOS hiện có 5 `Integration SRS` (`I01..I05`) và 12 `Business Module SRS` (`M01..M12`) ở mức high-level, đồng bộ qua `Feature Registry`, `Traceability Matrix`, và `Feature Dependency Map`.
+- Bộ SRS business modules đã được chuẩn hóa đủ 26 section theo `T-Feature-SRS`.
+- Portal CRM recommendation đã chốt rõ bộ module cần giữ, bộ module cần bổ sung (`I06`, `M13`, `M14`), và sitemap theo các product surfaces.
 
 ## Next Actions
 
-- Nếu cần đồng bộ remote, push `main` lên `origin/main`.
-- Quyết định xử lý riêng local thay đổi `.obsidian/workspace.json` trước lần commit tiếp theo.
-- Tiếp tục làm việc từ `main` hoặc mở work block mới theo nhu cầu của Business Owner.
+- Nếu Business Owner duyệt, materialize `I06`, `M13`, `M14` thành SRS riêng.
+- Chuyển sitemap recommendation thành `Portal IA / UXUI Spec`.
+- Nếu cần đi sâu hơn, break tiếp từng module `M01..M12` thành API / Data Mapping / UXUI packs.
+- Nếu Business Owner muốn, xử lý tiếp nhánh `main` so với `origin/main` ở work block riêng.

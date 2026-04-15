@@ -9,10 +9,10 @@
 **Last Status Change**: 2026-04-14
 **Source of Truth**: This document
 **Blocking Reason**: Chưa chốt nguồn cuối cùng cho pricing và CTKM theo từng kênh; chưa chốt phạm vi dữ liệu khách hàng / đơn hàng cho phase 1
-**Module**: MIA-INT
+**Module**: Integration / Source Spec
 **Phase**: PB-02 / PB-03
 **Priority**: High
-**Document Role**: Tài liệu SRS chuẩn để phân tích nghiệp vụ, thiết kế UXUI, FE Preview, và handoff kỹ thuật tích hợp
+**Document Role**: Integration source specification theo hệ SAP B1; dùng làm input cho Integration SRS và MIABOS module SRS
 
 ---
 
@@ -937,4 +937,3 @@ Thông tin cần nhìn thấy:
 - [ ] UXUI spec tồn tại và trích dẫn SRS này
 - [ ] Không còn mâu thuẫn giữa SRS, UXUI, và technical handoff
 - [ ] PM xác nhận trạng thái `Build Ready`
-

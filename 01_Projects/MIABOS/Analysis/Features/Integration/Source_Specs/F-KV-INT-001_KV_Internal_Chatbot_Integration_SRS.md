@@ -9,10 +9,10 @@
 **Last Status Change**: 2026-04-14  
 **Source of Truth**: This document  
 **Blocking Reason**: Chưa chốt phạm vi chính xác giữa dữ liệu dùng cho chatbot nội bộ và dữ liệu được phép lộ cho chatbot tư vấn bán hàng  
-**Module**: MIA-INT  
+**Module**: Integration / Source Spec  
 **Phase**: PB-02 / PB-03  
 **Priority**: High  
-**Document Role**: Tài liệu SRS chuẩn để phân tích nghiệp vụ, thiết kế UXUI, FE Preview, và handoff kỹ thuật tích hợp
+**Document Role**: Integration source specification theo hệ KiotViet; dùng làm input cho Integration SRS và MIABOS module SRS
 
 ---
 

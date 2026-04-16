@@ -11,7 +11,7 @@
 | `F-I04-INT-001` | Integration / Submodule | `Integration Foundation` | KiotViet Connector | Draft | A03 BA Agent | Pending | Cần materialize connector contract từ source spec KiotViet và chốt pagination / quota strategy | 2026-04-15 | `SRS Ready` |
 | `F-I05-INT-001` | Integration / Submodule | `Integration Foundation` | Canonical Mapping and Source of Truth | Draft | A03 BA Agent | Pending | Chưa chốt đầy đủ mã mapping đa hệ và priority rule cho giá / CTKM / order identity | 2026-04-15 | `SRS Ready` |
 | `F-M01-PRD-001` | Business Module | `Catalog And Commerce` | Product | Draft | A03 BA Agent | Pending | Cần rút chi tiết field, query pattern, và sales-safe projection từ source specs | 2026-04-15 | `SRS Ready` |
-| `F-M02-INV-001` | Business Module | `Catalog And Commerce` | Inventory Availability | Draft | A03 BA Agent | Pending | Cần chốt realtime vs cache-soft policy theo từng kênh và từng use case | 2026-04-15 | `SRS Ready` |
+| `F-M02-INV-001` | Business Module | `Catalog And Commerce` | Inventory Availability | SRS Ready | A03 BA Agent | Pass | - | 2026-04-16 | `UXUI Review` |
 | `F-M03-PRC-001` | Business Module | `Catalog And Commerce` | Pricing | Draft | A03 BA Agent | Pending | Chưa chốt source-priority rule cho giá theo kênh và loại cửa hàng | 2026-04-15 | `SRS Ready` |
 | `F-M04-PRO-001` | Business Module | `Catalog And Commerce` | Promotion | Draft | A03 BA Agent | Pending | Chưa chốt source-priority rule cho CTKM và phạm vi public-safe exposure | 2026-04-15 | `SRS Ready` |
 | `F-M05-ORD-001` | Business Module | `Orders And Service` | Order and Fulfillment | Draft | A03 BA Agent | Pending | Cần chốt order summary boundary, online/POS split, và fulfillment status vocabulary | 2026-04-15 | `SRS Ready` |

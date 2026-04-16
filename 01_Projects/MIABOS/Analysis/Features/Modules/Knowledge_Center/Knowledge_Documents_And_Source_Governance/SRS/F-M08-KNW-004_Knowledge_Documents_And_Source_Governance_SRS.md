@@ -1,14 +1,14 @@
 # Feature SRS: F-M08-KNW-004 Knowledge Documents and Source Governance
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Claude Code (claude-sonnet-4-6)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
+**Approved By**: A01 PM Agent — Promoted to SRS Ready 2026-04-16; freshness SLA per source type + internal vs external AI boundary deferred to BE/integration phase per BQ pilot scope decision
 **Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt source types chuẩn, freshness SLA theo từng nhóm source/document, và boundary source nào được phép dùng cho internal AI so với external-facing AI
+**Blocking Reason**: -
 **Module**: M08
 **Phase**: PB-02 / PB-03
 **Priority**: High

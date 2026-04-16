@@ -1,14 +1,14 @@
 # Feature SRS: F-M10-SLS-001 Sales Advisor AI
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
 **Last Updated By**: Codex CLI (GPT-5 Codex)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
+**Approved By**: A01 PM Agent — FE Preview scope confirmed by Business Owner instruction on 2026-04-16
 **Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt need-discovery flow, sales-safe boundary, projected inventory/price rules, và CTA/handoff model theo từng channel
+**Blocking Reason**: -
 **Module**: M10
 **Phase**: PB-02 / PB-03
 **Priority**: High
@@ -203,9 +203,13 @@ BQ là retail nhiều chi nhánh/kênh, nên bài toán AI external không thể
 
 ## 22. Open Questions
 
-- CTA set phase 1 cho từng channel là gì?
-- Availability projection được phép chi tiết tới mức nào?
-- Kịch bản nào cần human handoff ngay thay vì tiếp tục AI discovery?
+Các quyết định dưới đây đủ để mở `FE Preview`; phần contract backend thật vẫn cần A05 materialize trong Integration Spec trước khi promote `Build Ready`.
+
+| Question | FE Preview Decision | Downstream Note |
+|----------|---------------------|-----------------|
+| CTA set phase 1 cho từng channel là gì? | Dùng 4 CTA mock: `Xem sản phẩm`, `Để lại thông tin`, `Gặp nhân viên tư vấn`, `Hỏi câu khác`. | Channel routing thật sang CRM/store owner thuộc `F-M10-SLS-003` và Integration Spec. |
+| Availability projection được phép chi tiết tới mức nào? | Chỉ hiển thị 3 mức wording: `Còn hàng tại [cửa hàng]`, `Có thể còn tại [khu vực], nên xác nhận trước`, `Liên hệ cửa hàng để xác nhận tình trạng hàng`; không hiển thị số tồn kho. | Mapping confidence/freshness thật phải được A05/A08 chốt trước BE build. |
+| Kịch bản nào cần human handoff ngay thay vì tiếp tục AI discovery? | Trigger handoff mock khi khách hỏi dữ liệu nhạy cảm, availability confidence thấp nhưng muốn đến cửa hàng, lead form submit lỗi 2 lần, hoặc khách chọn CTA `Gặp nhân viên tư vấn`. | Destination routing và payload tối thiểu thuộc `F-M10-SLS-003` / `F-M11-ESC-001`. |
 
 ## 23. Definition of Done
 
@@ -213,12 +217,12 @@ BQ là retail nhiều chi nhánh/kênh, nên bài toán AI external không thể
 
 ## 24. Ready-for-UXUI Checklist
 
-- [ ] UXUI đã chốt sales chat shell, need-discovery prompts, suggestion card, blocked state, CTA footer
+- [x] UXUI đã chốt sales chat shell, need-discovery prompts, suggestion card, blocked state, CTA footer
 
 ## 25. Ready-for-FE-Preview Checklist
 
-- [ ] FE Preview có mock `discovery`, `suggestion`, `low-confidence availability`, `blocked`, `cta offered`
-- [ ] Stub payload đủ `rationale`, `price_band`, `availability_confidence`, `policy_notes`, `cta_options`
+- [x] FE Preview có mock `discovery`, `suggestion`, `low-confidence availability`, `blocked`, `cta offered`
+- [x] Stub payload đủ `rationale`, `price_band`, `availability_confidence`, `policy_notes`, `cta_options`
 
 ## 26. Ready-for-BE / Integration Promotion Checklist
 

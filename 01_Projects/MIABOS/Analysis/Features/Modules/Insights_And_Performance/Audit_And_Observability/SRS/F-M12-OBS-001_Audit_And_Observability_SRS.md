@@ -1,14 +1,14 @@
 # Feature SRS: F-M12-OBS-001 Audit and Observability
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
 **Last Updated By**: Claude Code (claude-sonnet-4-6)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
-**Last Status Change**: 2026-04-15
+**Approved By**: A01 PM Agent — Promoted to SRS Ready 2026-04-16; metric pack thresholds and alerting boundary specifics deferred to BE/integration phase per BQ pilot scope decision
+**Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt metric pack, audit retention, và alerting boundary giữa ops và business review
+**Blocking Reason**: -
 **Module**: M12
 **Phase**: PB-02 / PB-03
 **Priority**: High

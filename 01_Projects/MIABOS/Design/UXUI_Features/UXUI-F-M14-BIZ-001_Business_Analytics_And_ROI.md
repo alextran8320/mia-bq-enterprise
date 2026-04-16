@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M14-BIZ-001 Business Analytics And ROI
 
 **Feature ID**: F-M14-BIZ-001
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -9,9 +9,15 @@
 **Design System Reference**: [`Design/Design_System.md`](../Design_System.md)
 **Save to**: `Design/UXUI_Features/UXUI-F-M14-BIZ-001_Business_Analytics_And_ROI.md`
 **Date**: 2026-04-16
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
+**Last Reviewed By**: A01 PM Agent
+**Approval Required**: PM Agent
+**Approved By**: A01 PM Agent - FE Preview scope only
 **Last Status Change**: 2026-04-16
+**Source of Truth**: This document for `F-M14-BIZ-001` UXUI and FE Preview visual/interaction contract
+**Blocking Reason**: -
 
-> **Precondition**: SRS `F-M14-BIZ-001` ở `Draft`, Phase 2 (sau khi M05/M06/M10/M12 stable và có đủ data volume). Spec này chuẩn bị UX contract trước để không block design khi data sẵn sàng.
+> **Precondition Resolved**: SRS `F-M14-BIZ-001` hiện ở `SRS Ready`; spec này là visual/interaction authority cho FE Preview bằng mock/stub data. Production analytics vẫn là Phase 2 sau khi M05/M06/M10/M12 có đủ data volume và technical handoff được approve.
 
 ---
 
@@ -70,7 +76,7 @@ Tôi muốn xem hiệu quả vận hành tổng thể trên 1 dashboard thống 
 
 | Artifact | Location | Status |
 |----------|----------|--------|
-| Feature SRS | [`Analysis/Features/Modules/Insights_And_Performance/Business_Analytics_And_ROI/SRS/F-M14-BIZ-001_Business_Analytics_And_ROI_SRS.md`](../../Analysis/Features/Modules/Insights_And_Performance/Business_Analytics_And_ROI/SRS/F-M14-BIZ-001_Business_Analytics_And_ROI_SRS.md) | Draft |
+| Feature SRS | [`Analysis/Features/Modules/Insights_And_Performance/Business_Analytics_And_ROI/SRS/F-M14-BIZ-001_Business_Analytics_And_ROI_SRS.md`](../../Analysis/Features/Modules/Insights_And_Performance/Business_Analytics_And_ROI/SRS/F-M14-BIZ-001_Business_Analytics_And_ROI_SRS.md) | SRS Ready |
 
 ---
 
@@ -510,6 +516,6 @@ Không có destructive action trong analytics — read-only layer.
 - [ ] 100% copy tiếng Việt
 - [ ] Skeleton shimmer trên tất cả loading states
 
-**A06 Design Sign-Off**: ___ (YYYY-MM-DD)
+**A06 Design Sign-Off**: A01 PM approved for FE Preview scope (2026-04-16)
 **A05 Tech Sign-Off**: ___ (YYYY-MM-DD)
-**PM Gate**: ___ (YYYY-MM-DD)
+**PM Gate**: PASS for FE Preview with mock/stub data (2026-04-16)

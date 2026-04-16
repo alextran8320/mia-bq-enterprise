@@ -22,7 +22,7 @@
 | 6 | **A05 Tech** | [`design-api`](../Skills/miabos-product/skills/design-api/SKILL.md) | Materialize Integration Spec after FE Preview review |
 | 7 | **A08 BE** | [`directus-config`](../Skills/miabos-build/skills/directus-config/SKILL.md) | Configure Directus collections, build APIs per Integration Spec |
 | 8 | **A07 FE** | — | Connect FE to real backend APIs |
-| 9 | **A01 PM** | — | Verify integrated build, capture screenshots |
+| 9 | **A01 PM** | — | Verify integrated build and save runtime evidence; screenshots optional |
 | 10 | **A11 Knowledge** | [`session-log`](../Skills/miabos-ops/skills/session-log/SKILL.md) | Log the session |
 
 ---
@@ -33,7 +33,7 @@
 - [ ] UXUI Feature Spec was `Approved` at build start
 - [ ] Mid-build A06 checkpoint PASSED
 - [ ] Full A06 visual audit PASSED
-- [ ] Screenshots saved
+- [ ] Verified demo/runtime evidence saved; screenshots optional unless explicitly requested
 - [ ] All interactive states implemented
 
 **Backend (A08):**

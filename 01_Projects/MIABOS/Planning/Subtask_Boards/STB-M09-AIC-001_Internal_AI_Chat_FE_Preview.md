@@ -1,14 +1,14 @@
-# Subtask Board: Internal AI Chat FE Preview
+# Subtask Board — STB-M09-AIC-001 Internal AI Chat FE Preview
 
 **Status**: In Review
-**Owner**: [[A01_PM_Agent]]
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Owner**: A01 PM Agent
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
-**Approval Required**: PM Agent
+**Approval Required**: Business Owner / PM
 **Approved By**: -
 **Last Status Change**: 2026-04-16
-**Source of Truth**: Execution board for one approved user story — split into agent-owned subtasks with enough context for any AI to execute independently without reading the full conversation history.
-**Blocking Reason**: FE Preview vẫn blocked until UXUI được Approved; BA/UX planning work vẫn có thể chạy
+**Source of Truth**: Execution board for the `F-M09-AIC-001 Internal AI Chat` FE preview slice.
+**Blocking Reason**: Business Owner review vòng 1 đã ghi nhận 3 gap UX/interaction; FE preview đang được chỉnh và chờ re-review.
 
 ---
 
@@ -17,220 +17,188 @@
 - `Story ID`: `US-M09-AIC-001`
 - `Feature ID`: `F-M09-AIC-001`
 - `Backlog ID`: `PBI-M09-AIC-001`
-- `Module`: `AI Workspace`
-- `Related Feature SRS`: [F-M09-AIC-001_Internal_AI_Chat_SRS.md](../../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md)
-- `Story Summary`: Người dùng nội bộ hỏi MIABOS bằng tiếng Việt tự nhiên và nhận answer card có source trace, freshness, warning, và next action.
-- `Requirement Clarification Status`: `Clear for BA / UX refinement; canonical FE Preview still blocked pending mockup export and UXUI approval`
-- `Confirmed Decisions (PM / Business Owner)`: 
-  - `Answer type` phase 1 gồm `Policy`, `Data`, `Mixed`, `Blocked`
-  - `Source trace` là panel slide-in, không mở mặc định
-  - Không render raw JSON / raw ERP payload trong answer card
-  - FE Preview chỉ chạy bằng mock / stub data
-- `Open Questions That MUST Be Confirmed Before Execution`: 
-  - Threshold low-confidence phase 1 chốt thế nào
-  - Khi source conflict, source nào được ưu tiên cho từng intent class
-  - Default fallback là follow-up question hay escalate
-- `Key Constraints`:
-  - BQ context là internal-only phase 1
-  - M07 phải gate access / sensitivity trước render answer
-  - M08 phải cung cấp citation hợp lệ cho policy / mixed answer
-  - FE Preview không được mở trước khi UXUI Approved
-- `Release Rule`: Planning work cho BA/UX có thể tiếp tục, nhưng FE Preview canonical chỉ được mở sau khi `Feature SRS = SRS Ready`, `UXUI = Approved`, và PM explicitly opens preview
+- `Module`: `M09 AI Workspace`
+- `Related Feature SRS`: [`../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md`](../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md)
+- `Related UXUI Spec`: [`../../Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md`](../../Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md)
+- `Related FE Preview`: [`../../Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`](../../Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx)
+- `Route`: `/ai/chat`
+- `Evidence`: `npm run build` pass, `/ai/chat` HTTP 200, browser/runtime verification notes; screenshot is optional supporting evidence only.
+- `Story Summary`: Nhân viên nội bộ BQ hỏi MIABOS bằng tiếng Việt và nhận answer card có nguồn, freshness, warning, và next action từ mock data.
+- `Requirement Clarification Status`: `Clear for FE Preview / BE integration deferred`
+
+## Confirmed Decisions
+
+- Business Owner requested continuing the FE preview repair plan on 2026-04-16.
+- Current FE preview is mock/stub only; it must not invent or call real backend endpoints.
+- Reviewable route is `http://127.0.0.1:5173/ai/chat` when the Vite dev server is running.
+- `npm run build` passes when running under Node `v20.10.0`.
+
+## Open Questions That MUST Be Confirmed Before Backend / Production Integration
+
+- Intent taxonomy phase 1: exact labels and routing priority for `Policy`, `Data`, `Mixed`, `Blocked`, `Unsupported`.
+- Query routing matrix: which source wins when `SAP B1`, `KiotViet`, and `Haravan` conflict.
+- Escalation threshold: when to create a human handoff instead of showing an answer.
+- Trust UI contract: which freshness/trust/warning labels are final for Business Owner review.
+- PRD/User Story layer for `M09 AI Workspace` has been materialized for FE Preview scope.
+
+## Key Constraints
+
+- FE preview may use local mock data only.
+- No real endpoint integration is allowed before `Integration Spec` or approved split technical handoff exists.
+- User-facing copy must remain Vietnamese and operational, not system-code-heavy.
+- SRS is `SRS Ready` and UXUI is `Approved` for FE Preview. Production integration remains blocked until review + technical handoff.
+
+## Release Rule
+
+FE preview may be reviewed by PM / Business Owner as a mock implementation. BE/integration remains blocked until FE preview review is complete, behavior-changing feedback is folded back into SRS/UXUI, `Feature SRS = Build Ready`, and technical handoff is approved.
 
 ---
 
-## Subtask Statuses
+## Subtask Board Summary
 
-- `Todo`
-- `In Progress`
-- `Blocked`
-- `Ready for Review`
-- `Done`
-
----
-
-## Steel Shield Standard
-
-The `Subtask Board` is the execution shield for the story. A downstream agent must be able to execute from this board alone without inventing missing requirements.
-
-If any delivery-impacting requirement is unclear:
-- the board must mark it as `Blocked - PM / Business Owner confirmation required`, or
-- the board must record the confirmed decision explicitly.
-
-An incomplete board is not a legal handoff.
-
-### Mandatory Execution-Plan Fields For Every Detail Block
-
-Every subtask detail block must be complete enough to answer all items below:
-
-- `Objective`: what exactly this agent must achieve
-- `Confirmed Inputs`: decisions already confirmed by PM / Business Owner
-- `Blocked Clarifications`: unresolved items that must be asked before work continues
-- `In Scope`: what this agent is allowed to change or decide
-- `Out of Scope`: what this agent must not change
-- `Write Scope`: exact files / artifacts this agent may modify
-- `Read First`: exact artifacts the agent must consume
-- `Execution Steps`: step-by-step implementation plan
-- `Do Not Assume`: explicit assumptions that are forbidden
-- `Evidence Required`: screenshots, notes, test proof, or artifact updates required at handoff
-- `Escalate When`: exact conditions that require PM / Business Owner confirmation
-- `Done When`: objective exit criteria
-
-PM may not promote a board to execution-ready unless every active block is implementation-plan grade.
+| Subtask ID        | Workstream  | Title                                       | Primary Agent | Consulted Agents | Depends On             | Output Artifact            | Status           | Blocking Reason                                                 |
+| ----------------- | ----------- | ------------------------------------------- | ------------- | ---------------- | ---------------------- | -------------------------- | ---------------- | --------------------------------------------------------------- |
+| ST-M09-AIC-001-01 | PM          | Confirm gate and missing planning artifacts | A01           | A02, A03         | -                      | PRD/story/STB/backlog sync | Done             | -                                                               |
+| ST-M09-AIC-001-02 | BA          | Confirm SRS readiness                       | A03           | A01              | ST-M09-AIC-001-01      | Feature SRS                | Done             | -                                                               |
+| ST-M09-AIC-001-03 | UX          | Confirm UXUI readiness                      | A06           | A01, A03         | ST-M09-AIC-001-02      | UXUI spec                  | Done             | -                                                               |
+| ST-M09-AIC-001-04 | FE          | Repair and verify FE preview                | A07           | A01              | Business Owner request | `/ai/chat` preview         | Ready for Review | Mock-only preview; no backend integration                       |
+| ST-M09-AIC-001-05 | PM / Review | Business Owner review of FE preview         | A01           | A06, A07         | ST-M09-AIC-001-04      | Review decision            | In Progress      | Review vòng 1 đã có feedback; cần re-review sau bản vá          |
+| ST-M09-AIC-001-06 | Tech Lead   | Integration handoff                         | A05           | A03, A06         | ST-M09-AIC-001-05      | Integration Spec           | Blocked          | Requires reviewed FE preview and SRS promotion to `Build Ready` |
+| ST-M09-AIC-001-07 | BE/FE       | Real integration                            | A08 / A07     | A05              | ST-M09-AIC-001-06      | Integrated build           | Blocked          | No approved technical handoff                                   |
 
 ---
 
-## Subtask Board (Summary)
+## ST-M09-AIC-001-04 · FE · Repair and Verify FE Preview
 
-| Subtask ID | Workstream | Title | Primary Agent | Consulted Agents | Depends On | Output Artifact | Status | Blocking Reason |
-|------------|------------|-------|---------------|------------------|------------|-----------------|--------|-----------------|
-| ST-M09-AIC-001-01 | PM | Confirm sprint scope and gate readiness | A01 | A02, A03 | — | Sprint Backlog row updated | Done | - |
-| ST-M09-AIC-001-02 | BA | Materialize feature behavior rules and close open questions | A03 | A02 | ST-M09-AIC-001-01 | Story / SRS decision notes | Done | - |
-| ST-M09-AIC-001-03 | UX | Design layout, states, and interactions from SRS | A06 | A03 | ST-M09-AIC-001-02 | UXUI spec / mockup | In Progress | - |
-| ST-M09-AIC-001-04 | FE | Build FE Preview with mock / stub data | A07 | A06 | ST-M09-AIC-001-03 | Frontend preview | Blocked | UXUI chưa Approved; local spike `/ai/chat` exists for non-gated review only |
-| ST-M09-AIC-001-05 | PM / Review | Review FE Preview and absorb feedback into docs | A01 | A03, A06, A07 | ST-M09-AIC-001-04 | Review decision + updated docs | Blocked | FE Preview chưa legal |
+**Role**: A07 FE Builder — preview implementation with mock/stub data  
+**Status**: `Ready for Review`  
+**Depends On**: Business Owner request to continue FE preview repair
+
+### Objective
+
+Make the Internal AI Chat FE preview buildable and reviewable at `/ai/chat` without changing product behavior or connecting real backend endpoints.
+
+### Confirmed Inputs
+
+- Route is `/ai/chat`.
+- Preview implementation file: [`../../Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`](../../Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx)
+- Mock scenario file: [`../../Build/Frontend_App/src/mocks/ai-workspace/internalChat.ts`](../../Build/Frontend_App/src/mocks/ai-workspace/internalChat.ts)
+- UXUI status is `Approved` for FE Preview; this remains mock-only, not production integration approval.
+
+### Production Clarifications
+
+- Final production thresholds and source-priority conflict rules remain open for Integration Spec.
+- No backend API contract is approved for real integration.
+
+### In Scope
+
+- Fix TypeScript/build blocker.
+- Keep preview behavior and mock data intact.
+- Add local ignore rule for generated `*.tsbuildinfo`.
+- Save runtime evidence for review; screenshot capture is optional unless PM or Business Owner explicitly requests it.
+
+### Out of Scope
+
+- Do not promote SRS to `Build Ready`.
+- Do not create real API calls.
+- Do not change backend or Directus configuration.
+- Do not make Business Owner approval decisions.
+
+### Write Scope
+
+- `01_Projects/MIABOS/Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`
+- `01_Projects/MIABOS/Build/Frontend_App/.gitignore`
+- This subtask board and required session logs.
+
+### Read First
+
+| File                                                                                                                                                                                                                 | What to look for                               |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| [`../../Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md`](../../Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md)                                                                             | Intended layout, task flow, answer-card states |
+| [`../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md`](../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md) | `SRS Ready` behavior baseline for FE Preview   |
+| [`../../Build/Frontend_App/package.json`](../../Build/Frontend_App/package.json)                                                                                                                                     | Build/dev scripts                              |
+
+### Execution Steps Completed
+
+1. Replaced `assistantEntries.at(-1)` with `assistantEntries[assistantEntries.length - 1]` to stay compatible with current `ES2020` lib target.
+2. Added `*.tsbuildinfo` to front-end `.gitignore` because `tsc -b` creates this cache file.
+3. Ran production build with Node `v20.10.0`: `npm run build` passed.
+4. Started Vite dev server with Node `v20.10.0`: `http://127.0.0.1:5173/`.
+5. Verified `/ai/chat` returns HTTP `200`.
+6. Saved runtime evidence: production build passed, Vite route `/ai/chat` returned HTTP 200, and preview is reviewable in browser. Any screenshot artifact is optional support, not a gate requirement.
+7. Removed product copy `mock — đang trong quá trình xây dựng` khỏi UI chính.
+8. Converted `next actions`, `Câu hỏi gần nhất`, và `Trợ lý có thể giúp gì` thành interaction có thể click.
+9. Added `Lịch sử hỏi đáp nội bộ` panel trong FE preview để xem lại các câu đã hỏi trong phiên và nhảy lại answer.
+
+### Do Not Assume
+
+- Do not assume FE preview is production-ready.
+- SRS/UXUI đã approved cho FE preview, nhưng chưa phải approval cho production integration.
+- Do not assume current mock copy is final.
+- Do not assume backend endpoints exist.
+
+### Evidence Required
+
+- `npm run build` pass log.
+- `/ai/chat` HTTP `200` check.
+- Runtime evidence: build pass log, route HTTP 200 check, and review URL. Screenshot optional unless requested.
+- Business Owner review decision in ST-M09-AIC-001-05.
+
+### Escalate When
+
+- Business Owner rejects the visual direction.
+- Any feedback changes answer taxonomy, source trust rules, or escalation behavior.
+- Backend integration is requested before `Integration Spec` approval.
+
+### Done When
+
+- [x] Build passes under Node `v20.10.0`.
+- [x] `/ai/chat` route is reachable.
+- [x] Runtime evidence is captured; screenshot optional.
+- [ ] Business Owner reviews and marks preview `Approved / Needs Changes / Blocked`.
 
 ---
 
-## Subtask Detail Blocks
+## ST-M09-AIC-001-05 · PM / Review · Business Owner Review
 
-### ST-M09-AIC-001-01 · PM · Confirm Sprint Scope and Gate Readiness
-
-**Role**: A01 PM Agent — sprint scope gating and backlog hygiene
-**Status**: `Done`
-**Depends On**: —
-
-#### Read First
-| File | What to look for |
-|------|-----------------|
-| `Planning/PRD/AI_Workspace/PRD-M09-AIC-001_Internal_AI_Chat.md` | Business case, scope boundaries, and release slice |
-| `Planning/Backlog/Product_Backlog.md` | Readiness and next action for the story slice |
-| `Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` | Story scope, AC, and linked board |
-
-#### Task
-Confirm the slice is explicit, reviewable, and sequenced for BA/UX planning. Keep FE Preview out of execution until UXUI is approved.
-
-#### Produce
-| What | Where | Format |
-|------|-------|--------|
-| Sprint Backlog row updated | `Planning/Backlog/Sprint_Backlog.md` | Single canonical row for the story slice |
-| This subtask status | `STB-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` summary table | Set ST-M09-AIC-001-01 → `Done` |
-
-#### Done When
-- [x] Sprint backlog row exists and points to the correct story
-- [x] FE Preview gate is explicitly blocked until UXUI Approved
-- [x] BA/UX workstream may continue without inventing new scope
-
-### ST-M09-AIC-001-02 · BA · Materialize Feature Behavior Rules and Close Open Questions
-
-**Role**: A03 BA Agent — business rule closure and AC precision
-**Status**: `Done`
-**Depends On**: ST-M09-AIC-001-01
-
-#### Read First
-| File | What to look for |
-|------|-----------------|
-| `Planning/PRD/AI_Workspace/PRD-M09-AIC-001_Internal_AI_Chat.md` | Scope, user groups, and open questions |
-| `Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` | AC table, scope, and notes |
-| `Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md` | State machine, rules, API contract, validation |
-
-#### Task
-Tighten the behavior contract for the story slice. Close or explicitly defer the questions around intent threshold, source conflict priority, and fallback behavior. Ensure the story ACs remain testable and do not rely on future design improvisation.
-
-#### Produce
-| What | Where | Format |
-|------|-------|--------|
-| Decision notes | `Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` | Bullet list in `Notes` section |
-| Story AC precision | `Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` | Update AC table if needed |
-| This subtask status | `STB-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` summary table | Set `Done` after SRS Ready + story precision sync |
-
-#### Done When
-- [x] Every AC has a concrete, testable `Then` clause
-- [x] Open questions are either answered or explicitly deferred
-- [x] UX can start from the refined behavior contract without guessing
-
-### ST-M09-AIC-001-03 · UX · Design Layout, States, and Interactions from SRS
-
-**Role**: A06 UI/UX Agent — screen layout, component selection, interaction design
-**Status**: `In Progress`
-**Depends On**: ST-M09-AIC-001-02
-
-#### Read First
-| File | What to look for |
-|------|-----------------|
-| `Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md` | Main flow, alternate flows, error flows, state machine |
-| `Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` | Final ACs, scope, and notes |
-| `Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md` | Current UX draft, screen inventory, and mockup placeholders |
-
-#### Task
-Refine layout, states, and interactions for the chat shell, answer cards, blocked state, and source trace. Keep the design aligned with the current SRS draft and call out any contract gaps instead of silently inventing them.
-
-#### Produce
-| What | Where | Format |
-|------|-------|--------|
-| UX spec updates | `Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md` | Update state/behavior sections |
-| Mockup references | `Design/Mockups/` | Update or create mockup placeholders as needed |
-| This subtask status | `STB-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` summary table | Keep `In Progress` until UXUI is ready for approval |
-
-#### Done When
-- [ ] Every AC maps to a visible UI state or interaction
-- [ ] Empty, loading, error, blocked, and mixed states are defined
-- [ ] FE Preview can be built from the UXUI spec without guessing
-
-### ST-M09-AIC-001-04 · FE · Build FE Preview with Mock / Stub Data
-
-**Role**: A07 FE Builder — preview implementation for review and iteration
-**Status**: `Blocked`
-**Depends On**: ST-M09-AIC-001-03
-
-#### Read First
-| File | What to look for |
-|------|-----------------|
-| `Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md` | Layout, component map, interaction states |
-| `Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` | Scope boundaries and ACs |
-| `Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md` | Behavior rules and state machine |
-
-#### Task
-Implement the FE Preview using mock/stub data only. Do not connect to live APIs or invent new contract fields. A local spike preview already exists at `/ai/chat`, but it does not replace the canonical gate blocked by missing mockup approval.
-
-#### Produce
-| What | Where | Format |
-|------|-------|--------|
-| FE Preview implementation | Project FE codebase | React preview components using mock/stub data |
-| FE Preview notes | Story notes or preview README | Mock assumptions and edge cases |
-| This subtask status | `STB-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` summary table | Remain `Blocked` until UXUI Approved |
-
-#### Done When
-- [ ] Frontend is reviewable by PM / Business Owner
-- [ ] Preview respects approved UXUI and SRS behavior
-- [ ] Mock/stub assumptions are explicit
-- [ ] PM can run review without backend work first
-
-### ST-M09-AIC-001-05 · PM / Review · Review FE Preview and Absorb Feedback
-
-**Role**: A01 PM Agent — review orchestration and gate control
-**Status**: `Blocked`
+**Role**: A01 PM Agent — review orchestration and gate control  
+**Status**: `In Progress`  
 **Depends On**: ST-M09-AIC-001-04
 
-#### Read First
-| File | What to look for |
-|------|-----------------|
-| FE Preview implementation | Actual reviewable frontend |
-| `Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` | Scope, ACs, and any newly surfaced open questions |
-| `Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md` | Current behavior baseline |
-| `Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md` | Current UX baseline |
+### Objective
 
-#### Task
-Run FE Preview review only after preview exists. Capture feedback, classify it as visual-only or behavior-changing, and fold behavior-changing feedback back into Story, SRS, and UXUI before any downstream build.
+Review the mock FE preview with Business Owner and capture the decision before any backend or production integration work starts.
 
-#### Produce
-| What | Where | Format |
-|------|-------|--------|
-| Review decision | `STB-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` | Approved / Needs Changes / Blocked |
-| Updated docs | `Planning/Stories/...`, `Feature SRS`, `UXUI` | Only if feedback changes behavior or interaction contract |
-| This subtask status | `STB-M09-AIC-001_Internal_AI_Chat_FE_Preview.md` summary table | Stay blocked until FE Preview exists |
+### Review URL
 
-#### Done When
-- [ ] FE Preview has a clear review outcome
-- [ ] Any behavior-changing feedback is absorbed into Story / SRS / UXUI
-- [ ] PM has explicitly decided whether the story may proceed to technical closure
+- `http://127.0.0.1:5173/ai/chat`
+
+### Review Checklist
+
+- [ ] Layout is acceptable for internal BQ user review.
+- [ ] Main empty state and prompt chips are clear.
+- [ ] Answer-card states are acceptable: `Policy`, `Data`, `Mixed`, `Blocked`, `Unsupported`.
+- [ ] Source trace panel behavior is acceptable.
+- [ ] Copy tone is Vietnamese, operational, and understandable.
+- [x] Không còn copy `mock/đang xây dựng` trong màn hình chính.
+- [x] Các thành phần `Câu hỏi gần nhất` và `Trợ lý có thể giúp gì` đều clickable.
+- [x] Có panel `Lịch sử hỏi đáp nội bộ` để truy cập lại các câu đã hỏi trong phiên.
+- [ ] Business Owner decides: `Approved / Needs Changes / Blocked`.
+
+### Business Owner Review Notes (2026-04-16 - Round 1)
+
+- Không muốn hiển thị copy kiểu `mock — đang trong quá trình xây dựng`.
+- Một số khu vực chưa click được (`Câu hỏi gần nhất`, `Trợ lý có thể giúp gì`, một số action trong answer card).
+- Giao diện còn đơn giản, thiếu `Lịch sử đã hỏi đáp nội bộ`.
+
+### FE Patch Notes (2026-04-16 - After Round 1)
+
+- Đã bỏ copy `mock/đang xây dựng` ở mô tả chính.
+- Đã mở click interaction cho `Câu hỏi gần nhất`, `Trợ lý có thể giúp gì`, và action/feedback trong answer card.
+- Đã thêm panel `Lịch sử hỏi đáp nội bộ` để xem lại các câu đã hỏi trong phiên và nhảy về câu trả lời tương ứng.
+
+### Done When
+
+- [ ] Review decision is recorded in this board.
+- [ ] Behavior-changing feedback is reflected back into SRS/UXUI before technical handoff.
+- [ ] PM decides whether A05 can start integration specification.

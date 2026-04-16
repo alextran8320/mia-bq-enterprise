@@ -1,11 +1,10 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
-interface CardProps {
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
-  style?: CSSProperties;
 }
 
-export function Card({ children, style }: CardProps) {
+export function Card({ children, style, ...rest }: CardProps) {
   return (
     <div
       style={{
@@ -15,6 +14,7 @@ export function Card({ children, style }: CardProps) {
         boxShadow: "var(--shadow-ambient)",
         ...style,
       }}
+      {...rest}
     >
       {children}
     </div>

@@ -1,19 +1,19 @@
-# [PLACEHOLDER] Build Screenshots
+# [PLACEHOLDER] Optional Build Screenshots
 
 **Gate Required By**: Gate 4 — Build → Test (PB-03 → PB-04)
-**Status**: Replace this file with actual screenshots when build is complete.
+**Status**: Screenshots are optional supporting evidence. Do not block the build/test handoff solely because this folder is empty.
 
 ---
 
 ## What Goes Here
 
-This folder contains screenshots of the completed build, used for:
+This folder may contain screenshots of the completed build when PM or Business Owner explicitly requests visual capture, used for:
 1. **Fidelity comparison** — built UI vs approved mockups (must score ≥ 8/10)
 2. **A06 Visual Audit** — UI/UX Agent reviews all screens before Gate 4 passes
 3. **Beauty Score evidence** — 6-dimension beauty evaluation (average ≥ 8/10)
 
-### Required Screenshots (per Gate 4)
-Capture screenshots for every screen that has a corresponding mockup:
+### Optional Screenshots
+Capture screenshots only when PM/Business Owner requests them or when visual risk is high:
 - [ ] Home / Dashboard screen
 - [ ] Key interaction screen
 - [ ] Form screen
@@ -34,9 +34,9 @@ Examples:
 
 ---
 
-## Mid-Build Checkpoint Screenshots (Gate 3A)
+## Mid-Build Checkpoint Evidence
 
-A06 requires a mid-build visual checkpoint during PB-03. Store those here too:
+A06 requires a mid-build visual checkpoint during PB-03. Runtime evidence is sufficient; optional screenshots can be stored here:
 ```
 Checkpoints/
   [ScreenName]_Checkpoint_[Date].png
@@ -48,9 +48,9 @@ Checkpoints/
 
 For each screen, A06 scores fidelity vs mockup:
 
-| Screen | Mockup File | Screenshot | Fidelity Score (1-10) | Notes |
+| Screen | Mockup File | Evidence | Fidelity Score (1-10) | Notes |
 |--------|------------|------------|----------------------|-------|
-| Dashboard | `../Mockups/Dashboard_Default_v1.md` | `Dashboard_Default_YYYY-MM-DD.png` | | |
+| Dashboard | `../Mockups/Dashboard_Default_v1.md` | route/log/check/screenshot | | |
 | | | | | |
 
 **Gate 4 passes only when ALL screens score ≥ 8/10.**

@@ -6,6 +6,8 @@ import { CustomerProfilePage } from "@/modules/crm-workspace/pages/CustomerProfi
 import { LeadListPage } from "@/modules/crm-workspace/pages/LeadListPage";
 import { InternalAIChatPage } from "@/modules/ai-workspace/pages/InternalAIChatPage";
 import { OrderSummaryPage } from "@/modules/orders-and-service/pages/OrderSummaryPage";
+import { SalesAdvisorPage } from "@/modules/ai-workspace/pages/SalesAdvisorPage";
+import { BusinessAnalyticsPage } from "@/modules/insights-performance/pages/BusinessAnalyticsPage";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +28,31 @@ export const router = createBrowserRouter([
   {
     path: "/ai",
     element: <AppShell />,
-    children: [{ path: "chat", element: <InternalAIChatPage /> }],
+    children: [
+      { path: "chat", element: <InternalAIChatPage /> },
+      { path: "sales-advisor", element: <SalesAdvisorPage /> },
+    ],
+  },
+  {
+    path: "/sales-advisor",
+    element: <AppShell />,
+    children: [{ index: true, element: <SalesAdvisorPage /> }],
+  },
+  {
+    path: "/analytics",
+    element: <AppShell />,
+    children: [
+      { index: true, element: <Navigate to="/analytics/executive" replace /> },
+      {
+        path: "executive",
+        element: <BusinessAnalyticsPage view="executive" />,
+      },
+      {
+        path: "performance",
+        element: <BusinessAnalyticsPage view="performance" />,
+      },
+      { path: "funnel", element: <BusinessAnalyticsPage view="funnel" /> },
+      { path: "ai-roi", element: <BusinessAnalyticsPage view="ai-roi" /> },
+    ],
   },
 ]);

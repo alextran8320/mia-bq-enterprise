@@ -34,9 +34,10 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 14. **Subtask Board Is the Steel Shield**: No execution subtask is legal unless the linked `Subtask Board` is detailed enough to act as an implementation plan for the assigned agent. If the board lacks confirmed decisions, in-scope/out-of-scope boundaries, write scope, execution steps, evidence requirements, or do-not-assume rules, PM must block execution.
 15. **100% AC Coverage**: QA must have test cases covering every Acceptance Criteria code in the PRD.
 16. **Mandatory Verified Demo**: Every phase transition (e.g., Build → QA, QA → UAT) requires a `Verified Demo` artifact. The agent MUST:
-    - Automatically start the browser and perform a live demo of the feature.
-    - Record the interaction (`.webp`) and embed it in the `walkthrough.md`.
-    - Provide raw log proofs showing backend logic verification.
+    - Start or verify the runnable app/route and exercise the feature flow.
+    - Save runtime evidence such as build logs, route checks, console-free browser checks, Playwright/DOM assertions, or walkthrough notes.
+    - Provide raw log proofs showing backend logic verification when backend logic is in scope.
+    - Treat screenshots or `.webp` recordings as optional supporting evidence, not a required gate step, unless the Business Owner explicitly requests them.
     - Explicitly fix all bugs found during the demo BEFORE handing off.
 
 ## Structural Rules
@@ -64,7 +65,7 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 
 23. **Design Direction Before Design System**: [[A06_UI_UX_Agent|A06]] must propose **3** visual directions (brand color + font + photorealistic AI mockup each) and get Business Owner approval BEFORE creating the full Design System. No designing in a vacuum. If all 3 are rejected, A06 researches current global trends and generates 3 new directions. Maximum 3 iteration rounds.
 
-24. **Visual Integrity Gate**: No UI implementation is considered "Done" without a `Verified Demo` showing the interface is stable. The Agent must prove flexbox/grid alignment via browser screenshots and ensure no overflows or disjointed elements exist at standard viewports.
+24. **Visual Integrity Gate**: No UI implementation is considered "Done" without a `Verified Demo` showing the interface is stable. The Agent must prove layout stability via browser/runtime evidence such as viewport checks, DOM/layout assertions, console checks, or visual audit notes, and ensure no overflows or disjointed elements exist at standard viewports. Screenshots are optional supporting evidence.
 
 25. **Mid-Build Visual Checkpoint**: After the FIRST screen is implemented, [[A06_UI_UX_Agent|A06]] must review and approve before [[A03_Builder_Agent|Builder]] proceeds to remaining screens. This prevents entire builds going in the wrong visual direction.
 
@@ -105,6 +106,6 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 
 ---
 
-_Last updated: 2026-04-15 (added Rule 21F & 21G — `02_Sessions/` log-only and imported artifact canonicalization)_  
+_Last updated: 2026-04-16 (updated Rules 16 and 24 — screenshots are optional; Verified Demo/runtime evidence is the required gate evidence)_
 _Only [[A01_PM_Agent|PM Agent]] may update this file through the Knowledge Bank update process ([[PB-05_Ship_and_Learn|PB-05]])._  
 _Rule 15 updated: "2 directions" → "3 directions" per KB Rule 15._

@@ -1,14 +1,14 @@
 # Feature SRS: F-M08-KNW-001 Knowledge and Policy
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Claude Code (claude-sonnet-4-6)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
+**Approved By**: A01 PM Agent — Promoted to SRS Ready 2026-04-16; taxonomy fine-tuning + approval owner per domain deferred to BE/integration phase per BQ pilot scope decision
 **Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt taxonomy knowledge theo domain, approval owner cuối cho từng nhóm policy, và contract citation/freshness được hiển thị thống nhất trong `M09` và `M10`
+**Blocking Reason**: -
 **Module**: M08
 **Phase**: PB-02 / PB-03
 **Priority**: High

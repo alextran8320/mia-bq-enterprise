@@ -182,8 +182,8 @@ Slash commands are available in `.claude/commands/`:
 - `/write-stories <feature>` — Break feature into user stories
 - `/map-collections <feature>` — Map to Directus collections
 - `/write-uxui-spec <feature>` — Write UXUI Feature Spec (5 mandatory sections)
-- `/beauty-score <screenshots>` — Run beauty score assessment (6 dimensions)
-- `/visual-audit <screenshot>` — Mid-build visual checkpoint
+- `/beauty-score <runtime-evidence>` — Run beauty score assessment (6 dimensions; screenshots optional)
+- `/visual-audit <runtime-evidence>` — Mid-build visual checkpoint (screenshots optional)
 - `/design-direction <feature>` — Propose 2-3 design directions
 - `/ia-design <module>` — Design Information Architecture
 - `/session-log <project>` — Create/update session log

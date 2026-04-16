@@ -107,7 +107,7 @@ These checks apply before any phase transition or session close involving artifa
 **Frontend (A07):**
 - [ ] Mid-build A06 checkpoint PASSED
 - [ ] Full A06 visual audit PASSED
-- [ ] Screenshots saved
+- [ ] Verified demo/runtime evidence saved; screenshots are optional unless explicitly requested
 - [ ] All interactive states implemented
 
 **Backend (A08):**

@@ -2,10 +2,10 @@
 
 **Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
-**Last Reviewed By**: A03 BA Agent
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
+**Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
+**Approved By**: A01 PM Agent - FE Preview scope approved with mock/stub data on 2026-04-16
 **Last Status Change**: 2026-04-16
 **Source of Truth**: This document
 **Blocking Reason**: -
@@ -29,15 +29,15 @@
 
 ## 0B. Integration Source Map
 
-| Source System / Module | Data / Knowledge Type | Usage In Chat | Truth Level | Notes |
-|------------------------|-----------------------|---------------|-------------|-------|
-| `M08 Knowledge Center` | Policy, SOP, FAQ, system guide | Dùng cho policy explanation, SOP answer, citation, freshness | Canonical knowledge source | Ưu tiên cho answer mang tính rule/policy |
-| `SAP B1` | ERP, item master, pricing base, đối tác | Dùng qua integration layer để trả data snapshot có kiểm soát | Structured source | Không expose raw payload trực tiếp |
-| `KiotViet` | POS/store inventory, retail ops context | Dùng cho câu hỏi vận hành cửa hàng và tồn theo điểm bán | Operational source | Có thể conflict với ERP, phải có warning/priority |
-| `Haravan` | Ecommerce orders, omnichannel context | Dùng cho online order/service questions | Channel source | Quan trọng cho `CSKH` và `Ecommerce` |
-| `Excel` | Temporary exception table, manual notes | Chỉ dùng khi governance cho phép và phải gắn warning | Temporary source | Không được silent-use |
-| `M07 Security / Access` | Permission, role scope, sensitivity rules | Chặn/giảm scope answer, mask fields, block full detail | Gatekeeper | Bắt buộc chạy trước render answer |
-| `M11 Workflow / Escalation` | Handoff workflow | Nhận escalation khi answer không đủ chắc chắn | Operational target | Không để user dead-end |
+| Source System / Module      | Data / Knowledge Type                     | Usage In Chat                                                | Truth Level                | Notes                                             |
+| --------------------------- | ----------------------------------------- | ------------------------------------------------------------ | -------------------------- | ------------------------------------------------- |
+| `M08 Knowledge Center`      | Policy, SOP, FAQ, system guide            | Dùng cho policy explanation, SOP answer, citation, freshness | Canonical knowledge source | Ưu tiên cho answer mang tính rule/policy          |
+| `SAP B1`                    | ERP, item master, pricing base, đối tác   | Dùng qua integration layer để trả data snapshot có kiểm soát | Structured source          | Không expose raw payload trực tiếp                |
+| `KiotViet`                  | POS/store inventory, retail ops context   | Dùng cho câu hỏi vận hành cửa hàng và tồn theo điểm bán      | Operational source         | Có thể conflict với ERP, phải có warning/priority |
+| `Haravan`                   | Ecommerce orders, omnichannel context     | Dùng cho online order/service questions                      | Channel source             | Quan trọng cho `CSKH` và `Ecommerce`              |
+| `Excel`                     | Temporary exception table, manual notes   | Chỉ dùng khi governance cho phép và phải gắn warning         | Temporary source           | Không được silent-use                             |
+| `M07 Security / Access`     | Permission, role scope, sensitivity rules | Chặn/giảm scope answer, mask fields, block full detail       | Gatekeeper                 | Bắt buộc chạy trước render answer                 |
+| `M11 Workflow / Escalation` | Handoff workflow                          | Nhận escalation khi answer không đủ chắc chắn                | Operational target         | Không để user dead-end                            |
 
 ## 1. User Story
 
@@ -45,15 +45,15 @@ Là `Ban điều hành / vận hành trung tâm`, `CSKH`, `Ecommerce / omnichann
 
 ## 1A. User Task Flow
 
-| Step | User Role | Action | Task Type | Notes |
-|------|-----------|--------|-----------|-------|
-| 1 | User nội bộ | Nhập câu hỏi tự nhiên như `tồn kho`, `CTKM`, `policy đổi trả`, `cách xử lý đơn online`, `cách dùng hệ thống` | Quick Action | Entry |
-| 2 | Hệ thống | Phân loại intent, xác định đây là `Policy`, `Data`, `Mixed`, hoặc `Unsupported` | Quick Action | Intent routing |
-| 3 | Hệ thống | Chạy access check theo `M07`, xác định role/channel/branch scope | Configuration | Guardrail |
-| 4 | Hệ thống | Query các source phù hợp từ `M08`, integration layer, hoặc cả hai | Quick Action | Retrieval |
-| 5 | Hệ thống | Compose answer card theo cấu trúc `kết luận`, `bằng chứng`, `freshness`, `warning`, `next action` | Reporting | Response |
-| 6 | User nội bộ | Mở source trace, citation detail, hoặc follow suggested action | Reporting | Trust check |
-| 7 | User nội bộ / Hệ thống | Trigger escalation hoặc feedback nếu answer chưa đủ chắc chắn | Exception Handling | Follow-up |
+| Step | User Role              | Action                                                                                                       | Task Type          | Notes          |
+| ---- | ---------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------ | -------------- |
+| 1    | User nội bộ            | Nhập câu hỏi tự nhiên như `tồn kho`, `CTKM`, `policy đổi trả`, `cách xử lý đơn online`, `cách dùng hệ thống` | Quick Action       | Entry          |
+| 2    | Hệ thống               | Phân loại intent, xác định đây là `Policy`, `Data`, `Mixed`, hoặc `Unsupported`                              | Quick Action       | Intent routing |
+| 3    | Hệ thống               | Chạy access check theo `M07`, xác định role/channel/branch scope                                             | Configuration      | Guardrail      |
+| 4    | Hệ thống               | Query các source phù hợp từ `M08`, integration layer, hoặc cả hai                                            | Quick Action       | Retrieval      |
+| 5    | Hệ thống               | Compose answer card theo cấu trúc `kết luận`, `bằng chứng`, `freshness`, `warning`, `next action`            | Reporting          | Response       |
+| 6    | User nội bộ            | Mở source trace, citation detail, hoặc follow suggested action                                               | Reporting          | Trust check    |
+| 7    | User nội bộ / Hệ thống | Trigger escalation hoặc feedback nếu answer chưa đủ chắc chắn                                                | Exception Handling | Follow-up      |
 
 ## 2. Business Context
 
@@ -214,10 +214,15 @@ BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + int
 
 ## 22. Phase-1 Decisions
 
-- Intent taxonomy phase 1 chốt ở 4 outcome canonical: `Policy`, `Data`, `Mixed`, `Unsupported`.
-- `Unsupported` là outcome routing canonical; UI có thể hiển thị label `Blocked` khi lý do là ngoài scope, access fail, stale/conflict, hoặc trust failure.
-- Low-confidence xử lý bằng rule-based gate deterministic: hỏi lại đúng một lần nếu query còn có thể làm rõ trong cùng domain, sau đó mới escalate hoặc block.
-- Source trace panel của phase 1 dùng answer snapshot/history review, không phụ thuộc vào `GET /mia/chat/suggestions/:id`.
+Các quyết định dưới đây đủ để mở `UXUI` và `FE Preview` bằng mock/stub data. Backend/integration thật vẫn cần A05 materialize trong Integration Spec trước khi promote `Build Ready`.
+
+| Question                                                     | FE Preview Decision                                                                                                                                                                     | Downstream Note                                                                                            |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Intent taxonomy phase 1 chốt ở mức nào?                      | Dùng 4 answer types cho preview: `Policy`, `Data`, `Mixed`, `Unsupported/Blocked`.                                                                                                      | Production routing có thể mở rộng thêm sub-intent theo domain sau khi integration layer có dữ liệu thật.   |
+| Query routing matrix giữa data/policy answers như thế nào?   | Preview dùng deterministic routing: policy-only -> `M08`; data-only -> integration snapshot; mixed -> tách `Dữ liệu hiện tại` + `Chính sách áp dụng`; unsupported -> blocked/follow-up. | Source priority thật giữa `SAP B1`, `KiotViet`, `Haravan`, và Excel phải được chốt trong Integration Spec. |
+| Low-confidence threshold dùng rule-based hay score-based?    | Preview dùng state mock: low-confidence -> follow-up question nếu còn trong scope; stale/conflict/sensitive -> warning hoặc blocked card.                                               | Production cần threshold score/rule cụ thể và audit logic trước BE build.                                  |
+| Query nào được phép follow-up, query nào phải escalate ngay? | Follow-up khi thiếu intent/detail nhưng không nhạy cảm; escalate/block khi hỏi ngoài quyền, source conflict nặng, hoặc user bấm `Tạo yêu cầu hỗ trợ`.                                   | Destination routing và payload escalation thuộc `F-M09-AIC-003` / `F-M11-ESC-001`.                         |
+| Trust UI contract cho answer card đã đủ chưa?                | Preview dùng type badge + freshness chip + warning badge + source trace + next action theo UXUI `F-M09-AIC-001`.                                                                        | Label cuối cùng có thể refine sau Business Owner review nhưng không block FE Preview.                      |
 
 ## 23. Definition of Done
 

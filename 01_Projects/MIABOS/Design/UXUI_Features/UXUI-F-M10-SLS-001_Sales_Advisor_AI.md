@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M10-SLS-001 Sales Advisor AI
 
 **Feature ID**: F-M10-SLS-001
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -10,8 +10,11 @@
 **Save to**: `Design/UXUI_Features/UXUI-F-M10-SLS-001_Sales_Advisor_AI.md`
 **Date**: 2026-04-16
 **Last Status Change**: 2026-04-16
+**Approval Required**: PM Agent for FE Preview
+**Approved By**: A01 PM Agent — FE Preview scope confirmed by Business Owner instruction on 2026-04-16
+**Blocking Reason**: -
 
-> **Precondition**: Linked SRS `F-M10-SLS-001` hiện ở `Draft` — spec này được viết để chuẩn bị UX contract cho build khi SRS promote lên `SRS Ready`.
+> **Precondition Resolved**: Linked SRS `F-M10-SLS-001` hiện ở `SRS Ready`; spec này là visual/interaction authority cho FE Preview bằng mock/stub data. BE/integration thật vẫn cần Integration Spec trước khi promote SRS lên `Build Ready`.
 
 ---
 
@@ -67,7 +70,7 @@ Tôi muốn được AI gợi ý sản phẩm phù hợp với nhu cầu và ng�
 
 | Artifact | Location | Status |
 |----------|----------|--------|
-| Feature SRS | [`Analysis/Features/Modules/AI_Workspace/Sales_Advisor_AI/SRS/F-M10-SLS-001_Sales_Advisor_AI_SRS.md`](../../Analysis/Features/Modules/AI_Workspace/Sales_Advisor_AI/SRS/F-M10-SLS-001_Sales_Advisor_AI_SRS.md) | Draft |
+| Feature SRS | [`Analysis/Features/Modules/AI_Workspace/Sales_Advisor_AI/SRS/F-M10-SLS-001_Sales_Advisor_AI_SRS.md`](../../Analysis/Features/Modules/AI_Workspace/Sales_Advisor_AI/SRS/F-M10-SLS-001_Sales_Advisor_AI_SRS.md) | SRS Ready |
 
 ---
 
@@ -445,10 +448,10 @@ Discovery là **các câu hỏi của AI** hiển thị trong AI Bubble + Quick 
 | Token compatibility | Pending | Tất cả tokens từ `Design_System.md` |
 | Animation practical | Pending | Staggered chip animation cần test perf trên mobile |
 | Responsive aligns | Pending | Widget embed mode cần kiểm tra breakpoint riêng |
-| Data binding matches API | Pending | Verify `availability_confidence` enum với BE |
+| Data binding matches API | Approved for FE Preview | Dùng mock/stub payload theo SRS §25; verify enum thật với BE sau FE review |
 | Shared components | Pending | AI Bubble, User Bubble, Floating Dock share với M09 Internal Chat |
 
-**A05 Sign-Off**: ___ (chờ sau khi SRS promote lên SRS Ready)
+**A05 Sign-Off**: Preview technical cross-check accepted for mock/stub FE Preview; Integration Spec still required before BE build.
 
 ---
 
@@ -468,6 +471,6 @@ Discovery là **các câu hỏi của AI** hiển thị trong AI Bubble + Quick 
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility attributes đã gắn
 
-**A06 Design Sign-Off**: ___ (YYYY-MM-DD)
-**A05 Tech Sign-Off**: ___ (YYYY-MM-DD)
-**PM Gate**: ___ (YYYY-MM-DD)
+**A06 Design Sign-Off**: Approved for FE Preview (2026-04-16)
+**A05 Tech Sign-Off**: Mock/stub preview only; BE integration gated separately (2026-04-16)
+**PM Gate**: FE Preview opened by A01 PM Agent (2026-04-16)

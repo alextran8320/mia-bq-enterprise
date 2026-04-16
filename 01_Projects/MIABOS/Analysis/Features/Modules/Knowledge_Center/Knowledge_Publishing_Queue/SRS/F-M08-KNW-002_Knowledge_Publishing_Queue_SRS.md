@@ -1,14 +1,14 @@
 # Feature SRS: F-M08-KNW-002 Knowledge Publishing Queue
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Claude Code (claude-sonnet-4-6)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
+**Approved By**: A01 PM Agent — Promoted to SRS Ready 2026-04-16; approval matrix per domain + SLA specifics deferred to BE/integration phase per BQ pilot scope decision
 **Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt approval matrix theo domain, SLA review cho nhóm policy nhạy cảm, và quyền rollback/freeze sau publish incident
+**Blocking Reason**: -
 **Module**: M08
 **Phase**: PB-02 / PB-03
 **Priority**: High

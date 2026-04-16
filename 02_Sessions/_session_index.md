@@ -3,43 +3,42 @@
 ### 2026-04-16
 
 - [[2026-04-16_Daily_Log|Daily Log]] - All AI interactions for this day.
-- [[2026-04-16_MIABOS_Customer_360_UX_And_Story_Pack|MIABOS Customer 360 UX And Story Pack]] - Split Customer 360 into `Customer List`, `Customer 360`, `Duplicate Review`, and `Care Action`; added social-profile relationship modeling plus duplicate / merge / bulk-update logic.
-- [[2026-04-16_MIABOS_Customer_360_CRM_POC_Implementation_Ready|MIABOS Customer 360 CRM POC Implementation Ready]] - Elevated `F-M06-CRM-001` from deep analysis to POC / implementation-ready with module architecture, source ownership, sync boundary, APIs, jobs, storage boundary, and rollout phases.
-- [[2026-04-16_MIABOS_Pull_Main_Into_Hino_And_Resolve_Customer_360_Merge|MIABOS Pull Main Into Hino And Resolve Customer 360 Merge]] - Committed local Customer 360 work on `Hino`, pulled `origin/main`, resolved merge conflicts, and kept the branch clean for continued analysis.
-- [[2026-04-16_MIABOS_Process_Fix_And_Mock_Expansion|MIABOS Process Fix And Mock Data Expansion]] - Fix quy trÏnh: xÛa PNG gate per BO directive, promote UXUI Approved. Expand mock 4?8 scenarios. Improve spike: error state, scroll, Unsupported card, a11y, microcopy.
-- [[2026-04-16_MIABOS_Internal_AI_Chat_Canonical_Prep_And_Spike|MIABOS Internal AI Chat Canonical Prep And Spike]] - Promote `F-M09-AIC-001` lÍn `SRS Ready`, materialize planning chain d?y d?, canonicalize UXUI ? tr?ng th·i `Blocked`, v‡ thÍm local spike preview `/ai/chat` b?ng mock data.
-- [[2026-04-16_MIABOS_AI_Workspace_Planning_Chain_F_M09_AIC_001|MIABOS AI Workspace Planning Chain F M09 AIC 001]] - Materialize planning chain cho `F-M09-AIC-001 Internal AI Chat`: PRD, Product Backlog, Sprint Backlog, User Story, v‡ Subtask Board; gi? PRD `In Review`, story `Approved` cho planning, v‡ khÛa FE Preview d?n khi UXUI Approved th?t.
-- [[2026-04-16_MIABOS_UXUI_F_M09_AIC_001_Review|MIABOS UXUI F-M09-AIC-001 Review]] - Refine `UXUI-F-M09-AIC-001` into a canonical `Blocked` UXUI artifact with required metadata, FE Preview planning link, explicit mockup blocker, and SRS-aligned data binding.
-- [[2026-04-16_MIABOS_Obsidian_Local_Gitignore|MIABOS Obsidian Local Gitignore]] - Chuy?n `.obsidian/` th‡nh machine-local state b?ng root `.gitignore` v‡ g? to‡n b? `.obsidian` kh?i Git index.
-- [[2026-04-16_MIABOS_Alex_Implementation_To_Main_Merge|MIABOS Alex Implementation To Main Merge]] - Merge branch `alex_implementation` v‡o `main`, import to‡n b? l?ch s? implementation/spec/design liÍn quan, v‡ ph?c h?i local working state sau merge.
-- [[2026-04-16_MIABOS_UXUI_Spec_M09_M10|MIABOS UXUI Spec M09 M10]] - T?o 2 UXUI Feature Spec d?u tiÍn: F-M09-AIC-001 Internal AI Chat v‡ F-M10-SLS-001 Sales Advisor AI. T?o folder `Design/UXUI_Features/`.
-- [[2026-04-16_MIABOS_Knowledge_Center_And_AI_Workspace_SRS_Enhancement|MIABOS Knowledge Center And AI Workspace SRS Enhancement]] - Enhance l?i to‡n b? 10 SRS c?a `Knowledge_Center` v‡ `AI_Workspace` theo quy trÏnh SRS m?i: thÍm `ß0B`, neo BQ context/source map, v‡ m? r?ng flow/rule/NFR/AC nhung gi? `Draft` vÏ blocker nghi?p v? cÚn m?.
-- [[2026-04-16_MIABOS_Remaining_SRS_Enhancement|MIABOS Remaining SRS Enhancement]] - Enhance 9 SRS cÚn l?i (M01-M07, M11, M12) theo quy trÏnh SRS m?i: thÍm ß0B, neo BQ context, d? depth gate cho to‡n b? SRS pack.
-- [[2026-04-16_MIABOS_Insights_And_Performance_SRS_Completion|MIABOS Insights And Performance SRS Completion]] - Materialize `F-M14-BIZ-001 Business Analytics And ROI` d? ho‡n thi?n surface `Insights_And_Performance`; workspace MIABOS gi? cÛ d? 20 SRS.
-- [[2026-04-16_MIABOS_Order_And_Fulfillment_SRS_Deepening|MIABOS Order And Fulfillment SRS Deepening]] - Deepen `F-M05-ORD-001` into a more implementation-facing SRS with capability slices, order line + CTKM, fulfillment, return / transfer, and after-sales service scope.
+- [[2026-04-16_MIABOS_SRS_Promote_And_UXUI_Spec_Full_Pack|MIABOS SRS Promote And UXUI Spec Full Pack]] - Promote 9 SRS Draft ‚Üí SRS Ready cho AI_Workspace/Insights_And_Performance/Knowledge_Center; t·∫°o 8 UXUI Feature Specs m·ªõi; UXUI index ƒë·∫ßy ƒë·ªß 12 specs.
+- [[2026-04-16_MIABOS_M14_Dashboard_FE_Preview_Build|MIABOS M14 Dashboard FE Preview Build]] - Built mock-only Dashboard FE Preview routes, verified build and HTTP 200 routes, updated M14 STB/backlog to Ready for Review, and kept BE blocked.
+- [[2026-04-16_MIABOS_Internal_AI_Chat_Review_Round1_Fix|MIABOS Internal AI Chat Review Round1 Fix]] - V√° feedback review v√≤ng 1 cho `/ai/chat` (b·ªè copy mock, m·ªü click interaction, th√™m l·ªãch s·ª≠ h·ªèi ƒë√°p), ch·∫°y l·∫°i build/runtime evidence v√† ƒë∆∞a STB v·ªÅ tr·∫°ng th√°i re-review.
+- [[2026-04-16_MIABOS_M09_M14_Readiness_Sync|MIABOS M09 M14 Readiness Sync]] - Promoted M09/M14 to SRS Ready, approved UXUI for mock FE Preview, created missing PRD/story/STB/backlog chain, and kept production integration blocked.
+- [[2026-04-16_OS_Screenshot_Bypass_Process_Update|OS Screenshot Bypass Process Update]] - C·∫≠p nh·∫≠t quy tr√¨nh ƒë·ªÉ b·ªè b∆∞·ªõc screenshot b·∫Øt bu·ªôc; thay b·∫±ng Verified Demo/runtime evidence, screenshot ch·ªâ optional khi ƒë∆∞·ª£c y√™u c·∫ßu.
+- [[2026-04-16_MIABOS_Sales_Advisor_AI_FE_Preview_Readiness|MIABOS Sales Advisor AI FE Preview Readiness]] - S·ª≠a ghost session log v√† ghi l·∫°i readiness chain cho `F-M10-SLS-001 Sales Advisor AI` FE Preview.
+- [[2026-04-16_MIABOS_Internal_AI_Chat_FE_Preview_Fix|MIABOS Internal AI Chat FE Preview Fix]] - S·ª≠a l·ªói build FE preview cho m√†n `/ai/chat`, ch·∫°y ki·ªÉm ch·ª©ng build/dev server, v√† ghi nh·∫≠n tr·∫°ng th√°i review c·ªßa Internal AI Chat.
+- [[2026-04-16_MIABOS_Obsidian_Local_Gitignore|MIABOS Obsidian Local Gitignore]] - Chuy·ªÉn `.obsidian/` th√†nh machine-local state b·∫±ng root `.gitignore` v√† g·ª° to√†n b·ªô `.obsidian` kh·ªèi Git index.
+- [[2026-04-16_MIABOS_Alex_Implementation_To_Main_Merge|MIABOS Alex Implementation To Main Merge]] - Merge branch `alex_implementation` v√†o `main`, import to√†n b·ªô l·ªãch s·ª≠ implementation/spec/design li√™n quan, v√† ph·ª•c h·ªìi local working state sau merge.
+- [[2026-04-16_MIABOS_UXUI_Spec_M09_M10|MIABOS UXUI Spec M09 M10]] - T·∫°o 2 UXUI Feature Spec ƒë·∫ßu ti√™n: F-M09-AIC-001 Internal AI Chat v√† F-M10-SLS-001 Sales Advisor AI. T·∫°o folder `Design/UXUI_Features/`.
+- [[2026-04-16_MIABOS_Knowledge_Center_And_AI_Workspace_SRS_Enhancement|MIABOS Knowledge Center And AI Workspace SRS Enhancement]] - Enhance l·∫°i to√†n b·ªô 10 SRS c·ªßa `Knowledge_Center` v√† `AI_Workspace` theo quy tr√¨nh SRS m·ªõi: th√™m `¬ß0B`, neo BQ context/source map, v√† m·ªü r·ªông flow/rule/NFR/AC nh∆∞ng gi·ªØ `Draft` v√¨ blocker nghi·ªáp v·ª• c√≤n m·ªü.
+- [[2026-04-16_MIABOS_Remaining_SRS_Enhancement|MIABOS Remaining SRS Enhancement]] - Enhance 9 SRS c√≤n l·∫°i (M01-M07, M11, M12) theo quy tr√¨nh SRS m·ªõi: th√™m ¬ß0B, neo BQ context, ƒë·ªß depth gate cho to√†n b·ªô SRS pack.
+- [[2026-04-16_MIABOS_Insights_And_Performance_SRS_Completion|MIABOS Insights And Performance SRS Completion]] - Materialize `F-M14-BIZ-001 Business Analytics And ROI` ƒë·ªÉ ho√†n thi·ªán surface `Insights_And_Performance`; workspace MIABOS gi·ªù c√≥ ƒë·ªß 20 SRS.
 
 ### 2026-04-15
 
 - [[2026-04-15_Daily_Log|Daily Log]] - All AI interactions for this day.
 - [[2026-04-15_MIABOS_Customer_360_CRM_SRS_Deepening|MIABOS Customer 360 CRM SRS Deepening]] - Deepened `F-M06-CRM-001` into a Customer 360 SRS covering profile, identity mapping, order history, chat history, call history, consent, timeline, and AI-ready CRM context.
-- [[2026-04-15_MIABOS_SRS_Process_Enhancement|MIABOS SRS Process Enhancement]] - Enhanced quy trÏnh vi?t SRS: c?p nh?t SKILL.md, template (ß0B Integration Source Map), Global Rules 41+42, AGENTS.md d? enforce BQ anchor v‡ content depth gate cho m?i AI model.
-- [[2026-04-15_Giay_BQ_Design_System_Setup|Giay BQ Design System Setup]] - Materialize canonical Design System Aura Minimalist cho project Giay_BQ; kh?i t?o project folder v‡ `_project.md`.
-- [[2026-04-15_MIABOS_AI_Workspace_SRS_Expansion|MIABOS AI Workspace SRS Expansion]] - Materialize 4 SRS m?i cho `AI_Workspace` v‡ sync control-plane c?a surface AI.
-- [[2026-04-15_MIABOS_Planning_Folder_And_Knowledge_Center_PRDs|MIABOS Planning Folder And Knowledge Center PRDs]] - M? l?p `Planning/` cho project v‡ materialize 4 PRD c?a `Knowledge_Center`.
-- [[2026-04-15_MIABOS_Knowledge_Center_SRS_Expansion|MIABOS Knowledge Center SRS Expansion]] - Materialize `Knowledge_Center` th‡nh 4 SRS canonical v‡ sync control-plane c?a surface n‡y.
-- [[2026-04-15_MIABOS_Module_Surface_Restructuring|MIABOS Module Surface Restructuring]] - Restructure l?i `Modules/` theo c·c product surfaces c?a Portal CRM v‡ sync l?i control-plane theo `Portal Surface`.
-- [[2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation|MIABOS Portal CRM Module And Sitemap Recommendation]] - Materialize khuy?n ngh? chÌnh th?c v? b? module c?n cÛ v‡ sitemap Portal CRM cho Gi‡y BQ sau vÚng ph?n bi?n chÈo.
-- [[2026-04-15_MIABOS_Analysis_Feature_Modularization|MIABOS Analysis Feature Modularization]] - T·i c?u tr˙c `Analysis/Features` th‡nh `Integration` + `Modules`, relocate 3 source specs, t?o 17 SRS high-level m?i, v‡ d?ng b? l?i control-plane feature.
-- [[2026-04-15_MIABOS_Analysis_Artifact_Routing_Repair|MIABOS Analysis Artifact Routing Repair]] - Di chuy?n hai Feature SRS HAR/KV kh?i `02_Sessions/` sang l?p `Analysis/Features/`, d?ng b? control-plane, v‡ si?t rule/gate d? `02_Sessions/` ch? cÚn log artifacts.
-- [[2026-04-15_MIABOS_Tanh_To_Main_Merge|MIABOS Tanh To Main Merge]] - Ho‡n t?t merge branch `tanh` v‡o `main` b?ng merge commit, khÙng ph·t sinh conflict, v‡ gi? nguyÍn local `.obsidian/workspace.json`.
+- [[2026-04-15_MIABOS_SRS_Process_Enhancement|MIABOS SRS Process Enhancement]] - Enhanced quy trÔøΩnh vi?t SRS: c?p nh?t SKILL.md, template (ÔøΩ0B Integration Source Map), Global Rules 41+42, AGENTS.md d? enforce BQ anchor vÔøΩ content depth gate cho m?i AI model.
+- [[2026-04-15_Giay_BQ_Design_System_Setup|Giay BQ Design System Setup]] - Materialize canonical Design System Aura Minimalist cho project Giay_BQ; kh?i t?o project folder vÔøΩ `_project.md`.
+- [[2026-04-15_MIABOS_AI_Workspace_SRS_Expansion|MIABOS AI Workspace SRS Expansion]] - Materialize 4 SRS m?i cho `AI_Workspace` vÔøΩ sync control-plane c?a surface AI.
+- [[2026-04-15_MIABOS_Planning_Folder_And_Knowledge_Center_PRDs|MIABOS Planning Folder And Knowledge Center PRDs]] - M? l?p `Planning/` cho project vÔøΩ materialize 4 PRD c?a `Knowledge_Center`.
+- [[2026-04-15_MIABOS_Knowledge_Center_SRS_Expansion|MIABOS Knowledge Center SRS Expansion]] - Materialize `Knowledge_Center` thÔøΩnh 4 SRS canonical vÔøΩ sync control-plane c?a surface nÔøΩy.
+- [[2026-04-15_MIABOS_Module_Surface_Restructuring|MIABOS Module Surface Restructuring]] - Restructure l?i `Modules/` theo cÔøΩc product surfaces c?a Portal CRM vÔøΩ sync l?i control-plane theo `Portal Surface`.
+- [[2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation|MIABOS Portal CRM Module And Sitemap Recommendation]] - Materialize khuy?n ngh? chÔøΩnh th?c v? b? module c?n cÔøΩ vÔøΩ sitemap Portal CRM cho GiÔøΩy BQ sau vÔøΩng ph?n bi?n chÔøΩo.
+- [[2026-04-15_MIABOS_Analysis_Feature_Modularization|MIABOS Analysis Feature Modularization]] - TÔøΩi c?u trÔøΩc `Analysis/Features` thÔøΩnh `Integration` + `Modules`, relocate 3 source specs, t?o 17 SRS high-level m?i, vÔøΩ d?ng b? l?i control-plane feature.
+- [[2026-04-15_MIABOS_Analysis_Artifact_Routing_Repair|MIABOS Analysis Artifact Routing Repair]] - Di chuy?n hai Feature SRS HAR/KV kh?i `02_Sessions/` sang l?p `Analysis/Features/`, d?ng b? control-plane, vÔøΩ si?t rule/gate d? `02_Sessions/` ch? cÔøΩn log artifacts.
+- [[2026-04-15_MIABOS_Tanh_To_Main_Merge|MIABOS Tanh To Main Merge]] - HoÔøΩn t?t merge branch `tanh` vÔøΩo `main` b?ng merge commit, khÔøΩng phÔøΩt sinh conflict, vÔøΩ gi? nguyÔøΩn local `.obsidian/workspace.json`.
 
 ### 2026-04-14
 
 - [[2026-04-14_Daily_Log|Daily Log]] - All AI interactions for this day.
 - [[2026-04-14_MIABOS_BQ_Integration_Architecture_and_Data_Boundary|MIABOS BQ Integration Architecture and Data Boundary]] - Produced the overall BQ integration architecture artifact covering the SAP B1-centered system boundary, MIA data boundary, sync model, API ownership, and open discovery questions.
 - [[2026-04-14_OS_Vietnamese_Documentation_Rule_Update|OS Vietnamese Documentation Rule Update]] - Updated the workspace language policy so canonical document bodies now default to Vietnamese while file and folder naming stays English-safe.
-- [[2026-04-14_Analysis_Folder_Creation|Analysis Folder Creation]] - T?o `05_Analysis/` v?i subfolder `PO/` v‡ `BA/`; thÍm Rule 21D, 21E (OS), Rule 39 (KB) d? enforce PO & BA analysis artifact routing.
-- [[2026-04-14_MIABOS_Main_Branch_Merge|MIABOS Main Branch Merge]] - –?ng b? `main` v?i `hien` b?ng fast-forward merge, khÙng ph·t sinh conflict, gi? nguyÍn local `.obsidian/workspace.json`.
+- [[2026-04-14_Analysis_Folder_Creation|Analysis Folder Creation]] - T?o `05_Analysis/` v?i subfolder `PO/` vÔøΩ `BA/`; thÔøΩm Rule 21D, 21E (OS), Rule 39 (KB) d? enforce PO & BA analysis artifact routing.
+- [[2026-04-14_MIABOS_Main_Branch_Merge|MIABOS Main Branch Merge]] - ÔøΩ?ng b? `main` v?i `hien` b?ng fast-forward merge, khÔøΩng phÔøΩt sinh conflict, gi? nguyÔøΩn local `.obsidian/workspace.json`.
 
 ### 2026-04-13
 
@@ -49,9 +48,6 @@
 - [[2026-04-13_MIABOS_Project_Metadata_Reset|MIABOS Project Metadata Reset]] - Reframed the retained MIABOS workspace around Giay BQ, Retail, and the Marketing/Sales/Customer Service AI operating scope.
 - [[2026-04-13_MIABOS_Giay_BQ_Requirement_Source_Linkage|MIABOS Giay BQ Requirement Source Linkage]] - Linked the Giay BQ customer pack into the agent control plane as the active requirement source for the current MIABOS workspace.
 - [[2026-04-13_MIABOS_BQ_SAP_Research_Consolidation|MIABOS BQ SAP Research Consolidation]] - Consolidated the SAP Business One research for Giay BQ into a single reusable research pack and linked it from the BQ customer-pack index.
-
-
-
 
 - [[2026-04-16_MIABOS_CRM_UXUI_Detailing|MIABOS CRM UXUI Detailing]] - Expanded the four CRM UXUI specs with required on-screen information, search/filter/sort logic, detailed actions, and UX behavior.
 - [2026-04-16_MIABOS_Customer_List_Encoding_Fix](2026-04-16_MIABOS_Customer_List_Encoding_Fix.md) - UXUI formatting fix (Antigravity) - PB-03

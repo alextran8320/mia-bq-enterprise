@@ -1,21 +1,21 @@
-﻿# Current Active Context
+# Current Active Context
 
 **Last Updated**: 2026-04-16
-**Active Workspace Topic**: Hino synced with main and Customer 360 CRM preserved
+**Active Workspace Topic**: M05 Order and Fulfillment docs standardized across SRS, UXUI, and Story layers
 **Current Project**: `MIABOS`
-**Current Phase**: `PB-03 / Repo Sync And Analysis Continuity`
-**Latest Canonical Session Log**: [[2026-04-16_MIABOS_Pull_Main_Into_Hino_And_Resolve_Customer_360_Merge]]
+**Current Phase**: `PB-03 / Product Design`
+**Latest Canonical Session Log**: [[2026-04-16_MIABOS_Order_And_Fulfillment_SRS_Deepening]]
 **Today's Daily Log**: [[2026-04-16_Daily_Log]]
 
 ## Latest Decisions
 
-- Branch `Hino` now includes the latest `origin/main` through merge commit `9c710af`.
-- Local Customer 360 CRM work was preserved through pre-pull commit `dcdb264` and conflict resolution during merge.
-- `F-M06-CRM-001 Customer and CRM` remains in a deepened Customer 360 form and also retains the `0B Integration Source Map` enhancement from main.
-- The worktree has been restored to a clean state after merge-resolution and leftover formatting cleanup.
+- `F-M05-ORD-001` now has a deeper, more standardized documentation stack across SRS, UXUI, and Story layers.
+- The four M05 UXUI docs now include anatomy, richer state/error handling, visibility rules, and responsive guidance.
+- The four M05 stories now include problem/outcome framing, triggers, happy paths, dependencies, and clearer out-of-scope boundaries.
+- The module is now documented at a more implementation-ready and handoff-ready level than before.
 
 ## Next Actions
 
-- Continue CRM / Customer 360 analysis on branch `Hino`.
-- If needed, push `Hino` to remote after the next review checkpoint.
-- If the Business Owner wants, move next into UXUI / data-mapping / API packs for Customer 360.
+- Confirm the source-priority rule for fulfillment truth between Haravan, logistics source, and SAP delivery references.
+- Confirm ownership for in-store return / exchange versus service-case flow.
+- If approved, open subtask boards or FE-preview planning slices for the four M05 stories.

@@ -23,7 +23,8 @@ Folder này chứa các planning artifacts của project `MIABOS`, trả lời c
 | [`PRD/Knowledge_Center/`](./PRD/Knowledge_Center/_index.md) | Bộ PRD cho surface `Knowledge_Center` | Draft |
 | [`PRD/AI_Workspace/`](./PRD/AI_Workspace/_index.md) | Bộ PRD cho surface `AI_Workspace`, bắt đầu với `F-M09-AIC-001` | In Review |
 | [`Backlog/`](./Backlog/Product_Backlog.md) | Product backlog và sprint backlog cho các slice đã materialize | In Review |
-| [`Stories/AI_Workspace/`](./Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md) | Canonical user stories cho `AI_Workspace` | Approved |
+| [Stories/AI_Workspace/](./Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md) | Canonical user stories cho AI_Workspace | Approved |
+| [Stories/Orders_And_Service/](./Stories/Orders_And_Service/US-M05-ORD-001A_Sales_Order_And_POS.md) | Canonical user stories cho Orders And Service | Draft |
 | [`Subtask_Boards/`](./Subtask_Boards/STB-M09-AIC-001_Internal_AI_Chat_FE_Preview.md) | Execution boards cho story-level handoff | In Review |
 
 ## Operating Notes
@@ -33,3 +34,4 @@ Folder này chứa các planning artifacts của project `MIABOS`, trả lời c
 - Bước tiếp theo hợp lệ sau PRD là `Product Backlog -> Sprint Backlog -> User Story`, không nhảy cóc thẳng sang build.
 - Với `F-M09-AIC-001`, `FE Preview` chỉ được mở sau khi `UXUI` được `Approved` thật và PM explicitly mở preview.
 - `PRD In Review` không đồng nghĩa với `Business Owner Approved`; approval phải được giữ tách bạch để tránh fake sign-off.
+

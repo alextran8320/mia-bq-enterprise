@@ -5,6 +5,7 @@ import { CustomerListPage } from "@/modules/crm-workspace/pages/CustomerListPage
 import { CustomerProfilePage } from "@/modules/crm-workspace/pages/CustomerProfilePage";
 import { LeadListPage } from "@/modules/crm-workspace/pages/LeadListPage";
 import { InternalAIChatPage } from "@/modules/ai-workspace/pages/InternalAIChatPage";
+import { OrderSummaryPage } from "@/modules/orders-and-service/pages/OrderSummaryPage";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <DashboardPage /> },
+      { path: "orders", element: <OrderSummaryPage /> },
       { path: "customers", element: <CustomerListPage /> },
       { path: "customers/:id", element: <CustomerProfilePage /> },
       { path: "leads", element: <LeadListPage /> },

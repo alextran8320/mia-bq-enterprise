@@ -1,11 +1,18 @@
 import { NavLink } from "react-router-dom";
-import { Users, UserPlus, LayoutDashboard, MessageSquareText } from "lucide-react";
+import {
+  Users,
+  UserPlus,
+  LayoutDashboard,
+  MessageSquareText,
+  PackageSearch,
+} from "lucide-react";
 
 const GROUPS = [
   {
     label: "CRM Workspace",
     items: [
       { to: "/crm", icon: LayoutDashboard, label: "Tổng quan" },
+      { to: "/crm/orders", icon: PackageSearch, label: "Đơn hàng" },
       { to: "/crm/customers", icon: Users, label: "Khách hàng" },
       { to: "/crm/leads", icon: UserPlus, label: "Leads" },
     ],
@@ -70,8 +77,12 @@ export function Sidebar() {
                 borderRadius: "var(--radius-sm)",
                 fontSize: "14px",
                 fontWeight: isActive ? 500 : 400,
-                color: isActive ? "var(--color-primary)" : "var(--color-text-secondary)",
-                background: isActive ? "var(--color-primary-light)" : "transparent",
+                color: isActive
+                  ? "var(--color-primary)"
+                  : "var(--color-text-secondary)",
+                background: isActive
+                  ? "var(--color-primary-light)"
+                  : "transparent",
                 textDecoration: "none",
                 transition: "background 0.15s",
               })}

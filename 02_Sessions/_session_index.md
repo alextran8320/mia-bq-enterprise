@@ -3,6 +3,7 @@
 ### 2026-04-16
 
 - [[2026-04-16_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-16_MIABOS_Alex_Implementation_To_Main_Merge|MIABOS Alex Implementation To Main Merge]] - Merge branch `alex_implementation` vào `main`, import toàn bộ lịch sử implementation/spec/design liên quan, và phục hồi local working state sau merge.
 - [[2026-04-16_MIABOS_UXUI_Spec_M09_M10|MIABOS UXUI Spec M09 M10]] - Tạo 2 UXUI Feature Spec đầu tiên: F-M09-AIC-001 Internal AI Chat và F-M10-SLS-001 Sales Advisor AI. Tạo folder `Design/UXUI_Features/`.
 - [[2026-04-16_MIABOS_Knowledge_Center_And_AI_Workspace_SRS_Enhancement|MIABOS Knowledge Center And AI Workspace SRS Enhancement]] - Enhance lại toàn bộ 10 SRS của `Knowledge_Center` và `AI_Workspace` theo quy trình SRS mới: thêm `§0B`, neo BQ context/source map, và mở rộng flow/rule/NFR/AC nhưng giữ `Draft` vì blocker nghiệp vụ còn mở.
 - [[2026-04-16_MIABOS_Remaining_SRS_Enhancement|MIABOS Remaining SRS Enhancement]] - Enhance 9 SRS còn lại (M01-M07, M11, M12) theo quy trình SRS mới: thêm §0B, neo BQ context, đủ depth gate cho toàn bộ SRS pack.

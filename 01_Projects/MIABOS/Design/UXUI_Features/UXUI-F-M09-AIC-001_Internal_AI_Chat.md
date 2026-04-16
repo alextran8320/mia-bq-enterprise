@@ -10,13 +10,6 @@
 **Design System Reference**: [`Design/Design_System.md`](../Design_System.md)
 **Save to**: `Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md`
 **Date**: 2026-04-16
-**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
-**Last Reviewed By**: A01 PM Agent
-**Approval Required**: PM Agent
-**Approved By**: A01 PM Agent - FE Preview scope only
-**Last Status Change**: 2026-04-16
-**Source of Truth**: This document for `F-M09-AIC-001` UXUI and FE Preview visual/interaction contract
-**Blocking Reason**: -
 
 > **Precondition Resolved**: Linked SRS `F-M09-AIC-001` hiện ở `SRS Ready`; spec này là visual/interaction authority cho FE Preview bằng mock/stub data. BE/integration thật vẫn cần Integration Spec trước khi promote SRS lên `Build Ready`.
 
@@ -506,6 +499,6 @@ Hai khối dùng `grid grid-cols-2 gap-4` trên desktop, stack trên mobile.
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility attributes đã gắn
 
-**A06 Design Sign-Off**: **\_ (YYYY-MM-DD)
-**A05 Tech Sign-Off**: \_** (YYYY-MM-DD)
+**A06 Design Sign-Off**: \_\_\_ (YYYY-MM-DD)
+**A05 Tech Sign-Off**: \_\_\_ (YYYY-MM-DD)
 **PM Gate**: \_\_\_ (YYYY-MM-DD)

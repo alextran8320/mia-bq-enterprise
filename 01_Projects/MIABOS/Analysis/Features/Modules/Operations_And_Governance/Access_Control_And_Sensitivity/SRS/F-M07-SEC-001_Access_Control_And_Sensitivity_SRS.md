@@ -1,18 +1,18 @@
-# Feature SRS: F-M07-SEC-001 Access Control and Sensitivity
+﻿# Feature SRS: F-M07-SEC-001 Access Control and Sensitivity
 
 **Status**: Draft
 **Owner**: A03 BA Agent
-**Last Updated By**: Claude Code (claude-sonnet-4-6)
+**Last Updated By**: Codex CLI (GPT-5 Codex)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
 **Approved By**: -
-**Last Status Change**: 2026-04-15
+**Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt scope matrix theo branch/store/channel/role và public-safe response policy
+**Blocking Reason**: Cần chốt role matrix BQ theo phòng ban, quy tắc scope theo branch/store/channel/store type, taxonomy độ nhạy dữ liệu, và public-safe response policy cho pilot phase 1
 **Module**: M07
 **Phase**: PB-02 / PB-03
 **Priority**: High
-**Document Role**: SRS high-level cho module phân quyền, data scope, sensitivity, và public-safe policy
+**Document Role**: SRS canonical cho lớp quản trị role, data scope, sensitivity gating, masking, và public-safe policy của MIABOS
 
 ---
 
@@ -20,170 +20,283 @@
 
 - Feature ID: `F-M07-SEC-001`
 - Related User Story: `US-M07-SEC-001`
-- Related Screens: role/scope config, sensitivity policy config, public-safe rule config
-- Related APIs: `POST /mia/access/evaluate`, `POST /mia/public-safe/evaluate`
-- Related Tables: `mia_user_scope_profile`, `sensitivity_rule`, `public_safe_response_policy`
-- Related Events: `access.rule.updated`, `public.safe.policy.updated`
-- Related Error IDs: `SEC-001`
+- Related PRD: `-`
+- Related Screens: user scope profile list, role/scope profile detail, sensitivity rule list, policy preview, public-safe rule config, blocked/masked answer states
+- Related APIs: `POST /mia/access/evaluate`, `POST /mia/public-safe/evaluate`, `GET /mia/access/profiles/:id`, `POST /mia/access/rules/preview`
+- Related Tables: `mia_user_scope_profile`, `mia_role_profile`, `sensitivity_rule`, `public_safe_response_policy`, `mia_access_audit_log`
+- Related Events: `mia.access.rule.updated`, `mia.access.profile.updated`, `mia.public_safe_policy.updated`, `mia.access.denied`
+- Related Error IDs: `SEC-001`, `SEC-002`, `SEC-003`, `SEC-004`, `SEC-005`
 
 ## 0B. Integration Source Map
 
 | Data Domain | Source System | Direction | Notes |
 |---|---|---|---|
-| User identity, role assignment | MIABOS internal DB | Read | Nguồn authority cho role/scope trong MIABOS |
-| Branch/store/channel mapping | SAP B1 + KiotViet + Haravan | Read | Dùng để resolve scope branch/channel cho user |
-| Sensitivity rules, public-safe policy | MIABOS internal DB | Read/Write | Admin config — không kéo từ external system |
-| User scope profile | MIABOS internal DB | Read/Write | Output của module này, được dùng bởi M09/M10 |
+| User identity, login subject, base account status | MIABOS internal DB hoặc approved IdP | Read | M07 chỉ tiêu thụ identity gốc, không phụ thuộc hoàn toàn vào role ngoài |
+| Department / role abstraction | MIABOS internal DB | Read/Write | MIABOS là authority cho role nội bộ phục vụ AI |
+| Branch, region, warehouse, store type mapping | SAP B1 + KiotViet + Haravan | Read | Dùng để resolve scope branch/store/channel theo ngữ cảnh BQ |
+| Channel taxonomy | Haravan + MIABOS internal config | Read | Phân biệt online, retail, dealer, marketplace, omnichannel |
+| Sensitivity rules, public-safe policy | MIABOS internal DB | Read/Write | Quản trị nội bộ, không kéo từ hệ ngoài |
+| Escalation handoff constraint | M11 Workflow / Case Handling | Read | Nếu answer bị block, có thể chỉ cho phép escalation với payload đã mask |
+| Audit / metrics sink | M12 Observability | Write | Ghi denied events, masked events, policy-gap events |
 
 ## 1. User Story
 
-Là PM / Admin / Ops Governance, tôi muốn MIABOS tự quản lý access, scope, sensitivity, và public-safe policy để AI không lộ dữ liệu sai ngữ cảnh.
+Là `PM Governance`, `Admin / Ops Governance`, `IT / ERP / data`, hoặc owner vận hành từng phòng ban, tôi muốn MIABOS tự quản lý quyền truy cập, phạm vi dữ liệu, mức độ nhạy cảm, và chính sách public-safe để AI chỉ trả đúng dữ liệu cho đúng người, đúng bối cảnh, và vẫn có đường xử lý tiếp khi gặp dữ liệu bị chặn.
 
 ## 1A. User Task Flow
 
 | Step | User Role | Action | Task Type | Notes |
 |------|-----------|--------|-----------|-------|
-| 1 | Admin | Cấu hình role và data scope | Configuration | Entry |
-| 2 | Admin | Cấu hình sensitivity và public-safe policy | Configuration | Governance |
-| 3 | Hệ thống | Evaluate quyền trước khi trả câu trả lời | Quick Action | Runtime |
+| 1 | Admin / Ops Governance | Tạo hoặc sửa role profile cho nhóm người dùng BQ | Configuration | Entry |
+| 2 | Admin / Ops Governance | Gán data scope theo branch, store, region, channel, store type | Configuration | Scope control |
+| 3 | Admin / Ops Governance | Khai báo sensitivity rules và public-safe policies | Configuration | Governance |
+| 4 | Hệ thống | Khi M09/M10/M08 cần render answer hoặc transcript, gọi evaluate engine | Quick Action | Runtime gate |
+| 5 | Hệ thống | Trả kết quả `allow`, `mask`, `summary_only`, `deny`, hoặc `escalation_only` | Quick Action | Decision |
+| 6 | User / Team Lead | Nhìn thấy answer phù hợp scope, hoặc blocked state rõ ràng, hoặc CTA escalation | Exception Handling | Outcome |
 
 ## 2. Business Context
 
-BQ có hơn 200 cửa hàng/đại lý với nhiều loại nhân sự (cửa hàng trưởng, sales, CSKH, kế toán, IT, ban điều hành). Mỗi role có phạm vi dữ liệu khác nhau: sales không được thấy giá nhập, CSKH không được thấy toàn bộ hồ sơ khách, cửa hàng đại lý không được thấy dữ liệu cửa hàng chính hãng. Nếu không có lớp access control + sensitivity gate rõ ràng trong MIABOS, AI sẽ lộ dữ liệu sai người và mất tin cậy ngay từ pilot.
+BQ vận hành theo mô hình retail đa chi nhánh, đa cửa hàng, đa kênh, và có sự khác biệt rõ giữa cửa hàng chính hãng, đại lý, ecommerce, và các đội hỗ trợ trung tâm. Theo stakeholder map và BQ pack, các nhóm như `Ban điều hành / vận hành trung tâm`, `Vận hành bán lẻ`, `CSKH`, `Logistics / kho`, `Marketing / Trade`, `Ecommerce / omnichannel`, `Tài chính / pricing control`, và `IT / ERP / data` đều có lý do hợp lệ để dùng AI, nhưng không thể nhìn cùng một lớp dữ liệu.
+
+Pain point thật của BQ là dữ liệu đang phân mảnh giữa `SAP B1`, `KiotViet`, `Haravan`, `Excel`, và lớp workflow như `Lark`. Nếu MIABOS không có lớp phân quyền độc lập, AI rất dễ:
+
+- làm lộ giá nhập, margin-adjacent data, hoặc cơ chế CTKM nội bộ cho vai trò không phù hợp
+- cho phép cửa hàng/đại lý nhìn dữ liệu ngoài phạm vi chi nhánh, vùng, hoặc kênh
+- hiển thị transcript/source snapshot nhạy cảm trong các luồng review và escalation
+- làm mất niềm tin ngay từ pilot vì user thấy "AI trả đúng nhưng sai người"
+
+Vì vậy M07 là gatekeeper bắt buộc cho toàn bộ phase 1 của chatbot nội bộ và cả public-safe mode ở các surface về sau.
 
 ## 3. Preconditions
 
-- User identity và role assignment trong MIABOS đã được setup tối thiểu cho phase 1.
-- Branch/store/channel mapping giữa SAP B1, KiotViet, Haravan đã có.
-- Admin đã config ít nhất `public-safe whitelist` cho phase 1 để phân biệt internal vs external safe data.
+- User identity tối thiểu đã tồn tại trong MIABOS hoặc qua IdP được approve.
+- Có mapping tối thiểu giữa `branch`, `store`, `region`, `warehouse`, `channel`, `store_type` từ các nguồn `SAP B1`, `KiotViet`, `Haravan`.
+- Các module tiêu thụ dữ liệu như `M08`, `M09`, `M10`, `M11` chấp nhận gọi evaluate API trước khi render hoặc handoff.
+- Admin đã khai báo ít nhất một bộ `role profile`, một bộ `scope profile`, và một policy `public-safe` cho pilot.
 
 ## 4. Postconditions
 
-- Mọi answer từ M09/M10 đều đi qua scope + sensitivity gate trước khi render.
-- Admin có thể xem rule effect và adjust policy mà không cần code change.
+- Mọi answer, transcript detail, source trace, escalation payload, và review payload đều đi qua M07 trước khi hiển thị hoặc gửi tiếp.
+- Các blocked/masked decisions có audit trail và giải thích vận hành đủ rõ cho PM/Ops theo dõi.
+- Admin có thể thay đổi rule mà không cần sửa code downstream.
 
 ## 5. Main Flow
 
-1. AI module (M09/M10) gửi request evaluate access cho một answer trước khi render.
-2. Hệ thống resolve `actor` (user ID → role → scope profile) từ `mia_user_scope_profile`.
-3. Hệ thống resolve `context`: branch/store/channel của request hiện tại.
-4. Hệ thống evaluate `sensitivity_rule`: field nào cần mask, block, hoặc trim cho role + context này.
-5. Nếu context là `public-safe` (chatbot ngoài / sales-safe), apply thêm `public_safe_response_policy`.
-6. Trả về `allowed_fields[]`, `masked_fields[]`, `blocked_reason` cho module gọi.
-7. Module gọi render answer chỉ với fields được phép.
+1. Một module tiêu thụ dữ liệu như `M09 Internal AI Chat`, `M09 Trust Review`, `M10 Sales Advisor`, hoặc `M11 Escalation` gửi request tới `POST /mia/access/evaluate` trước khi render output hoặc gửi handoff payload.
+2. M07 resolve `actor identity` thành `user`, `role_profile`, `department`, `tenant`, và trạng thái active.
+3. M07 resolve `context scope` gồm `branch`, `region`, `store`, `store_type`, `warehouse`, `channel`, `entry_point`, và `mode` (`internal`, `public-safe`, `escalation-recipient`, `reviewer`).
+4. M07 load `requested data fields` và `resource class` từ module gọi, ví dụ `inventory.available_qty`, `pricing.base_price`, `promotion.mechanic`, `customer.phone`, `chat.source_snapshot`.
+5. M07 đối chiếu role profile với data scope profile để xác định resource đó có thuộc phạm vi cho phép hay không.
+6. Nếu resource thuộc phạm vi, M07 tiếp tục áp dụng `sensitivity_rule` để quyết định từng field được `allow`, `mask`, `summary_only`, hay `deny`.
+7. Nếu mode là `public-safe`, M07 áp dụng thêm `public_safe_response_policy`; policy này có thể giảm thêm kết quả từ `allow` xuống `summary_only` hoặc `deny`.
+8. Nếu answer chính bị deny hoàn toàn nhưng use case cho phép follow-up, M07 trả `decision = escalation_only` cùng reason code để M11/M09 mở CTA chuyển người xử lý.
+9. M07 ghi `mia_access_audit_log` với input context, policy version, decision summary, và denied/masked reasons.
+10. Module downstream chỉ được render đúng theo payload projection M07 trả về; không được tự khôi phục field gốc từ data source.
 
 ## 6. Alternate Flows
 
-- Internal mode: role nội bộ có scope rộng hơn, ít mask hơn.
-- Sales-safe mode: dành cho chatbot bán hàng ngoài — chỉ trả data đã whitelist.
-- Escalation-only mode: user bị block full answer nhưng vẫn có thể tạo escalation.
+- `Internal manager mode`: Team Lead hoặc PM Governance được xem aggregate hoặc cross-branch trong đúng domain của mình nhưng vẫn bị chặn các field tài chính sâu.
+- `Dealer-safe mode`: Người dùng thuộc hệ đại lý được xem giá bán/chính sách áp dụng cho kênh của mình, nhưng không được xem data của cửa hàng chính hãng.
+- `Public-safe mode`: Chatbot external hoặc sales-safe chỉ được xem whitelist tối thiểu như tồn khả dụng dạng hint, giá công khai, CTKM public.
+- `Escalation-recipient mode`: Người nhận case ở M11 được xem payload đã mask theo role nhận case, không mặc định nhận full transcript.
+- `Reviewer mode`: M09-AIC-002 mở transcript/history theo scope review, có thể thấy masked transcript thay vì full detail.
 
 ## 7. Error Flows
 
-- Policy rule missing cho context hiện tại → default deny, log warning cho Admin.
-- Scope conflict (user được giao 2 branch mâu thuẫn nhau) → block và yêu cầu Admin resolve.
-- Public-safe evaluate fail → block toàn bộ answer, trả lý do "không thể xác nhận scope an toàn".
+- Không tìm thấy `mia_user_scope_profile` cho user đang truy cập -> chặn output, trả `SEC-002`, ghi audit.
+- User có nhiều scope profile xung đột nhau trên cùng một `branch/store/channel` -> chặn output, trả `SEC-004`, yêu cầu Admin resolve.
+- Thiếu mapping `branch/store/channel` từ nguồn upstream nên không resolve được context -> default deny, trả `SEC-005`.
+- Module downstream gửi field chưa đăng ký sensitivity class -> default deny và ghi `policy_gap`.
+- `public_safe_response_policy` lỗi hoặc chưa có bản active cho mode hiện tại -> deny toàn bộ câu trả lời public-safe.
+- Evaluate engine timeout hoặc lỗi hệ thống -> fail closed, không fail open.
 
 ## 8. State Machine
 
-`Draft -> Active -> Warning (policy gap) / Blocked (evaluation error)`
+`Draft -> Configured -> Active -> Warning / Blocked -> Deprecated`
+
+Giải thích:
+
+- `Configured`: đã có tối thiểu role profile, scope profile, sensitivity rules
+- `Active`: runtime evaluate đang dùng policy version hợp lệ
+- `Warning`: có policy gap hoặc mapping gap nhưng chưa gây outage toàn phần
+- `Blocked`: evaluate engine hoặc config state khiến downstream không thể sử dụng an toàn
 
 ## 9. UX / Screen Behavior
 
-- Admin config screen phải hiển thị rule list với preview "answer này sẽ bị trim như thế nào với role X".
-- Blocked answer phải hiển thị lý do rõ cho user: "thiếu quyền", "ngoài scope branch", "public-safe block".
-- Không hiển thị tên field kỹ thuật trong lý do blocked — dùng ngôn ngữ vận hành.
+- Màn hình `Role / Scope Profile` phải cho phép đọc nhanh theo "ai được xem cái gì", không chỉ hiển thị JSON hay field kỹ thuật.
+- Policy preview phải cho phép thử scenario như: `Store Manager tại chi nhánh A hỏi tồn kho SKU X`, `CSKH hỏi lịch sử đơn`, `sales-safe bot hỏi giá`.
+- Blocked state cho end-user phải dùng ngôn ngữ vận hành như `ngoài phạm vi chi nhánh`, `thông tin nhạy cảm`, `chỉ hiển thị cho bộ phận phụ trách`, không lộ tên field kỹ thuật.
+- Masked state phải phân biệt rõ giữa `đã ẩn một phần` và `không được phép xem toàn bộ`.
+- Nếu decision là `escalation_only`, UI phải hiện CTA rõ ràng `Chuyển người phụ trách xử lý`.
 
 ## 10. Role / Permission Rules
 
-- `IT / ERP / data (Ban điều hành)`: full access để config rules và xem audit trail.
-- `Admin / Ops Governance`: config scope profile và sensitivity rules cho từng role.
-- `Mọi module AI (M09/M10)`: gọi evaluate API trước khi render — không được bypass.
-- Không có role nào được tự assign scope cho mình — chỉ Admin mới config.
+- `PM Governance`: xem được mọi policy, audit summary, override review và quản lý exception policy ở mức hệ thống.
+- `Admin / Ops Governance`: tạo/sửa role profile, scope profile, sensitivity rules, public-safe policy, nhưng không được giả mạo quyền kinh doanh ngoài policy đã phê duyệt.
+- `IT / ERP / data`: xem audit trail sâu, mapping gaps, policy gaps, và debug info của evaluate engine.
+- `Ban điều hành / vận hành trung tâm`: xem báo cáo aggregate cross-domain, nhưng quyền xem chi tiết field vẫn phụ thuộc sensitivity rule.
+- `Store Manager / Retail Operations`: xem dữ liệu trong branch/store/vùng được giao; không xem giá nhập hoặc dữ liệu của đơn vị khác.
+- `CSKH Team Lead`: xem ticket/order/service context thuộc phạm vi khách hàng và kênh phụ trách; không xem full pricing internals.
+- `Pricing Control / Finance`: xem logic giá, discount authority, và policy liên quan; không mặc định xem full customer transcript nếu không có nhu cầu.
+- `Ecommerce / Omnichannel Lead`: xem online order, channel operations, và chính sách kênh online trong scope được giao.
+- `Dealer / Franchise role`: chỉ xem dữ liệu áp dụng cho nhóm cửa hàng/đại lý được gán; không được nhìn nội bộ HQ.
+- `M08`, `M09`, `M10`, `M11`: bắt buộc là consumer của evaluate API; không được bypass bằng rule local.
 
 ## 11. Business Rules
 
-- MIABOS không phụ thuộc vào phân quyền gốc của SAP B1/KiotViet/Haravan — scope trong MIABOS là independent layer.
-- Mọi answer từ M09/M10 phải đi qua `POST /mia/access/evaluate` trước khi render — không có bypass.
-- Nếu không có rule cho một field/context cụ thể, default behavior là **deny** (không phải allow).
-- Public-safe whitelist phải được Admin review và approve định kỳ — không tự động mở rộng.
-- Mọi thay đổi rule phải có audit trail với timestamp, actor, và lý do.
+- M07 là authority cho `role abstraction`, `data scope`, `sensitivity`, và `public-safe` trong MIABOS; không reuse mù quáng role gốc từ `SAP B1`, `KiotViet`, hoặc `Haravan`.
+- Scope phải xét đồng thời ít nhất 4 trục: `branch/store`, `region`, `channel`, `store_type`; không đủ dữ liệu ở bất kỳ trục nào thì mặc định `deny`.
+- Sensitivity class tối thiểu cho phase 1 phải có: `Public`, `Internal Operational`, `Restricted Internal`, `Sensitive Commercial`, `PII / Customer Sensitive`.
+- Với mỗi field hoặc resource class, action hợp lệ chỉ nằm trong tập: `allow`, `mask`, `summary_only`, `deny`, `escalation_only`.
+- `summary_only` chỉ được dùng khi có định nghĩa projection cụ thể; không được để downstream tự tóm tắt theo cảm tính.
+- Nếu `requested field` không có sensitivity class hoặc policy mapping, hệ thống phải `deny` thay vì `allow`.
+- Public-safe policy luôn là lớp siết chặt thêm, không bao giờ nới rộng hơn kết quả evaluate nội bộ.
+- Payload được gửi sang `M11 Escalation` hoặc `M09 Trust Review` vẫn phải tôn trọng sensitivity theo role người nhận, không theo role người hỏi ban đầu.
+- Mọi thay đổi policy phải có `reason`, `changed_by`, `approved_by`, `effective_at`, và audit trail.
+- Không có role nào tự mở rộng scope cho chính mình; mọi thay đổi scope phải do `Admin / Ops Governance` hoặc `PM Governance` thực hiện.
+- Denied/masked decisions phải trả `reason_code` chuẩn để downstream hiển thị đúng ngôn ngữ vận hành và feed được vào analytics.
 
 ## 12. API Contract Excerpt + Canonical Links
 
-- `POST /mia/access/evaluate`: evaluate scope cho một request
-  - Input: `user_id`, `role`, `context` (branch/channel/store_type), `requested_fields[]`, `mode` (internal/public-safe)
-  - Output: `allowed_fields[]`, `masked_fields[]`, `blocked`, `blocked_reason`
-- `POST /mia/public-safe/evaluate`: evaluate public-safe whitelist cho external chatbot
+- `POST /mia/access/evaluate`
+  - Purpose: evaluate projection cho một request render/handoff cụ thể
+  - Input:
+    - `user_id`
+    - `role_profile_code`
+    - `mode` = `internal | public-safe | escalation-recipient | reviewer`
+    - `context`: `branch_id`, `store_id`, `region_id`, `channel_code`, `store_type`, `entry_point`
+    - `resource_type`: `inventory | pricing | promotion | product | customer | transcript | source_trace | escalation_payload`
+    - `requested_fields[]`
+    - `resource_scope_ref`
+  - Output:
+    - `decision`
+    - `allowed_fields[]`
+    - `masked_fields[]`
+    - `summary_projection`
+    - `blocked_reason_code`
+    - `policy_version`
+    - `requires_escalation`
+- `POST /mia/public-safe/evaluate`
+  - Purpose: evaluate riêng cho kịch bản external/public-safe
+  - Input: `resource_type`, `requested_fields[]`, `channel_code`, `policy_context`
+  - Output: `public_allowed_fields[]`, `summary_projection`, `blocked_reason_code`
+- `GET /mia/access/profiles/:id`
+  - Output: role profile + scope profile + effective policies
+- `POST /mia/access/rules/preview`
+  - Input: actor + context + requested resource giả lập
+  - Output: projected result để admin preview trước khi publish policy
 - Canonical links:
-  - Authority cho `F-M09-AIC-001`, `F-M10-SLS-001`, và tất cả modules có sensitive data
-  - Feeds audit trail vào `F-M12-OBS-001`
+  - Gatekeeper cho `F-M09-AIC-001`, `F-M09-AIC-002`, `F-M09-AIC-003`, `F-M10-SLS-001`, `F-M11-ESC-001`
+  - Gửi denied/masked events sang `F-M12-OBS-001`
 
 ## 13. Event / Webhook Contract Excerpt + Canonical Links
 
-- `access.rule.updated`: phát khi Admin thay đổi sensitivity rule hoặc scope profile.
-- `public.safe.policy.updated`: phát khi public-safe whitelist được cập nhật.
+- `mia.access.profile.updated`: khi user scope profile hoặc role profile thay đổi.
+- `mia.access.rule.updated`: khi sensitivity rule được tạo/sửa/deprecate.
+- `mia.public_safe_policy.updated`: khi policy public-safe đổi version active.
+- `mia.access.denied`: khi runtime evaluate trả `deny` hoặc `escalation_only`.
+- `mia.access.policy_gap_detected`: khi field/resource không có mapping policy.
 
 ## 14. Data / DB Impact Excerpt + Canonical Links
 
-- `mia_user_scope_profile`: mapping user → role → branch/store/channel scope
-- `sensitivity_rule`: field-level sensitivity config theo role/context
-- `public_safe_response_policy`: whitelist cho external/sales-safe mode
+- `mia_role_profile`
+  - `role_profile_code`, `department_code`, `can_view_cross_branch`, `can_receive_escalation`, `status`
+- `mia_user_scope_profile`
+  - `user_id`, `role_profile_code`, `branch_scope`, `store_scope`, `region_scope`, `channel_scope`, `store_type_scope`, `effective_from`, `effective_to`
+- `sensitivity_rule`
+  - `resource_type`, `field_code`, `sensitivity_class`, `allowed_role_profiles`, `projection_type`, `policy_version`, `status`
+- `public_safe_response_policy`
+  - `resource_type`, `allowed_fields`, `summary_projection`, `channel_scope`, `effective_at`, `status`
+- `mia_access_audit_log`
+  - `request_id`, `user_id`, `role_profile_code`, `mode`, `resource_type`, `decision`, `blocked_reason_code`, `policy_version`, `evaluated_at`
+- Canonical notes:
+  - Không mirror full source payload gốc ở M07; M07 chỉ quản lý policy + audit + projection outcome
+  - Scope dimension codes phải map được sang master data read models từ integration layer
 
 ## 15. Validation Rules
 
-- Không có module nào được render answer chứa field chưa qua evaluate.
-- Mọi evaluate call phải được log vào audit trail.
-- Rule change chỉ được apply sau khi được Admin confirm — không có auto-apply.
+- Module downstream không được render field nào ngoài `allowed_fields[]` hoặc `summary_projection` M07 trả về.
+- `summary_projection` phải là output chuẩn hóa từ policy, không phải text tự sinh ngẫu hứng.
+- Mọi evaluate call phải được log vào `mia_access_audit_log`, kể cả `allow`.
+- Nếu context thiếu `branch/channel/store_type` mà resource yêu cầu những dimension đó, evaluate phải fail closed.
+- Policy preview chỉ hợp lệ nếu dùng đúng engine và policy version đang active; không được dùng mock rules khác production.
+- Recipient của escalation/review chỉ xem được payload sau khi M07 re-evaluate theo role nhận.
 
 ## 16. Error Codes
 
-- `SEC-001`: Policy evaluation failed — rule engine error.
-- `SEC-002`: User scope not found — chưa có profile cho user này.
-- `SEC-003`: Public-safe evaluate blocked — field không trong whitelist.
+- `SEC-001`: Policy evaluation failed - rule engine/system error.
+- `SEC-002`: User scope profile not found.
+- `SEC-003`: Public-safe policy blocked the resource.
+- `SEC-004`: Conflicting scope assignments detected.
+- `SEC-005`: Missing context or mapping data for access evaluation.
 
 ## 17. Non-Functional Requirements
 
-- `POST /mia/access/evaluate` phải trả kết quả trong `<= 200ms` (không thể là bottleneck của chat response).
-- Evaluate call phải deterministic — cùng input luôn cho cùng output.
-- Audit log cho evaluate calls phải được giữ tối thiểu `180 ngày`.
-- Rule cache phải invalidate ngay khi Admin update rule — không có stale rule trong production.
+- `POST /mia/access/evaluate` phải trả kết quả trong `<= 200ms` cho `95%` request chuẩn.
+- `POST /mia/public-safe/evaluate` phải trả kết quả trong `<= 150ms` cho `95%` request.
+- Policy change phải invalidate cache và có hiệu lực runtime trong `<= 60 giây`.
+- Audit log cho mọi evaluate decision phải giữ tối thiểu `180 ngày`.
+- Chính sách active phải versioned; rollback về bản policy trước phải thực hiện được trong `<= 5 phút`.
+- Evaluate engine phải deterministic: cùng `user + context + policy_version + resource payload` phải ra cùng kết quả.
+- Denied/masked events phải xuất hiện trên dashboard M12 trong `<= 5 phút`.
 
 ## 18. Acceptance Criteria
 
-- Sales query giá nhập bị block và nhận lý do "ngoài phạm vi quyền truy cập" — không thấy field giá nhập.
-- Chatbot public (sales-safe mode) chỉ trả fields trong whitelist — internal field bị mask hoàn toàn.
-- Admin thay đổi rule và effect được áp dụng ngay lập tức cho evaluate calls tiếp theo.
-- Mọi blocked access được log vào audit trail với timestamp và lý do.
+- `Store Manager` chỉ xem được tồn kho và CTKM trong branch/store được giao; query ngoài scope bị block với lý do vận hành rõ ràng.
+- `Sales / Retail Operations` không xem được `giá nhập`, `margin-adjacent fields`, hoặc CTKM mechanic nội bộ nếu role profile không cho phép.
+- `CSKH Team Lead` xem được complaint/order/service context của team mình nhưng transcript/source detail nhạy cảm vẫn bị mask theo policy.
+- `Public-safe mode` chỉ trả các field trong whitelist và có thể hạ từ số tuyệt đối xuống `summary_projection` nếu policy yêu cầu.
+- Nếu thiếu mapping policy cho field mới, hệ thống phải deny và ghi `policy_gap_detected`, không render field đó.
+- Nếu answer bị deny hoàn toàn nhưng scenario cho phép follow-up, downstream nhận được `requires_escalation = true`.
+- Admin thay đổi policy và effect được áp dụng cho runtime trong thời gian NFR quy định, có audit đầy đủ.
 
 ## 19. Test Scenarios
 
-Internal allowed, public denied, branch-scope denied.
+- `Store Manager` hỏi tồn SKU ở chi nhánh của mình -> allow.
+- `Store Manager` hỏi tồn của chi nhánh khác -> deny với reason `OUT_OF_SCOPE_BRANCH`.
+- `Sales role` hỏi giá nhập -> deny hoặc summary-only theo policy.
+- `Public-safe bot` hỏi CTKM nội bộ -> deny.
+- `CSKH Team Lead` mở answer history có customer PII -> masked transcript.
+- `Escalation recipient` nhận case từ pricing conflict -> payload đã mask đúng theo role nhận.
+- Policy mới publish cho `promotion.mechanic` -> preview đúng, runtime đổi đúng, audit log có policy version mới.
 
 ## 20. Observability
 
-Theo dõi denied count và overridden answer count.
+- Theo dõi `allow rate`, `deny rate`, `masked rate`, `summary_only rate`, `policy_gap count`, `scope_conflict count`, `public-safe block count`, `escalation_only count`.
+- Breakdown theo `role_profile`, `resource_type`, `channel`, `branch`, `blocked_reason_code`.
+- Dashboard phải chỉ ra top field/resource bị deny nhiều nhất để PM/IT biết rule nào đang quá chặt hoặc thiếu mapping.
 
 ## 21. Rollout / Feature Flag
 
-Bắt buộc trước khi mở AI cho người dùng thật.
+- Bật bắt buộc trước khi pilot nội bộ cho `M09`.
+- Pha 1 ưu tiên coverage cho `inventory`, `pricing`, `promotion`, `product`, `transcript/source trace`, `escalation payload`.
+- `public-safe mode` có thể bật sau internal mode nhưng policy phải được chuẩn bị trước.
 
 ## 22. Open Questions
 
-Scope granularity theo channel / branch / store type là gì?
+- BQ có cần scope sâu đến mức `warehouse` riêng hay chỉ `branch/store/channel/store type` là đủ cho phase 1?
+- Team Lead các phòng ban có được xem cross-branch aggregate hay chỉ xem branch do mình phụ trách?
+- Với `summary_only`, từng domain nên trả gì là an toàn: ví dụ inventory trả `còn hàng / sắp hết / hết`, pricing trả `giá áp dụng hiện tại` hay chỉ `liên hệ bộ phận phụ trách`?
+- Role nào được phép xem full source snapshot của answer history và escalation payload?
 
 ## 23. Definition of Done
 
-Có gate kiểm soát answer projection chạy được phase 1.
+- MIABOS có một access/sensitivity gate vận hành được cho pilot BQ, đủ rõ để downstream render đúng projection, audit được mọi quyết định, và không làm AI lộ dữ liệu sai người hoặc sai phạm vi.
 
 ## 24. Ready-for-UXUI Checklist
 
-- [ ] UXUI đã chốt policy config screens
+- [ ] UXUI đã chốt screen quản lý role profile, scope profile, sensitivity rules, policy preview
+- [ ] UXUI đã chốt các trạng thái `allow`, `masked`, `summary_only`, `deny`, `escalation_only`
+- [ ] UXUI đã chốt blocked copy theo ngôn ngữ vận hành, không dùng field kỹ thuật
 
 ## 25. Ready-for-FE-Preview Checklist
 
-- [ ] FE Preview có mock allow/deny/warning states
+- [ ] FE Preview có mock policy preview và answer states cho `masked`, `summary_only`, `deny`, `escalation_only`
+- [ ] Stub payload đủ `decision`, `allowed_fields`, `masked_fields`, `summary_projection`, `blocked_reason_code`, `requires_escalation`
 
 ## 26. Ready-for-BE / Integration Promotion Checklist
 
-- [ ] BE evaluation contract đã rõ
+- [ ] Role matrix BQ theo stakeholder group đã chốt
+- [ ] Scope dimensions và mapping source (`SAP B1`, `KiotViet`, `Haravan`) đã chốt
+- [ ] Sensitivity taxonomy và public-safe rules đã chốt
+- [ ] Audit contract và M12 observability mapping đã rõ

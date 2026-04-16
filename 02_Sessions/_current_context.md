@@ -55,3 +55,11 @@
 - Business Owner chốt 8 open questions trong §22 của các SRS để promote sang Build Ready.
 - Business Owner review M09 `/ai/chat` và M14 `/analytics/executive` FE Previews hiện có.
 - A07 FE Builder chờ UXUI spec approval trước khi bắt đầu build 9 features còn lại.
+- Created draft UXUI spec cho `F-M11-ESC-001` Escalation and Workflow tại `Design/UXUI_Features`.
+- Áp dụng Right Drawer layout để giữ context chat log thay vì mở route page mới.
+- Đổi status thành Draft do SRS đang In Review.
+
+## Next Actions
+
+- Review/Approve file F-M11 UXUI Spec và các UI Screen trên figma/UI layout.
+- Or proceed with another feature.

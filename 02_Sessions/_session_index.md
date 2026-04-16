@@ -1,8 +1,21 @@
 # Session Index
 
+### 2026-04-16
+
+- [[2026-04-16_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-16_MIABOS_UXUI_Spec_M09_M10|MIABOS UXUI Spec M09 M10]] - Tạo 2 UXUI Feature Spec đầu tiên: F-M09-AIC-001 Internal AI Chat và F-M10-SLS-001 Sales Advisor AI. Tạo folder `Design/UXUI_Features/`.
+- [[2026-04-16_MIABOS_Knowledge_Center_And_AI_Workspace_SRS_Enhancement|MIABOS Knowledge Center And AI Workspace SRS Enhancement]] - Enhance lại toàn bộ 10 SRS của `Knowledge_Center` và `AI_Workspace` theo quy trình SRS mới: thêm `§0B`, neo BQ context/source map, và mở rộng flow/rule/NFR/AC nhưng giữ `Draft` vì blocker nghiệp vụ còn mở.
+- [[2026-04-16_MIABOS_Remaining_SRS_Enhancement|MIABOS Remaining SRS Enhancement]] - Enhance 9 SRS còn lại (M01-M07, M11, M12) theo quy trình SRS mới: thêm §0B, neo BQ context, đủ depth gate cho toàn bộ SRS pack.
+- [[2026-04-16_MIABOS_Insights_And_Performance_SRS_Completion|MIABOS Insights And Performance SRS Completion]] - Materialize `F-M14-BIZ-001 Business Analytics And ROI` để hoàn thiện surface `Insights_And_Performance`; workspace MIABOS giờ có đủ 20 SRS.
+
 ### 2026-04-15
 
 - [[2026-04-15_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-15_MIABOS_SRS_Process_Enhancement|MIABOS SRS Process Enhancement]] - Enhanced quy trình viết SRS: cập nhật SKILL.md, template (§0B Integration Source Map), Global Rules 41+42, AGENTS.md để enforce BQ anchor và content depth gate cho mọi AI model.
+- [[2026-04-15_Giay_BQ_Design_System_Setup|Giay BQ Design System Setup]] - Materialize canonical Design System Aura Minimalist cho project Giay_BQ; khởi tạo project folder và `_project.md`.
+- [[2026-04-15_MIABOS_AI_Workspace_SRS_Expansion|MIABOS AI Workspace SRS Expansion]] - Materialize 4 SRS mới cho `AI_Workspace` và sync control-plane của surface AI.
+- [[2026-04-15_MIABOS_Planning_Folder_And_Knowledge_Center_PRDs|MIABOS Planning Folder And Knowledge Center PRDs]] - Mở lớp `Planning/` cho project và materialize 4 PRD của `Knowledge_Center`.
+- [[2026-04-15_MIABOS_Knowledge_Center_SRS_Expansion|MIABOS Knowledge Center SRS Expansion]] - Materialize `Knowledge_Center` thành 4 SRS canonical và sync control-plane của surface này.
 - [[2026-04-15_MIABOS_Module_Surface_Restructuring|MIABOS Module Surface Restructuring]] - Restructure lại `Modules/` theo các product surfaces của Portal CRM và sync lại control-plane theo `Portal Surface`.
 - [[2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation|MIABOS Portal CRM Module And Sitemap Recommendation]] - Materialize khuyến nghị chính thức về bộ module cần có và sitemap Portal CRM cho Giày BQ sau vòng phản biện chéo.
 - [[2026-04-15_MIABOS_Analysis_Feature_Modularization|MIABOS Analysis Feature Modularization]] - Tái cấu trúc `Analysis/Features` thành `Integration` + `Modules`, relocate 3 source specs, tạo 17 SRS high-level mới, và đồng bộ lại control-plane feature.

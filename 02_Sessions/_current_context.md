@@ -1,25 +1,23 @@
 # Current Active Context
 
-**Last Updated**: 2026-04-15
-**Active Workspace Topic**: MIABOS modules regrouped by Portal CRM product surfaces
+**Last Updated**: 2026-04-16
+**Active Workspace Topic**: 2 UXUI Feature Spec đầu tiên đã được tạo — M09 Internal AI Chat và M10 Sales Advisor AI
 **Current Project**: `MIABOS`
-**Current Phase**: `PB-03 / Operational Governance`
-**Latest Canonical Session Log**: [[2026-04-15_MIABOS_Module_Surface_Restructuring]]
-**Today's Daily Log**: [[2026-04-15_Daily_Log]]
+**Current Phase**: `PB-03 Product Design`
+**Latest Canonical Session Log**: [[2026-04-16_MIABOS_UXUI_Spec_M09_M10]]
+**Today's Daily Log**: [[2026-04-16_Daily_Log]]
 
 ## Latest Decisions
 
-- `Analysis/Features` đã được tái cấu trúc thành 2 lớp chính: `Integration` và `Modules`.
-- 3 tài liệu `SAP / Haravan / KiotViet` giờ nằm dưới `Integration/Source_Specs/` và được xem là source specs theo hệ ngoài.
-- MIABOS hiện có 5 `Integration SRS` (`I01..I05`) và 12 `Business Module SRS` (`M01..M12`) ở mức high-level, đồng bộ qua `Feature Registry`, `Traceability Matrix`, và `Feature Dependency Map`.
-- Bộ SRS business modules đã được chuẩn hóa đủ 26 section theo `T-Feature-SRS`.
-- Portal CRM recommendation đã chốt rõ bộ module cần giữ, bộ module cần bổ sung (`I06`, `M13`, `M14`), và sitemap theo các product surfaces.
-- Lớp `Modules/` hiện đã được regroup thực tế theo 7 product surfaces của Portal CRM; `Feature Registry` và `Traceability Matrix` có thêm cột `Portal Surface`.
+- Folder `01_Projects/MIABOS/Design/UXUI_Features/` đã được tạo — canonical location cho tất cả UXUI Spec.
+- `UXUI-F-M09-AIC-001_Internal_AI_Chat.md` — 6 screens, trust layer rõ (Answer Type Badge, Freshness Chip, Warning, Source Trace Panel), Floating Dock glassmorphism.
+- `UXUI-F-M10-SLS-001_Sales_Advisor_AI.md` — 5 screens, conversion-oriented (Quick Reply chips, Suggestion Card với rationale, availability wording mềm, Lead Capture inline).
+- Cả 2 spec ở `Draft` tương ứng SRS source vẫn Draft. A05 sign-off pending.
+- AI Bubble / User Bubble / Floating Dock là shared components giữa M09 và M10.
+- **20/20 SRS** workspace đã có `§0B`, BQ context anchor, và đủ depth gate (prior session).
 
 ## Next Actions
 
-- Nếu Business Owner duyệt, materialize `I06`, `M13`, `M14` thành SRS riêng.
-- Chuyển sitemap recommendation thành `Portal IA / UXUI Spec`.
-- Nếu cần, bổ sung thêm `Feature Dependency Map` ở góc nhìn product surfaces / portal navigation.
-- Nếu cần đi sâu hơn, break tiếp từng module `M01..M12` thành API / Data Mapping / UXUI packs.
-- Nếu Business Owner muốn, xử lý tiếp nhánh `main` so với `origin/main` ở work block riêng.
+- Chốt blocker nghiệp vụ để promote SRS → rồi promote UXUI spec tương ứng.
+- A05 Tech Lead điền Section 9 của cả 2 UXUI spec.
+- Khi anh assign thêm feature, viết tiếp UXUI spec cho module tiếp theo.

@@ -1,7 +1,7 @@
 # MIABOS - Project Workspace
 
 **Status**: Active Workspace
-**Last Updated**: 2026-04-15
+**Last Updated**: 2026-04-16
 
 ## Project Identity
 
@@ -46,6 +46,7 @@ The following documentation layers were intentionally removed on 2026-04-13:
 
 | Date | Session Log | Summary |
 |------|-------------|---------|
+| 2026-04-16 | [2026-04-16_MIABOS_Knowledge_Center_And_AI_Workspace_SRS_Enhancement](../../02_Sessions/2026-04-16_MIABOS_Knowledge_Center_And_AI_Workspace_SRS_Enhancement.md) | Enhance lại toàn bộ 10 SRS của `Knowledge_Center` và `AI_Workspace` theo quy trình SRS mới: thêm `§0B Integration Source Map`, neo BQ context/source map, mở rộng flows/rules/NFR/AC, và giữ tất cả ở `Draft` vì blocker nghiệp vụ vẫn còn mở. |
 | 2026-04-13 | [2026-04-13_MIABOS_Project_Document_Reset](../../02_Sessions/2026-04-13_MIABOS_Project_Document_Reset.md) | Removed business, planning, analysis, architecture, test, and feature-level design documents while preserving the design system and build workspace. |
 | 2026-04-13 | [2026-04-13_MIABOS_Project_Metadata_Reset](../../02_Sessions/2026-04-13_MIABOS_Project_Metadata_Reset.md) | Updated the retained project metadata so MIABOS is now explicitly scoped to Giay BQ, Retail, and the Marketing/Sales/CS operating domain. |
 | 2026-04-13 | [2026-04-13_MIABOS_Giay_BQ_Requirement_Source_Linkage](../../02_Sessions/2026-04-13_MIABOS_Giay_BQ_Requirement_Source_Linkage.md) | Linked the `Giay_BQ` customer pack into the agent control plane so the team now uses it as the active requirement source. |
@@ -63,3 +64,6 @@ The following documentation layers were intentionally removed on 2026-04-13:
 | 2026-04-15 | [2026-04-15_MIABOS_Analysis_Feature_Modularization](../../02_Sessions/2026-04-15_MIABOS_Analysis_Feature_Modularization.md) | Tái cấu trúc `Analysis/Features` thành 2 lớp `Integration` + `Modules`, relocate 3 source specs vào `Integration/Source_Specs/`, materialize 5 integration SRS và 12 business-module SRS, và đồng bộ lại feature control-plane. |
 | 2026-04-15 | [2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation](../../02_Sessions/2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation.md) | Materialize khuyến nghị chính thức về final module set và sitemap Portal CRM cho Giày BQ, chốt các module cần giữ, các module cần bổ sung (`I06`, `M13`, `M14`), và packaging product surfaces cho portal. |
 | 2026-04-15 | [2026-04-15_MIABOS_Module_Surface_Restructuring](../../02_Sessions/2026-04-15_MIABOS_Module_Surface_Restructuring.md) | Restructure lại canonical tree của `Modules/` theo các product surfaces của Portal CRM, move 12 business modules sang nhóm surface mới, và đồng bộ lại `Feature Registry` / `Traceability Matrix` với cột `Portal Surface`. |
+| 2026-04-15 | [2026-04-15_MIABOS_Knowledge_Center_SRS_Expansion](../../02_Sessions/2026-04-15_MIABOS_Knowledge_Center_SRS_Expansion.md) | Materialize `Knowledge_Center` thành 4 SRS canonical riêng cho knowledge core, publishing queue, FAQ/policy library, và source governance; đồng bộ lại control-plane analysis cho surface này. |
+| 2026-04-15 | [2026-04-15_MIABOS_Planning_Folder_And_Knowledge_Center_PRDs](../../02_Sessions/2026-04-15_MIABOS_Planning_Folder_And_Knowledge_Center_PRDs.md) | Mở lớp `Planning/` cho project và materialize 4 PRD canonical của `Knowledge_Center`, đồng thời nối traceability từ PRD sang SRS. |
+| 2026-04-15 | [2026-04-15_MIABOS_AI_Workspace_SRS_Expansion](../../02_Sessions/2026-04-15_MIABOS_AI_Workspace_SRS_Expansion.md) | Materialize `AI_Workspace` thành 6 capability slices bằng cách thêm 4 SRS mới cho answer history, escalation handoff, suggested actions, và CTA/lead handoff; đồng bộ lại control-plane analysis cho surface AI. |

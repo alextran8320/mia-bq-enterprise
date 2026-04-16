@@ -1,10 +1,10 @@
 # Current Active Context
 
 **Last Updated**: 2026-04-15
-**Active Workspace Topic**: MIABOS modules regrouped by Portal CRM product surfaces
+**Active Workspace Topic**: MIABOS Customer 360 CRM SRS deepening
 **Current Project**: `MIABOS`
 **Current Phase**: `PB-03 / Operational Governance`
-**Latest Canonical Session Log**: [[2026-04-15_MIABOS_Module_Surface_Restructuring]]
+**Latest Canonical Session Log**: [[2026-04-15_MIABOS_Customer_360_CRM_SRS_Deepening]]
 **Today's Daily Log**: [[2026-04-15_Daily_Log]]
 
 ## Latest Decisions
@@ -15,6 +15,8 @@
 - Bộ SRS business modules đã được chuẩn hóa đủ 26 section theo `T-Feature-SRS`.
 - Portal CRM recommendation đã chốt rõ bộ module cần giữ, bộ module cần bổ sung (`I06`, `M13`, `M14`), và sitemap theo các product surfaces.
 - Lớp `Modules/` hiện đã được regroup thực tế theo 7 product surfaces của Portal CRM; `Feature Registry` và `Traceability Matrix` có thêm cột `Portal Surface`.
+- `F-M06-CRM-001 Customer and CRM` đã được deepen thành Customer 360 SRS, bao gồm profile, identity mapping, attributes, consent, order history, chat history, call history, timeline, và AI-ready customer summary.
+- `Feature Dependency Map` hiện phản ánh thêm việc `M06 Customer and CRM` nhận context từ order, internal chat, sales advisor, escalation/workflow và feed observability / AI context.
 
 ## Next Actions
 
@@ -22,4 +24,5 @@
 - Chuyển sitemap recommendation thành `Portal IA / UXUI Spec`.
 - Nếu cần, bổ sung thêm `Feature Dependency Map` ở góc nhìn product surfaces / portal navigation.
 - Nếu cần đi sâu hơn, break tiếp từng module `M01..M12` thành API / Data Mapping / UXUI packs.
+- Chốt customer master boundary, identity merge rule, consent policy, và raw-vs-summary storage policy cho chat/call history trước khi promote `F-M06-CRM-001`.
 - Nếu Business Owner muốn, xử lý tiếp nhánh `main` so với `origin/main` ở work block riêng.

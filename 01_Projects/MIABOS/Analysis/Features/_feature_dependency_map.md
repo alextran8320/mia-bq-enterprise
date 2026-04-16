@@ -68,17 +68,24 @@ graph TD
     M02 --> M10
     M03 --> M10
     M04 --> M10
+    M05 --> M10
     M06 --> M10
     M07 --> M10
+    M08 --> M10
 
     M09 --> M11
     M10 --> M11
+    M05 --> M06
+    M09 --> M06
+    M10 --> M06
+    M11 --> M06
 
     I01 --> M12
     I02 --> M12
     I03 --> M12
     I04 --> M12
     I05 --> M12
+    M06 --> M12
     M09 --> M12
     M10 --> M12
     M11 --> M12
@@ -89,3 +96,5 @@ graph TD
 - `Integration` là layer cấp dữ liệu, không phải business module.
 - `Modules` là layer nghiệp vụ và AI vận hành của MIABOS.
 - `Source Specs` là input để materialize `Integration SRS` và `Business Module SRS`.
+- `M06 Customer and CRM` receives context from `M05 Order and Fulfillment`, `M09 Internal AI Chat`, `M10 Sales Advisor AI`, and `M11 Escalation and Workflow` to form the Customer 360 profile.
+- `M06 Customer and CRM` feeds customer context, consent, segment, and AI-ready profile summary to `M09`, `M10`, and `M12`.

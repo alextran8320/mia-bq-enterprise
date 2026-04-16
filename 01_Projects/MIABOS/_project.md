@@ -1,4 +1,4 @@
-﻿# MIABOS - Project Workspace
+# MIABOS - Project Workspace
 
 **Status**: Active Workspace
 **Last Updated**: 2026-04-16
@@ -46,6 +46,8 @@ The following documentation layers were intentionally removed on 2026-04-13:
 
 | Date | Session Log | Summary |
 |------|-------------|---------|
+| 2026-04-17 | [2026-04-17_MIABOS_Escalation_UXUI_Spec_Draft](../../02_Sessions/2026-04-17_MIABOS_Escalation_UXUI_Spec_Draft.md) | Tạo draft UXUI spec cho `F-M11-ESC-001` tại `Design/UXUI_Features`: route composer dạng Drawer, screen inventory S1-S5, interaction pattern và đầy đủ 5 behavioral sections bắt buộc. Giá trị Status là Draft. |
+| 2026-04-17 | [2026-04-17_MIABOS_Escalation_And_Workflow_SRS_Refinement](../../02_Sessions/2026-04-17_MIABOS_Escalation_And_Workflow_SRS_Refinement.md) | Refine sâu F-M11-ESC-001: neo BQ Context với SAP/KiotViet, phân định Lark là External Destination, thiết lập Fallback Queue nội bộ tại MIABOS DB, và chốt AC, Error codes. |
 | 2026-04-16 | [2026-04-16_MIABOS_Access_Control_And_Sensitivity_UXUI_Spec_Draft](../../02_Sessions/2026-04-16_MIABOS_Access_Control_And_Sensitivity_UXUI_Spec_Draft.md) | Tạo draft UXUI spec cho `F-M07-SEC-001` tại `Design/UXUI_Features`: route `/governance/phan-quyen-du-lieu`, screen inventory cho governance UI, simulator outcome `allow/mask/summary_only/deny/escalation_only`, và giữ `Draft` vì linked SRS chưa `SRS Ready`. |
 | 2026-04-16 | [2026-04-16_MIABOS_Inventory_Availability_Phase1_Rule_Closure](../../02_Sessions/2026-04-16_MIABOS_Inventory_Availability_Phase1_Rule_Closure.md) | Chot tam bo rule phase 1 cho `F-M02-INV-001`: quantity_hint, freshness SLA theo nguon, conflict threshold, va dong bo cac rule nay sang validation/AC/test/checklist. |
 | 2026-04-16 | [2026-04-16_MIABOS_Inventory_Availability_SRS_Rewrite](../../02_Sessions/2026-04-16_MIABOS_Inventory_Availability_SRS_Rewrite.md) | Rewrite sach file `F-M02-INV-001_Inventory_Availability_SRS.md` trong module `Inventory_Availability`, loai bo loi encoding va lam ro lai toan bo semantics, flow, rules, va contract. |

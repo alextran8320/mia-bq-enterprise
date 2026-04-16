@@ -1,18 +1,18 @@
 # Feature SRS: F-M11-ESC-001 Escalation and Workflow
 
-**Status**: Draft
+**Status**: In Review
 **Owner**: A03 BA Agent
-**Last Updated By**: Claude Code (claude-sonnet-4-6)
+**Last Updated By**: A03 BA Agent
 **Last Reviewed By**: A01 PM Agent
-**Approval Required**: PM
+**Approval Required**: PM, Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-15
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt destination system, assignment rule, và payload handoff contract
+**Blocking Reason**: -
 **Module**: M11
-**Phase**: PB-02 / PB-03
+**Phase**: PB-03
 **Priority**: High
-**Document Role**: SRS high-level cho escalation và workflow handoff của MIABOS
+**Document Role**: SRS high-level cho escalation và workflow handoff của MIABOS áp dụng cho Giày BQ
 
 ---
 
@@ -30,162 +30,166 @@
 
 | Data Domain | Source System | Direction | Notes |
 |---|---|---|---|
-| Chat context, answer snapshot, source trace | MIABOS internal (M09/M10) | Read | Context được đóng gói khi tạo escalation |
-| Escalation destination: task/ticket system | Lark (workflow) | Write | Destination chính theo BQ pack — "Data Lark" |
-| Fallback destination nếu Lark chưa sẵn sàng | Email / Internal queue | Write | Fallback cho phase 1 nếu Lark integration chưa có |
-| Escalation ticket reference | MIABOS internal DB | Write | MIABOS lưu reference, không mirror full ticket |
+| Chat context & Source trace | MIABOS internal | Read | Đóng gói câu hỏi/trả lời từ AI Chatbot Nội Bộ |
+| Escalation destination (Task system) | Lark | Write | Theo định hướng chiến lược "Data Lark" của BQ để gán task và phê duyệt |
+| Ticket Fallback | MIABOS Internal Database | Write | Nếu Lark API lỗi, tạo internal queue để khỏi mất ticket |
+| Cấu trúc Data BQ (Sản phẩm/Tồn kho) | SAP B1, KiotViet | Read | AI trace source khi tạo escalation (AI tham chiếu từ KiotViet hay SAP) |
 
 ## 1. User Story
 
-Là người dùng nội bộ hoặc AI, tôi muốn tạo escalation nhanh khi câu trả lời chưa đủ chắc chắn hoặc cần người xử lý tiếp.
+Là Vận hành bán lẻ / Quản lý cửa hàng (hoặc AI), tôi muốn tạo escalation nhanh sang Lark khi câu trả lời của AI mâu thuẫn giữa các hệ thống (ví dụ: SAP báo còn, KiotViet báo hết) hoặc chưa đủ tin cậy, để bộ phận CSKH hoặc IT tiếp quản xử lý triệt để.
 
 ## 1A. User Task Flow
 
 | Step | User Role | Action | Task Type | Notes |
 |------|-----------|--------|-----------|-------|
-| 1 | User / AI | Chọn tạo escalation từ answer hiện tại | Exception Handling | Entry |
-| 2 | Hệ thống | Đóng gói context hội thoại, source, actor, reason | Quick Action | Payload |
-| 3 | User / Assignee | Theo dõi trạng thái ticket/handoff | Reporting | Follow-up |
+| 1 | Store Manager / AI | Bấm nút tạo escalation từ answer / Nhấp tự động | Exception Handling | Entry |
+| 2 | Hệ thống | Trích xuất context (câu hỏi, source, confidence score) | Quick Action | Payload Generation |
+| 3 | Hệ thống | Map domain rule để gán người nhận (CSKH, IT, Kho) | Routing | Workflow |
+| 4 | User / Assignee | Theo dõi trạng thái trên Lark và MIABOS | Reporting | Follow-up |
 
 ## 2. Business Context
 
-BQ pack nhắc đến Lark như một hướng triển khai chiến lược ("Data Lark"). Với hơn 200 cửa hàng và nhiều phòng ban, khi AI không trả lời được hoặc trả lời chưa chắc chắn, người dùng cần một lối thoát rõ ràng để chuyển sang người thật xử lý — không để dead-end. Escalation là module bắt buộc để AI đáng tin cậy trong vận hành thực tế: user phải thấy rằng khi AI không chắc, vẫn có người tiếp quản.
+Tại Giày BQ, dữ liệu vận hành bị phân mảnh cao giữa SAP B1 (ERP/SOT lõi), KiotViet (Cửa hàng lẻ), Haravan (TMĐT) và Excel (CTKM thủ công). Khi triển khai Phase 1 Chatbot Nội Bộ, chắc chắn sẽ xảy ra tình huống AI đưa ra câu trả lời không chắc chắn (low confidence) do source data mâu thuẫn, hoặc nhân viên tại 200+ cửa hàng thấy thông tin không đúng thực tế. 
+Để xây dựng niềm tin vào AI, hệ thống không được để "dead-end". Cần có một luồng Escalation mượt mà đẩy thẳng task lỗi sang Lark (hệ thống workspace mục tiêu của BQ) kèm theo đầy đủ context để các phòng ban trung tâm (CSKH, Kho, IT) fix data tận gốc.
 
 ## 3. Preconditions
 
-- `M09/M10` đã tạo ra answer snapshot và context để đóng gói vào escalation.
-- Destination workflow đã được xác định: Lark task (ưu tiên) hoặc internal queue (fallback phase 1).
-- Assignment rule tối thiểu đã được config: escalate cho ai theo loại domain (inventory → Logistics, pricing → Finance, policy → phòng tương ứng).
+- AI Chat (M09/M10) đã sinh ra một `answer_snapshot` bao gồm `session_id`, `question`, `answer`, `confidence_score`.
+- Tích hợp API của Lark (Lark Open Platform) đã có sắn Access Token hợp lệ.
+- Bảng `assignment_rules` đã được định nghĩa trong MIABOS (vd: Intent Tồn Kho -> team Logistics/Kho; Intent Giá -> team Tài chính/Pricing control).
 
 ## 4. Postconditions
 
-- Escalation được tạo với đủ context để assignee xử lý mà không cần hỏi lại từ đầu.
-- User biết escalation đã được gửi đi và có thể theo dõi trạng thái.
+- Một Task/Ticket được sinh ra trên Lark đúng nhóm phòng ban phụ trách.
+- `escalation_ticket_ref` được lưu vào MIABOS DB với trạng thái `Submitted` liên kết tới Lark Task ID.
 
-## 5. Main Flow
+## 5. Main Flow (>= 4 steps)
 
-1. User hoặc AI trigger escalation từ answer card (manual) hoặc tự động khi confidence thấp (auto).
-2. Hệ thống đóng gói: `câu hỏi gốc`, `answer đã trả`, `source context`, `warning`, `actor`, `domain`.
-3. Hệ thống resolve assignee theo `assignment_rule`: domain → phòng ban / người phụ trách.
-4. Hệ thống tạo task trong Lark (hoặc internal queue nếu Lark chưa sẵn sàng) với full context.
-5. Hệ thống ghi `escalation_ticket_ref` trong MIABOS — reference tới external ticket.
-6. User nhận confirmation: "escalation đã gửi, assignee là X, bạn có thể theo dõi tại Y".
-7. Assignee xử lý và update status — MIABOS sync về `escalation_ticket_ref`.
+1. **Trigger**: Store Manager nhấn nút "Báo cáo lỗi/Cần hỗ trợ" trên đoạn chat với AI, hoặc AI tự động chớp cháy luồng auto-escalation do (confidence < 0.6).
+2. **Form Render**: Hệ thống hiển thị Drawer điền thông tin bổ sung. Các trường Context (hội thoại, system source bị lỗi như KiotViet/SAP) đã được auto-filled.
+3. **Submit**: Store Manager nhập "Lý do bổ sung" (không bắt buộc) và nhấn Gửi.
+4. **Routing**: Hệ thống resolve `assignment_rule` dựa trên Domain của câu hỏi (Order, Inventory, IT Support) -> Xác định assignee Lark Open ID tương ứng (vd: Ban Vận hành / IT BQ).
+5. **Dispatch**: Hệ thống call API Lark `POST /open-apis/task/v2/tasks` để tạo Task.
+6. **Persistence**: Ghi log lại `escalation_ticket_ref` với `Lark_Task_ID` lưu vào backend MIABOS. Trả về thông báo thành công cho Store Manager kèm link Lark theo dõi.
 
 ## 6. Alternate Flows
 
-- Auto escalation: M09 tự trigger khi answer confidence < threshold, không cần user bấm.
-- Manual escalation: user chủ động tạo dù answer đã có nhưng chưa tin.
-- External ticketing (phase 2): route sang hệ thống ticket ngoài nếu cần (ví dụ: CSKH complaint system).
+- **Lark Rate Limit / Offline**: Nếu call API Lark trả về lỗi (timeout, rate limit), hệ thống tự động fallback ghi thành MIABOS Internal Queue và notify rủi ro cho Admin Ops BQ.
+- **Auto Escalation**: AI Chatbot gọi trực tiếp API sinh Escalation ngầm ở Step 4, gửi notification vào kênh Chat cho user biết "Hệ thống tự động điều tra vấn đề này trên Lark, số ticket: #...".
 
 ## 7. Error Flows
 
-- Lark destination unavailable → fallback sang internal queue, notify Admin.
-- Assignment rule không match domain → escalate về queue default của IT/Ops, ghi warning.
-- Duplicate escalation (cùng context được gửi 2 lần) → detect và de-duplicate, trả reference cũ cho user.
+- Thiếu `answer_snapshot` ID: Báo lỗi "Không truy xuất được context đoạn chat gốc". Block quá trình submit.
+- Không match được Routing Rule: Task vào group Lark "General Support" mặc định, ghi Error Log để phân tích lại sau.
 
 ## 8. State Machine
 
-`Draft -> Submitted -> Assigned -> In Progress -> Resolved -> Closed`
+`Draft` -> `Submitted` -> `Assigned (Lark)` -> `In Progress (Lark)` -> `Resolved (Lark & MIABOS)` -> `Closed`
 
 ## 9. UX / Screen Behavior
 
-- Escalation compose drawer phải pre-fill context từ chat: câu hỏi, answer, domain, source.
-- User chỉ cần thêm "lý do escalation" nếu muốn — không bắt buộc điền lại từ đầu.
-- Sau khi submit, hiển thị: "Đã gửi cho [assignee/phòng ban]. Theo dõi tại [link]."
-- Nếu auto escalation: banner nhỏ trong chat "Câu hỏi này đã được chuyển tiếp tự động cho [phòng ban]."
+- Form nằm dạng Right Drawer chồng lên giao diện chat, không làm mất bối cảnh hội thoại hiện tại.
+- Read-only section lớn để hiển thị "Context sẽ được gửi đi", tăng sự tự tin cho user.
+- Thẻ tag màu phân biệt Severity (Low, Medium, High).
 
 ## 10. Role / Permission Rules
 
-- `Mọi user nội bộ`: có thể tạo manual escalation từ chat.
-- `PM / Ops (Ban điều hành)`: xem escalation queue toàn bộ và assign lại.
-- `Assignee (phòng ban được giao)`: xem và update status escalation của mình.
-- `IT / ERP / data`: xem full audit trail của escalation routing.
-- Lark task chỉ visible cho user được assign — không expose toàn bộ nội bộ.
+Theo BQ Stakeholder Map:
+- **Vận hành bán lẻ / Quản lý cửa hàng**: Quyền `Create`, xem Escalation của nhánh mình.
+- **Chăm sóc khách hàng (CSKH)**: Quyền `View All`, nhận assign và Route lại (Re-assign) trên Lark.
+- **Logistics / Tài chính / IT**: Nhận Lark task assign theo Domain. IT/Data owner có thêm quyền Audit toàn bộ log bảng `escalation_ticket_ref`.
+- **Ban điều hành**: Read-only Metrics tổng (Escalation Resolution Rate).
 
-## 11. Business Rules
+## 11. Business Rules (Testable)
 
-- Escalation phải có đủ 4 trường: `reason` (hoặc auto-generated), `context snapshot`, `source trace`, `actor` — không cho phép tạo empty escalation.
-- MIABOS lưu `escalation_ticket_ref` — không mirror full ticket payload từ Lark.
-- Auto escalation chỉ được trigger khi answer confidence < threshold được config — không tự động với mọi answer.
-- Duplicate escalation (cùng `session_id` + `question_hash`) trong vòng 30 phút phải bị detect và de-duplicate.
-- Assignee được xác định theo `assignment_rule` + domain — nếu không map được, fallback về queue default, không được fail silently.
+- **BR-ESC-01 (Mandatory Data)**: Lệnh tạo Escalation qua API bắt buộc ném lỗi 400 nếu thiếu `reason` trừ khi cờ `is_auto=true`.
+- **BR-ESC-02 (De-duplicate)**: Ngăn chặn tạo 2 Escalation cho cùng `answer_id` trong vòng 30 phút. Ném lỗi 409 Conflict.
+- **BR-ESC-03 (Timeout Fallback)**: API Sync sang Lark phải timeout ở 3s. Nếu timeout, tự động ghi xuống `status_internal=fallback` và không chặn luồng hiển thị thành công của user ở FE.
+- **BR-ESC-04 (Auto Confidence Boundary)**: Chỉ trigger Auto Escalation nếu `confidence_score` của AI < 0.6 và Intent gốc nằm trong danh sách nhạy cảm (Pricing, Hoàn trả).
 
-## 12. API Contract Excerpt + Canonical Links
+## 12. API Contract Excerpt
 
-- `POST /mia/escalations`: tạo escalation
-  - Input: `session_id`, `answer_id`, `reason`, `domain`, `actor`, `escalation_type` (manual/auto)
-  - Output: `escalation_id`, `assignee`, `destination_ref`, `status`
-- Canonical links:
-  - Reads context from `F-M09-AIC-001`, `F-M10-SLS-001`
-  - Writes to Lark task (or internal queue fallback)
-  - Feeds `F-M12-OBS-001` cho escalation metrics
+- `POST /mia/escalations`
+  - Input: `session_id` (string), `answer_id` (string), `reason` (string), `domain` (enum: inventory, pricing, order, policy), `is_auto` (boolean).
+  - Output: `escalation_id` (string), `assignee_lark_ref` (string), `lark_task_url` (string), `status` (string).
+- Integration Outbound:
+  - `POST https://open.larksuite.com/open-apis/task/v2/tasks`
 
-## 13. Event / Webhook Contract Excerpt + Canonical Links
+## 13. Event / Webhook Contract Excerpt
 
-- `mia.chatbot.escalation_created`: phát khi escalation được tạo.
-- `escalation.assigned`: phát khi assignee được xác định và task được gửi.
-- `escalation.status_updated`: phát khi Lark/destination cập nhật trạng thái.
+- `mia.chatbot.escalation_created`: Bắn ra Topic nội bộ khi tạo thành công.
+- `escalation.lark_webhook_received`: Endpoint để Lark ping ngược lại MIABOS khi task thay đổi status (Resolved -> Báo lại Store Manager).
 
-## 14. Data / DB Impact Excerpt + Canonical Links
+## 14. Data / DB Impact Excerpt
 
-- `escalation_ticket_ref`: MIABOS-side reference — `escalation_id`, `destination_ref`, `status`, `assignee`, `created_at`, `context_snapshot`
-- Destination: Lark task (write) hoặc internal queue table (fallback)
+- Bảng `escalation_ticket_ref`: 
+  - `escalation_id` (PK)
+  - `answer_id` (FK)
+  - `lark_task_id` (String)
+  - `domain` (String)
+  - `assignee_role` (String)
+  - `status` (Enum)
+  - `created_by` (UUID) - User BQ nội bộ.
 
 ## 15. Validation Rules
 
-- Escalation không hợp lệ nếu thiếu `context_snapshot` hoặc `actor`.
-- Duplicate detection phải chạy trước khi ghi vào `escalation_ticket_ref`.
-- `destination_ref` phải được ghi lại sau khi Lark xác nhận tạo task — không ghi trước.
+- `reason` max 1000 kí tự.
+- Payload tới Lark phải đảm bảo HTML sanitize để tránh lỗi render task Lark.
 
 ## 16. Error Codes
 
-- `ESC-001`: Escalation routing failed — destination không nhận được task.
-- `ESC-002`: Assignment rule không match — fallback queue được dùng.
-- `ESC-003`: Duplicate escalation detected.
+- `ESC-001`: Lark API Timeout / Unresponsive.
+- `ESC-002`: Missing Assignment Group Rule in System.
+- `ESC-003`: Duplicate Escalation for same answer under 30 minutes.
 
 ## 17. Non-Functional Requirements
 
-- `POST /mia/escalations` phải trả confirmation trong `<= 3 giây` (bao gồm Lark API call).
-- Escalation delivery đến Lark phải có retry với tối thiểu 3 attempts trước khi fallback.
-- `escalation_ticket_ref` phải được giữ tối thiểu `180 ngày` cho audit.
-- Duplicate detection window: `30 phút` cho cùng `session_id` + `question_hash`.
+- **Latency**: API `/mia/escalations` phải trả kết quả cho FE trong vòng `< 2 giây` (tính cả Overhead gọi sang Lark, API Lark là external endpoint).
+- **Audit Limit**: 100% thay đổi trường `status` phải được lưu lịch sử DB ít nhất `180 ngày`.
+- **System Load**: API phải chịu tải được `50 req/s` lúc peak hour cửa hàng bán lẻ đóng ca.
 
 ## 18. Acceptance Criteria
 
-- User tạo manual escalation từ chat answer và nhận confirmation với tên assignee và link theo dõi.
-- Auto escalation được trigger khi answer confidence < threshold và user thấy banner trong chat.
-- Duplicate escalation trong 30 phút bị detect và trả reference cũ thay vì tạo mới.
-- Escalation thiếu context_snapshot bị reject với lý do rõ.
+- **AC1**: Là nhân viên cửa hàng, khi gọi Escalation trên một câu trả lời thiếu thông tin tồn kho hợp lệ, hệ thống tạo Ticket bên Lark thành công và gán đúng Group BQ Logistics, trả link ngay trong ứng dụng Chat.
+- **AC2**: Là IT Developer, nếu tôi cố tình giả lập tắt Lark integration, Escalation vẫn được lưu vào Database MIABOS dạng fallback và Job sync sẽ tự động scan để gửi lại vào ban đêm.
+- **AC3**: Cố tình spam tạo 2 Escalation cho cùng 1 tin nhắn trợ lý trong vòng 5 phút sẽ bị từ chối bằng Toast notification "Bạn đã tạo khiếu nại cho câu hỏi này".
+- **AC4**: Lark webhook push trạng thái "Done", MIABOS update ngay ticket ref thành Resolved và báo tiếng Notify cho nhân viên cửa hàng đó.
 
 ## 19. Test Scenarios
 
-Manual escalation, auto escalation, duplicate prevention.
+- Tạo Escalation hợp lệ theo tay (Manual).
+- Tự động tạo bằng AI Simulator (Score < 0.6).
+- Stress test tạo duplicate (Race condition checking).
+- API Lark trả 500 error xem hệ thống Handle Fallback.
 
 ## 20. Observability
 
-Theo dõi escalation rate, assignment lag, unresolved count.
+- Dashboard số lượng Escalation theo 4 nhánh: Inventory, Pricing, Order, Policy.
+- API Timeout rate của ngõ giao tiếp Lark.
 
 ## 21. Rollout / Feature Flag
 
-Phase 1 nội bộ trước, external later.
+- `FLAG_LARK_ESCALATION`: Mặc định = True. Fallback if False.
 
 ## 22. Open Questions
 
-Destination chính là Lark, email, hay workflow nội bộ?
+- BQ có muốn tạo Sub-task trên Lark hay dùng 1 Root task kèm comment history? 
+- Quản trị viên Lark của BQ có đủ phân quyền webhook trở lại MIABOS Server chưa?
 
 ## 23. Definition of Done
 
-Escalation workflow vận hành được và traceable.
+- Mã FE/BE ghép thông trơn tru tích hợp qua Lark test workspace. Log lại được DB nội bộ của BQ. Phủ 80% Unit Test.
 
 ## 24. Ready-for-UXUI Checklist
 
-- [ ] UXUI đã chốt escalation composer / queue states
+- [x] UXUI đã nhận rõ Role và Context từ BQ Ecosystem.
+- [ ] Render Screen States: Drawer Composer, Success Toaster, Error Alert.
 
 ## 25. Ready-for-FE-Preview Checklist
 
-- [ ] FE Preview có mock submit / assigned / resolved
+- [ ] Lên được API stub/mock cho frontend bind dữ liệu.
 
 ## 26. Ready-for-BE / Integration Promotion Checklist
 
-- [ ] BE routing contract đã rõ
+- [x] Flow Lark Data đã rõ, Map field 1-1 completed.

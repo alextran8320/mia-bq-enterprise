@@ -1,4 +1,10 @@
-﻿# Session Index
+# Session Index
+
+### 2026-04-17
+
+- [[2026-04-17_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-17_MIABOS_Escalation_UXUI_Spec_Draft|MIABOS Escalation UXUI Spec Draft]] - Tạo draft UXUI spec cho `F-M11-ESC-001` tại `Design/UXUI_Features`: route composer dạng Drawer, screen inventory S1-S5, interaction pattern và đầy đủ 5 behavioral sections bắt buộc.
+- [[2026-04-17_MIABOS_Escalation_And_Workflow_SRS_Refinement|MIABOS Escalation And Workflow SRS Refinement]] - Refine sâu F-M11-ESC-001: neo BQ Context với SAP/KiotViet, phân định Lark là External Destination, thiết lập Fallback Queue nội bộ tại MIABOS DB và chốt AC, Error codes, Role assignment.
 
 ### 2026-04-16
 

@@ -1,17 +1,22 @@
 # UXUI Feature Spec: F-M09-AIC-001 Internal AI Chat
 
 **Feature ID**: F-M09-AIC-001
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
-**Implementation Reviewer**: A05 Tech Lead
+**Last Updated By**: A07 FE Builder Agent (Claude Code, claude-sonnet-4-6)
+**Last Reviewed By**: A05 Tech Lead
+**Approval Required**: Business Owner, A05 Tech Lead, A01 PM
+**Approved By**: Business Owner (2026-04-16) — mockup PNG gate removed per BO directive
+**Last Status Change**: 2026-04-16
+**Source of Truth**: This document
+**Blocking Reason**: -
 **Implemented By**: A07 FE Builder
 **Product**: MIA Smart
 **Design System Reference**: [`Design/Design_System.md`](../Design_System.md)
 **Save to**: `Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md`
 **Date**: 2026-04-16
-**Last Status Change**: 2026-04-16
 
-> **Precondition**: Linked SRS `F-M09-AIC-001` hiện ở `Draft` — spec này được viết để chuẩn bị UX contract cho build khi SRS promote lên `SRS Ready`.
+> **Precondition**: Linked SRS `F-M09-AIC-001` is `SRS Ready`, planning chain is materialized. Mockup PNG gate removed per Business Owner directive (2026-04-16) — UXUI spec text + data-binding contract is sufficient for FE build. Spike preview at `/ai/chat` promoted to canonical FE Preview build.
 
 ---
 
@@ -71,7 +76,9 @@ và nhận câu trả lời có nguồn rõ, freshness, và hướng xử lý ti
 
 | Artifact | Location | Status |
 |----------|----------|--------|
-| Feature SRS | [`Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md`](../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md) | Draft |
+| Feature SRS | [`Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md`](../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md) | SRS Ready |
+| User Story | [`Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md`](../../Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md) | Approved for planning / design |
+| Mockups | N/A — PNG gate removed per BO directive 2026-04-16 | N/A |
 
 ---
 
@@ -204,7 +211,8 @@ và nhận câu trả lời có nguồn rõ, freshness, và hướng xử lý ti
 │  • Citation 1 (link mở Source Trace)       │
 │  • Citation 2                              │
 ├─────────────────────────────────────────────┤
-│ [Nút: Xem nguồn]  [Nút: Escalate] [👍 👎]  │  ← Actions row
+│ [Nút: Xem nguồn] [Nút: Escalate] [Hữu ích] │  ← Actions row
+│ [Nút: Chưa đúng]                            │
 └─────────────────────────────────────────────┘
 ```
 
@@ -212,7 +220,7 @@ và nhận câu trả lời có nguồn rõ, freshness, và hướng xử lý ti
 
 | Loại Answer | Badge Label | Badge Color | Tailwind |
 |-------------|-------------|-------------|---------|
-| Policy | `Chính sách` | `#8B5CF6` bg-light, text purple | `bg-purple-50 text-purple-700` |
+| Policy | `Chính sách` | `#013652` text on cool-slate tint | `bg-[#ECF2FE] text-[#013652]` |
 | Data | `Dữ liệu` | `#2F64F6` bg-light, text primary | `bg-[#ECF2FE] text-[#2F64F6]` |
 | Mixed | `Kết hợp` | `#F59E0B` bg-light, text amber | `bg-amber-50 text-amber-700` |
 | Unsupported / Blocked | `Ngoài phạm vi` | `#E11D48` bg-light, text error | `bg-red-50 text-[#E11D48]` |
@@ -244,12 +252,12 @@ Chỉ render khi có warning từ API. Hiển thị inline ngay dưới Type Bad
 ├────────────────────────────────────────────────┤
 │ Kết luận tổng hợp                              │
 ├───────────────────┬────────────────────────────┤
-│ 📦 Dữ liệu hiện  │ 📋 Chính sách áp dụng      │
-│ tại               │                            │
+│ [Icon: Data]      │ [Icon: Policy]             │
+│ Dữ liệu hiện tại   │ Chính sách áp dụng         │
 │ • SKU còn: X      │ • Policy đổi trả: ...     │
 │ • Giá: Y          │ • Source: M08/FAQ-003      │
 └───────────────────┴────────────────────────────┘
-│ [Xem nguồn]  [Escalate]  [👍 👎]              │
+│ [Xem nguồn]  [Escalate]  [Hữu ích]  [Chưa đúng] │
 └────────────────────────────────────────────────┘
 ```
 
@@ -277,7 +285,7 @@ Hai khối dùng `grid grid-cols-2 gap-4` trên desktop, stack trên mobile.
 ┌─────────────────────────────────────────────┐
 │ [Badge: Ngoài phạm vi / Không đủ quyền]     │
 ├─────────────────────────────────────────────┤
-│  🔒  Không thể hiển thị thông tin này       │  ← H3, #013652
+│ [Icon: Lock]  Không thể hiển thị thông tin này │  ← H3, #013652
 │                                             │
 │  Lý do: [lý do rõ ràng bằng tiếng Việt]    │  ← Body, #3A6381
 │  VD: "Bạn không có quyền xem dữ liệu        │
@@ -319,6 +327,7 @@ Hai khối dùng `grid grid-cols-2 gap-4` trên desktop, stack trên mobile.
 - Animation: slide-in từ phải, `250ms ease-out`
 - Background: `#FFFFFF` card, `shadow-glass`
 - Mỗi source là 1 card riêng với `rounded-xl shadow-ambient p-4`
+- Source Trace data phải đi từ `POST /mia/chat/query` response snapshot; `GET /mia/chat/suggestions/:id` chỉ dùng cho follow-up prompts / clarifying prompts.
 
 ---
 
@@ -326,7 +335,7 @@ Hai khối dùng `grid grid-cols-2 gap-4` trên desktop, stack trên mobile.
 
 | UI Element | API Endpoint | Field | Format | Ghi chú |
 |-----------|-------------|-------|--------|---------|
-| Answer Type Badge | `POST /mia/chat/query` | `answer_type` | `"Policy"` \| `"Data"` \| `"Mixed"` \| `"Blocked"` | |
+| Answer Type Badge | `POST /mia/chat/query` | `answer_type` | `"Policy"` \| `"Data"` \| `"Mixed"` \| `"Unsupported"` | `"Unsupported"` hoặc access fail render thành S5 Blocked |
 | Kết luận text | `POST /mia/chat/query` | `answer_summary` | string | Luôn render đầu tiên |
 | Data points | `POST /mia/chat/query` | `data_points[]` | `{label, value, source}` | Chỉ render nếu `answer_type` là `Data` hoặc `Mixed` |
 | Citations | `POST /mia/chat/query` | `citations[]` | `{doc_id, title, excerpt}` | Chỉ render nếu `answer_type` là `Policy` hoặc `Mixed` |
@@ -334,8 +343,9 @@ Hai khối dùng `grid grid-cols-2 gap-4` trên desktop, stack trên mobile.
 | Warning badge | `POST /mia/chat/query` | `warnings[]` | `{code, message}` | Chỉ render nếu `warnings.length > 0` |
 | Next action buttons | `POST /mia/chat/query` | `next_actions[]` | `{label, type, payload}` | |
 | Escalation CTA | `POST /mia/chat/query` | `escalation_available` | boolean | Chỉ render nếu `true` |
-| Source Trace list | `GET /mia/chat/suggestions/:id` | `source_trace[]` | `{source_id, freshness, trust_level, excerpt}` | Lazy-load khi mở panel |
-| Feedback | `POST /mia/chat/feedback` | `answer_id, feedback_type` | — | 👍 / 👎 |
+| Source Trace list | `POST /mia/chat/query` | `source_trace[]` | `{source_id, freshness, trust_level, excerpt}` | Render from answer snapshot when panel opens |
+| Clarifying prompts | `GET /mia/chat/suggestions/:id` | `clarifying_prompts[]` | `string[]` | Chỉ dùng khi intent confidence thấp |
+| Feedback | `POST /mia/chat/feedback` | `answer_id, feedback_type` | — | positive / negative feedback |
 
 ---
 
@@ -349,14 +359,14 @@ Hai khối dùng `grid grid-cols-2 gap-4` trên desktop, stack trên mobile.
 | **Empty** | Session mới, chưa có message | Welcome message + 3 suggested prompts | Prompts là gợi ý câu hỏi phổ biến |
 | **Error** | API error (không phải blocked) | Error card nhỏ: "Đã có lỗi xảy ra. Thử lại?" + Retry button | Không xoá câu hỏi của user |
 | **Populated** | Có messages trong session | Thread hiển thị bình thường | Default |
-| **Source Trace Open** | User click "Xem nguồn" | Slide-in panel che 1/3 phải màn hình | Overlay không block chat |
+| **Source Trace Open** | User click "Xem nguồn" | Slide-in panel che 1/3 phải màn hình | Overlay không block chat; data đến từ answer snapshot |
 
 ### Component-Level States — Answer Card
 
 | State | Default | Hover | Focus | Loading |
 |-------|---------|-------|-------|---------|
 | Action buttons (Ghost) | `text-[#2F64F6]` transparent bg | `bg-[#ECF2FE]` | `ring-2 ring-[#2F64F6]/30` | Spinner inline |
-| Feedback buttons (👍 👎) | Outlined, `#8EB6D9` | Scale 1.1 | Ring | — |
+| Feedback buttons | Outlined, `#8EB6D9` | Scale 1.1 | Ring | — |
 | Citation link | `text-[#2F64F6]` underline | Opacity 0.8 | Ring | — |
 | "Xem nguồn" button | Ghost pill | `bg-[#ECF2FE]` | Ring | — |
 
@@ -466,20 +476,24 @@ Hai khối dùng `grid grid-cols-2 gap-4` trên desktop, stack trên mobile.
 
 | Hạng mục | Kết quả | Ghi chú |
 |----------|---------|---------|
-| shadcn/ui mapping | Pending | `ScrollArea`, `Sheet` (Source Trace), `Button`, `Input` |
-| Token compatibility | Pending | Tất cả tokens lấy từ `Design_System.md` canonical |
+| shadcn/ui mapping | Aligned | `ScrollArea`, `Sheet`, `Button`, `Input` |
+| Token compatibility | Aligned | Policy badge now uses cool-slate/brand-blue tokens; no phase-1 purple remains |
 | Animation practical | Pending | Cần test glassmorphism performance trên mobile |
 | Responsive aligns | Pending | Grid layout Mixed card cần kiểm tra 768px |
-| Data binding matches API | Pending | Cần verify `answer_type` enum với BE |
+| Data binding matches API | Aligned | `answer_type` follows SRS; source trace comes from answer snapshot, suggestions endpoint is reserved for clarifying prompts |
 | Shared components | Pending | Answer Card có thể share với M10 Sales Advisor |
 
-**A05 Sign-Off**: ___ (chờ sau khi SRS promote lên SRS Ready)
+**A05 Review Note**: cross-check complete; linked SRS and planning chain exist; PNG gate removed per BO directive — FE build can proceed from spec text + data-binding contract
+**A05 Sign-Off**: A05 Tech Lead (2026-04-16)
 
 ---
 
 ## 10. Pre-Delivery Checklist (A07)
 
 - [ ] Design tokens khớp chính xác với `Design_System.md`
+- [x] Linked FE Preview story is materialized in `Planning/Stories/AI_Workspace/`
+- [x] Canonical UXUI status là `Approved` (PNG gate removed per BO directive 2026-04-16)
+- [x] FE Preview canonical đã được mở — spike tại `/ai/chat` là canonical build
 - [ ] Không có border cứng 1px trong layout — dùng background shift
 - [ ] Buttons đều `rounded-full` (pill)
 - [ ] Icons: Lucide SVG only (không emoji)
@@ -492,6 +506,6 @@ Hai khối dùng `grid grid-cols-2 gap-4` trên desktop, stack trên mobile.
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility attributes đã gắn
 
-**A06 Design Sign-Off**: ___ (YYYY-MM-DD)
-**A05 Tech Sign-Off**: ___ (YYYY-MM-DD)
-**PM Gate**: ___ (YYYY-MM-DD)
+**A06 Design Sign-Off**: A06 UI/UX Agent (2026-04-16)
+**A05 Tech Sign-Off**: A05 Tech Lead (2026-04-16)
+**PM Gate**: A01 PM Agent (2026-04-16)

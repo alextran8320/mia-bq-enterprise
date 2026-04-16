@@ -1,14 +1,14 @@
 # Feature SRS: F-M09-AIC-001 Internal AI Chat
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
 **Last Updated By**: Codex CLI (GPT-5 Codex)
-**Last Reviewed By**: A01 PM Agent
+**Last Reviewed By**: A03 BA Agent
 **Approval Required**: PM
 **Approved By**: -
 **Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt intent taxonomy phase 1, query routing matrix giữa data/policy answers, escalation threshold, và trust UI contract cho answer card
+**Blocking Reason**: -
 **Module**: M09
 **Phase**: PB-02 / PB-03
 **Priority**: High
@@ -19,7 +19,8 @@
 ## 0. Metadata
 
 - Feature ID: `F-M09-AIC-001`
-- Related User Story: `US-M09-AIC-001`
+- Related PRD: [Planning/PRD/AI_Workspace/PRD-M09-AIC-001_Internal_AI_Chat.md](../../../../../../Planning/PRD/AI_Workspace/PRD-M09-AIC-001_Internal_AI_Chat.md)
+- Related User Story: [Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md](../../../../../../Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md)
 - Related Screens: chat console nội bộ, answer card, source trace panel, warning state, escalation CTA, blocked state
 - Related APIs: `POST /mia/chat/query`, `GET /mia/chat/suggestions/:id`, `POST /mia/chat/feedback`
 - Related Tables: `chat_session`, `chat_message`, `chat_answer_snapshot`, `chat_audit_log`
@@ -47,7 +48,7 @@ Là `Ban điều hành / vận hành trung tâm`, `CSKH`, `Ecommerce / omnichann
 | Step | User Role | Action | Task Type | Notes |
 |------|-----------|--------|-----------|-------|
 | 1 | User nội bộ | Nhập câu hỏi tự nhiên như `tồn kho`, `CTKM`, `policy đổi trả`, `cách xử lý đơn online`, `cách dùng hệ thống` | Quick Action | Entry |
-| 2 | Hệ thống | Phân loại intent, xác định đây là `data question`, `policy question`, `mixed question`, hoặc `out-of-scope` | Quick Action | Intent routing |
+| 2 | Hệ thống | Phân loại intent, xác định đây là `Policy`, `Data`, `Mixed`, hoặc `Unsupported` | Quick Action | Intent routing |
 | 3 | Hệ thống | Chạy access check theo `M07`, xác định role/channel/branch scope | Configuration | Guardrail |
 | 4 | Hệ thống | Query các source phù hợp từ `M08`, integration layer, hoặc cả hai | Quick Action | Retrieval |
 | 5 | Hệ thống | Compose answer card theo cấu trúc `kết luận`, `bằng chứng`, `freshness`, `warning`, `next action` | Reporting | Response |
@@ -60,10 +61,10 @@ BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + int
 
 ## 3. Preconditions
 
-- `M08 Knowledge Center` đã có ít nhất các domain phase 1 `pricing`, `promotion`, `đổi trả`, `bảo hành`, `system usage`.
-- Integration foundation với `SAP B1`, `KiotViet`, `Haravan` có contract đọc tối thiểu.
+- `M08 Knowledge Center` đã có tối thiểu các domain phase 1 `pricing`, `promotion`, `đổi trả`, `bảo hành`, `system usage`, với citation/freshness contract rõ.
+- Integration foundation với `SAP B1`, `KiotViet`, `Haravan` có contract đọc tối thiểu hoặc summary projection an toàn.
 - `M07` đã cung cấp access/sensitivity rules.
-- Escalation path tối thiểu từ `F-M09-AIC-003` hoặc workflow đích tương đương đã tồn tại.
+- Escalation path phase 1 đã được xác định qua `F-M09-AIC-003` và `F-M11-ESC-001`.
 
 ## 4. Postconditions
 
@@ -77,23 +78,24 @@ BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + int
 2. Hệ thống normalize query, phân loại intent, và xác định answer type là `Policy`, `Data`, `Mixed`, hoặc `Unsupported`.
 3. Hệ thống kiểm tra `role`, `branch`, `channel`, `sensitivity` qua `M07`.
 4. Nếu là `Policy`, hệ thống query `M08`; nếu là `Data`, hệ thống query integration source phù hợp; nếu là `Mixed`, hệ thống lấy cả `data snapshot` và `policy citation`.
-5. Hệ thống đánh giá freshness/trust của từng source, gắn warning khi source tạm thời, stale, hoặc conflict.
-6. Hệ thống render answer card với `kết luận`, `bằng chứng`, `source trace`, `freshness`, `warning`, `next action`.
-7. User mở citation, gửi feedback, hoặc tạo escalation nếu answer chưa đủ.
+5. Nếu intent confidence thấp nhưng vẫn có thể làm rõ trong cùng domain, hệ thống hỏi lại đúng một lần theo rule phase 1; nếu vẫn không đủ hoặc query ngoài scope thì chuyển sang `Unsupported` hoặc escalation.
+6. Hệ thống đánh giá freshness/trust của từng source, gắn warning khi source tạm thời, stale, hoặc conflict.
+7. Hệ thống render answer card với `kết luận`, `bằng chứng`, `source trace`, `freshness`, `warning`, `next action`; nếu `Unsupported` hoặc access fail thì render Blocked state với lý do rõ ràng.
+8. User mở citation, gửi feedback, hoặc tạo escalation nếu answer chưa đủ.
 
 ## 6. Alternate Flows
 
 - Một query như `giày mẫu X còn ở đâu và CTKM áp dụng thế nào` cần ghép `inventory snapshot` với `promotion policy`.
-- Query vượt scope của user nên chỉ trả summary an toàn thay vì full detail.
+- Query vượt scope của user nên chỉ trả summary an toàn hoặc `Blocked` state thay vì full detail.
 - Query chỉ có policy nhưng không có data source nào cần chạm.
-- Query không rõ ý nên chat trả follow-up question thay vì đoán.
+- Query không rõ ý được phép hỏi lại đúng một lần trước khi escalate hoặc trả `Unsupported`.
 
 ## 7. Error Flows
 
 - Source data khả dụng nhưng policy backing bị thiếu.
 - Policy có citation nhưng source data stale hoặc conflict.
-- User hỏi ngoài scope phase 1, hệ thống phải blocked có giải thích.
-- Query routing sai khiến answer lấy sai source hoặc sai scope quyền.
+- User hỏi ngoài scope phase 1, hệ thống phải `Unsupported` hoặc blocked có giải thích.
+- Query routing sai hoặc access check fail thì trả blocked reason thay vì raw payload.
 
 ## 8. State Machine
 
@@ -105,6 +107,7 @@ BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + int
 - Answer card phải luôn có `kết luận trước`, `details sau`, `warning rõ`, `actions rõ`.
 - Nếu answer là `Mixed`, UI phải tách hai khối `Dữ liệu hiện tại` và `Chính sách áp dụng`.
 - Nếu answer bị blocked, UI phải nói rõ lý do như `thiếu quyền`, `nguồn chưa đủ tin cậy`, hoặc `ngoài scope`.
+- Source trace panel hiển thị snapshot đã log của answer thay vì gọi raw payload trực tiếp.
 
 ## 10. Role / Permission Rules
 
@@ -122,7 +125,9 @@ BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + int
 - Nếu query chạm dữ liệu từ source đang `stale` hoặc `conflict`, answer không được hiển thị là fully trusted; phải có warning hoặc block tùy rule.
 - Nếu user không đủ quyền với dữ liệu chi tiết, hệ thống có thể trả summary an toàn nhưng không được trả raw fields ngoài scope.
 - Không được render raw JSON, raw ERP payload, hoặc tên bảng kỹ thuật ra answer card cho user business.
-- Nếu intent confidence thấp hơn threshold phase 1, hệ thống phải hỏi lại hoặc đề nghị escalation thay vì tự suy đoán.
+- Phase 1 dùng rule-based confidence gate, không dùng ML score để tự quyết; nếu chưa đủ rõ thì hỏi lại đúng một lần rồi mới escalate hoặc block.
+- `Blocked` là state UI/runtime cho `Unsupported`, access denied, stale/conflict, hoặc trust failure; enum canonical của routing vẫn là `Policy`, `Data`, `Mixed`, `Unsupported`.
+- `GET /mia/chat/suggestions/:id` chỉ trả follow-up actions hoặc clarifying prompts; source trace dùng snapshot/history review, không lấy từ endpoint này.
 - Mọi answer phải log snapshot của `question`, `answer`, `source set`, `warning set`, `actor role`.
 
 ## 12. API Contract Excerpt + Canonical Links
@@ -137,7 +142,8 @@ BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + int
 - Canonical links:
   - Reads `F-M08-KNW-001..004`
   - Uses `F-M07-SEC-001`
-  - Emits to `F-M09-AIC-002`, `F-M09-AIC-003`, `F-M12-OBS-001`
+  - Emits to `F-M09-AIC-002`, `F-M09-AIC-003`, `F-M11-ESC-001`, `F-M12-OBS-001`
+  - Source trace review is consumed by `F-M09-AIC-002`
 
 ## 13. Event / Webhook Contract Excerpt + Canonical Links
 
@@ -206,11 +212,12 @@ BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + int
 - Đây là feature ưu tiên cao nhất của phase 1 nội bộ.
 - `Mixed answer` và `auto escalation` có thể bật dần nếu PM muốn pilot nhỏ trước.
 
-## 22. Open Questions
+## 22. Phase-1 Decisions
 
-- Intent taxonomy phase 1 sẽ chốt ở mức nào?
-- Low-confidence threshold sẽ dùng rule-based hay score-based?
-- Query nào được phép trả follow-up question, query nào phải escalate ngay?
+- Intent taxonomy phase 1 chốt ở 4 outcome canonical: `Policy`, `Data`, `Mixed`, `Unsupported`.
+- `Unsupported` là outcome routing canonical; UI có thể hiển thị label `Blocked` khi lý do là ngoài scope, access fail, stale/conflict, hoặc trust failure.
+- Low-confidence xử lý bằng rule-based gate deterministic: hỏi lại đúng một lần nếu query còn có thể làm rõ trong cùng domain, sau đó mới escalate hoặc block.
+- Source trace panel của phase 1 dùng answer snapshot/history review, không phụ thuộc vào `GET /mia/chat/suggestions/:id`.
 
 ## 23. Definition of Done
 
@@ -218,12 +225,12 @@ BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + int
 
 ## 24. Ready-for-UXUI Checklist
 
-- [ ] UXUI đã chốt chat shell, answer card, blocked state, mixed-answer pattern, source trace, escalation CTA
+- [x] UXUI đã chốt chat shell, answer card, blocked state, mixed-answer pattern, source trace, escalation CTA
 
 ## 25. Ready-for-FE-Preview Checklist
 
-- [ ] FE Preview có mock `policy`, `data`, `mixed`, `blocked`, `warning`, `escalation`
-- [ ] Stub payload đủ `answer_type`, `citations`, `warnings`, `freshness_status`, `next_actions`
+- [x] FE Preview có mock `policy`, `data`, `mixed`, `blocked`, `warning`, `escalation`
+- [x] Stub payload đủ `answer_type`, `citations`, `warnings`, `freshness_status`, `next_actions`
 
 ## 26. Ready-for-BE / Integration Promotion Checklist
 

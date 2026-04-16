@@ -1,21 +1,24 @@
 # Current Active Context
 
 **Last Updated**: 2026-04-16
-**Active Workspace Topic**: Chuyển `.obsidian/` sang machine-local state bằng root `.gitignore`
+**Active Workspace Topic**: Internal AI Chat — FE Preview canonical build
 **Current Project**: `MIABOS`
-**Current Phase**: `Operational / Repo Hygiene`
-**Latest Canonical Session Log**: [[2026-04-16_MIABOS_Obsidian_Local_Gitignore]]
+**Current Phase**: `PB-04 Build (FE Preview — F-M09-AIC-001)`
+**Latest Canonical Session Log**: [[2026-04-16_MIABOS_Process_Fix_And_Mock_Expansion]]
 **Today's Daily Log**: [[2026-04-16_Daily_Log]]
 
 ## Latest Decisions
 
-- Repo hiện có root `.gitignore` mới với rule `.obsidian/`.
-- Toàn bộ `.obsidian/**` đã được gỡ khỏi Git index bằng `git rm -r --cached` nhưng file local vẫn còn trên máy.
-- `git check-ignore -v --no-index` xác nhận `.obsidian/workspace.json` và `.obsidian/app.json` đang bị ignore đúng theo rule mới.
-- `main` vẫn giữ merge commit `f1fab3d` từ `alex_implementation`; work block hiện tại chỉ harden tracking behavior cho Obsidian.
+- Mockup PNG gate removed per Business Owner directive — UXUI spec text + data-binding contract đủ để FE build.
+- `UXUI-F-M09-AIC-001` promoted lên `Approved`.
+- `F-M09-AIC-001` promoted lên `UXUI Approved` trong feature registry — next target: `FE Preview`.
+- Spike `/ai/chat` giờ là canonical FE Preview build.
+- Mock data mở rộng từ 4 → 8 scenarios: thêm SOP, conflict (Data), CTKM+inventory (Mixed), Unsupported.
+- `AnswerType` mở rộng thêm `"Unsupported"` để tách biệt với `"Blocked"`.
+- Spike page cải thiện: error state, scroll-to-bottom, accessibility, microcopy align UXUI spec.
 
 ## Next Actions
 
-- Commit `.gitignore` mới cùng staged removals của `.obsidian/`.
-- Nếu cần, push `main` lên remote sau khi chốt commit repo hygiene này.
-- Nếu muốn giữ lại một vài file Obsidian dùng chung, thiết kế whitelist riêng.
+- Verify build: `npm run build` trong `Build/Frontend_App/`.
+- Business Owner review `/ai/chat` — toàn bộ 8 scenarios.
+- Quyết định next FE workstream: responsive layout, animation (UXUI spec §7), hay nối backend stub.

@@ -3,6 +3,10 @@
 ### 2026-04-16
 
 - [[2026-04-16_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-16_MIABOS_Process_Fix_And_Mock_Expansion|MIABOS Process Fix And Mock Data Expansion]] - Fix quy trình: xóa PNG gate per BO directive, promote UXUI Approved. Expand mock 4→8 scenarios. Improve spike: error state, scroll, Unsupported card, a11y, microcopy.
+- [[2026-04-16_MIABOS_Internal_AI_Chat_Canonical_Prep_And_Spike|MIABOS Internal AI Chat Canonical Prep And Spike]] - Promote `F-M09-AIC-001` lên `SRS Ready`, materialize planning chain đầy đủ, canonicalize UXUI ở trạng thái `Blocked`, và thêm local spike preview `/ai/chat` bằng mock data.
+- [[2026-04-16_MIABOS_AI_Workspace_Planning_Chain_F_M09_AIC_001|MIABOS AI Workspace Planning Chain F M09 AIC 001]] - Materialize planning chain cho `F-M09-AIC-001 Internal AI Chat`: PRD, Product Backlog, Sprint Backlog, User Story, và Subtask Board; giữ PRD `In Review`, story `Approved` cho planning, và khóa FE Preview đến khi UXUI Approved thật.
+- [[2026-04-16_MIABOS_UXUI_F_M09_AIC_001_Review|MIABOS UXUI F-M09-AIC-001 Review]] - Refine `UXUI-F-M09-AIC-001` into a canonical `Blocked` UXUI artifact with required metadata, FE Preview planning link, explicit mockup blocker, and SRS-aligned data binding.
 - [[2026-04-16_MIABOS_Obsidian_Local_Gitignore|MIABOS Obsidian Local Gitignore]] - Chuyển `.obsidian/` thành machine-local state bằng root `.gitignore` và gỡ toàn bộ `.obsidian` khỏi Git index.
 - [[2026-04-16_MIABOS_Alex_Implementation_To_Main_Merge|MIABOS Alex Implementation To Main Merge]] - Merge branch `alex_implementation` vào `main`, import toàn bộ lịch sử implementation/spec/design liên quan, và phục hồi local working state sau merge.
 - [[2026-04-16_MIABOS_UXUI_Spec_M09_M10|MIABOS UXUI Spec M09 M10]] - Tạo 2 UXUI Feature Spec đầu tiên: F-M09-AIC-001 Internal AI Chat và F-M10-SLS-001 Sales Advisor AI. Tạo folder `Design/UXUI_Features/`.

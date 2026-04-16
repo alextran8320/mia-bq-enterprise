@@ -506,6 +506,6 @@ Hai khối dùng `grid grid-cols-2 gap-4` trên desktop, stack trên mobile.
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility attributes đã gắn
 
-**A06 Design Sign-Off**: A01 PM approved for FE Preview scope (2026-04-16)
-**A05 Tech Sign-Off**: \_\_\_ (YYYY-MM-DD)
-**PM Gate**: PASS for FE Preview with mock/stub data (2026-04-16)
+**A06 Design Sign-Off**: **\_ (YYYY-MM-DD)
+**A05 Tech Sign-Off**: \_** (YYYY-MM-DD)
+**PM Gate**: \_\_\_ (YYYY-MM-DD)

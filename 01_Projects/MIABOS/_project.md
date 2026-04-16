@@ -83,3 +83,6 @@ The following documentation layers were intentionally removed on 2026-04-13:
 
 
 
+| 2026-04-16 | [2026-04-16_MIABOS_Customer_List_Encoding_Fix](../../02_Sessions/2026-04-16_MIABOS_Customer_List_Encoding_Fix.md) | Fixed UXUI Customer List text encoding (Antigravity) |
+| 2026-04-16 | [2026-04-16_MIABOS_M06_CRM_UXUI_Encoding_Fix](../../02_Sessions/2026-04-16_MIABOS_M06_CRM_UXUI_Encoding_Fix.md) | Fixed UXUI M06 files text encoding (Antigravity) |
+| 2026-04-16 | [2026-04-16_MIABOS_M06_CRM_Stories_Structure_Update](../../02_Sessions/2026-04-16_MIABOS_M06_CRM_Stories_Structure_Update.md) | Structured and expanded M06 CRM User Stories fields (Antigravity) |

@@ -2,7 +2,7 @@
 
 **Status**: Draft
 **Owner**: [[A03_BA_Agent]]
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Antigravity (Gemini 3.1 Pro)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: BA Agent + PM Agent
 **Approved By**: -
@@ -20,6 +20,26 @@
 
 `Là Sales / CSKH / CRM Manager, tôi muốn mở một màn hình Customer 360 để nhìn thấy profile, social relationship, order, chat, call, timeline, AI summary, và action tiếp theo của khách hàng trong cùng một nơi.`
 
+## Problem / Outcome
+
+- Người dùng thường xuyên phải chuyển tab qua lại nhiều hệ thống (POS, ERP, Chat) để nắm bối cảnh khách hàng.
+- Customer 360 sẽ tập hợp mọi sự kiện, thuộc tính và liên kết chéo, cho ra kết quả trong < 3s.
+- Cải thiện tỷ lệ ra quyết định chính xác dựa trên ngữ cảnh và consent.
+
+## Trigger
+
+- Mở từ danh sách khách hàng.
+- Deep link từ đơn hàng / chat conversation / ticket.
+- Click thông báo push tự động.
+
+## Happy Path
+
+1. User bấm chi tiết khách hàng từ list.
+2. Hệ thống tải header profile, consent flag và thẻ tóm tắt AI summary.
+3. User xem phần panel Social relationship để kiểm tra liên lạc.
+4. User cuộn xem timeline đa kênh (call, chat, order) và lịch sử gần nhất.
+5. User quyết định gọi điện thoại hoặc gửi email thông qua nút "Care Action".
+
 ## Acceptance Criteria
 
 | AC ID | Given | When | Then |
@@ -29,6 +49,17 @@
 | AC-03 | một nguồn history lỗi | mở customer 360 | màn hình vẫn render partial data |
 | AC-04 | customer có duplicate flag | mở hồ sơ | thấy CTA sang duplicate review |
 | AC-05 | tạo action từ customer 360 | submit thành công | action xuất hiện trên timeline |
+
+## Dependencies
+
+- `F-M06-CRM-001` SRS
+- `UXUI-F-M06-CRM-001B`
+- API gọi xuống các core domains như hội thoại, call history, đơn hàng, promotion.
+
+## Out Of Scope
+
+- Cập nhật thủ công các field dữ liệu đồng bộ chéo với ERP (VD: điểm thưởng loyal point).
+- Xóa hồ sơ gốc trực tiếp từ UI này.
 
 ## Linked Artifacts
 

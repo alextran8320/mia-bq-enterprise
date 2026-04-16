@@ -1,21 +1,20 @@
 # Current Active Context
 
 **Last Updated**: 2026-04-16
-**Active Workspace Topic**: M05 Order and Fulfillment docs standardized across SRS, UXUI, and Story layers
+**Active Workspace Topic**: Expanded the CRM User Stories structure similarly to M05
 **Current Project**: `MIABOS`
 **Current Phase**: `PB-03 / Product Design`
-**Latest Canonical Session Log**: [[2026-04-16_MIABOS_Order_And_Fulfillment_SRS_Deepening]]
+**Latest Canonical Session Log**: [[2026-04-16_MIABOS_M06_CRM_Stories_Structure_Update]]
 **Today's Daily Log**: [[2026-04-16_Daily_Log]]
 
 ## Latest Decisions
 
-- `F-M05-ORD-001` now has a deeper, more standardized documentation stack across SRS, UXUI, and Story layers.
-- The four M05 UXUI docs now include anatomy, richer state/error handling, visibility rules, and responsive guidance.
-- The four M05 stories now include problem/outcome framing, triggers, happy paths, dependencies, and clearer out-of-scope boundaries.
-- The module is now documented at a more implementation-ready and handoff-ready level than before.
+- Expanded all four `M06 CRM Workspace` User Stories to structurally align with M05.
+- Included `Problem / Outcome`, `Trigger`, `Happy Path`, `Dependencies`, and `Out Of Scope` sections into Customer 360, Duplicate Review, Care Action, and Customer List.
+- Resolved mojibake text encodings inside these documents at the same time.
+- The `M06 CRM Workspace` module stories are now fully documented at a more implementation-ready and handoff-ready level.
 
 ## Next Actions
 
-- Confirm the source-priority rule for fulfillment truth between Haravan, logistics source, and SAP delivery references.
-- Confirm ownership for in-store return / exchange versus service-case flow.
-- If approved, open subtask boards or FE-preview planning slices for the four M05 stories.
+- Begin implementation breakdown (FE-preview planning) for M06 or finalize any pending SRS enhancements for related modules.
+- Check API and DB mappings for the Customer List and Care Action UX flows.

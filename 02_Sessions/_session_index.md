@@ -54,3 +54,6 @@
 
 
 - [[2026-04-16_MIABOS_CRM_UXUI_Detailing|MIABOS CRM UXUI Detailing]] - Expanded the four CRM UXUI specs with required on-screen information, search/filter/sort logic, detailed actions, and UX behavior.
+- [2026-04-16_MIABOS_Customer_List_Encoding_Fix](2026-04-16_MIABOS_Customer_List_Encoding_Fix.md) - UXUI formatting fix (Antigravity) - PB-03
+- [2026-04-16_MIABOS_M06_CRM_UXUI_Encoding_Fix](2026-04-16_MIABOS_M06_CRM_UXUI_Encoding_Fix.md) - UXUI formatting fix M06 (Antigravity) - PB-03
+- [2026-04-16_MIABOS_M06_CRM_Stories_Structure_Update](2026-04-16_MIABOS_M06_CRM_Stories_Structure_Update.md) - CRM Stories struct expansion (Antigravity) - PB-03

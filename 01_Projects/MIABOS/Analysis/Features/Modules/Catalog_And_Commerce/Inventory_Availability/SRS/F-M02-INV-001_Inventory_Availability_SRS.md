@@ -20,11 +20,12 @@
 
 - Feature ID: `F-M02-INV-001`
 - Related User Story: `US-M02-INV-001`
+- Related PRD: `PRD-MIABOS-BQ-Phase1`
 - Related Screens: availability answer card, realtime check status, stale warning
 - Related APIs: `POST /mia/inventory/check`, `GET /mia/inventory/availability`
 - Related Tables: `inventory_read_model`, `availability_cache`
-- Related Events: `mia.inventory.realtime_checked`
-- Related Error IDs: `INV-001`
+- Related Events: `mia.inventory.realtime_checked`, `mia.inventory.stale_detected`
+- Related Error IDs: `INV-001`, `INV-002`, `INV-003`
 
 ## 0B. Integration Source Map
 
@@ -43,9 +44,11 @@ Là Sales, Logistics, CSKH, hoặc AI bán hàng, tôi muốn biết tình trạ
 
 | Step | User Role | Action | Task Type | Notes |
 |------|-----------|--------|-----------|-------|
-| 1 | Sales / Logistics | Hỏi tồn theo mã hàng và khu vực | Quick Action | Entry |
-| 2 | Hệ thống | Chọn realtime hoặc cache-soft path | Quick Action | Policy-driven |
-| 3 | User / AI | Xem kết quả availability + source + freshness | Reporting | Trust |
+| 1 | Sales / CSKH | Hỏi tồn theo mã hàng, size, màu, hoặc khu vực cụ thể | Quick Action | Điểm vào |
+| 2 | Sales / CSKH | Xem kết quả tồn với freshness badge (realtime/cached/stale) | Reporting | Kết quả chính |
+| 3 | Sales / CSKH | Yêu cầu kiểm tra realtime nếu cache đang stale | Quick Action | Override path |
+| 4 | Logistics / Vận hành bán lẻ | Xem chi tiết tồn theo kho/cửa hàng cụ thể để cân nhắc chuyển hàng | Reporting | Role nội bộ |
+| 5 | Logistics | Nhận cảnh báo conflict nếu SAP B1 vs KiotViet không khớp | Exception Handling | Data quality |
 
 ## 2. Business Context
 
@@ -160,11 +163,24 @@ BQ pack xác nhận bài toán tồn kho của BQ không phải là "có hàng h
 
 ## 19. Test Scenarios
 
-Realtime success, cache fallback, stale warning.
+| # | Scenario | Input | Expected Output |
+|---|---|---|---|
+| TS-01 | Realtime check thành công | `sku=BQ001, location=store_HN01, freshness=realtime` | Tồn realtime + source KiotViet + freshness_level=realtime |
+| TS-02 | Cache fallback khi realtime timeout | `sku=BQ001` (SAP B1 timeout) | Tồn cached + stale badge + synced_at hiện tại |
+| TS-03 | Cache stale vượt threshold | `sku=BQ002` (cached >4h for SAP B1) | Stale warning + gợi ý "kiểm tra realtime nếu cần xác nhận" |
+| TS-04 | Conflict SAP B1 vs KiotViet | `sku=BQ003` (số tồn lệch >10%) | Warning "dữ liệu chưa đồng nhất giữa các nguồn" — không tự chọn |
+| TS-05 | User không đủ scope | Sales query chi tiết tồn kho nội bộ | Chỉ nhận "còn/hết" không nhận số tuyệt đối |
+| TS-06 | Branch không map được | `location=UNKNOWN_BRANCH` | Error INV-002 + "không tìm thấy dữ liệu cho chi nhánh này" |
+| TS-07 | Cả realtime và cache đều fail | `sku=BQ004` (hệ thống lỗi) | Error INV-001 + "không có dữ liệu đáng tin tại thời điểm này" |
 
 ## 20. Observability
 
-Theo dõi success/fail/fallback rate.
+- **inventory_check_total**: tổng số availability check theo realtime / cache-soft path
+- **realtime_success_rate**: % check realtime thành công trong ≤3s
+- **cache_fallback_rate**: % check phải dùng cache do realtime fail
+- **stale_detection_count**: số lần cache vượt freshness threshold — alert khi tăng
+- **conflict_flag_count**: số lần SAP B1 vs KiotViet conflict — dùng để data quality review
+- **scope_violation_count**: số lần user không đủ scope request chi tiết tồn (audit log)
 
 ## 21. Rollout / Feature Flag
 
@@ -180,12 +196,27 @@ Availability module vận hành được cho internal và sales-safe mode.
 
 ## 24. Ready-for-UXUI Checklist
 
-- [ ] UXUI đã chốt cách hiển thị availability confidence
+- [ ] `User Story` đã approved và có problem, trigger, happy path, dependencies, AC context
+- [ ] User Task Flow đủ chi tiết để thiết kế screen/state (§1A)
+- [ ] Business rules và permission rules testable (§11)
+- [ ] Main, alternate, và error flows đã ghi đầy đủ (§5/6/7)
+- [ ] State machine rõ ràng hoặc đánh dấu `N/A + lý do` (§8)
+- [ ] Data và event dependencies đã link (§12/13/14)
+- [ ] Open questions buộc A06 phải tự bịa behavior đã được resolve hoặc đánh dấu blocker (§22)
 
 ## 25. Ready-for-FE-Preview Checklist
 
-- [ ] FE Preview có mock realtime/cached/stale states
+- [ ] User Story đã approved và link trong Sprint Backlog
+- [ ] UXUI spec tồn tại và cite SRS này
+- [ ] Không còn mâu thuẫn chưa giải quyết giữa SRS và UXUI
+- [ ] Mock/stub data assumptions cho FE Preview đã rõ ràng
+- [ ] PM đã mở `FE Preview` một cách tường minh
 
 ## 26. Ready-for-BE / Integration Promotion Checklist
 
-- [ ] BE contract realtime vs cache đã rõ
+- [ ] FE Preview đã được review
+- [ ] Feedback thay đổi behavior từ FE Preview đã được đưa về SRS / UXUI
+- [ ] `Integration Spec` (hoặc split technical pack đã approved) align với SRS này
+- [ ] UXUI spec tồn tại và cite SRS này
+- [ ] Không còn mâu thuẫn chưa giải quyết giữa SRS, UXUI, và technical handoff artifact
+- [ ] PM đã confirm `Build Ready`

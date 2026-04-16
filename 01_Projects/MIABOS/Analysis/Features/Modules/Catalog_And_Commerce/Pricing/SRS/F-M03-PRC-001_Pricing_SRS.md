@@ -20,11 +20,12 @@
 
 - Feature ID: `F-M03-PRC-001`
 - Related User Story: `US-M03-PRC-001`
+- Related PRD: `PRD-MIABOS-BQ-Phase1`
 - Related Screens: price answer card, source priority warning, pricing detail summary
 - Related APIs: `POST /mia/pricing/query`
 - Related Tables: `pricing_read_model`, `source_priority_rule`
 - Related Events: `pricing.read_model.updated`
-- Related Error IDs: `PRC-001`
+- Related Error IDs: `PRC-001`, `PRC-002`, `PRC-003`
 
 ## 0B. Integration Source Map
 
@@ -44,9 +45,11 @@ Là Sales, Marketing, Finance, hoặc AI bán hàng, tôi muốn biết giá áp
 
 | Step | User Role | Action | Task Type | Notes |
 |------|-----------|--------|-----------|-------|
-| 1 | User | Hỏi giá của mã hàng trong một context cụ thể | Quick Action | Entry |
-| 2 | Hệ thống | Resolve source-priority rule | Quick Action | Rule engine |
-| 3 | User / AI | Xem giá kết luận + nguồn + warning nếu conflict | Reporting | Trust |
+| 1 | Sales / Vận hành bán lẻ | Hỏi giá sản phẩm X theo kênh hoặc loại cửa hàng cụ thể | Quick Action | Điểm vào |
+| 2 | Sales / Vận hành bán lẻ | Xem giá kết luận: giá cơ sở + CTKM nếu có + context áp dụng + nguồn | Reporting | Kết quả chính |
+| 3 | Sales / Vận hành bán lẻ | Xem cảnh báo conflict nếu giá giữa SAP B1 và Haravan không khớp | Exception Handling | Data quality |
+| 4 | Tài chính / pricing control | Tra source-priority rule và audit log lý do giá ra kết quả đó | Reporting | Role nội bộ |
+| 5 | Marketing / trade marketing | Xem CTKM đang áp dụng theo từng channel/store type | Reporting | Campaign context |
 
 ## 2. Business Context
 
@@ -158,11 +161,24 @@ BQ pack ghi nhận rõ: BQ áp dụng `chính sách 1 giá` nhưng CTKM khác nh
 
 ## 19. Test Scenarios
 
-Pricing theo channel, pricing conflict, stale price.
+| # | Scenario | Input | Expected Output |
+|---|---|---|---|
+| TS-01 | Giá ecommerce thông thường | `sku=BQ001, channel=ecommerce, date=today` | Giá Haravan + CTKM online nếu có + source + synced_at |
+| TS-02 | Giá cửa hàng chính hãng với CTKM 20% | `sku=BQ001, channel=pos, store_type=flagship` | Giá cơ sở SAP B1 + CTKM 20% từ M08 policy |
+| TS-03 | Conflict giá SAP B1 vs Haravan | `sku=BQ002` (conflict state) | Warning PRC-002 — không tự chọn nguồn |
+| TS-04 | Thiếu source-priority rule cho context | `sku=BQ003, channel=wholesale` (no rule) | Error PRC-001 + gợi ý liên hệ Finance |
+| TS-05 | Giá stale vượt threshold | `sku=BQ004` (synced_at >4h) | Stale badge + warning PRC-003 |
+| TS-06 | Sales query giá nhạy cảm | Sales query giá nhập | Field masked — không trả giá nhập/margin |
+| TS-07 | Giá đại lý vs chính hãng khác nhau | `store_type=agent vs flagship` | Hai context riêng biệt rõ ràng trong answer card |
 
 ## 20. Observability
 
-Theo dõi số case pricing warning.
+- **pricing_query_total**: tổng số pricing query theo channel/store type
+- **pricing_resolve_success_rate**: % query resolve được đúng source-priority rule
+- **pricing_conflict_count**: số lần conflict giữa SAP B1 và nguồn khác — alert khi tăng
+- **pricing_stale_count**: số lần giá stale vượt threshold
+- **source_priority_rule_change_log**: audit log mỗi khi rule thay đổi (ai thay đổi, lúc nào, lý do)
+- **missing_rule_count**: số lần không có rule cho context — dùng để ưu tiên bổ sung rule engine
 
 ## 21. Rollout / Feature Flag
 
@@ -178,12 +194,27 @@ Có pricing answer đáng tin cậy cho phase 1.
 
 ## 24. Ready-for-UXUI Checklist
 
-- [ ] UXUI đã chốt warning state cho pricing conflict
+- [ ] `User Story` đã approved và có problem, trigger, happy path, dependencies, AC context
+- [ ] User Task Flow đủ chi tiết để thiết kế screen/state (§1A)
+- [ ] Business rules và permission rules testable (§11)
+- [ ] Main, alternate, và error flows đã ghi đầy đủ (§5/6/7)
+- [ ] State machine rõ ràng hoặc đánh dấu `N/A + lý do` (§8)
+- [ ] Data và event dependencies đã link (§12/13/14)
+- [ ] Open questions buộc A06 phải tự bịa behavior đã được resolve hoặc đánh dấu blocker (§22)
 
 ## 25. Ready-for-FE-Preview Checklist
 
-- [ ] FE Preview có mock multi-source pricing
+- [ ] User Story đã approved và link trong Sprint Backlog
+- [ ] UXUI spec tồn tại và cite SRS này
+- [ ] Không còn mâu thuẫn chưa giải quyết giữa SRS và UXUI
+- [ ] Mock/stub data assumptions cho FE Preview đã rõ ràng
+- [ ] PM đã mở `FE Preview` một cách tường minh
 
 ## 26. Ready-for-BE / Integration Promotion Checklist
 
-- [ ] BE contract source-priority đã rõ
+- [ ] FE Preview đã được review
+- [ ] Feedback thay đổi behavior từ FE Preview đã được đưa về SRS / UXUI
+- [ ] `Integration Spec` (hoặc split technical pack đã approved) align với SRS này
+- [ ] UXUI spec tồn tại và cite SRS này
+- [ ] Không còn mâu thuẫn chưa giải quyết giữa SRS, UXUI, và technical handoff artifact
+- [ ] PM đã confirm `Build Ready`

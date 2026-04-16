@@ -20,11 +20,12 @@
 
 - Feature ID: `F-M04-PRO-001`
 - Related User Story: `US-M04-PRO-001`
+- Related PRD: `PRD-MIABOS-BQ-Phase1`
 - Related Screens: promotion answer card, voucher detail, promo scope explanation
 - Related APIs: `POST /mia/promotions/query`
 - Related Tables: `promotion_read_model`, `source_priority_rule`
-- Related Events: `promotion.read_model.updated`
-- Related Error IDs: `PRO-001`
+- Related Events: `promotion.read_model.updated`, `promotion.expired`
+- Related Error IDs: `PRO-001`, `PRO-002`, `PRO-003`
 
 ## 0B. Integration Source Map
 
@@ -44,9 +45,11 @@ Là Sales, Marketing, CSKH, hoặc AI bán hàng, tôi muốn biết CTKM / vouc
 
 | Step | User Role | Action | Task Type | Notes |
 |------|-----------|--------|-----------|-------|
-| 1 | User | Hỏi CTKM hoặc mã giảm giá đang áp dụng | Quick Action | Entry |
-| 2 | Hệ thống | Resolve promotion scope và source rule | Quick Action | Rule engine |
-| 3 | User / AI | Xem CTKM kết luận + điều kiện áp dụng | Reporting | Trust |
+| 1 | Sales / CSKH | Hỏi CTKM đang áp dụng cho sản phẩm X hoặc tại cửa hàng/kênh cụ thể | Quick Action | Điểm vào |
+| 2 | Sales / CSKH | Xem CTKM kết luận: tên, điều kiện, % giảm, hiệu lực, scope, nguồn | Reporting | Kết quả chính |
+| 3 | CSKH | Kiểm tra xem CTKM có áp dụng cho khách hàng cụ thể không (channel/group) | Quick Action | Customer context |
+| 4 | Marketing / Ecommerce | Xem toàn bộ CTKM đang active theo channel/store type để lên kế hoạch | Reporting | Campaign view |
+| 5 | Sales / CSKH | Nhận cảnh báo nếu CTKM conflict giữa SAP B1 và Haravan | Exception Handling | Data quality |
 
 ## 2. Business Context
 
@@ -160,11 +163,24 @@ BQ pack ghi nhận: xác định CTKM phù hợp tại BQ hiện đang làm **th
 
 ## 19. Test Scenarios
 
-Promo by channel, voucher by customer group, expired promo.
+| # | Scenario | Input | Expected Output |
+|---|---|---|---|
+| TS-01 | CTKM cửa hàng chính hãng | `sku=BQ001, channel=pos, store_type=flagship, date=today` | CTKM 20% CHS + điều kiện + hiệu lực + source |
+| TS-02 | CTKM ecommerce | `sku=BQ001, channel=ecommerce, date=today` | CTKM Haravan campaign + scope online |
+| TS-03 | Voucher theo customer group | `voucher_code=VIP2026, customer_group=loyal` | CTKM loyalty + điều kiện tối thiểu mua |
+| TS-04 | CTKM đã hết hiệu lực | `sku=BQ002` (expired promo in read model) | Filter out expired — không xuất hiện trong answer |
+| TS-05 | Conflict CTKM SAP B1 vs Haravan | `sku=BQ003, channel=ecommerce` (conflict) | Warning PRO-002 — không tự chọn nguồn |
+| TS-06 | Public-safe mode | CSKH query tư vấn khách | Không trả internal-only promo — whitelist filter |
+| TS-07 | Không có CTKM nào phù hợp | `sku=BQ004, channel=agent` (no promo) | "không có CTKM đang áp dụng cho context này" — không im lặng |
 
 ## 20. Observability
 
-Theo dõi top promotion conflicts.
+- **promotion_query_total**: tổng số promotion query theo channel/store type/customer group
+- **promotion_resolve_success_rate**: % query trả được CTKM đúng scope
+- **promotion_conflict_count**: số lần conflict giữa nguồn CTKM — alert khi tăng đột biến
+- **expired_promo_filtered_count**: số lần CTKM hết hiệu lực bị filter — báo hiệu cleanup chậm
+- **public_safe_block_count**: số lần internal-only promo bị block bởi whitelist (audit log)
+- **no_promo_match_rate**: % query không có CTKM nào phù hợp — dùng để phân tích coverage
 
 ## 21. Rollout / Feature Flag
 
@@ -180,12 +196,27 @@ Promotion module trả lời được cho phase 1.
 
 ## 24. Ready-for-UXUI Checklist
 
-- [ ] UXUI đã chốt promo card / warning states
+- [ ] `User Story` đã approved và có problem, trigger, happy path, dependencies, AC context
+- [ ] User Task Flow đủ chi tiết để thiết kế screen/state (§1A)
+- [ ] Business rules và permission rules testable (§11)
+- [ ] Main, alternate, và error flows đã ghi đầy đủ (§5/6/7)
+- [ ] State machine rõ ràng hoặc đánh dấu `N/A + lý do` (§8)
+- [ ] Data và event dependencies đã link (§12/13/14)
+- [ ] Open questions buộc A06 phải tự bịa behavior đã được resolve hoặc đánh dấu blocker (§22)
 
 ## 25. Ready-for-FE-Preview Checklist
 
-- [ ] FE Preview có mock promo scope variants
+- [ ] User Story đã approved và link trong Sprint Backlog
+- [ ] UXUI spec tồn tại và cite SRS này
+- [ ] Không còn mâu thuẫn chưa giải quyết giữa SRS và UXUI
+- [ ] Mock/stub data assumptions cho FE Preview đã rõ ràng
+- [ ] PM đã mở `FE Preview` một cách tường minh
 
 ## 26. Ready-for-BE / Integration Promotion Checklist
 
-- [ ] BE contract promo priority đã rõ
+- [ ] FE Preview đã được review
+- [ ] Feedback thay đổi behavior từ FE Preview đã được đưa về SRS / UXUI
+- [ ] `Integration Spec` (hoặc split technical pack đã approved) align với SRS này
+- [ ] UXUI spec tồn tại và cite SRS này
+- [ ] Không còn mâu thuẫn chưa giải quyết giữa SRS, UXUI, và technical handoff artifact
+- [ ] PM đã confirm `Build Ready`

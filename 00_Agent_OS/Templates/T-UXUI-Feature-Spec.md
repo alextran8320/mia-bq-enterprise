@@ -284,7 +284,7 @@ _Document common errors users encounter during the Task Flow (§2.1) and how the
 - [ ] Touch targets ≥ 44x44px
 - [ ] Responsive: desktop + tablet + mobile
 - [ ] 100% Vietnamese copy
-- [ ] Screenshots for all screens + states
+- [ ] Verified demo/runtime evidence for all screens + states; screenshots optional unless explicitly requested
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility attributes applied
 

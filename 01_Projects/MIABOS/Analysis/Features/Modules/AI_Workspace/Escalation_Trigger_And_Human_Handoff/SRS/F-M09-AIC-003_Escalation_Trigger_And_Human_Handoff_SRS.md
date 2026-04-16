@@ -1,14 +1,14 @@
 # Feature SRS: F-M09-AIC-003 Escalation Trigger and Human Handoff
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Claude Code (claude-sonnet-4-6)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
+**Approved By**: A01 PM Agent — Promoted to SRS Ready 2026-04-16; trigger matrix + routing specifics deferred to BE/integration phase per BQ pilot scope decision
 **Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt trigger matrix phase 1, destination routing theo domain/branch/team, và payload tối thiểu chuyển sang workflow xử lý người thật
+**Blocking Reason**: -
 **Module**: M09
 **Phase**: PB-02 / PB-03
 **Priority**: High

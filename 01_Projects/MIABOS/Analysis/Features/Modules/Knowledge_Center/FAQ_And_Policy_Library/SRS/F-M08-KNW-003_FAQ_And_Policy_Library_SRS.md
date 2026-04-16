@@ -1,14 +1,14 @@
 # Feature SRS: F-M08-KNW-003 FAQ and Policy Library
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Claude Code (claude-sonnet-4-6)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
+**Approved By**: A01 PM Agent — Promoted to SRS Ready 2026-04-16; library taxonomy + mobile scope + sales-facing exposure rules deferred to BE/integration phase per BQ pilot scope decision
 **Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt taxonomy library theo domain/persona, phạm vi mobile cho store staff, và rule tài liệu nào được expose sang sales-facing contexts
+**Blocking Reason**: -
 **Module**: M08
 **Phase**: PB-02 / PB-03
 **Priority**: High

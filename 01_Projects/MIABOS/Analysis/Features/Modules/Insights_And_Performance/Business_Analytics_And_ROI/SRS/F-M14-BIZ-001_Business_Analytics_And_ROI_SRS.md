@@ -1,16 +1,16 @@
 # Feature SRS: F-M14-BIZ-001 Business Analytics And ROI
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Claude Code (claude-sonnet-4-6)
-**Last Reviewed By**: -
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
+**Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
+**Approved By**: A01 PM Agent - FE Preview scope approved with mock/stub data on 2026-04-16
 **Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt KPI set ưu tiên cho phase 1 dashboard, granularity phân tích theo chi nhánh/kênh, và ownership dữ liệu giữa Ban điều hành và Marketing/Sales Lead
+**Blocking Reason**: -
 **Module**: M14
-**Phase**: PB-02 / PB-03 (P2 — Sales Expansion bundle)
+**Phase**: PB-03 / FE Preview (mock) - production analytics remains P2
 **Priority**: High
 **Document Role**: SRS high-level cho analytics, ROI, và business performance dashboard của MIABOS
 
@@ -186,14 +186,20 @@ M14 tái dùng M12 cho ops alerting (snapshot pipeline delay). M14 tự emit `an
 
 ## 21. Rollout / Feature Flag
 
-Phase 2 — sau khi M05, M06, M10, M12 stable và có đủ data volume từ pilot để tính metric có nghĩa.
+- FE Preview có thể mở ngay bằng mock/stub data để review dashboard IA, KPI hierarchy, states, và copy.
+- Production analytics vẫn là Phase 2 — sau khi M05, M06, M10, M12 stable và có đủ data volume từ pilot để tính metric có nghĩa.
 
 ## 22. Open Questions
 
-- KPI set ưu tiên cho phase 1 dashboard là gì? (Revenue, sell-through, AI ROI, hay funnel conversion?)
-- Granularity phân tích theo chi nhánh cần đến mức nào trước khi M13 available?
-- Ai là owner của dashboard definitions — PM, Ban điều hành, hay Marketing?
-- YoY comparison có cần trong phase 1 không hay để phase 2?
+Các quyết định dưới đây đủ để mở `UXUI` và `FE Preview` bằng mock/stub data. Production analytics/integration thật vẫn cần A05/A08 chốt sau FE review.
+
+| Question | FE Preview Decision | Downstream Note |
+|----------|---------------------|-----------------|
+| KPI set ưu tiên cho phase 1 dashboard là gì? | Executive Preview dùng top-4 KPI: `Doanh thu`, `Đơn hàng`, `Tỉ lệ trả lời thành công của AI`, `Tỉ lệ escalation`. Các view phụ dùng `sell-through`, `promo effectiveness`, `funnel conversion`, `lead capture`, `time saved`. | KPI cuối cùng cho production cần Business Owner/BQ leadership approve sau demo. |
+| Granularity phân tích theo chi nhánh/kênh cần đến mức nào trước M13? | FE Preview mô phỏng branch/channel/segment filter nhưng không cam kết dữ liệu thật; Regional Manager only sees assigned scope. | Drill-down production theo vùng/đại lý/chi nhánh phụ thuộc M13 và M07 scope matrix. |
+| Ai owner dashboard definitions? | PM sở hữu dashboard definition cho preview; Ban điều hành/BQ sponsor approve KPI priority; Marketing/Sales Lead approve funnel/promo definitions. | Ownership chính thức cần đưa vào governance artifact trước Build Ready. |
+| YoY comparison có cần phase 1 không? | Deferred. Preview chỉ cần current period vs previous period; YoY để Phase 2 khi có retention đủ 2 năm. | Production retention đã đặt tối thiểu 2 năm trong NFR. |
+| Export có cần hoạt động thật ở preview không? | FE Preview hiển thị export action và mock success/error states; không generate file thật nếu chưa có backend. | Export thật cần quyết định server-side/client-side trong technical handoff. |
 
 ## 23. Definition of Done
 
@@ -201,12 +207,12 @@ Ban điều hành và PM có dashboard dùng được để báo cáo BQ pilot R
 
 ## 24. Ready-for-UXUI Checklist
 
-- [ ] UXUI đã chốt dashboard layout và persona views cho Executive, Marketing, PM
-- [ ] Color coding và threshold system đã được Define theo BQ's preferred reporting style
+- [x] UXUI đã chốt dashboard layout và persona views cho Executive, Marketing, PM
+- [x] Color coding và threshold system đã được define đủ cho FE Preview; BQ reporting style cuối cùng chờ review
 
 ## 25. Ready-for-FE-Preview Checklist
 
-- [ ] FE Preview có mock data cho tất cả 4 main views với các trạng thái: healthy, warning, insufficient data
+- [x] FE Preview có mock data cho tất cả 4 main views với các trạng thái: healthy, warning, insufficient data
 
 ## 26. Ready-for-BE / Integration Checklist
 

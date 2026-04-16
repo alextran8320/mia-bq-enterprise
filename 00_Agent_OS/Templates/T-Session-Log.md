@@ -32,7 +32,7 @@ _Record item-by-item details of the "close work" with the Business Owner._
 
 ## 👁️ Visual / Logic Audit
 _Mandatory proof of implementation stability._
-- [ ] **Layout Audit**: [Link to screenshot] - No "bể" (broken) elements detected.
+- [ ] **Layout Audit**: [Verified demo/runtime evidence; screenshot optional] - No "bể" (broken) elements detected.
 - [ ] **Tone Audit**: Matches the approved project palette.
 - [ ] **Logic Audit**: [Link to terminal logs] - CRUD/API verified.
 

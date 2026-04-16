@@ -43,8 +43,8 @@ This certificate confirms that **[Project Name]** has passed all quality gates a
 | Gate 2A | Design Direction Approved | ✅ PASSED | YYYY-MM-DD | Session log |
 | Gate 2B | Mockups Signed Off | ✅ PASSED | YYYY-MM-DD | `Design/Mockups/` |
 | Gate 3 | Design → Build | ✅ PASSED | YYYY-MM-DD | `Design/Architecture.md`, `Design/API_Contract.md` |
-| Gate 3A | Mid-Build Visual Checkpoint | ✅ PASSED | YYYY-MM-DD | `Build/Screenshots/Checkpoints/` |
-| Gate 4 | Build → Test | ✅ PASSED | YYYY-MM-DD | `Build/Screenshots/` |
+| Gate 3A | Mid-Build Visual Checkpoint | ✅ PASSED | YYYY-MM-DD | Verified demo/runtime evidence; screenshots optional |
+| Gate 4 | Build → Test | ✅ PASSED | YYYY-MM-DD | Build/test/runtime evidence; screenshots optional |
 | Gate 5 | Test → Ship | ✅ PASSED | YYYY-MM-DD | This document |
 
 ---

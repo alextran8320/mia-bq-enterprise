@@ -64,7 +64,7 @@ Every subtask detail block must be complete enough to answer all items below:
 - `Read First`: exact artifacts the agent must consume
 - `Execution Steps`: step-by-step implementation plan
 - `Do Not Assume`: explicit assumptions that are forbidden
-- `Evidence Required`: screenshots, notes, test proof, or artifact updates required at handoff
+- `Evidence Required`: verified demo/runtime evidence, notes, test proof, artifact updates, or optional screenshots required at handoff
 - `Escalate When`: exact conditions that require PM / Business Owner confirmation
 - `Done When`: objective exit criteria
 

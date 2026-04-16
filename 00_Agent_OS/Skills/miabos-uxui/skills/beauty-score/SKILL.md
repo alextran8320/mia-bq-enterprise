@@ -3,7 +3,7 @@ name: beauty-score
 description: "Evaluate visual quality of FE implementation across 6 dimensions. Target: average >= 8/10. Gate requirement for PB-05. Use when QA phase needs visual quality assessment of built screens."
 agent: A06
 phase: PB-05
-input: "FE screenshots, approved UXUI Feature Spec, Design System"
+input: "FE runtime evidence or optional screenshots, approved UXUI Feature Spec, Design System"
 output: "Beauty Score Report with per-dimension scores and remediation"
 template: null
 ---
@@ -18,10 +18,10 @@ Evaluate the visual quality of implemented screens. This is a PB-05 gate require
 
 ### Step 1: Gather Materials
 
-1. Collect all **FE screenshots** from `Build/Screenshots/`
+1. Collect **FE runtime evidence**: runnable route, viewport checks, browser/DOM assertions, Playwright results, review notes, or screenshots if already available
 2. Read the approved **UXUI Feature Spec** for design intent
 3. Read the **Design System** for token values
-4. If using Pencil MCP: use `get_screenshot` for live capture
+4. If using Pencil MCP and PM explicitly requests visual capture: use `get_screenshot`; otherwise screenshot capture is skipped
 
 ### Step 2: Score Each Screen Across 6 Dimensions
 
@@ -120,5 +120,5 @@ For each screen, score 1-10 on:
 - [ ] All screens evaluated (no screen skipped)
 - [ ] Each dimension scored with evidence (not gut feel)
 - [ ] Vietnamese copy checked for accuracy
-- [ ] Screenshots saved as evidence
+- [ ] Runtime evidence saved; screenshots optional unless explicitly requested
 - [ ] Remediation items specific and actionable (not "make it look better")

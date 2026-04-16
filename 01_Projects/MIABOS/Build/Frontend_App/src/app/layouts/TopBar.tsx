@@ -4,6 +4,7 @@ import { Avatar } from "@/shared/ui";
 export function TopBar() {
   return (
     <header
+      className="topbar"
       style={{
         height: 56,
         flexShrink: 0,
@@ -17,6 +18,7 @@ export function TopBar() {
       }}
     >
       <div
+        className="topbar__search"
         style={{
           display: "flex",
           alignItems: "center",
@@ -43,7 +45,10 @@ export function TopBar() {
         />
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
+      <div
+        className="topbar__profile"
+        style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}
+      >
         <span style={{ fontSize: "13px", color: "var(--color-text-secondary)" }}>Admin</span>
         <Avatar name="Admin User" size={32} />
       </div>

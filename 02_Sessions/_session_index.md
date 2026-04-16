@@ -3,6 +3,13 @@
 ### 2026-04-16
 
 - [[2026-04-16_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-16_MIABOS_SRS_Promote_And_UXUI_Spec_Full_Pack|MIABOS SRS Promote And UXUI Spec Full Pack]] - Promote 9 SRS Draft → SRS Ready cho AI_Workspace/Insights_And_Performance/Knowledge_Center; tạo 8 UXUI Feature Specs mới; UXUI index đầy đủ 12 specs.
+- [[2026-04-16_MIABOS_M14_Dashboard_FE_Preview_Build|MIABOS M14 Dashboard FE Preview Build]] - Built mock-only Dashboard FE Preview routes, verified build and HTTP 200 routes, updated M14 STB/backlog to Ready for Review, and kept BE blocked.
+- [[2026-04-16_MIABOS_Internal_AI_Chat_Review_Round1_Fix|MIABOS Internal AI Chat Review Round1 Fix]] - Vá feedback review vòng 1 cho `/ai/chat` (bỏ copy mock, mở click interaction, thêm lịch sử hỏi đáp), chạy lại build/runtime evidence và đưa STB về trạng thái re-review.
+- [[2026-04-16_MIABOS_M09_M14_Readiness_Sync|MIABOS M09 M14 Readiness Sync]] - Promoted M09/M14 to SRS Ready, approved UXUI for mock FE Preview, created missing PRD/story/STB/backlog chain, and kept production integration blocked.
+- [[2026-04-16_OS_Screenshot_Bypass_Process_Update|OS Screenshot Bypass Process Update]] - Cập nhật quy trình để bỏ bước screenshot bắt buộc; thay bằng Verified Demo/runtime evidence, screenshot chỉ optional khi được yêu cầu.
+- [[2026-04-16_MIABOS_Sales_Advisor_AI_FE_Preview_Readiness|MIABOS Sales Advisor AI FE Preview Readiness]] - Sửa ghost session log và ghi lại readiness chain cho `F-M10-SLS-001 Sales Advisor AI` FE Preview.
+- [[2026-04-16_MIABOS_Internal_AI_Chat_FE_Preview_Fix|MIABOS Internal AI Chat FE Preview Fix]] - Sửa lỗi build FE preview cho màn `/ai/chat`, chạy kiểm chứng build/dev server, và ghi nhận trạng thái review của Internal AI Chat.
 - [[2026-04-16_MIABOS_Obsidian_Local_Gitignore|MIABOS Obsidian Local Gitignore]] - Chuyển `.obsidian/` thành machine-local state bằng root `.gitignore` và gỡ toàn bộ `.obsidian` khỏi Git index.
 - [[2026-04-16_MIABOS_Alex_Implementation_To_Main_Merge|MIABOS Alex Implementation To Main Merge]] - Merge branch `alex_implementation` vào `main`, import toàn bộ lịch sử implementation/spec/design liên quan, và phục hồi local working state sau merge.
 - [[2026-04-16_MIABOS_UXUI_Spec_M09_M10|MIABOS UXUI Spec M09 M10]] - Tạo 2 UXUI Feature Spec đầu tiên: F-M09-AIC-001 Internal AI Chat và F-M10-SLS-001 Sales Advisor AI. Tạo folder `Design/UXUI_Features/`.

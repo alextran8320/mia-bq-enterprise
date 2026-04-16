@@ -9,9 +9,10 @@
 **Design System Reference**: [`Design/Design_System.md`](../Design_System.md)
 **Save to**: `Design/UXUI_Features/UXUI-F-M12-OBS-001_Audit_And_Observability.md`
 **Date**: 2026-04-16
+**Last Updated By**: Claude Code (claude-sonnet-4-6)
 **Last Status Change**: 2026-04-16
 
-> **Precondition**: SRS `F-M12-OBS-001` hiện ở `Draft` — spec này chuẩn bị UX contract để build khi SRS promote lên `SRS Ready`. Bật từ ngày đầu pilot.
+> **Precondition Resolved**: Linked SRS `F-M12-OBS-001` đã ở `SRS Ready` (promoted 2026-04-16); spec này là visual/interaction authority cho FE Preview bằng mock/stub data. Bật từ ngày đầu pilot. BE/integration thật cần Integration Spec riêng trước khi promote lên `Build Ready`.
 
 ---
 

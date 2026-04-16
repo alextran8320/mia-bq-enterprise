@@ -1,14 +1,14 @@
 # Feature SRS: F-M09-AIC-001 Internal AI Chat
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
+**Approved By**: A01 PM Agent - FE Preview scope approved with mock/stub data on 2026-04-16
 **Last Status Change**: 2026-04-16
 **Source of Truth**: This document
-**Blocking Reason**: Cần chốt intent taxonomy phase 1, query routing matrix giữa data/policy answers, escalation threshold, và trust UI contract cho answer card
+**Blocking Reason**: -
 **Module**: M09
 **Phase**: PB-02 / PB-03
 **Priority**: High
@@ -208,9 +208,15 @@ BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + int
 
 ## 22. Open Questions
 
-- Intent taxonomy phase 1 sẽ chốt ở mức nào?
-- Low-confidence threshold sẽ dùng rule-based hay score-based?
-- Query nào được phép trả follow-up question, query nào phải escalate ngay?
+Các quyết định dưới đây đủ để mở `UXUI` và `FE Preview` bằng mock/stub data. Backend/integration thật vẫn cần A05 materialize trong Integration Spec trước khi promote `Build Ready`.
+
+| Question | FE Preview Decision | Downstream Note |
+|----------|---------------------|-----------------|
+| Intent taxonomy phase 1 chốt ở mức nào? | Dùng 4 answer types cho preview: `Policy`, `Data`, `Mixed`, `Unsupported/Blocked`. | Production routing có thể mở rộng thêm sub-intent theo domain sau khi integration layer có dữ liệu thật. |
+| Query routing matrix giữa data/policy answers như thế nào? | Preview dùng deterministic routing: policy-only -> `M08`; data-only -> integration snapshot; mixed -> tách `Dữ liệu hiện tại` + `Chính sách áp dụng`; unsupported -> blocked/follow-up. | Source priority thật giữa `SAP B1`, `KiotViet`, `Haravan`, và Excel phải được chốt trong Integration Spec. |
+| Low-confidence threshold dùng rule-based hay score-based? | Preview dùng state mock: low-confidence -> follow-up question nếu còn trong scope; stale/conflict/sensitive -> warning hoặc blocked card. | Production cần threshold score/rule cụ thể và audit logic trước BE build. |
+| Query nào được phép follow-up, query nào phải escalate ngay? | Follow-up khi thiếu intent/detail nhưng không nhạy cảm; escalate/block khi hỏi ngoài quyền, source conflict nặng, hoặc user bấm `Tạo yêu cầu hỗ trợ`. | Destination routing và payload escalation thuộc `F-M09-AIC-003` / `F-M11-ESC-001`. |
+| Trust UI contract cho answer card đã đủ chưa? | Preview dùng type badge + freshness chip + warning badge + source trace + next action theo UXUI `F-M09-AIC-001`. | Label cuối cùng có thể refine sau Business Owner review nhưng không block FE Preview. |
 
 ## 23. Definition of Done
 
@@ -218,12 +224,12 @@ BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + int
 
 ## 24. Ready-for-UXUI Checklist
 
-- [ ] UXUI đã chốt chat shell, answer card, blocked state, mixed-answer pattern, source trace, escalation CTA
+- [x] UXUI đã chốt chat shell, answer card, blocked state, mixed-answer pattern, source trace, escalation CTA
 
 ## 25. Ready-for-FE-Preview Checklist
 
-- [ ] FE Preview có mock `policy`, `data`, `mixed`, `blocked`, `warning`, `escalation`
-- [ ] Stub payload đủ `answer_type`, `citations`, `warnings`, `freshness_status`, `next_actions`
+- [x] FE Preview có mock `policy`, `data`, `mixed`, `blocked`, `warning`, `escalation`
+- [x] Stub payload đủ `answer_type`, `citations`, `warnings`, `freshness_status`, `next_actions`
 
 ## 26. Ready-for-BE / Integration Promotion Checklist
 

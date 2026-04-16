@@ -4,6 +4,7 @@ import { DashboardPage } from "@/modules/crm-workspace/pages/DashboardPage";
 import { CustomerListPage } from "@/modules/crm-workspace/pages/CustomerListPage";
 import { CustomerProfilePage } from "@/modules/crm-workspace/pages/CustomerProfilePage";
 import { LeadListPage } from "@/modules/crm-workspace/pages/LeadListPage";
+import { InternalAIChatPage } from "@/modules/ai-workspace/pages/InternalAIChatPage";
 
 export const router = createBrowserRouter([
   {
@@ -19,5 +20,10 @@ export const router = createBrowserRouter([
       { path: "customers/:id", element: <CustomerProfilePage /> },
       { path: "leads", element: <LeadListPage /> },
     ],
+  },
+  {
+    path: "/ai",
+    element: <AppShell />,
+    children: [{ path: "chat", element: <InternalAIChatPage /> }],
   },
 ]);

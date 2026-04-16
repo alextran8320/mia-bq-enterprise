@@ -33,13 +33,13 @@
 
 _For each relevant user role, document 3–5 primary task steps for the core job-to-be-done._
 
-| Step | User Role | Action | Task Type | Notes |
-|------|-----------|--------|-----------|-------|
-| 1 | _e.g. Agent_ | _e.g. Opens assigned conversation_ | Quick Action | _Entry point_ |
-| 2 | _e.g. Agent_ | _e.g. Reviews customer message_ | — | |
-| 3 | _e.g. Agent_ | _e.g. Sends reply or changes status_ | Quick Action | _Primary task_ |
-| 4 | _e.g. Supervisor_ | _e.g. Reviews team dashboard_ | Reporting | _Separate role flow_ |
-| 5 | _e.g. Supervisor_ | _e.g. Reassigns conversation_ | Quick Action | |
+| Step | User Role         | Action                               | Task Type    | Notes                |
+| ---- | ----------------- | ------------------------------------ | ------------ | -------------------- |
+| 1    | _e.g. Agent_      | _e.g. Opens assigned conversation_   | Quick Action | _Entry point_        |
+| 2    | _e.g. Agent_      | _e.g. Reviews customer message_      | —            |                      |
+| 3    | _e.g. Agent_      | _e.g. Sends reply or changes status_ | Quick Action | _Primary task_       |
+| 4    | _e.g. Supervisor_ | _e.g. Reviews team dashboard_        | Reporting    | _Separate role flow_ |
+| 5    | _e.g. Supervisor_ | _e.g. Reassigns conversation_        | Quick Action |                      |
 
 **Task Types**: `Quick Action` | `Configuration` | `Reporting` | `Bulk Operation` | `Exception Handling`
 

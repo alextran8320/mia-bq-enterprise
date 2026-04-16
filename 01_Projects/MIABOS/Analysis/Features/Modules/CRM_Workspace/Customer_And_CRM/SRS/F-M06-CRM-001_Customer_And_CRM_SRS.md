@@ -73,6 +73,17 @@
   - `CRM-003`
   - `CRM-004`
 
+
+## 0B. Integration Source Map
+
+| Data Domain | Source System | Direction | Notes |
+|---|---|---|---|
+| Customer master, thông tin khách hàng cơ bản | SAP B1 | Read | Nguồn cho business partner / customer code |
+| Khách hàng ecommerce, loyalty, đơn online | Haravan | Read | Nguồn cho customer profile phía online và loyalty |
+| Khách hàng tại cửa hàng, CRM POS | KiotViet | Read | Nguồn cho customer tại điểm bán |
+| Chính sách loyalty, điểm tích lũy, hạng thành viên | MIABOS Knowledge Center (M08) | Read | Policy layer cho CRM rules |
+| CRM customer master, lead, enrichment attributes | MIABOS internal DB | Read/Write | MIABOS là master của CRM layer; source là read-only |
+
 ## 1. User Story
 
 Là Sales, CSKH, Marketing, Store Manager, hoặc AI bán hàng, tôi muốn MIABOS có hồ sơ khách hàng 360 hợp nhất để xem được thông tin định danh, sở thích, nhu cầu, lịch sử mua hàng, lịch sử chat, lịch sử gọi điện, lịch sử chăm sóc, quan hệ dữ liệu giữa các mã khách hàng trên nhiều hệ thống, và gợi ý hành động tiếp theo, nhằm tư vấn chính xác hơn, chăm sóc tốt hơn, remarketing đúng tệp hơn, và không phải tra nhiều hệ thống rời rạc.
@@ -586,3 +597,4 @@ erDiagram
 - [ ] BE contract order/chat/call summary đã chốt.
 - [ ] Consent model đã được duyệt.
 - [ ] Retention và audit rule đã được duyệt.
+

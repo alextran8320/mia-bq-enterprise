@@ -369,6 +369,17 @@ PB-06: Ship & Learn
 2. Activate [[A02_Product_Owner_Agent|A02]] + [[A03_BA_Agent|A03]]
 3. Follow PB-02 → PB-03 pipeline
 
+### Khi viết Feature SRS (A03 — bắt buộc với mọi AI model):
+1. **Đọc BQ pack TRƯỚC khi mở template** — xem [Active Requirement Source](#active-requirement-source--giày-bq) section phía trên
+2. Đọc theo thứ tự: `BQ_Stakeholder_Map` → `BQ_Systems_And_Integration_Landscape` → `BQ_Customer_Research_Pack §3`
+3. Điền **§0B Integration Source Map** ngay sau §0 Metadata — ghi rõ data đến từ SAP B1 / KiotViet / Haravan / MIABOS internal
+4. Dùng **BQ Stakeholder Map** để fill §10 Role — không được chỉ viết "User nội bộ"
+5. Dùng **BQ Systems & Integration Landscape** để fill §12 API Contract và §14 DB Impact
+6. Anchor **§2 Business Context** vào pain point thật từ BQ pack — không viết generic
+7. Chạy **Quality Check** của skill `write-feature-spec` trước khi set status
+8. **Không set `SRS Ready`** nếu §5 < 4 steps, §11 < 3 rules testable, §17 không có số liệu, §18 < 3 AC độc lập
+9. Xem [Global Rules](03_Knowledge_Bank/Global_Rules.md) Rule 41 + 42 cho gate cứng trước UXUI handoff
+
 ---
 
 ## Key Reference Files

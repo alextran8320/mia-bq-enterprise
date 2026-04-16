@@ -1,0 +1,49 @@
+:root {
+  /* ── Primary Palette (MIA Brand Blue) ── */
+  --color-primary: #2F64F6;
+  --color-primary-hover: #2552CC;
+  --color-primary-active: #1A3B99;
+  --color-primary-light: #ECF2FE;
+  --color-primary-muted: #D3E1FC;
+
+  /* ── Neutral Palette (Cool Slate) ── */
+  --color-bg-page: #F6F9FF;
+  --color-bg-surface: #ECF4FF;
+  --color-bg-card: #FFFFFF;
+  --color-text-primary: #013652;
+  --color-text-secondary: #3A6381;
+  --color-text-tertiary: #8EB6D9;
+  --color-border-ghost: rgba(142, 182, 217, 0.15);
+
+  /* ── Semantic Colors ── */
+  --color-success: #22C55E;
+  --color-error: #E11D48;
+  --color-warning: #F59E0B;
+
+  /* ── Elevation ── */
+  --shadow-0: none;
+  --shadow-ambient: 0 12px 24px rgba(1, 54, 82, 0.04);
+  --shadow-glass: blur(20px);
+
+  /* ── Spacing (4px base) ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* ── Radius ── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+  --radius-full: 9999px;
+
+  /* ── Typography ── */
+  --font-primary: "Be Vietnam Pro", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}

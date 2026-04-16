@@ -3,6 +3,7 @@
 ### 2026-04-16
 
 - [[2026-04-16_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-16_MIABOS_Pull_Main_Into_Hino_And_Resolve_Customer_360_Merge|MIABOS Pull Main Into Hino And Resolve Customer 360 Merge]] - Committed local Customer 360 work on `Hino`, pulled `origin/main`, resolved merge conflicts, and kept the branch clean for continued analysis.
 - [[2026-04-16_MIABOS_Process_Fix_And_Mock_Expansion|MIABOS Process Fix And Mock Data Expansion]] - Fix quy trình: xóa PNG gate per BO directive, promote UXUI Approved. Expand mock 4→8 scenarios. Improve spike: error state, scroll, Unsupported card, a11y, microcopy.
 - [[2026-04-16_MIABOS_Internal_AI_Chat_Canonical_Prep_And_Spike|MIABOS Internal AI Chat Canonical Prep And Spike]] - Promote `F-M09-AIC-001` lên `SRS Ready`, materialize planning chain đầy đủ, canonicalize UXUI ở trạng thái `Blocked`, và thêm local spike preview `/ai/chat` bằng mock data.
 - [[2026-04-16_MIABOS_AI_Workspace_Planning_Chain_F_M09_AIC_001|MIABOS AI Workspace Planning Chain F M09 AIC 001]] - Materialize planning chain cho `F-M09-AIC-001 Internal AI Chat`: PRD, Product Backlog, Sprint Backlog, User Story, và Subtask Board; giữ PRD `In Review`, story `Approved` cho planning, và khóa FE Preview đến khi UXUI Approved thật.
@@ -45,4 +46,5 @@
 - [[2026-04-13_MIABOS_Project_Metadata_Reset|MIABOS Project Metadata Reset]] - Reframed the retained MIABOS workspace around Giay BQ, Retail, and the Marketing/Sales/Customer Service AI operating scope.
 - [[2026-04-13_MIABOS_Giay_BQ_Requirement_Source_Linkage|MIABOS Giay BQ Requirement Source Linkage]] - Linked the Giay BQ customer pack into the agent control plane as the active requirement source for the current MIABOS workspace.
 - [[2026-04-13_MIABOS_BQ_SAP_Research_Consolidation|MIABOS BQ SAP Research Consolidation]] - Consolidated the SAP Business One research for Giay BQ into a single reusable research pack and linked it from the BQ customer-pack index.
+
 

@@ -7,3 +7,6 @@ Nhóm này chứa các module quản trị tri thức, SOP, policy, và publishi
 ## Modules
 
 - `Knowledge_And_Policy`
+- `Knowledge_Publishing_Queue`
+- `FAQ_And_Policy_Library`
+- `Knowledge_Documents_And_Source_Governance`

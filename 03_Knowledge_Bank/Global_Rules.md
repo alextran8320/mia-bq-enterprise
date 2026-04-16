@@ -92,4 +92,7 @@ The following rules were removed from this file during the 2026-03-17 OS Hardeni
 
 ---
 
-_Last updated: 2026-04-15 (added Rule 40 — branch-import misrouting into `02_Sessions/` must be repaired immediately)_
+| 41 | **SRS BQ Context Anchor Rule**: Mọi Feature SRS được viết trong context MIABOS/BQ phải anchor §2 Business Context vào ít nhất 1 pain point thật từ BQ pack (`04_Raw_Information/Customers/Giay_BQ/`), §10 Role vào BQ Stakeholder Map (không chỉ dùng role generic), và §0B Integration Source Map + §12 API Contract + §14 DB Impact vào BQ Systems & Integration Landscape (SAP B1, KiotViet, Haravan, Lark, Excel). SRS không có anchor này là incomplete draft và không eligible cho UXUI handoff. | [Source: 02_Sessions/2026-04-15_MIABOS_SRS_Process_Enhancement.md] | 2026-04-15 |
+| 42 | **SRS Content Depth Gate**: Feature SRS không được promote sang `SRS Ready` nếu bất kỳ điều kiện nào sau đây chưa đạt: §5 Main Flow dưới 4 steps có tên actor và action cụ thể; §11 Business Rules dưới 3 rules testable (mỗi rule có điều kiện "nếu X thì Y", không dùng "nên" hoặc "phải nhanh"); §17 NFR không có ít nhất 1 số liệu đo được (latency, retention, concurrent user, hoặc uptime SLA); §18 AC dưới 3 statements testable độc lập. PM Agent enforce gate này trước mọi UXUI handoff. | [Source: 02_Sessions/2026-04-15_MIABOS_SRS_Process_Enhancement.md] | 2026-04-15 |
+
+_Last updated: 2026-04-15 (added Rule 41 — SRS BQ Context Anchor; Rule 42 — SRS Content Depth Gate)_

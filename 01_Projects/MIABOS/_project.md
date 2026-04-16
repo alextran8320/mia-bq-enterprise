@@ -46,6 +46,7 @@ The following documentation layers were intentionally removed on 2026-04-13:
 
 | Date | Session Log | Summary |
 |------|-------------|---------|
+| 2026-04-16 | [2026-04-16_MIABOS_Obsidian_Local_Gitignore](../../02_Sessions/2026-04-16_MIABOS_Obsidian_Local_Gitignore.md) | Tạo root `.gitignore` với rule `.obsidian/` và gỡ toàn bộ `.obsidian` khỏi Git index để mỗi máy giữ Obsidian workspace/config riêng mà không bị Git bắt buộc track. |
 | 2026-04-16 | [2026-04-16_MIABOS_Alex_Implementation_To_Main_Merge](../../02_Sessions/2026-04-16_MIABOS_Alex_Implementation_To_Main_Merge.md) | Merge branch `alex_implementation` vào `main` bằng merge commit `f1fab3d`, đưa toàn bộ khối implementation/spec/design/session artifacts sang nhánh chính, và giữ lại local working state của Business Owner dưới dạng unstaged change sau merge. |
 | 2026-04-16 | [2026-04-16_MIABOS_Knowledge_Center_And_AI_Workspace_SRS_Enhancement](../../02_Sessions/2026-04-16_MIABOS_Knowledge_Center_And_AI_Workspace_SRS_Enhancement.md) | Enhance lại toàn bộ 10 SRS của `Knowledge_Center` và `AI_Workspace` theo quy trình SRS mới: thêm `§0B Integration Source Map`, neo BQ context/source map, mở rộng flows/rules/NFR/AC, và giữ tất cả ở `Draft` vì blocker nghiệp vụ vẫn còn mở. |
 | 2026-04-13 | [2026-04-13_MIABOS_Project_Document_Reset](../../02_Sessions/2026-04-13_MIABOS_Project_Document_Reset.md) | Removed business, planning, analysis, architecture, test, and feature-level design documents while preserving the design system and build workspace. |

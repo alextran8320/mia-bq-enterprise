@@ -1,22 +1,21 @@
 # Current Active Context
 
 **Last Updated**: 2026-04-16
-**Active Workspace Topic**: Merge branch `alex_implementation` vào `main` và sync control-plane sau repo integration
+**Active Workspace Topic**: Chuyển `.obsidian/` sang machine-local state bằng root `.gitignore`
 **Current Project**: `MIABOS`
-**Current Phase**: `Operational / Repo Sync`
-**Latest Canonical Session Log**: [[2026-04-16_MIABOS_Alex_Implementation_To_Main_Merge]]
+**Current Phase**: `Operational / Repo Hygiene`
+**Latest Canonical Session Log**: [[2026-04-16_MIABOS_Obsidian_Local_Gitignore]]
 **Today's Daily Log**: [[2026-04-16_Daily_Log]]
 
 ## Latest Decisions
 
-- `main` đã merge thành công branch `alex_implementation` tại commit `f1fab3d`.
-- Merge đã import thêm khối artifact đáng kể cho `Analysis`, `Design`, `Planning`, `02_Sessions`, `AGENTS.md`, và `01_Projects/Giay_BQ/`.
-- Không phát sinh conflict thủ công trong quá trình merge.
-- Local working state của Business Owner được giữ lại dưới dạng unstaged change ở `.obsidian/workspace.json` và `00_Agent_OS/Templates/T-Feature-SRS.md`.
-- `main` hiện đang `ahead origin/main` 2 commit.
+- Repo hiện có root `.gitignore` mới với rule `.obsidian/`.
+- Toàn bộ `.obsidian/**` đã được gỡ khỏi Git index bằng `git rm -r --cached` nhưng file local vẫn còn trên máy.
+- `git check-ignore -v --no-index` xác nhận `.obsidian/workspace.json` và `.obsidian/app.json` đang bị ignore đúng theo rule mới.
+- `main` vẫn giữ merge commit `f1fab3d` từ `alex_implementation`; work block hiện tại chỉ harden tracking behavior cho Obsidian.
 
 ## Next Actions
 
-- Nếu cần, push `main` lên remote.
-- Review nhanh các artifact mới được kéo vào từ `alex_implementation`.
-- Quyết định có giữ hay discard hai local unstaged files đang còn mở.
+- Commit `.gitignore` mới cùng staged removals của `.obsidian/`.
+- Nếu cần, push `main` lên remote sau khi chốt commit repo hygiene này.
+- Nếu muốn giữ lại một vài file Obsidian dùng chung, thiết kế whitelist riêng.

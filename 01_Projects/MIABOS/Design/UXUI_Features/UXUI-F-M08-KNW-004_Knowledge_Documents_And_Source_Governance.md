@@ -9,7 +9,7 @@
 **Design System Reference**: [`Design/Design_System.md`](../Design_System.md)
 **Save to**: `Design/UXUI_Features/UXUI-F-M08-KNW-004_Knowledge_Documents_And_Source_Governance.md`
 **Date**: 2026-04-16
-**Last Updated By**: A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI, incorporating research 2026-04-17)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
 **Approved By**: A01 PM Agent
@@ -89,7 +89,7 @@ và xử lý được stale/restricted source ngay trên dashboard,
 | Source Status | Chatbot Behavior | Visual Indicator |
 |--------------|-----------------|-----------------|
 | Active + fresh | Retrieve + cite bình thường | Source badge xanh |
-| Active + stale (quá review cycle) | Retrieve + stale badge + "chưa review X tháng" | Source badge vàng |
+| Active + stale (vượt threshold 1 giờ phase 1) | Retrieve theo rule + stale badge + warning rõ | Source badge vàng |
 | Restricted | Không retrieve — Uncertainty Signal + escalation | — |
 | Inactive | Không retrieve | — |
 
@@ -154,14 +154,11 @@ và xử lý được stale/restricted source ngay trên dashboard,
 ├─────────────────────────────────────────────────────────────┤
 │ [Status ▼] [Source Type ▼] [Owner ▼]       [🔍 Tìm kiếm]  │
 ├─────────────────────────────────────────────────────────────┤
-│ Tổng: 6 nguồn  │  Cần xử lý: 2  │  Stale: 1  │  Conflict: 1 │
+│ Tổng: 3 nguồn  │  Cần xử lý: 1  │  Stale: 1  │  Bị khóa: 0  │
 ├─────────────────────────────────────────────────────────────┤
 │ ● SAP B1      | ERP    | Tài chính | Trust: Cao | ● Active   │
 │ ● KiotViet    | POS    | Vận hành  | Trust: Cao | ● Active   │
-│ ⚠ Excel Q1   | Manual | Marketing | Trust: Thấp| ⚠ Stale   │
-│ ⚡ KiotViet  | POS    | IT        | Trust: Cao | ⚡ Conflict│
-│ ○ Haravan    | Ecomm  | Ecomm     | Trust: Cao | ● Active   │
-│ ○ Lark       | Wflow  | HR        | Trust: Thấp| ● Active   │
+│ ⚠ Excel Upload| Manual | Marketing | Trust: Thấp| ⚠ Stale   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -199,12 +196,11 @@ và xử lý được stale/restricted source ngay trên dashboard,
 ┌─────────────────────────────────────────────────────────────┐
 │ PageHeader: "Độ tươi mới của nguồn tri thức"  [Refresh]    │
 ├─────────────────────────────────────────────────────────────┤
-│ ● Còn mới (4)    ⚠ Gần hết hạn (1)    🔴 Hết hạn (1)      │
+│ ● Còn mới (2)    ⚠ Hết hạn cập nhật (1)    ○ Bị khóa (0)  │
 ├─────────────────────────────────────────────────────────────┤
-│ SAP B1         | Lần cuối: 2h trước  | Ngưỡng: 24h  | ● OK  │
-│ KiotViet       | Lần cuối: 3h trước  | Ngưỡng: 24h  | ● OK  │
-│ Haravan        | Lần cuối: 6h trước  | Ngưỡng: 12h  | ⚠ 6h  │
-│ Excel Q1       | Lần cuối: 8 ngày    | Ngưỡng: 7 ngày| 🔴 Stale│
+│ SAP B1         | Lần cuối: 20p trước | Ngưỡng: 1h   | ● OK  │
+│ KiotViet       | Lần cuối: 35p trước | Ngưỡng: 1h   | ● OK  │
+│ Excel Upload   | Lần cuối: 80p trước | Ngưỡng: 1h   | 🔴 Stale│
 ├─────────────────────────────────────────────────────────────┤
 │ Tài liệu ảnh hưởng bởi nguồn Stale: 3 tài liệu [Xem →]    │
 └─────────────────────────────────────────────────────────────┘
@@ -261,7 +257,7 @@ và xử lý được stale/restricted source ngay trên dashboard,
 | Status | Display | Color | Meaning |
 |--------|---------|-------|---------|
 | Active | ● Active | Success green | Đang dùng, fresh |
-| Warning | ⚠ Gần hết hạn | Warning yellow | Sắp stale |
+| Warning | ⚠ Gần hết hạn | Warning yellow | Sắp vượt ngưỡng 1 giờ |
 | Stale | 🔴 Hết hạn | Danger red | Vượt freshness threshold |
 | Restricted | ○ Bị khóa | Muted gray | Không được dùng cho runtime |
 | Deprecated | — (ẩn) | N/A | Không còn active |
@@ -305,6 +301,7 @@ và xử lý được stale/restricted source ngay trên dashboard,
 | Restrict impact | [N] tài liệu đang dùng nguồn này sẽ bị ảnh hưởng. | 55 chars |
 | Reason note label | Ghi chú (bắt buộc) | 22 chars |
 | Restrict success | Nguồn đã được khóa. M09 và M10 đã cập nhật. | 50 chars |
+| Freshness threshold hint | Ngưỡng phase 1: 1 giờ cho mọi nguồn | 45 chars |
 
 ---
 
@@ -358,8 +355,9 @@ và xử lý được stale/restricted source ngay trên dashboard,
 ## 10. Pre-Delivery Checklist (A07)
 
 - [ ] Source Health section trong `/knowledge` với status dots + trust badges
-- [ ] Summary stat bar (Tổng / Cần xử lý / Stale / Restricted)
+- [ ] Summary stat bar (Tổng / Cần xử lý / Stale / Bị khóa)
 - [ ] Freshness board với days-since-refresh + threshold comparison
+- [ ] Freshness board dùng threshold 1 giờ trong toàn bộ mock data
 - [ ] Stale row highlight (--color-danger-bg)
 - [ ] Restrict source modal — impact preview + note bắt buộc
 - [ ] Create/Edit source form
@@ -371,5 +369,5 @@ và xử lý được stale/restricted source ngay trên dashboard,
 - [ ] Accessibility: aria-label on status dots, focus trap, role="table"
 
 **A06 Design Sign-Off**: Approved (2026-04-17) — 3 source types (SAP B1/KiotViet/Excel); freshness threshold 1 giờ cho tất cả; Source Health section trong `/knowledge`; Restrict modal impact-count và linked assets là required UX.
-**A05 Tech Sign-Off**: Approved (2026-04-17) — 1-hour threshold unified; 3 source types đơn giản hơn dự kiến; reconciliation/conflict handling defer sang BE/Catalog & Commerce phase, không nằm trong M08 object model.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — 1-hour threshold unified; 3 source types đơn giản hơn dự kiến; reconciliation / source mismatch handling defer sang BE/Catalog & Commerce phase, không nằm trong M08 object model.
 **PM Gate**: Approved (2026-04-17) — Source types và freshness SLA đã chốt. Ready for A07 FE build (mock/stub only).

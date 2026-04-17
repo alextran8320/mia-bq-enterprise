@@ -9,7 +9,7 @@
 **Design System Reference**: [`Design/Design_System.md`](../Design_System.md)
 **Save to**: `Design/UXUI_Features/UXUI-F-M08-KNW-001_Knowledge_And_Policy.md`
 **Date**: 2026-04-16
-**Last Updated By**: A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI, incorporating research 2026-04-17)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
 **Approved By**: A01 PM Agent
@@ -91,7 +91,7 @@ Thay vì dựa vào trí nhớ cá nhân hoặc file Excel không kiểm soát.
 |-------------|------|----------------------|
 | Internal Chatbot Concept | [RES-M08-KNW_Internal_Chatbot_Concept.md](../../Research/Knowledge_Center/RES-M08-KNW_Internal_Chatbot_Concept.md) | Gen 3 RAG; Answer-First; Verified KB; Role-Aware; Honest Uncertainty |
 | Paradigm & Benchmark | [RES-M08-KNW_Paradigm_And_Benchmark.md](../../Research/Knowledge_Center/RES-M08-KNW_Paradigm_And_Benchmark.md) | Guru verification model; Source Citation block; Embedded wins standalone |
-| UX Patterns & IA | [RES-M08-KNW_UX_Patterns_And_IA.md](../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md) | 7 UX patterns; 3 interaction modes; Article Metadata Block |
+| UX Patterns & IA | [RES-M08-KNW_UX_Patterns_And_IA.md](../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md) | 7 UX patterns; 3 interaction modes; Source Citation, Uncertainty, Stale, Quick Replies, Role-Aware, Feedback |
 | Layout & Rich Document | [RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md](../../Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md) | 3-panel workspace; Sidebar max 3 levels; Cmd+K search; Content blocks |
 
 ### UX Patterns bắt buộc trong spec này
@@ -103,9 +103,9 @@ Thay vì dựa vào trí nhớ cá nhân hoặc file Excel không kiểm soát.
 | Article Metadata Block (owner, date, tags, verified) | S4 Detail Panel header | ✅ |
 | Uncertainty Signal (khi không tìm thấy) | S1 empty state + E3-E6 error states | ✅ |
 | Human Escalation Path (không dead-end) | Feedback button trong S4 | ✅ |
-| Feedback Loop (thumbs up/down) | Thiếu — cần thêm vào S4 | ⚠ Cần bổ sung |
-
-> **⚠ Feedback Loop**: Research doc §2 Pattern 7 yêu cầu thumbs up/down sau mỗi document view. A07 cần thêm feedback widget vào S4 Document Detail Panel.
+| Quick Reply Chips / related next steps | S4 Detail Panel + S5 Source Reference Panel | ✅ |
+| Role-Aware Response Header | S4 Detail Panel + S5 Source Reference Panel | ✅ |
+| Feedback Loop (thumbs up/down) | S4 Detail Panel + S5 Source Reference Panel | ✅ |
 
 ## 1.2 Research-Backed IA Reset (cũ — giữ nguyên)
 
@@ -346,6 +346,7 @@ Knowledge Center không triển khai như nhiều route độc lập. `Library`,
 ┌─────────────────────────────────────────────────────────────┐
 │ ← Quay lại   [Policy] Chính sách đổi trả Q2 2026  [Sửa]   │
 │ Published | Owner: Tài chính | v2.1 | Hiệu lực: 01/04/2026 │
+│ Áp dụng cho: CSKH / Ecommerce                              │
 ├─────────────────────────────────────────────────────────────┤
 │ Tóm tắt: [Quy định đổi trả sản phẩm cho khách lẻ...]       │
 ├─────────────────────────────────────────────────────────────┤
@@ -358,9 +359,11 @@ Knowledge Center không triển khai như nhiều route độc lập. `Library`,
 │ [Attachment: File policy gốc.pdf]                           │
 ├─────────────────────────────────────────────────────────────┤
 │ Nguồn: SAP B1 (fresh ✓) | KiotViet (fresh ✓)               │
+│ Scope: Knowledge Base nội bộ / Policy / Đổi trả            │
 │ Lịch sử phiên bản: v2.1 (hiện tại) | v2.0 | v1.3          │
 ├─────────────────────────────────────────────────────────────┤
-│ [Gửi phản hồi]                                              │
+│ Câu hỏi liên quan: [SOP đổi trả] [Ngoại lệ] [Hỏi người thật]│
+│ Câu trả lời này hữu ích không?  [Hữu ích] [Chưa hữu ích]   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -373,8 +376,10 @@ Knowledge Center không triển khai như nhiều route độc lập. `Library`,
 │ Tài liệu tham chiếu:                                        │
 │ [Policy] Chính sách đổi trả Q2 2026                        │
 │ Phòng ban: Tài chính | v2.1 | Hiệu lực: 01/04/2026         │
+│ Scope: Knowledge Base nội bộ / Policy                       │
 │ Độ mới: ● Còn mới (4 ngày trước)                           │
 │ [Mở tài liệu đầy đủ →]                                     │
+│ [SOP liên quan] [Hỏi người thật]   [Hữu ích] [Chưa hữu ích] │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -391,7 +396,7 @@ Knowledge Center không triển khai như nhiều route độc lập. `Library`,
 | Import document | `POST /mia/knowledge/import` | `source_type`, `file_ref`, `target_folder`, `metadata`, `assets[]` | Multipart / async job |
 | Create form submit | Internal draft save → `POST /mia/knowledge/publish-request` (via KNW-002) | All form fields | POST body |
 | Document detail | `GET /mia/knowledge/documents/:id` | `metadata`, `current_version`, `version_history`, `source_links`, `assets[]` | Object |
-| Source reference panel | `GET /mia/knowledge/documents/:id` | `title`, `version`, `owner`, `effective_date`, `freshness_status`, `source_links` | Object |
+| Source reference panel | `GET /mia/knowledge/documents/:id` | `title`, `version`, `owner`, `effective_date`, `freshness_status`, `source_links`, `scope_statement`, `quick_reply_suggestions`, `feedback_action`, `escalation_action` | Object |
 | SOP step list | `GET /mia/knowledge/documents/:id` | `sop_steps[]` with `actor`, `action`, `expected_output`, `exception_note` | Array |
 
 ---
@@ -459,6 +464,9 @@ Knowledge Center không triển khai như nhiều route độc lập. `Library`,
 | Stale banner | Tài liệu này quá hạn xem xét — có thể không còn chính xác | 65 chars |
 | Superseded banner | Đã có phiên bản mới hơn cho tài liệu này. | 50 chars |
 | Feedback button | Gửi phản hồi | 15 chars |
+| Helpful button | Hữu ích | 10 chars |
+| Not helpful button | Chưa hữu ích | 15 chars |
+| Ask human button | Hỏi người thật | 15 chars |
 | Import warning | Có hình ảnh chưa import thành công. | 40 chars |
 
 ---
@@ -514,9 +522,10 @@ Knowledge Center không triển khai như nhiều route độc lập. `Library`,
 - [ ] Progressive disclosure cho advanced fields
 - [ ] Document detail với freshness, version, source badges
 - [ ] Source reference panel render ≤ 1s
+- [ ] Source reference panel có scope statement + quick replies + feedback actions
 - [ ] Stale banner (role="alert")
 - [ ] Superseded banner với link sang version mới
-- [ ] Feedback/escalation path không tạo object gap riêng
+- [ ] Feedback thumbs up/down + escalation path không tạo object gap riêng
 - [ ] Responsive: form single-column ở mobile
 - [ ] 100% Vietnamese copy
 - [ ] `prefers-reduced-motion` handled

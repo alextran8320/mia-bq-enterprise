@@ -20,12 +20,16 @@
 
 - Feature ID: `F-M09-AIC-001`
 - Related PRD: [Planning/PRD/AI_Workspace/PRD-M09-AIC-001_Internal_AI_Chat.md](../../../../../../Planning/PRD/AI_Workspace/PRD-M09-AIC-001_Internal_AI_Chat.md)
-- Related User Story: [Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md](../../../../../../Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md)
+- Related User Story: [Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat.md](../../../../../../Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat.md)
 - Related Screens: chat console nội bộ, answer card, source trace panel, warning state, escalation CTA, blocked state
 - Related APIs: `POST /mia/chat/query`, `GET /mia/chat/suggestions/:id`, `POST /mia/chat/feedback`
 - Related Tables: `chat_session`, `chat_message`, `chat_answer_snapshot`, `chat_audit_log`
 - Related Events: `mia.chat.answer_generated`, `mia.chat.answer_blocked`, `mia.chat.escalation_created`, `mia.chat.feedback_submitted`
 - Related Error IDs: `AIC-001`, `AIC-008`, `AIC-009`, `AIC-010`
+- Related Research:
+  - [RES-M08-KNW_Internal_Chatbot_Concept.md](../../../../../../Research/Knowledge_Center/RES-M08-KNW_Internal_Chatbot_Concept.md)
+  - [RES-M08-KNW_Paradigm_And_Benchmark.md](../../../../../../Research/Knowledge_Center/RES-M08-KNW_Paradigm_And_Benchmark.md)
+  - [RES-M08-KNW_UX_Patterns_And_IA.md](../../../../../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md)
 
 ## 0B. Integration Source Map
 
@@ -38,6 +42,10 @@
 | `Excel`                     | Temporary exception table, manual notes   | Chỉ dùng khi governance cho phép và phải gắn warning         | Temporary source           | Không được silent-use                             |
 | `M07 Security / Access`     | Permission, role scope, sensitivity rules | Chặn/giảm scope answer, mask fields, block full detail       | Gatekeeper                 | Bắt buộc chạy trước render answer                 |
 | `M11 Workflow / Escalation` | Handoff workflow                          | Nhận escalation khi answer không đủ chắc chắn                | Operational target         | Không để user dead-end                            |
+
+## 0C. Research Alignment Note
+
+Feature này bám concept `Trusted Knowledge Companion` trong research M08: answer-first, citation rõ, verified knowledge, role-sensitive response, honest uncertainty, và human escalation. Phạm vi `Data` / `Mixed` trong SRS là **read-only operational data snapshot** cho BQ phase 1 khi user hỏi tồn kho, đơn online, giá/CTKM hoặc source vận hành; đây không phải Gen 4 action execution. Hệ thống không tự tạo ticket, tự update CRM/SAP, hay proactive push notification trong scope `F-M09-AIC-001`.
 
 ## 1. User Story
 

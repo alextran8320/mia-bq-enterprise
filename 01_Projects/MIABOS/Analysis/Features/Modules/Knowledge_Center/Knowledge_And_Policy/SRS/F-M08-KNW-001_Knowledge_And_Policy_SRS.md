@@ -128,6 +128,7 @@ Theo BQ research pack, phase 1 phải giải quyết gói `chatbot nội bộ + 
 - Có nút `Import tài liệu` ở command bar; `Tạo thủ công` là action phụ.
 - Document detail phải render rich content gồm text, heading, table, inline image, attachment, caption/alt text nếu có.
 - Source reference panel phải cho thấy `document type`, `owner phòng ban`, `version`, `effective date`, `freshness label`, `source backing`.
+- AI answer/reference payload phải render theo `RES-M08-KNW_UX_Patterns_And_IA`: answer summary tối đa 3-4 dòng, scope declaration, source citation block, stale/uncertainty state, quick reply chips, role-aware guidance, và feedback/escalation action.
 - SOP detail phải cho thấy các `SOP Step` theo thứ tự thao tác, actor phụ trách, điều kiện áp dụng, và bước escalation nếu quy trình bị chặn.
 - Policy detail phải ưu tiên `quy định chính`, `scope áp dụng`, `ngoại lệ`, rồi mới tới full body.
 - Nếu tài liệu bị `Superseded` hoặc `Deprecated`, UI phải cho link sang bản thay thế và gắn cảnh báo rõ.
@@ -150,12 +151,15 @@ Theo BQ research pack, phase 1 phải giải quyết gói `chatbot nội bộ + 
 - Nếu `sensitivity level` của document cao hơn quyền hiện tại của user, hệ thống có thể trả summary an toàn nhưng phải chặn mở full detail.
 - Nếu document quá `review cycle` mà chưa republish hoặc revalidate, runtime phải gắn nhãn `stale` và answer không được hiển thị như fully trusted.
 - Nếu query đồng thời đụng `transaction data` và `policy knowledge`, UI phải tách rõ phần `data snapshot` và phần `policy explanation`.
+- Nếu runtime không tìm thấy source phù hợp hoặc source bị restricted, hệ thống không được trả confident answer; phải trả `uncertain` state với scope searched và escalation/contact action.
+- Nếu document có `sop_steps[]`, runtime phải có thể trả `Guided Process` payload thay vì chỉ trả body text.
+- Nếu document khai báo `role_guidance[]`, answer phải ưu tiên guidance đúng role/persona/channel hiện tại và hiển thị role-aware header.
 
 ## 12. API Contract Excerpt + Canonical Links
 
 - `POST /mia/knowledge/query`
   - Input: `query_text`, `intent`, `role`, `channel`, `branch_scope`, `sensitivity_scope`
-  - Output: `answer_summary`, `source_references[]`, `freshness_status`, `warnings[]`, `follow_up_actions[]`
+  - Output: `answer_summary`, `scope_statement`, `confidence_state`, `source_references[]`, `freshness_status`, `warnings[]`, `role_guidance`, `quick_reply_suggestions[]`, `follow_up_actions[]`, `escalation_action`, `feedback_action`
   - Consumer: `F-M09-AIC-001`, `F-M10-SLS-001`
 - `GET /mia/knowledge/documents/:id`
   - Output: `document metadata`, `current version`, `version history`, `source links`, `assets`, `access flags`
@@ -180,7 +184,7 @@ Theo BQ research pack, phase 1 phải giải quyết gói `chatbot nội bộ + 
 - `knowledge_document_version`
   - Lưu `version_number`, `effective_date`, `published_at`, `approval_note`, `superseded_by`
 - `knowledge_policy_index`
-  - Lưu searchable payload cho runtime, normalized tags, document/version reference
+  - Lưu searchable payload cho runtime, normalized tags, document/version reference, `answer_summary`, `scope_statement`, `quick_reply_suggestions`, `role_guidance`, `escalation_owner`
 - `knowledge_sop_step`
   - Lưu step order, actor, action text, expected output, exception/escalation note cho tài liệu SOP
 - `knowledge_document_source_link`
@@ -200,6 +204,9 @@ Theo BQ research pack, phase 1 phải giải quyết gói `chatbot nội bộ + 
 - Source reference runtime phải map đúng `knowledge_document_version` tại thời điểm answer được sinh ra.
 - Runtime không được dùng documents ở trạng thái `Draft`, `In Review`, `Restricted`, hoặc `Deprecated`.
 - Nếu review cycle quá hạn, system vẫn có thể cho phép mở detail nhưng phải chặn trạng thái `trusted` ở runtime answer.
+- Published document dùng cho AI runtime phải có đủ source citation metadata: `title`, `version`, `owner`, `effective_date`, `freshness_status`, và `source_backing`.
+- `answer_summary` không được vượt quá 4 dòng trong answer card; nội dung dài phải đi qua detail link hoặc expand.
+- Quick reply suggestions chỉ được tạo từ related docs/topics đã qua permission filter.
 
 ## 16. Error Codes
 
@@ -226,11 +233,15 @@ Theo BQ research pack, phase 1 phải giải quyết gói `chatbot nội bộ + 
 - Nếu answer hoặc library chưa đủ rõ, UI phải có feedback/escalation path; scope này không tạo gap-report object riêng.
 - Khi import tài liệu có hình ảnh, detail view phải hiển thị ảnh đúng vị trí hoặc hiển thị warning rõ nếu ảnh lỗi.
 - Khi user mở `/knowledge`, họ phải thấy cùng lúc cây nội dung category, danh sách section, và preview/detail panel mà không phải nhảy qua nhiều page riêng.
+- Khi runtime không tìm thấy source hợp lệ, answer phải hiển thị uncertainty signal với `scope_statement`, suggestions, và `Hỏi người thật` / contact action.
+- Khi hỏi SOP, hệ thống phải trả được guided step payload gồm step order, actor, action, expected output, và exception/escalation note.
 
 ## 19. Test Scenarios
 
 - Query `policy đổi trả` từ role `CSKH` và kiểm tra source reference metadata.
 - Query `pricing rule` từ role không đủ quyền và xác minh full detail bị chặn.
+- Query không có source phù hợp và xác minh uncertainty signal + escalation action.
+- Query SOP vận hành và xác minh guided step payload thay vì wall of text.
 - Publish version mới của cùng policy rồi kiểm tra version cũ sang `Superseded`.
 - Gửi feedback từ answer/library và xác minh không tạo object gap riêng trong Knowledge Center.
 - Import một file có ảnh/bảng/attachment và xác minh `knowledge_document_asset` được tạo, detail panel render đủ rich content.

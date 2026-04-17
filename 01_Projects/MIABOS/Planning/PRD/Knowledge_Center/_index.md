@@ -18,6 +18,8 @@ Folder này gom các PRD của surface `Knowledge_Center` để A02/A01 có lớ
 
 **UX/IA decision 2026-04-17**: Knowledge Center là một page chung `/knowledge`, không chia thành nhiều page rời. Các capability bên dưới là section/panel trong cùng workspace: folder tree bên trái, search/command bar phía trên, content sections ở giữa, preview/detail panel bên phải. Tài liệu import từ nguồn ngoài phải preserve hình ảnh, bảng, và attachment dưới dạng document assets.
 
+**AI Chat UX alignment 2026-04-17**: PRD/SRS/UXUI M08 phải align với [RES-M08-KNW_UX_Patterns_And_IA.md](../../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md). Knowledge Center không chỉ lưu document body; nó phải cung cấp answer-ready metadata cho M09/M10: source citation, scope statement, stale/uncertainty state, quick replies, role-aware guidance, escalation path, và feedback action.
+
 ## PRD Map
 
 | PRD | Capability | Linked SRS | Status |

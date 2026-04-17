@@ -6,7 +6,7 @@
 | Research Type | UX / IA / Product Pattern Research |
 | Author | A03 BA Agent + A06 UI/UX Agent (via Codex CLI + Claude Code CLI) |
 | Date | 2026-04-17 |
-| Status | **Draft — Chờ Business Owner Approve** |
+| Status | **Approved — Business Owner approved 2026-04-17** |
 | Related Docs | `UXUI-F-M08-KNW-001`, `PRD-M08-KNW-*`, `F-M08-KNW-* SRS`, `STB-M08-KNW-*` |
 
 ---
@@ -315,4 +315,4 @@ Knowledge Center nên được thiết kế như một **knowledge workspace**, 
 
 ---
 
-*Tài liệu này là research input — chưa phải spec chính thức. Business Owner cần approve hoặc feedback trước khi FE Preview M08 được rework theo hướng unified `/knowledge` workspace.*
+*Tài liệu này là input research đã được approve để định hướng PRD/SRS/UXUI. Nếu Business Owner đổi layout concept, phải revise research trước rồi mới sync lại artifact chính thức.*

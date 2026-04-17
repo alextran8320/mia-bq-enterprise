@@ -75,7 +75,7 @@ BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `
 2. Governance gán `trust level`, `allowed channels`, `allowed personas`, và `freshness rule`.
 3. `Knowledge Owner` link knowledge document/version tới source backing tương ứng và chỉ rõ source nào là primary.
 4. Hệ thống chạy freshness evaluation, so last refresh / last confirm / review cycle với threshold đã cấu hình.
-5. Nếu phát hiện source stale hoặc bị governance restrict, hệ thống gắn trạng thái `Warning`, `Stale`, hoặc `Restricted` trực tiếp trên source/document-source link.
+5. Nếu phát hiện source stale hoặc bị governance restrict, hệ thống gắn trạng thái `Warning`, `Stale`, hoặc `Restricted` trực tiếp trên source/document-source link; phase 1 dùng threshold chung `1 giờ`.
 6. Runtime query từ `M09` hoặc `M10` chỉ nhận được source set đã pass filter theo role/channel/trust/freshness.
 7. Governance cập nhật rule hoặc restrict/unrestrict source để bảo vệ downstream AI.
 
@@ -105,6 +105,7 @@ BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `
 - Freshness board phải cho thấy `days since last refresh`, `threshold`, `affected documents`, `downstream modules impacted`.
 - Source governance nằm trong `/knowledge` dưới dạng section/panel, không tách người dùng ra khỏi Knowledge Center workspace.
 - Source detail phải hiển thị linked documents/assets để biết tài liệu import nào bị ảnh hưởng bởi source stale/restricted.
+- Source status phải feed trực tiếp sang UX patterns của M09: `fresh` -> source citation bình thường, `stale` -> stale warning, `restricted/inactive` -> uncertainty signal + escalation.
 - Nếu cần so sánh source A/B ở mức dữ liệu, scope đó thuộc integration/Catalog & Commerce hoặc BE reconciliation.
 
 ## 10. Role / Permission Rules
@@ -124,6 +125,8 @@ BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `
 - Nếu source type là `Excel`, default trust level phải thấp hơn `SAP B1` / `Haravan` / `KiotViet` trừ khi PM Governance override rõ ràng.
 - Nếu source được phép cho `Internal AI` nhưng không được phép cho `External-facing AI`, `M10` phải bị chặn dùng source đó ngay cả khi `M09` được phép dùng.
 - Một document `Published` phải link tới ít nhất một source backing hợp lệ hoặc explicit `manual canonical policy source`.
+- Phase 1 freshness rule mặc định là `1 giờ` cho SAP B1, KiotViet, Excel upload, và tài liệu viết tay; ví dụ UI phải dùng thống nhất threshold này trong mọi mock data.
+- M08 không tạo object hoặc workflow xử lý mismatch dữ liệu; source mismatch chỉ hiển thị health/warning và defer reconciliation sang BE/integration hoặc Catalog & Commerce.
 
 ## 12. API Contract Excerpt + Canonical Links
 
@@ -174,6 +177,7 @@ BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `
 - Document/source link phải chỉ rõ source priority nếu có nhiều hơn một nguồn.
 - Restricted source không được trả về trong runtime source set cho `M09` hoặc `M10`.
 - Source restrict/unrestrict chỉ hợp lệ khi có actor, reason note, và audit log.
+- Freshness threshold phase 1 phải validate `threshold_hours = 1` cho các source types đã chốt, trừ khi có quyết định BO mới.
 
 ## 16. Error Codes
 
@@ -197,6 +201,7 @@ BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `
 - Nếu source health không đủ điều kiện, runtime phải nhận warning hoặc bị chặn theo rule.
 - Khi source stale/restricted có linked imported assets, source detail phải hiển thị affected asset/document count.
 - Mỗi document `Published` link được tới source backing hợp lệ hoặc manual canonical source có kiểm soát.
+- Khi source stale, M09/M10 phải nhận được `stale` warning metadata; khi source restricted, M09/M10 phải nhận được block/uncertainty signal thay vì source content.
 
 ## 19. Test Scenarios
 
@@ -204,6 +209,7 @@ BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `
 - Link document tới nhiều source với priority khác nhau.
 - Source `Excel` vượt freshness threshold và bị gắn `Stale`.
 - Source stale/restricted và kiểm tra warning/runtime behavior.
+- Freshness threshold 1 giờ áp dụng đồng nhất cho SAP B1, KiotViet, Excel upload, và tài liệu viết tay trong FE preview.
 - Restrict source rồi query từ `M09`/`M10`.
 
 ## 20. Observability
@@ -236,7 +242,7 @@ BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `
 **Impact lên UXUI / FE:**
 - Freshness board: đánh dấu stale khi `last_sync > 1 giờ` — thống nhất tất cả source
 - Source Registry: 3 source types với badge tương ứng (SAP B1 / KiotViet / Excel)
-- Conflict behavior: không có case workflow trong UI phase 1; chỉ hiển thị source health/freshness/restricted state
+- Source mismatch behavior: không có case workflow trong UI phase 1; chỉ hiển thị source health/freshness/restricted state
 
 ## 23. Definition of Done
 

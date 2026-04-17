@@ -2,7 +2,7 @@
 
 **Status**: Draft — Research Approved, Pending Business Owner PRD Approval
 **Owner**: A02 Product Owner Agent
-**Last Updated By**: A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: Business Owner
 **Approved By**: -
@@ -144,11 +144,11 @@ Mapping source → chatbot behavior:
 | Source Status | Chatbot Behavior |
 |--------------|-----------------|
 | Active + fresh | Retrieve bình thường + cite |
-| Active + stale (warning) | Retrieve + hiển thị stale badge + "chưa được review X tháng" |
+| Active + stale (warning) | Retrieve theo rule cho phép + hiển thị stale badge theo freshness threshold `1 giờ` phase 1 |
 | Restricted | Không retrieve — Uncertainty Signal + escalation path |
 | Inactive | Không retrieve |
 
-Xem [RES-M08-KNW_Internal_Chatbot_Concept.md](../../../../Research/Knowledge_Center/RES-M08-KNW_Internal_Chatbot_Concept.md) §3 Pillar 2 và [RES-M08-KNW_Paradigm_And_Benchmark.md](../../../../Research/Knowledge_Center/RES-M08-KNW_Paradigm_And_Benchmark.md) §6 Insight 1.
+Xem [RES-M08-KNW_UX_Patterns_And_IA.md](../../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md) §2 Pattern 2-3, [RES-M08-KNW_Internal_Chatbot_Concept.md](../../../Research/Knowledge_Center/RES-M08-KNW_Internal_Chatbot_Concept.md) §3 Pillar 2, và [RES-M08-KNW_Paradigm_And_Benchmark.md](../../../Research/Knowledge_Center/RES-M08-KNW_Paradigm_And_Benchmark.md) §6 Insight 1.
 
 ### 9.2 UX / IA Direction
 
@@ -160,11 +160,12 @@ Source governance là bề mặt cho PM/Ops/Governance trong `/knowledge`, khôn
 - Define trust / freshness / allowed usage rules
 - Link documents/assets to sources
 - Detect stale / restricted source status
+- Feed runtime warning contract: `fresh`, `stale`, `restricted`, `inactive`, `scope searched`, and escalation owner for M09 uncertainty/stale patterns
 
 ### 9.3 Operational Rules
 
 - Mỗi source phải có owner
-- Source không có freshness rule thì không được active
+- Source không có freshness rule thì không được active; phase 1 default freshness threshold là `1 giờ` cho SAP B1, KiotViet, Excel upload, và tài liệu viết tay
 - Source bị restricted không được dùng cho runtime answer mới
 - Internal AI và external AI có thể dùng khác source set
 
@@ -187,7 +188,7 @@ Source governance là bề mặt cho PM/Ops/Governance trong `/knowledge`, khôn
 | Risk | Type | Impact | Mitigation | Owner |
 |------|------|--------|------------|-------|
 | Source types quá nhiều hoặc mơ hồ | Product / Data | Rule governance rối | Chốt taxonomy source types theo P1 | PM / A02 |
-| Freshness SLA không khả thi | Operational | Cảnh báo stale vô nghĩa | Phân lớp SLA theo source type / knowledge topic | PM / Ops |
+| Freshness SLA không khả thi | Operational | Cảnh báo stale vô nghĩa | Phase 1 dùng threshold chung `1 giờ`, sau pilot mới xét phân lớp SLA | PM / Ops |
 | Data reconciliation bị kéo vào Knowledge Center | Governance | M08 phình scope, trùng Catalog & Commerce | Chỉ lưu source metadata/linking; reconciliation thuộc integration/Catalog & Commerce hoặc BE phase | PM |
 | Không thấy asset impact khi source stale | UX / Governance | Tài liệu import có hình ảnh/attachment lỗi nhưng governance không thấy | Source detail hiển thị linked documents/assets và affected counts | A03 / A06 |
 
@@ -205,6 +206,7 @@ Source governance là bề mặt cho PM/Ops/Governance trong `/knowledge`, khôn
 |------|----------|---------|--------|
 | 2026-04-15 | Source governance được tách riêng khỏi knowledge core | Codex CLI / A01 PM Agent | Trust layer cần artifact riêng để gate kiến trúc và operational rules |
 | 2026-04-17 | Source governance là section `Source Health` trong `/knowledge` và phải hiển thị affected documents/assets | Codex CLI / A01 PM Agent | Giữ Knowledge Center thống nhất và hỗ trợ tài liệu import rich content |
+| 2026-04-17 | Freshness phase 1 dùng threshold chung `1 giờ`; không tạo workflow xử lý mismatch dữ liệu trong M08 | Codex CLI / A01 PM Agent | Align với quyết định BO và giữ source governance ở mức warning/restricted health |
 
 ## 14. Linked Artifacts
 
@@ -216,6 +218,8 @@ Source governance là bề mặt cho PM/Ops/Governance trong `/knowledge`, khôn
 - Architecture / Integration Specs:
   - [F-I05-INT-001_Canonical_Mapping_And_Source_Of_Truth_SRS.md](../../../Analysis/Features/Integration/SRS/F-I05-INT-001_Canonical_Mapping_And_Source_Of_Truth_SRS.md)
 - Research / Evidence:
+  - [RES-M08-KNW_UX_Patterns_And_IA.md](../../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md)
+  - [RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md](../../../Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md)
   - [2026-04-13_BQ_Customer_Research_Pack.md](../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Customer_Research_Pack.md)
   - [2026-04-13_BQ_Systems_And_Integration_Landscape.md](../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Systems_And_Integration_Landscape.md)
 

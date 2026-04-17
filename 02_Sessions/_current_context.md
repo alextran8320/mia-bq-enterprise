@@ -1,14 +1,16 @@
 # Current Active Context
 
-**Last Updated**: 2026-04-17
-**Active Workspace Topic**: UnifiedInbox UI refinement round 2 — clean/minimal conversation interface with controlled brand accents, avatars, and clearer hierarchy
+**Last Updated**: 2026-04-18
+**Active Workspace Topic**: Internal Chatbot Concept alignment completed
 **Current Project**: `MIABOS`
-**Current Phase**: `PB-04 FE Preview UI Refinement`
-**Latest Canonical Session Log**: [[2026-04-17_MIABOS_UnifiedInbox_UI_Refinement]]
-**Today's Daily Log**: [[2026-04-17_Daily_Log]]
+**Current Phase**: `PB-03 Product Design`
+**Latest Canonical Session Log**: [[2026-04-18_MIABOS_Internal_Chatbot_Concept_Alignment]]
+**Today's Daily Log**: [[2026-04-18_Daily_Log]]
 
 ## Latest Decisions
 
+- Internal Chatbot Concept alignment completed on 2026-04-18: M09 SRS/UXUI were confirmed broadly aligned to `Trusted Knowledge Companion`; research metadata synced to Approved; M09 UXUI Source Trace binding fixed to use answer snapshot from `POST /mia/chat/query`.
+- `Data` / `Mixed` answer in `F-M09-AIC-001` is explicitly scoped as read-only operational data snapshot for BQ phase 1, not Gen 4 action execution.
 - Business Owner yêu cầu Knowledge Center không duplicate Catalog & Commerce taxonomy/data; `Knowledge Category / Domain` phải được diễn giải lại thành taxonomy tri thức nội bộ.
 - Business Owner yêu cầu bỏ `Citation Snapshot`, `Knowledge Gap Report`, `Knowledge Usage Log`, và `Conflict Case` khỏi object set của Knowledge Center.
 - `SOP Step` cần được giải thích lại là bước hướng dẫn thao tác trong tài liệu SOP, không phải workflow/task execution engine.
@@ -20,6 +22,9 @@
 - SRS/PRD/Stories/UXUI/STB M08 đã được refine theo layout mới; FE preview hiện có `/knowledge/library`, `/knowledge/publishing-queue`, `/knowledge/sources`, `/knowledge/freshness` được xem là legacy/revision-required trước FE handoff tiếp theo.
 - Research chính thức đã được materialize tại `01_Projects/MIABOS/Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md` và link vào Research index.
 - UnifiedInbox `/inbox` đã được refine 2 vòng: vòng 1 neutral hóa; vòng 2 theo feedback BO đã đưa lại brand color ở mức vừa phải, dùng `Avatar` component xuyên suốt, thêm search thật sự chạy, giữ nguyên logic nghiệp vụ.
+- Internal AI Chat doc chain đã được dọn trước BO review: Feature Registry chỉ còn một row `F-M09-AIC-001`, user story duplicate `_FE_Preview` đã bị xóa, story canonical là `US-M09-AIC-001_Internal_AI_Chat.md`, SRS/Requirements Mapping đã trỏ về story chính, UXUI metadata đủ status-model fields.
+- Knowledge Center PRD/SRS/UXUI đã được align với `RES-M08-KNW_UX_Patterns_And_IA.md`: M08 giờ có contract answer-ready cho M09/M10 gồm source citation, scope statement, uncertainty/stale state, quick replies, guided SOP, role-aware guidance, feedback/escalation, AI Preview before publish, và freshness threshold `1 giờ`.
+- M08 docs không còn TODO `cần bổ sung/cần verify` cho feedback/quick replies, không còn dual-approval UI residue trong queue, và không còn conflict-case workflow trong Source Governance.
 - Build full qua `vite build` đang bị chặn bởi môi trường Node `v16.14.0`; `npx tsc -b` pass cho code mới.
 - Business Owner đã chốt 8 open questions ngày 2026-04-17 (retention, trigger, routing, action types, CTA set, approval, freshness SLA).
 - **12/12 UXUI Feature Specs** = Approved.
@@ -40,10 +45,10 @@
 | F-M10-SLS-003 | **Approved** | Open for A07 FE build |
 | F-M12-OBS-001 | **Approved** | Open for A07 FE build |
 | F-M14-BIZ-001 | Approved | Ready for Review at `/analytics/executive` |
-| F-M08-KNW-001 | **Approved, revised 2026-04-17** | Needs FE preview revision to unified `/knowledge` |
-| F-M08-KNW-002 | **Approved, revised 2026-04-17** | Needs FE preview revision as `/knowledge` section |
-| F-M08-KNW-003 | **Approved, revised 2026-04-17** | Needs FE preview revision as `/knowledge` section |
-| F-M08-KNW-004 | **Approved, revised 2026-04-17** | Needs FE preview revision as `/knowledge` section |
+| F-M08-KNW-001 | **Approved, revised 2026-04-17 with UX Pattern IA alignment** | Needs FE preview revision to unified `/knowledge` |
+| F-M08-KNW-002 | **Approved, revised 2026-04-17 with UX Pattern IA alignment** | Needs FE preview revision as `/knowledge` section with AI Preview tab |
+| F-M08-KNW-003 | **Approved, revised 2026-04-17 with UX Pattern IA alignment** | Needs FE preview revision as `/knowledge` section with citation/quick replies/feedback |
+| F-M08-KNW-004 | **Approved, revised 2026-04-17 with UX Pattern IA alignment** | Needs FE preview revision as `/knowledge` section with 1-hour source freshness |
 
 ## FE Build Status
 
@@ -64,10 +69,12 @@
 
 ## Next Actions
 
-- **PM / Business Owner**: review enhanced Knowledge Center UX direction before FE revision.
+- **A07 FE Builder**: keep `/ai/chat` FE Preview within answer-first/trust-layer scope; do not add ticket/CRM/SAP action execution in this slice.
+- **A05/A08**: before backend/integration, materialize Integration Spec with source priority, access check, source routing, answer snapshot, and escalation handoff.
+- **PM / Business Owner**: review aligned Knowledge Center PRD/SRS/UXUI docs against `RES-M08-KNW_UX_Patterns_And_IA.md` before FE revision.
 - **PM / Business Owner**: approve hoặc comment research artifact `RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md`.
 - **PM / Business Owner**: review `/inbox` UI refinement round 2 (brand + avatar + search) và chốt feedback cuối.
 - **A07 FE Builder**: revise M08 FE Preview into one `/knowledge` workspace with folder tree, `Import tài liệu`, content sections, rich document assets, and preview/detail panel.
 - **A07 FE Builder**: Build 5 features còn lại (mock/stub only): AIC-002, AIC-003, SLS-002, SLS-003, OBS-001.
-- Business Owner review FE Previews hiện có: M09 `/ai/chat`, M14 `/analytics/executive`; M08 should be reworked before final review.
+- Business Owner review FE Previews hiện có: M09 `/ai/chat` (doc chain cleaned), M14 `/analytics/executive`; M08 should be reworked before final review.
 - Không mở backend/integration cho đến khi BO mở gate riêng.

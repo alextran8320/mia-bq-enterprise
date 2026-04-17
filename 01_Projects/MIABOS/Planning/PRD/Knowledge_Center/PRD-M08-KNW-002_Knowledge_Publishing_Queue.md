@@ -2,13 +2,13 @@
 
 **Status**: Draft — Research Approved, Pending Business Owner PRD Approval
 **Owner**: A02 Product Owner Agent
-**Last Updated By**: A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-15
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document
-**Blocking Reason**: Chưa chốt approval matrix theo domain, SLA review, và quyền rollback sau publish
+**Blocking Reason**: Chưa chốt quyền rollback cuối cùng và runtime index confirmation detail
 **Project**: MIABOS
 **Module ID**: M08
 **Phase**: PB-02 / PB-03
@@ -118,9 +118,9 @@ Queue phải được định nghĩa song song với knowledge core; nếu để
 
 | Slice | Goal | Included Features | Excluded Features | Dependency |
 |-------|------|-------------------|-------------------|------------|
-| `P1 Basic Queue` | Chặn publish trực tiếp và có review path | submit, review, approve/reject, publish status | multi-approval phức tạp | `F-M08-KNW-001` |
+| `P1 Basic Queue` | Chặn publish trực tiếp và có review path | submit, review, approve/reject, publish status | SAP approval workflow / legal approval | `F-M08-KNW-001` |
 | `P1.5 Rollback Governance` | Xử lý sai sót publish | rollback + incident note | automated notifications | runtime index confirmation |
-| `P2 Advanced Governance` | Tăng kiểm soát theo domain nhạy cảm | multi-approval, SLA dashboard | legal workflow | `M12`, PM policy |
+| `P2 Advanced Governance` | Tăng kiểm soát theo domain nhạy cảm | SLA dashboard, incident review, runtime confirmation detail | legal / SAP approval workflow | `M12`, PM policy |
 
 ## 8. Linked Features
 
@@ -140,7 +140,9 @@ Publishing Queue là lớp **governance bắt buộc** để đảm bảo chatbo
 - Chatbot chỉ được dùng item có status `Published` — queue là gate duy nhất
 - Reviewer phải thấy **rich content preview** (hình ảnh, bảng, attachment) trước khi approve — không duyệt text-only sẽ bỏ sót ngữ cảnh
 
-Xem [RES-M08-KNW_Paradigm_And_Benchmark.md](../../../../Research/Knowledge_Center/RES-M08-KNW_Paradigm_And_Benchmark.md) §2.1 cho Guru verification workflow detail.
+Queue cũng là điểm kiểm tra để tài liệu có đủ metadata phục vụ các pattern trong [RES-M08-KNW_UX_Patterns_And_IA.md](../../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md): source citation, stale warning, uncertainty fallback, quick replies, role-aware guidance, và feedback/escalation path. Reviewer không chỉ duyệt nội dung đọc được trên library; reviewer phải xác nhận nội dung này đủ an toàn để AI Chat dùng làm answer source.
+
+Xem [RES-M08-KNW_Paradigm_And_Benchmark.md](../../../Research/Knowledge_Center/RES-M08-KNW_Paradigm_And_Benchmark.md) §2.1 cho Guru verification workflow detail.
 
 ### 9.2 UX / IA Direction
 
@@ -149,6 +151,7 @@ Queue là section vận hành trong `/knowledge`, không phải page rời. Revi
 UX patterns bắt buộc trong review interface:
 - **Diff view**: so sánh bản cũ và bản mới side-by-side
 - **Rich content preview tab**: render đầy đủ hình ảnh, bảng, attachment — không được text-only
+- **AI Answer Preview**: preview answer summary, source citation block, role-aware header, stale/uncertainty state, quick replies, và feedback/escalation action trước khi publish
 - **Impact declaration**: hiển thị bao nhiêu AI queries/tháng đang dùng knowledge item này (để reviewer hiểu độ rủi ro)
 - **Decision log**: approve/reject phải có reason — không được one-click silent
 
@@ -156,6 +159,7 @@ UX patterns bắt buộc trong review interface:
 
 - Submit request với metadata bắt buộc
 - Review detail + diff + rich content preview
+- AI answer-ready validation preview
 - Approve / reject có lý do
 - Publish status + rollback path
 
@@ -164,6 +168,7 @@ UX patterns bắt buộc trong review interface:
 - Không được publish trực tiếp từ draft
 - Reject phải có reason
 - Rollback phải có incident note và target version rõ
+- Request không đủ `source citation`, `freshness state`, `scope statement`, hoặc `escalation owner` thì không được publish cho AI runtime
 
 ### 9.4 Technical Constraints for Downstream Teams
 
@@ -190,11 +195,13 @@ UX patterns bắt buộc trong review interface:
 
 ## 12. Open Questions
 
-| ID | Question | Blocking? | Owner | Target Resolution Date |
-|----|----------|-----------|-------|------------------------|
-| `OQ-001` | Domain nào cần single approval, domain nào cần multi-approval? | Yes | Business Owner / PM | 2026-04-18 |
-| `OQ-002` | Ai có quyền force rollback cuối cùng? | Yes | PM / Business Owner | 2026-04-18 |
-| `OQ-003` | SLA review chuẩn cho pricing / promotion / service là bao lâu? | Yes | PM / Ops | 2026-04-19 |
+| ID | Question / Decision Area | Status | Owner | Target Resolution Date |
+|----|--------------------------|--------|-------|------------------------|
+| `D-001` | Approval workflow nằm ở đâu? | **Resolved 2026-04-17**: nằm ở SAP; MIABOS không làm dual approval UI | Business Owner / PM | Done |
+| `OQ-002` | Ai có quyền force rollback cuối cùng? | Open | PM / Business Owner | 2026-04-18 |
+| `OQ-003` | Runtime index confirmation khi publish/rollback được xác nhận bằng signal nào? | Open | PM / A05 / A08 | 2026-04-19 |
+
+> **Decision update — 2026-04-17**: Queue trong MIABOS dùng 1-reviewer visibility/review flow cho FE Preview; rollback authority và runtime index confirmation vẫn cần chốt ở BE/integration phase.
 
 ## 13. Decision Log
 
@@ -202,6 +209,7 @@ UX patterns bắt buộc trong review interface:
 |------|----------|---------|--------|
 | 2026-04-15 | Tách publishing governance thành PRD riêng | Codex CLI / A01 PM Agent | Cần gate governance độc lập thay vì ẩn trong knowledge core |
 | 2026-04-17 | Queue là section `Chờ duyệt` trong `/knowledge`, không phải workspace rời | Codex CLI / A01 PM Agent | Giữ reviewer trong cùng Knowledge Center và hỗ trợ rich content review |
+| 2026-04-17 | Queue phải kiểm tra AI answer-ready metadata trước khi publish | Codex CLI / A01 PM Agent | Align với `RES-M08-KNW_UX_Patterns_And_IA` để M09 có citation, uncertainty/stale state, quick replies, role-aware guidance, và feedback/escalation |
 
 ## 14. Linked Artifacts
 
@@ -212,6 +220,8 @@ UX patterns bắt buộc trong review interface:
 - UXUI specs: `-`
 - Architecture / Integration Specs: `-`
 - Research / Evidence:
+  - [RES-M08-KNW_UX_Patterns_And_IA.md](../../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md)
+  - [RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md](../../../Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md)
   - [2026-04-13_BQ_Customer_Research_Pack.md](../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Customer_Research_Pack.md)
   - [2026-04-13_BQ_Raw_Notes.md](../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Raw_Notes.md)
 

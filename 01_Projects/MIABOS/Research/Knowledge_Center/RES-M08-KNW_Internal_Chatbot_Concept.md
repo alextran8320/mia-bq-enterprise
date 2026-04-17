@@ -6,7 +6,7 @@
 | Research Type | Concept Direction |
 | Author | A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI, w/ A06 UX input) |
 | Date | 2026-04-17 |
-| Status | **Draft — Chờ Business Owner Approve** |
+| Status | **Approved — Business Owner approved 2026-04-17** |
 | Blocks | PRD-M08-KNW-*, SRS-M08-KNW-*, UXUI-M08-KNW-* |
 
 ---
@@ -14,6 +14,8 @@
 ## Mục đích tài liệu
 
 Tài liệu này xác định **concept cốt lõi** cho Internal Chatbot của MIABOS trước khi rewrite các tài liệu chính thức (PRD, SRS, UXUI Spec). Mọi quyết định design trong tài liệu này phải được Business Owner approve trước khi thực thi.
+
+> **Approval / Alignment Note (2026-04-18)**: Research index đang ghi tài liệu này ở trạng thái `Approved`. Các SRS/UXUI liên quan phải giữ concept `Trusted Knowledge Companion` làm lõi: answer-first, source citation, verified knowledge, role-sensitive response, honest uncertainty, và human escalation. Với BQ phase 1, `M09 Internal AI Chat` được phép mở rộng sang **read-only operational data snapshot** từ SAP B1 / KiotViet / Haravan khi cần trả lời câu hỏi tồn kho/đơn hàng/CTKM, nhưng không được vượt sang Gen 4 action execution như tự tạo ticket, tự update CRM/SAP, hoặc proactive push notification.
 
 ---
 
@@ -137,14 +139,14 @@ Dựa trên context Giày BQ (Sales team, CS agents, Ops staff):
 
 ## 6. Điều cần Business Owner quyết định
 
-Trước khi em rewrite tài liệu, anh cần confirm:
+Các quyết định dưới đây là checklist review ban đầu. Trạng thái hiện tại theo Research Index: **Approved 2026-04-17**.
 
-- [ ] **Concept direction**: "Trusted Knowledge Companion" (Gen 3 RAG) có đúng không?
-- [ ] **Phase 1 scope**: Priority 1 use cases đủ chưa, hay cần bổ sung?
-- [ ] **Primary user**: Focus CS Agent trước hay tất cả nhân viên?
-- [ ] **Verified KB**: MIABOS có kế hoạch build admin interface để manage KB (owner/expiry) không?
-- [ ] **Language**: Chatbot trả lời bằng tiếng Việt hay cần hỗ trợ cả English?
+- [x] **Concept direction**: "Trusted Knowledge Companion" (Gen 3 RAG) là hướng chuẩn.
+- [x] **Phase 1 scope**: Priority 1 use cases được dùng làm lõi; BQ phase 1 có thêm read-only data/mixed answer cho inventory/order/promotion context.
+- [x] **Primary user**: Tất cả nhân viên nội bộ phase 1, với priority cao cho CSKH / Sales / Store / Ecommerce.
+- [x] **Verified KB**: M08 Knowledge Center quản lý owner/freshness/source governance cho KB.
+- [x] **Language**: Tiếng Việt là mặc định cho chatbot nội bộ; English có thể xử lý sau nếu Business Owner mở scope.
 
 ---
 
-*Tài liệu này là input research — chưa phải spec chính thức. Chờ approve trước khi cập nhật PRD/SRS/UXUI.*
+*Tài liệu này là input research đã được approve để định hướng PRD/SRS/UXUI. Nếu Business Owner đổi concept, phải revise research trước rồi mới sync lại artifact chính thức.*

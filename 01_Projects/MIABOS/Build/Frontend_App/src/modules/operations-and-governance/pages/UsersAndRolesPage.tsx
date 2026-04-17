@@ -1,19 +1,12 @@
-import { useEffect, useState } from "react";
-import { ShieldAlert, Store, UserRound, Users } from "lucide-react";
-import { Badge, Button, Card } from "@/shared/ui";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { Badge, Card, DataTable, Input } from "@/shared/ui";
+import type { Column } from "@/shared/ui";
 import {
-  getUserScopeProfileById,
-  searchUserScopeProfiles,
+  USER_SCOPE_PROFILES,
   type UserScopeProfile,
 } from "@/mocks/operations/operations";
-import {
-  DetailRow,
-  EmptyResultCard,
-  Eyebrow,
-  WARNING_STYLES,
-  WarningBanner,
-  useOperationsContext,
-} from "@/modules/operations-and-governance/components/OperationsModuleLayout";
 
 const STATUS_STYLES: Record<string, { color: string; bg: string }> = {
   "Đang áp dụng": { color: "var(--color-success)", bg: "#DCFCE7" },
@@ -21,223 +14,281 @@ const STATUS_STYLES: Record<string, { color: string; bg: string }> = {
   "Giới hạn quyền": { color: "#7C3AED", bg: "#F3E8FF" },
 };
 
-function StatusChip({ label }: { label: string }) {
-  const style = STATUS_STYLES[label] ?? {
-    color: "var(--color-text-secondary)",
-    bg: "var(--color-bg-surface)",
-  };
+function Eyebrow({ children }: { children: string }) {
+  return (
+    <span
+      style={{
+        fontSize: "11px",
+        fontWeight: 500,
+        color: "var(--color-text-tertiary)",
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
 
-  return <Badge label={label} color={style.color} bg={style.bg} />;
+function FilterSelect<T extends string>({
+  value,
+  options,
+  onChange,
+}: {
+  value: T;
+  options: { value: T; label: string }[];
+  onChange: (v: T) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const selectedLabel = options.find((o) => o.value === value)?.label ?? "";
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "10px 14px",
+          borderRadius: "var(--radius-sm)",
+          border: open ? "1.5px solid var(--color-text-primary)" : "1.5px solid transparent",
+          background: "var(--color-bg-card)",
+          color: "var(--color-text-primary)",
+          fontSize: "14px",
+          fontFamily: "var(--font-primary)",
+          fontWeight: 400,
+          cursor: "pointer",
+          boxShadow: "var(--shadow-ambient)",
+          minWidth: 140,
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span style={{ flex: 1, textAlign: "left" }}>{selectedLabel}</span>
+        {open ? (
+          <ChevronUp size={16} color="var(--color-text-tertiary)" />
+        ) : (
+          <ChevronDown size={16} color="var(--color-text-tertiary)" />
+        )}
+      </button>
+
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(100% + 4px)",
+            left: 0,
+            zIndex: 10,
+            background: "#fff",
+            borderRadius: "var(--radius-sm)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.06)",
+            minWidth: "100%",
+            padding: "4px 0",
+            overflow: "hidden",
+          }}
+        >
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                onChange(opt.value);
+                setOpen(false);
+              }}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "10px 16px",
+                border: "none",
+                background: opt.value === value ? "var(--color-bg-page)" : "transparent",
+                color: "var(--color-text-primary)",
+                fontSize: "14px",
+                fontFamily: "var(--font-primary)",
+                fontWeight: opt.value === value ? 600 : 400,
+                textAlign: "left",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                if (opt.value !== value)
+                  e.currentTarget.style.background = "var(--color-bg-page)";
+              }}
+              onMouseLeave={(e) => {
+                if (opt.value !== value)
+                  e.currentTarget.style.background = "transparent";
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+type StatusFilter = "all" | "active" | "attention" | "resolved";
+
+const STATUS_FILTERS: { value: StatusFilter; label: string }[] = [
+  { value: "all", label: "Tất cả" },
+  { value: "active", label: "Hoạt động" },
+  { value: "attention", label: "Cần chú ý" },
+  { value: "resolved", label: "Đã xử lý" },
+];
+
+const columns: Column<UserScopeProfile>[] = [
+  {
+    key: "id",
+    header: "Mã",
+    render: (r) => (
+      <div>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontWeight: 600,
+            fontSize: "13px",
+          }}
+        >
+          {r.id}
+        </div>
+        <div
+          style={{
+            fontSize: "12px",
+            color: "var(--color-text-secondary)",
+            marginTop: 2,
+          }}
+        >
+          {r.name}
+        </div>
+      </div>
+    ),
+    width: "22%",
+  },
+  {
+    key: "role",
+    header: "Vai trò",
+    render: (r) => <span style={{ fontSize: "13px" }}>{r.role}</span>,
+  },
+  {
+    key: "ownerTeam",
+    header: "Đội",
+    render: (r) => <span style={{ fontSize: "13px" }}>{r.ownerTeam}</span>,
+  },
+  {
+    key: "branchSummary",
+    header: "Phạm vi chi nhánh",
+    render: (r) => (
+      <span style={{ fontSize: "13px" }}>{r.branchSummary}</span>
+    ),
+  },
+  {
+    key: "statusLabel",
+    header: "Trạng thái",
+    render: (r) => {
+      const s = STATUS_STYLES[r.statusLabel] ?? { color: "var(--color-text-secondary)", bg: "var(--color-bg-surface)" };
+      return <Badge label={r.statusLabel} color={s.color} bg={s.bg} />;
+    },
+  },
+  {
+    key: "updatedAt",
+    header: "Cập nhật",
+    render: (r) => (
+      <span style={{ fontSize: "12px", color: "var(--color-text-tertiary)" }}>
+        {r.updatedAt}
+      </span>
+    ),
+  },
+];
+
+function normalize(v: string) {
+  return v.trim().toLowerCase();
 }
 
 export function UsersAndRolesPage() {
-  const { filters } = useOperationsContext();
-  const records = searchUserScopeProfiles(filters);
-  const [selectedId, setSelectedId] = useState<string | null>(records[0]?.id ?? null);
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!records.some((item) => item.id === selectedId)) {
-      setSelectedId(records[0]?.id ?? null);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [search]);
+
+  const records = USER_SCOPE_PROFILES.filter((r) => {
+    if (statusFilter !== "all" && r.statusGroup !== statusFilter) return false;
+    if (debouncedSearch.trim()) {
+      const kw = normalize(debouncedSearch);
+      const haystack = [r.id, r.name, r.role, r.ownerTeam, r.branchSummary, ...r.modes].map(normalize);
+      if (!haystack.some((h) => h.includes(kw))) return false;
     }
-  }, [records, selectedId]);
-
-  if (records.length === 0) {
-    return (
-      <EmptyResultCard
-        title="Không có hồ sơ quyền nào khớp với bộ lọc"
-        description="Thử tìm theo tên người dùng, vai trò hoặc chuyển domain về `Quyền truy cập` để xem các profile đang hoạt động và các profile cần rà soát thêm."
-      />
-    );
-  }
-
-  const selectedRecord = getUserScopeProfileById(selectedId ?? records[0]?.id ?? null);
+    return true;
+  });
 
   return (
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(0, 1.04fr) minmax(340px, 0.96fr)",
+        display: "flex",
+        flexDirection: "column",
         gap: "var(--space-6)",
-        alignItems: "start",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-        {records.map((record) => {
-          const warningStyle =
-            record.warningState === "none" ? null : WARNING_STYLES[record.warningState];
-
-          return (
-            <Card
-              key={record.id}
-              style={{
-                cursor: "pointer",
-                background:
-                  record.id === selectedRecord?.id
-                    ? "var(--color-primary-light)"
-                    : "var(--color-bg-card)",
-                boxShadow:
-                  record.id === selectedRecord?.id
-                    ? "0 18px 30px rgba(47, 100, 246, 0.14)"
-                    : "var(--shadow-ambient)",
-              }}
-            >
-              <button
-                onClick={() => setSelectedId(record.id)}
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  padding: 0,
-                  width: "100%",
-                  textAlign: "left",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "var(--space-4)",
-                  cursor: "pointer",
-                  fontFamily: "var(--font-primary)",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", gap: "var(--space-4)", alignItems: "flex-start" }}>
-                  <div>
-                    <div style={{ fontFamily: "var(--font-mono)", fontWeight: 600, fontSize: "13px", marginBottom: "var(--space-1)" }}>
-                      {record.id}
-                    </div>
-                    <h3 style={{ marginBottom: "var(--space-1)" }}>{record.name}</h3>
-                    <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
-                      {record.role} • {record.ownerTeam}
-                    </div>
-                  </div>
-                  <StatusChip label={record.statusLabel} />
-                </div>
-
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-                  <Badge label={record.branchSummary} color="#0F766E" bg="#CCFBF1" />
-                  {record.modes.map((mode) => (
-                    <Badge
-                      key={mode}
-                      label={mode}
-                      color="var(--color-text-secondary)"
-                      bg="var(--color-bg-surface)"
-                    />
-                  ))}
-                  {warningStyle ? (
-                    <Badge
-                      label={warningStyle.label}
-                      color={warningStyle.color}
-                      bg={warningStyle.bg}
-                    />
-                  ) : null}
-                </div>
-
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "var(--space-3)" }}>
-                  <InfoCell label="Chi nhánh" value={`${record.scopeAssignments[0]?.values.length ?? 0} scope`} />
-                  <InfoCell label="Kênh" value={`${record.scopeAssignments[1]?.values.length ?? 0} scope`} />
-                  <InfoCell label="Cập nhật" value={record.updatedAt} />
-                </div>
-
-                <div style={{ color: "var(--color-text-secondary)", fontSize: "13px", lineHeight: 1.6 }}>
-                  {record.note}
-                </div>
-              </button>
-            </Card>
-          );
-        })}
+      <div style={{ marginBottom: "var(--space-2)" }}>
+        <Eyebrow>Vận hành</Eyebrow>
+        <h1 style={{ marginTop: "var(--space-2)", marginBottom: 0 }}>
+          Người dùng & Vai trò
+        </h1>
       </div>
 
-      <Card style={{ position: "sticky", top: 0 }}>
-        {selectedRecord ? (
-          <UserScopeDetail record={selectedRecord} />
-        ) : (
-          <div>
-            <Eyebrow>Users And Roles</Eyebrow>
-            <h2 style={{ marginTop: "var(--space-2)", marginBottom: "var(--space-3)" }}>
-              Chọn 1 hồ sơ quyền để xem chi tiết
-            </h2>
-            <p style={{ color: "var(--color-text-secondary)" }}>
-              Chọn một profile bên trái để xem role, mode áp dụng và các phạm vi theo chi nhánh, kênh, loại cửa hàng.
-            </p>
-          </div>
-        )}
+      <div
+        style={{
+          display: "flex",
+          gap: "var(--space-4)",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <Input
+          icon={<Search size={16} />}
+          placeholder="Tìm tên, vai trò, đội..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: 320 }}
+        />
+
+        <FilterSelect
+          value={statusFilter}
+          options={STATUS_FILTERS}
+          onChange={setStatusFilter}
+        />
+      </div>
+
+      <Card style={{ padding: 0, overflow: "hidden" }}>
+        <DataTable
+          columns={columns}
+          data={records}
+          rowKey={(r) => r.id}
+          onRowClick={(r) => navigate(`/operations/users-roles/${r.id}`)}
+        />
       </Card>
-    </div>
-  );
-}
-
-function UserScopeDetail({ record }: { record: UserScopeProfile }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-5)" }}>
-      <div>
-        <Eyebrow>Users And Roles</Eyebrow>
-        <h2 style={{ marginTop: "var(--space-2)", marginBottom: "var(--space-1)" }}>
-          {record.name}
-        </h2>
-        <div style={{ color: "var(--color-text-secondary)" }}>
-          {record.role} • {record.ownerTeam}
-        </div>
-      </div>
-
-      <WarningBanner warningState={record.warningState} customText={record.reviewNote} />
-
-      <section>
-        <Eyebrow>Thông tin hồ sơ</Eyebrow>
-        <div style={{ marginTop: "var(--space-3)", display: "grid", gap: "var(--space-3)" }}>
-          <DetailRow icon={<UserRound size={15} />} label="Vai trò" value={record.role} />
-          <DetailRow icon={<Users size={15} />} label="Đội phụ trách" value={record.ownerTeam} />
-          <DetailRow icon={<Store size={15} />} label="Tóm tắt phạm vi" value={record.branchSummary} />
-          <DetailRow icon={<ShieldAlert size={15} />} label="Trạng thái" value={record.statusLabel} />
-        </div>
-      </section>
-
-      <section>
-        <Eyebrow>Phạm vi áp dụng</Eyebrow>
-        <div style={{ marginTop: "var(--space-3)", display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-          {record.scopeAssignments.map((item) => (
-            <Card key={item.label} style={{ background: "var(--color-bg-surface)", padding: "var(--space-4)" }}>
-              <div style={{ fontSize: "11px", color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "var(--space-2)" }}>
-                {item.label}
-              </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-                {item.values.map((value) => (
-                  <Badge key={value} label={value} color="var(--color-text-secondary)" bg="var(--color-bg-card)" />
-                ))}
-              </div>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <Eyebrow>Mode vận hành</Eyebrow>
-        <Card style={{ marginTop: "var(--space-3)", background: "var(--color-bg-surface)", padding: "var(--space-4)" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)", marginBottom: "var(--space-3)" }}>
-            {record.modes.map((mode) => (
-              <Badge key={mode} label={mode} color="#0F4C81" bg="rgba(47, 100, 246, 0.1)" />
-            ))}
-          </div>
-          <div style={{ color: "var(--color-text-secondary)", lineHeight: 1.6 }}>{record.note}</div>
-        </Card>
-      </section>
-
-      <section>
-        <Eyebrow>Hướng xử lý</Eyebrow>
-        <Card style={{ marginTop: "var(--space-3)", background: "var(--color-bg-surface)", padding: "var(--space-4)" }}>
-          <div style={{ fontWeight: 600, marginBottom: "var(--space-2)" }}>{record.reviewNote}</div>
-          <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
-            <Button variant="secondary">Mở role matrix</Button>
-            <Button variant="secondary">Xem preview answer</Button>
-          </div>
-        </Card>
-      </section>
-    </div>
-  );
-}
-
-function InfoCell({ label, value }: { label: string; value: string }) {
-  return (
-    <div style={{ padding: "var(--space-3)", borderRadius: "var(--radius-md)", background: "var(--color-bg-surface)" }}>
-      <div style={{ fontSize: "11px", color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-        {label}
-      </div>
-      <div style={{ marginTop: "var(--space-1)", fontWeight: 500 }}>{value}</div>
     </div>
   );
 }

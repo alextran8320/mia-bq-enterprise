@@ -14,7 +14,6 @@ import {
   Package,
   ShieldAlert,
   TicketPercent,
-  Warehouse,
   ArrowRightLeft,
   BookOpen,
   MessageSquare,
@@ -22,60 +21,71 @@ import {
 
 const GROUPS = [
   {
-    label: "CRM Workspace",
+    label: "Quản lý khách hàng",
     items: [
-      { to: "/crm", icon: LayoutDashboard, label: "Tổng quan" },
       { to: "/crm/customers", icon: Users, label: "Khách hàng" },
-      { to: "/crm/leads", icon: UserPlus, label: "Leads" },
+      { to: "/crm/leads", icon: UserPlus, label: "Đầu mối" },
     ],
   },
   {
-    label: "Orders & Service",
+    label: "Đơn hàng",
     items: [{ to: "/orders", icon: PackageSearch, label: "Đơn hàng" }],
   },
   {
     label: "Danh mục & Thương mại",
     items: [
       { to: "/catalog/products", icon: Package, label: "Sản phẩm" },
-      { to: "/catalog/inventory", icon: Warehouse, label: "Tồn kho" },
       { to: "/catalog/pricing", icon: CircleDollarSign, label: "Giá bán" },
       { to: "/catalog/promotions", icon: TicketPercent, label: "Khuyến mãi" },
     ],
   },
   {
-    label: "Operations & Governance",
+    label: "Vận hành & Quản trị",
     items: [
-      { to: "/operations/escalations", icon: CircleAlert, label: "Escalation Queue" },
-      { to: "/operations/users-roles", icon: Users, label: "Users And Roles" },
-      { to: "/operations/scope-rules", icon: ShieldAlert, label: "Scope Rules" },
-      { to: "/operations/integration-ops", icon: LayoutDashboard, label: "Integration Ops" },
-      { to: "/operations/source-mapping", icon: ArrowRightLeft, label: "Source Mapping" },
+      {
+        to: "/operations/escalations",
+        icon: CircleAlert,
+        label: "Hàng đợi xử lý",
+      },
+      {
+        to: "/operations/users-roles",
+        icon: Users,
+        label: "Người dùng & Vai trò",
+      },
+      {
+        to: "/operations/scope-rules",
+        icon: ShieldAlert,
+        label: "Quy tắc phạm vi",
+      },
+      {
+        to: "/operations/integration-ops",
+        icon: LayoutDashboard,
+        label: "Tích hợp hệ thống",
+      },
+      {
+        to: "/operations/source-mapping",
+        icon: ArrowRightLeft,
+        label: "Nguồn & Mapping",
+      },
     ],
   },
   {
-    label: "Omnichannel Inbox",
-    items: [
-      { to: "/inbox", icon: MessageSquare, label: "Hội thoại" },
-    ],
+    label: "Hộp thư đa kênh",
+    items: [{ to: "/inbox", icon: MessageSquare, label: "Hội thoại" }],
   },
   {
     label: "AI Workspace",
+    items: [{ to: "/ai/chat", icon: MessageSquareText, label: "Chat nội bộ" }],
+  },
+  {
+    label: "Phân tích",
     items: [
-      { to: "/ai/chat", icon: MessageSquareText, label: "Chat nội bộ" },
-      { to: "/sales-advisor", icon: ShoppingBag, label: "Tư vấn bán hàng" },
+      { to: "/analytics/executive", icon: BarChart3, label: "Bảng điều khiển" },
     ],
   },
   {
-    label: "Insights",
-    items: [
-      { to: "/analytics/executive", icon: BarChart3, label: "Dashboard ROI" },
-    ],
-  },
-  {
-    label: "Knowledge Center",
-    items: [
-      { to: "/knowledge", icon: BookOpen, label: "Knowledge Center" },
-    ],
+    label: "Trung tâm kiến thức",
+    items: [{ to: "/knowledge", icon: BookOpen, label: "Kiến thức" }],
   },
 ];
 
@@ -85,64 +95,69 @@ interface SidebarProps {
 }
 
 export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
+  const NAV_WIDTH = collapsed ? 88 : 280;
+
   return (
     <nav
       className="app-sidebar"
       style={{
-        width: collapsed ? 60 : 240,
+        width: NAV_WIDTH,
         flexShrink: 0,
-        background: "var(--color-bg-surface)",
+        background: "#FFFFFF",
         display: "flex",
         flexDirection: "column",
-        padding: "var(--space-4) 0",
-        transition: "width 220ms cubic-bezier(0.4,0,0.2,1)",
+        transition: "width 200ms cubic-bezier(0.4,0,0.2,1)",
         overflow: "hidden",
-        borderRight: "1px solid rgba(0,0,0,0.04)",
+        borderRight: "1px dashed rgba(145,158,171,0.2)",
         position: "relative",
       }}
     >
       {/* Logo row */}
       <div
         style={{
-          padding: collapsed ? "0 10px var(--space-5)" : "0 var(--space-5) var(--space-5)",
+          padding: collapsed ? "24px 0 20px" : "24px 20px 20px 28px",
           display: "flex",
           alignItems: "center",
           justifyContent: collapsed ? "center" : "space-between",
-          gap: "var(--space-2)",
-          minHeight: 44,
+          gap: 8,
+          minHeight: 64,
         }}
       >
-        {/* Logo mark — always visible */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--space-2)",
+            gap: 12,
             overflow: "hidden",
             flexShrink: 0,
           }}
         >
           <div
             style={{
-              width: 28,
-              height: 28,
-              borderRadius: "var(--radius-sm)",
-              background: "var(--color-primary)",
+              width: 36,
+              height: 36,
+              borderRadius: 12,
+              background: "linear-gradient(135deg, #2F64F6 0%, #5B8DEF 100%)",
               display: "grid",
               placeItems: "center",
               flexShrink: 0,
+              boxShadow: "0 2px 8px rgba(47,100,246,0.3)",
             }}
           >
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-              <path d="M2 2h5v5H2V2zm7 0h5v5H9V2zm0 7h5v5H9V9zm-7 0h5v5H2V9z" fill="white" />
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M2 2h5v5H2V2zm7 0h5v5H9V2zm0 7h5v5H9V9zm-7 0h5v5H2V9z"
+                fill="white"
+                fillOpacity="0.9"
+              />
             </svg>
           </div>
           {!collapsed && (
             <span
               style={{
-                fontSize: "15px",
-                fontWeight: 700,
-                color: "var(--color-primary)",
+                fontSize: 17,
+                fontWeight: 800,
+                color: "#212B36",
                 letterSpacing: "-0.02em",
                 whiteSpace: "nowrap",
               }}
@@ -151,60 +166,95 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
             </span>
           )}
         </div>
-        <button
-          type="button"
-          onClick={onToggleCollapse}
-          aria-label={collapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
-          title={collapsed ? "Mở rộng" : "Thu gọn"}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 32,
-            height: 32,
-            border: "none",
-            borderRadius: "var(--radius-sm)",
-            background: "transparent",
-            color: "var(--color-text-tertiary)",
-            cursor: "pointer",
-            flexShrink: 0,
-            transition: "background 0.15s, color 0.15s",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background =
-              "var(--color-primary-light)";
-            (e.currentTarget as HTMLButtonElement).style.color =
-              "var(--color-primary)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background =
-              "transparent";
-            (e.currentTarget as HTMLButtonElement).style.color =
-              "var(--color-text-tertiary)";
-          }}
-        >
-          {collapsed ? (
-            <PanelLeftOpen size={18} />
-          ) : (
+        {!collapsed && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            aria-label="Thu gọn sidebar"
+            title="Thu gọn"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 28,
+              height: 28,
+              border: "none",
+              borderRadius: 8,
+              background: "transparent",
+              color: "#919EAB",
+              cursor: "pointer",
+              flexShrink: 0,
+              transition: "background 0.2s, color 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(145,158,171,0.08)";
+              e.currentTarget.style.color = "#212B36";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "#919EAB";
+            }}
+          >
             <PanelLeftClose size={18} />
-          )}
-        </button>
+          </button>
+        )}
+        {collapsed && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            aria-label="Mở rộng sidebar"
+            title="Mở rộng"
+            style={{
+              position: "absolute",
+              top: 28,
+              right: -14,
+              width: 28,
+              height: 28,
+              border: "1px dashed rgba(145,158,171,0.2)",
+              borderRadius: "50%",
+              background: "#FFFFFF",
+              color: "#919EAB",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 10,
+              transition: "color 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#212B36";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "#919EAB";
+            }}
+          >
+            <PanelLeftOpen size={14} />
+          </button>
+        )}
       </div>
 
       {/* Nav groups */}
-      <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+      <div
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          overflowX: "hidden",
+          padding: collapsed ? "0 12px" : "0 16px",
+        }}
+      >
         {GROUPS.map((group) => (
-          <div key={group.label} style={{ marginBottom: "var(--space-5)" }}>
+          <div key={group.label} style={{ marginBottom: 24 }}>
             {!collapsed && (
               <div
                 style={{
-                  padding: "0 var(--space-6)",
-                  fontSize: "10px",
-                  fontWeight: 600,
-                  color: "var(--color-text-tertiary)",
+                  padding: "0 12px",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: "#919EAB",
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
-                  marginBottom: "var(--space-1)",
+                  marginBottom: 4,
+                  lineHeight: "18px",
                 }}
               >
                 {group.label}
@@ -215,8 +265,9 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
               <div
                 style={{
                   height: 1,
-                  margin: "0 10px var(--space-2)",
-                  background: "rgba(0,0,0,0.06)",
+                  margin: "0 8px 8px",
+                  background: "rgba(145,158,171,0.12)",
+                  borderRadius: 1,
                 }}
               />
             )}
@@ -226,55 +277,55 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
                 key={to}
                 to={to}
                 end={
-                  to === "/crm" || to === "/inbox" || to === "/ai/chat" || to === "/sales-advisor" || to === "/knowledge"
+                  to === "/crm" ||
+                  to === "/inbox" ||
+                  to === "/ai/chat" ||
+                  to === "/sales-advisor" ||
+                  to === "/knowledge"
                 }
                 title={collapsed ? label : undefined}
                 style={({ isActive }) => ({
                   display: "flex",
                   alignItems: "center",
-                  gap: collapsed ? 0 : "var(--space-3)",
+                  gap: collapsed ? 0 : 12,
                   justifyContent: collapsed ? "center" : "flex-start",
-                  padding: collapsed ? "9px 0" : "9px var(--space-5)",
-                  paddingLeft: collapsed ? 0 : isActive ? "calc(var(--space-5) - 3px)" : "var(--space-5)",
-                  margin: "1px 0",
-                  borderLeft: isActive
-                    ? "3px solid var(--color-primary)"
-                    : "3px solid transparent",
-                  borderRadius: collapsed ? "var(--radius-sm)" : 0,
-                  marginLeft: collapsed ? 8 : 0,
-                  marginRight: collapsed ? 8 : 0,
-                  fontSize: "13.5px",
-                  fontWeight: isActive ? 600 : 400,
-                  color: isActive
-                    ? "var(--color-primary-hover)"
-                    : "var(--color-text-secondary)",
+                  padding: collapsed ? "10px 0" : "8px 12px",
+                  margin: "2px 0",
+                  borderRadius: 8,
+                  fontSize: 14,
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? "#2F64F6" : "#637381",
                   background: isActive
-                    ? "var(--color-primary-light)"
+                    ? "rgba(47,100,246,0.08)"
                     : "transparent",
                   textDecoration: "none",
-                  transition: "background 0.15s, color 0.15s, border-color 0.15s",
+                  transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
+                  minHeight: 40,
                 })}
                 onMouseEnter={(e) => {
                   const el = e.currentTarget as HTMLAnchorElement;
-                  const isActiveEl = el.style.borderLeftColor === "var(--color-primary)" ||
-                    el.style.background === "var(--color-primary-light)";
-                  if (!isActiveEl) {
-                    el.style.background = "var(--color-bg-surface)";
-                    el.style.color = "var(--color-text-primary)";
+                  const active =
+                    el.getAttribute("aria-current") === "page" ||
+                    el.classList.contains("active");
+                  if (!active) {
+                    el.style.background = "rgba(145,158,171,0.08)";
+                    el.style.color = "#212B36";
                   }
                 }}
                 onMouseLeave={(e) => {
                   const el = e.currentTarget as HTMLAnchorElement;
-                  const isActiveEl = el.style.background === "var(--color-bg-surface)";
-                  if (isActiveEl) {
+                  const active =
+                    el.getAttribute("aria-current") === "page" ||
+                    el.classList.contains("active");
+                  if (!active) {
                     el.style.background = "transparent";
-                    el.style.color = "var(--color-text-secondary)";
+                    el.style.color = "#637381";
                   }
                 }}
               >
-                <Icon size={18} style={{ flexShrink: 0 }} />
+                <Icon size={20} style={{ flexShrink: 0, strokeWidth: 1.5 }} />
                 {!collapsed && (
                   <span style={{ transition: "opacity 150ms" }}>{label}</span>
                 )}

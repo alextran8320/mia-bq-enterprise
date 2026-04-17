@@ -31,8 +31,8 @@ export function AppShell() {
           style={{
             flex: 1,
             overflow: "auto",
-            background: "var(--color-bg-page)",
-            padding: "32px var(--space-4) 20px",
+            background: "#F9FAFB",
+            padding: "28px 28px 20px",
           }}
         >
           <Outlet />

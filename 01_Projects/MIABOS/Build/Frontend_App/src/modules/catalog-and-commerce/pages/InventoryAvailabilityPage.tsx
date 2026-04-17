@@ -1,354 +1,345 @@
-import { Badge, Button, Card } from "@/shared/ui";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { Badge, Card, DataTable, Input } from "@/shared/ui";
+import type { Column } from "@/shared/ui";
 import {
-  Boxes,
-  Clock3,
-  Package,
-  Store,
-  Truck,
-  Warehouse,
-} from "lucide-react";
-import { getCatalogRecordById, getPrimaryInventory } from "@/mocks/catalog/catalog";
-import {
-  DetailRow,
-  EmptyResultCard,
-  Eyebrow,
-  WARNING_STYLES,
-  WarningBanner,
-  useCatalogContext,
-} from "@/modules/catalog-and-commerce/components/CatalogModuleLayout";
-import {
-  AvailabilityStatusBadge,
-  FreshnessBadge,
-} from "@/modules/catalog-and-commerce/components/CatalogSharedComponents";
+  searchCatalog,
+  getPrimaryInventory,
+  type CatalogRecord,
+  type CatalogSearchResult,
+} from "@/mocks/catalog/catalog";
+import { AvailabilityStatusBadge } from "@/modules/catalog-and-commerce/components/CatalogSharedComponents";
 
-export function InventoryAvailabilityPage() {
-  const { result, filters, selectedId, setSelectedId } = useCatalogContext();
+const DEFAULT_FILTERS = {
+  query: "",
+  channel: "all" as const,
+  storeType: "all" as const,
+  branch: "all" as const,
+};
 
-  if (result.kind === "not_found") {
-    return <EmptyResultCard result={result} appliedQuery={filters.query} />;
-  }
+const initialResult = searchCatalog(DEFAULT_FILTERS);
 
-  const selectedRecord = getCatalogRecordById(selectedId ?? result.records[0]?.id ?? null);
-
+function Eyebrow({ children }: { children: string }) {
   return (
-    <div
+    <span
       style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(0, 1.05fr) minmax(340px, 0.95fr)",
-        gap: "var(--space-6)",
-        alignItems: "start",
+        fontSize: "11px",
+        fontWeight: 500,
+        color: "var(--color-text-tertiary)",
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-        {result.records.map((record) => {
-          const primaryInventory = getPrimaryInventory(record, filters);
-          const warningStyle =
-            primaryInventory && primaryInventory.warningState !== "none"
-              ? WARNING_STYLES[primaryInventory.warningState]
-              : null;
+      {children}
+    </span>
+  );
+}
 
-          return (
-            <Card
-              key={record.id}
+function FilterSelect<T extends string>({
+  value,
+  options,
+  onChange,
+}: {
+  value: T;
+  options: { value: T; label: string }[];
+  onChange: (v: T) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const selectedLabel = options.find((o) => o.value === value)?.label ?? "";
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "10px 14px",
+          borderRadius: "var(--radius-sm)",
+          border: open ? "1.5px solid var(--color-text-primary)" : "1.5px solid transparent",
+          background: "var(--color-bg-card)",
+          color: "var(--color-text-primary)",
+          fontSize: "14px",
+          fontFamily: "var(--font-primary)",
+          fontWeight: 400,
+          cursor: "pointer",
+          boxShadow: "var(--shadow-ambient)",
+          minWidth: 140,
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span style={{ flex: 1, textAlign: "left" }}>{selectedLabel}</span>
+        {open ? (
+          <ChevronUp size={16} color="var(--color-text-tertiary)" />
+        ) : (
+          <ChevronDown size={16} color="var(--color-text-tertiary)" />
+        )}
+      </button>
+
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(100% + 4px)",
+            left: 0,
+            zIndex: 10,
+            background: "#fff",
+            borderRadius: "var(--radius-sm)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.06)",
+            minWidth: "100%",
+            padding: "4px 0",
+            overflow: "hidden",
+          }}
+        >
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                onChange(opt.value);
+                setOpen(false);
+              }}
               style={{
+                display: "block",
+                width: "100%",
+                padding: "10px 16px",
+                border: "none",
+                background: opt.value === value ? "var(--color-bg-page)" : "transparent",
+                color: "var(--color-text-primary)",
+                fontSize: "14px",
+                fontFamily: "var(--font-primary)",
+                fontWeight: opt.value === value ? 600 : 400,
+                textAlign: "left",
                 cursor: "pointer",
-                background:
-                  record.id === selectedRecord?.id
-                    ? "var(--color-primary-light)"
-                    : "var(--color-bg-card)",
-                boxShadow:
-                  record.id === selectedRecord?.id
-                    ? "0 18px 30px rgba(47, 100, 246, 0.14)"
-                    : "var(--shadow-ambient)",
+              }}
+              onMouseEnter={(e) => {
+                if (opt.value !== value)
+                  e.currentTarget.style.background = "var(--color-bg-page)";
+              }}
+              onMouseLeave={(e) => {
+                if (opt.value !== value)
+                  e.currentTarget.style.background = "transparent";
               }}
             >
-              <button
-                onClick={() => setSelectedId(record.id)}
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  padding: 0,
-                  width: "100%",
-                  textAlign: "left",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "var(--space-4)",
-                  cursor: "pointer",
-                  fontFamily: "var(--font-primary)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: "var(--space-4)",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: 600,
-                        fontSize: "13px",
-                        marginBottom: "var(--space-1)",
-                      }}
-                    >
-                      {record.sku}
-                    </div>
-                    <h3 style={{ marginBottom: "var(--space-1)" }}>{record.name}</h3>
-                    <div style={{ fontSize: "13px", color: "var(--color-text-secondary)" }}>
-                      {primaryInventory?.scopeLabel ?? "Chưa có scope"} • {record.category}
-                    </div>
-                  </div>
-                  {primaryInventory ? (
-                    <AvailabilityStatusBadge label={primaryInventory.availabilityLabel} />
-                  ) : null}
-                </div>
-
-                {primaryInventory ? (
-                  <>
-                    <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
-                      <Badge label={primaryInventory.source} color="#0F766E" bg="#CCFBF1" />
-                      <FreshnessBadge label={primaryInventory.freshnessLabel} />
-                      {warningStyle ? (
-                        <Badge
-                          label={warningStyle.label}
-                          color={warningStyle.color}
-                          bg={warningStyle.bg}
-                        />
-                      ) : null}
-                    </div>
-
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                        gap: "var(--space-3)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          padding: "var(--space-3)",
-                          borderRadius: "var(--radius-md)",
-                          background: "var(--color-bg-surface)",
-                        }}
-                      >
-                        <div
-                          style={{
-                            fontSize: "11px",
-                            color: "var(--color-text-tertiary)",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                          }}
-                        >
-                          Khả dụng
-                        </div>
-                        <div style={{ marginTop: "var(--space-1)", fontWeight: 600 }}>
-                          {primaryInventory.quantityLabel}
-                        </div>
-                      </div>
-                      <div
-                        style={{
-                          padding: "var(--space-3)",
-                          borderRadius: "var(--radius-md)",
-                          background: "var(--color-bg-surface)",
-                        }}
-                      >
-                        <div
-                          style={{
-                            fontSize: "11px",
-                            color: "var(--color-text-tertiary)",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                          }}
-                        >
-                          Đồng bộ
-                        </div>
-                        <div style={{ marginTop: "var(--space-1)", fontWeight: 600 }}>
-                          {primaryInventory.syncedAt}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
-                      {primaryInventory.nextAction}
-                    </div>
-                  </>
-                ) : null}
-              </button>
-            </Card>
-          );
-        })}
-      </div>
-
-      <Card style={{ position: "sticky", top: 0 }}>
-        {selectedRecord ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-5)" }}>
-            <div>
-              <Eyebrow>Tồn kho</Eyebrow>
-              <h2 style={{ marginTop: "var(--space-2)", marginBottom: "var(--space-1)" }}>
-                {selectedRecord.name}
-              </h2>
-              <div style={{ color: "var(--color-text-secondary)" }}>
-                {selectedRecord.sku} • {selectedRecord.collection}
-              </div>
-            </div>
-
-            <WarningBanner warningState={selectedRecord.warningState} />
-
-            <section>
-              <Eyebrow>Ngữ cảnh hiện tại</Eyebrow>
-              <div style={{ marginTop: "var(--space-3)", display: "grid", gap: "var(--space-3)" }}>
-                <DetailRow icon={<Package size={15} />} label="SKU chuẩn" value={selectedRecord.sku} />
-                <DetailRow icon={<Boxes size={15} />} label="Danh mục" value={selectedRecord.category} />
-                <DetailRow icon={<Store size={15} />} label="Phạm vi hiển thị" value={selectedRecord.projectionScope} />
-                <DetailRow icon={<Clock3 size={15} />} label="Đồng bộ record" value={selectedRecord.syncedAt} />
-              </div>
-            </section>
-
-            <section>
-              <Eyebrow>Tồn theo điểm bán / kho</Eyebrow>
-              <div style={{ marginTop: "var(--space-3)", display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-                {selectedRecord.inventoryLocations.map((location) => {
-                  const warningStyle =
-                    location.warningState === "none"
-                      ? null
-                      : WARNING_STYLES[location.warningState];
-
-                  return (
-                    <div
-                      key={location.id}
-                      style={{
-                        borderRadius: "var(--radius-md)",
-                        background: "var(--color-bg-surface)",
-                        padding: "var(--space-4)",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "var(--space-3)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          gap: "var(--space-3)",
-                          alignItems: "flex-start",
-                        }}
-                      >
-                        <div>
-                          <div style={{ fontWeight: 600, marginBottom: "var(--space-1)" }}>
-                            {location.name}
-                          </div>
-                          <div style={{ fontSize: "13px", color: "var(--color-text-secondary)" }}>
-                            {location.scopeLabel}
-                          </div>
-                        </div>
-                        <AvailabilityStatusBadge label={location.availabilityLabel} />
-                      </div>
-
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-                        <Badge label={location.source} color="#0F766E" bg="#CCFBF1" />
-                        <FreshnessBadge label={location.freshnessLabel} />
-                        {warningStyle ? (
-                          <Badge
-                            label={warningStyle.label}
-                            color={warningStyle.color}
-                            bg={warningStyle.bg}
-                          />
-                        ) : null}
-                      </div>
-
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                          gap: "var(--space-3)",
-                        }}
-                      >
-                        <DetailCard
-                          icon={<Warehouse size={15} />}
-                          label="Số lượng"
-                          value={location.quantityLabel}
-                        />
-                        <DetailCard
-                          icon={<Clock3 size={15} />}
-                          label="Thời điểm sync"
-                          value={location.syncedAt}
-                        />
-                      </div>
-
-                      <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
-                        {location.nextAction}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            <section>
-              <Eyebrow>Hướng xử lý</Eyebrow>
-              <Card
-                style={{
-                  marginTop: "var(--space-3)",
-                  background: "var(--color-bg-surface)",
-                  padding: "var(--space-4)",
-                }}
-              >
-                <div style={{ fontWeight: 600, marginBottom: "var(--space-2)" }}>
-                  Gợi ý xử lý cho bán hàng và vận hành
-                </div>
-                <div style={{ color: "var(--color-text-secondary)", lineHeight: 1.6 }}>
-                  Nếu dữ liệu đã cũ hoặc đang có chênh lệch giữa các nguồn, chỉ nên tư vấn theo hướng tham khảo và kiểm tra lại tồn thực tế trước khi giữ hàng hoặc điều chuyển.
-                </div>
-                <Button variant="secondary" style={{ marginTop: "var(--space-3)" }}>
-                  <Truck size={16} /> Đề xuất kiểm tra tức thời
-                </Button>
-              </Card>
-            </section>
-          </div>
-        ) : (
-          <div>
-            <Eyebrow>Tồn kho</Eyebrow>
-            <h2 style={{ marginTop: "var(--space-2)", marginBottom: "var(--space-3)" }}>
-              Chọn 1 sản phẩm để xem tồn theo điểm bán
-            </h2>
-            <p style={{ color: "var(--color-text-secondary)" }}>
-              Chọn một sản phẩm bên trái để xem tình trạng tồn, thời điểm cập nhật và hướng xử lý gợi ý.
-            </p>
-          </div>
-        )}
-      </Card>
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-function DetailCard({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
+type ChannelFilter = "all" | "ecommerce" | "store" | "dealer";
+type AvailabilityFilter = "all" | "in_stock" | "low_stock" | "out_of_stock";
+
+const CHANNEL_FILTERS: { value: ChannelFilter; label: string }[] = [
+  { value: "all", label: "Tất cả" },
+  { value: "ecommerce", label: "Ecommerce" },
+  { value: "store", label: "Cửa hàng" },
+  { value: "dealer", label: "Đại lý" },
+];
+
+const AVAILABILITY_FILTERS: { value: AvailabilityFilter; label: string }[] = [
+  { value: "all", label: "Tất cả" },
+  { value: "in_stock", label: "Còn hàng" },
+  { value: "low_stock", label: "Sắp hết" },
+  { value: "out_of_stock", label: "Hết hàng" },
+];
+
+function matchesAvailability(label: string, filter: AvailabilityFilter): boolean {
+  if (filter === "all") return true;
+  const lower = label.toLowerCase();
+  if (filter === "in_stock") return lower.includes("còn hàng") && !lower.includes("giới hạn");
+  if (filter === "low_stock") return lower.includes("giới hạn") || lower.includes("còn size");
+  if (filter === "out_of_stock") return lower.includes("hết") || lower.includes("chờ");
+  return true;
+}
+
+const columns: Column<CatalogRecord>[] = [
+  {
+    key: "sku",
+    header: "SKU",
+    render: (r) => (
+      <div>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontWeight: 600,
+            fontSize: "13px",
+          }}
+        >
+          {r.sku}
+        </div>
+        <div
+          style={{
+            fontSize: "12px",
+            color: "var(--color-text-secondary)",
+            marginTop: 2,
+          }}
+        >
+          {r.name}
+        </div>
+      </div>
+    ),
+    width: "22%",
+  },
+  {
+    key: "category",
+    header: "Danh mục",
+    render: (r) => <span style={{ fontSize: "13px" }}>{r.category}</span>,
+  },
+  {
+    key: "inventoryLocations",
+    header: "Tình trạng",
+    render: (r) => {
+      const inv = getPrimaryInventory(r, DEFAULT_FILTERS);
+      if (!inv) return <span style={{ fontSize: "13px", color: "var(--color-text-tertiary)" }}>--</span>;
+      return <AvailabilityStatusBadge label={inv.availabilityLabel} />;
+    },
+  },
+  {
+    key: "variants",
+    header: "Số lượng",
+    render: (r) => {
+      const inv = getPrimaryInventory(r, DEFAULT_FILTERS);
+      if (!inv) return <span style={{ fontSize: "13px", color: "var(--color-text-tertiary)" }}>--</span>;
+      return <span style={{ fontSize: "13px" }}>{inv.quantityLabel}</span>;
+    },
+  },
+  {
+    key: "source",
+    header: "Nguồn",
+    render: (r) => (
+      <Badge
+        label={r.source}
+        color="var(--color-text-secondary)"
+        bg="var(--color-bg-surface)"
+      />
+    ),
+  },
+  {
+    key: "syncedAt",
+    header: "Đồng bộ",
+    render: (r) => (
+      <span
+        style={{
+          fontSize: "12px",
+          color: "var(--color-text-tertiary)",
+        }}
+      >
+        {r.syncedAt}
+      </span>
+    ),
+  },
+];
+
+export function InventoryAvailabilityPage() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [result, setResult] = useState<CatalogSearchResult>(initialResult);
+  const [channelFilter, setChannelFilter] = useState<ChannelFilter>("all");
+  const [availabilityFilter, setAvailabilityFilter] = useState<AvailabilityFilter>("all");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const allRecords = result.kind === "found" ? result.records : [];
+
+  const records = allRecords.filter((r) => {
+    if (channelFilter !== "all") {
+      const hasChannel = r.inventoryLocations.some((loc) => loc.channel === channelFilter);
+      if (!hasChannel) return false;
+    }
+    if (availabilityFilter !== "all") {
+      const inv = getPrimaryInventory(r, DEFAULT_FILTERS);
+      if (!inv || !matchesAvailability(inv.availabilityLabel, availabilityFilter)) return false;
+    }
+    return true;
+  });
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setResult(
+        searchCatalog({
+          query: search,
+          channel: "all",
+          storeType: "all",
+          branch: "all",
+        }),
+      );
+    }, 500);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [search]);
+
   return (
     <div
       style={{
         display: "flex",
-        alignItems: "flex-start",
-        gap: "var(--space-2)",
-        padding: "var(--space-3)",
-        borderRadius: "var(--radius-md)",
-        background: "var(--color-bg-card)",
+        flexDirection: "column",
+        gap: "var(--space-6)",
       }}
     >
-      <span style={{ display: "flex", color: "var(--color-primary)" }}>{icon}</span>
-      <div>
-        <div style={{ fontSize: "11px", color: "var(--color-text-tertiary)" }}>{label}</div>
-        <div style={{ fontSize: "13px", fontWeight: 500 }}>{value}</div>
+      <div style={{ marginBottom: "var(--space-2)" }}>
+        <Eyebrow>Catalog</Eyebrow>
+        <h1 style={{ marginTop: "var(--space-2)", marginBottom: 0 }}>
+          Tồn kho
+        </h1>
       </div>
+
+      <div
+        style={{
+          display: "flex",
+          gap: "var(--space-4)",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <Input
+          icon={<Search size={16} />}
+          placeholder="Tìm SKU, tên sản phẩm, barcode..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: 320 }}
+        />
+
+        <FilterSelect
+          value={channelFilter}
+          options={CHANNEL_FILTERS}
+          onChange={setChannelFilter}
+        />
+
+        <FilterSelect
+          value={availabilityFilter}
+          options={AVAILABILITY_FILTERS}
+          onChange={setAvailabilityFilter}
+        />
+      </div>
+
+      <Card style={{ padding: 0, overflow: "hidden" }}>
+        <DataTable
+          columns={columns}
+          data={records}
+          rowKey={(r) => r.id}
+          onRowClick={(r) => navigate(`/catalog/inventory/${r.id}`)}
+        />
+      </Card>
     </div>
   );
 }

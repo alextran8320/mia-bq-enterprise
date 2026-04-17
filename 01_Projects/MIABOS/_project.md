@@ -1,7 +1,7 @@
 # MIABOS - Project Workspace
 
 **Status**: Active Workspace
-**Last Updated**: 2026-04-16
+**Last Updated**: 2026-04-17
 
 ## Project Identity
 
@@ -50,6 +50,7 @@ The following documentation layers were intentionally removed on 2026-04-13:
 | 2026-04-17 | [2026-04-17_MIABOS_Knowledge_Center_Object_Model_Refinement](../../02_Sessions/2026-04-17_MIABOS_Knowledge_Center_Object_Model_Refinement.md)                   | Refined Knowledge Center BA object model per Business Owner feedback: `Domain` → `Knowledge Topic`, clarified `SOP Step`, removed old persistence/API contracts for gap/usage/conflict/citation-snapshot objects, and synced SRS/PRD/Stories/UXUI.                |
 | 2026-04-17 | [2026-04-17_MIABOS_Knowledge_Center_Layout_Research_And_UXUI_Refinement](../../02_Sessions/2026-04-17_MIABOS_Knowledge_Center_Layout_Research_And_UXUI_Refinement.md) | Researched Knowledge Center layout patterns and revised M08 docs around one `/knowledge` workspace with folder tree, `Import tài liệu`, rich document assets, and section/panel model; FE preview boards marked legacy/revision-required where separate routes conflict. |
 | 2026-04-17 | [2026-04-17_MIABOS_Knowledge_Center_Research_Artifact_Materialization](../../02_Sessions/2026-04-17_MIABOS_Knowledge_Center_Research_Artifact_Materialization.md) | Materialized the Knowledge Center layout/rich document research into `01_Projects/MIABOS/Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md` and updated the Research index. |
+| 2026-04-17 | [2026-04-17_MIABOS_UnifiedInbox_UI_Refinement](../../02_Sessions/2026-04-17_MIABOS_UnifiedInbox_UI_Refinement.md) | Refined UnifiedInbox `/inbox` in 2 rounds: first neutralized visual noise, then reintroduced controlled brand accents and avatars, added functional search in the conversation list, and improved action/message hierarchy while preserving behavior logic. |
 | 2026-04-16 | [2026-04-16_MIABOS_Customer_360_UX_And_Story_Pack](../../02_Sessions/2026-04-16_MIABOS_Customer_360_UX_And_Story_Pack.md)                                       | Split `Customer 360 CRM` into four UX/story surfaces (`Customer List`, `Customer 360`, `Duplicate Review`, `Care Action`) and deepened customer-social relationships plus duplicate / merge / bulk-update logic.                                                    |
 | 2026-04-16 | [2026-04-16_MIABOS_Order_And_Fulfillment_SRS_Deepening](../../02_Sessions/2026-04-16_MIABOS_Order_And_Fulfillment_SRS_Deepening.md)                             | Deepened `F-M05-ORD-001 Order and Fulfillment`, split `sales order` vs `return order`, materialized 4 UXUI docs and 4 planning stories, then standardized the docs to a richer implementation-ready level across SRS, UXUI, and Story layers.                       |
 | 2026-04-16 | [2026-04-16_MIABOS_Customer_360_CRM_POC_Implementation_Ready](../../02_Sessions/2026-04-16_MIABOS_Customer_360_CRM_POC_Implementation_Ready.md)                 | Elevated `F-M06-CRM-001 Customer and CRM` from deep analysis into a POC / implementation-ready SRS with clearer module boundaries, source ownership, sync design, API/job structure, and rollout phases.                                                            |

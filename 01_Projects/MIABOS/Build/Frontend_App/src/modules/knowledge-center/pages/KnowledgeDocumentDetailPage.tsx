@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, AlertTriangle, Info, Edit } from "lucide-react";
-import { KNOWLEDGE_DOCS } from "@/mocks/knowledge/documents";
+import { KNOWLEDGE_DOCS, isStaleDoc } from "@/mocks/knowledge/documents";
 
 const TYPE_COLORS: Record<string, string> = {
   FAQ: "#0EA5E9",
@@ -8,11 +8,6 @@ const TYPE_COLORS: Record<string, string> = {
   Policy: "#1E40AF",
   "System Guide": "#059669",
 };
-
-function isStale(lastUpdated: string): boolean {
-  const diff = Date.now() - new Date(lastUpdated).getTime();
-  return diff > 60 * 60 * 1000;
-}
 
 export function KnowledgeDocumentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -31,7 +26,7 @@ export function KnowledgeDocumentDetailPage() {
   }
 
   const supersededDoc = doc.supersededBy ? KNOWLEDGE_DOCS.find((d) => d.id === doc.supersededBy) : null;
-  const stale = isStale(doc.lastUpdated);
+  const stale = isStaleDoc(doc);
 
   return (
     <div style={{ padding: "var(--space-6)", maxWidth: 800, margin: "0 auto" }}>
@@ -74,7 +69,7 @@ export function KnowledgeDocumentDetailPage() {
             <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 4, background: TYPE_COLORS[doc.type] + "1A", color: TYPE_COLORS[doc.type] }}>
               {doc.type}
             </span>
-            <span style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>{doc.domain}</span>
+            <span style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>{doc.topic}</span>
             <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 10, background: "#F1F5F9", color: "var(--color-text-secondary)" }}>
               {doc.scope}
             </span>

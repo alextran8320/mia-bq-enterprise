@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, BookOpen } from "lucide-react";
-import { KNOWLEDGE_DOCS, DOMAINS, type Domain } from "@/mocks/knowledge/documents";
+import { KNOWLEDGE_DOCS, KNOWLEDGE_TOPICS, type KnowledgeTopic } from "@/mocks/knowledge/documents";
 
 const TYPE_COLORS: Record<string, string> = {
   FAQ: "#0EA5E9",
@@ -14,7 +14,7 @@ export function KnowledgeLibraryPage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
-  const [activeDomain, setActiveDomain] = useState<Domain | "Tất cả">("Tất cả");
+  const [activeDomain, setActiveDomain] = useState<KnowledgeTopic | "Tất cả">("Tất cả");
   const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export function KnowledgeLibraryPage() {
   const publishedDocs = KNOWLEDGE_DOCS.filter((d) => d.status === "Published" || d.status === "Stale");
 
   const results = publishedDocs.filter((d) => {
-    const matchDomain = activeDomain === "Tất cả" || d.domain === activeDomain;
+    const matchDomain = activeDomain === "Tất cả" || d.topic === activeDomain;
     const matchQ =
       !debouncedQ ||
       d.title.toLowerCase().includes(debouncedQ.toLowerCase()) ||
@@ -62,10 +62,10 @@ export function KnowledgeLibraryPage() {
 
       {/* Domain tabs */}
       <div style={{ display: "flex", gap: "var(--space-2)", marginBottom: "var(--space-6)", flexWrap: "wrap" }}>
-        {(["Tất cả", ...DOMAINS] as const).map((d) => (
+        {(["Tất cả", ...KNOWLEDGE_TOPICS] as const).map((d) => (
           <button
             key={d}
-            onClick={() => setActiveDomain(d as Domain | "Tất cả")}
+            onClick={() => setActiveDomain(d as KnowledgeTopic | "Tất cả")}
             style={{
               padding: "8px 16px", borderRadius: "var(--radius-sm)",
               border: activeDomain === d ? "2px solid var(--color-primary)" : "1px solid var(--color-border)",
@@ -120,7 +120,7 @@ export function KnowledgeLibraryPage() {
                     <span style={{ fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 4, background: TYPE_COLORS[doc.type] + "1A", color: TYPE_COLORS[doc.type] }}>
                       {doc.type}
                     </span>
-                    <span style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>{doc.domain}</span>
+                    <span style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>{doc.topic}</span>
                     <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 10, background: "#F1F5F9", color: "#64748B" }}>{doc.scope}</span>
                     {doc.status === "Stale" && (
                       <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 10, background: "#FEF2F2", color: "#DC2626", fontWeight: 600 }}>Cần cập nhật</span>

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, CheckCircle } from "lucide-react";
-import { DOMAINS, DOC_TYPES, type Domain, type DocType } from "@/mocks/knowledge/documents";
+import { KNOWLEDGE_TOPICS, type KnowledgeTopic, type DocType } from "@/mocks/knowledge/documents";
+
+const DOC_TYPES: DocType[] = ["FAQ", "SOP", "Policy", "System Guide"];
 
 interface FormState {
   type: DocType | "";
   title: string;
-  domain: Domain | "";
+  topic: KnowledgeTopic | "";
   body: string;
   source: string;
   scope: string;
@@ -16,7 +18,7 @@ type FormErrors = Partial<Record<keyof FormState, string>>;
 
 export function KnowledgeCreatePage() {
   const navigate = useNavigate();
-  const [form, setForm] = useState<FormState>({ type: "", title: "", domain: "", body: "", source: "", scope: "Nội bộ" });
+  const [form, setForm] = useState<FormState>({ type: "", title: "", topic: "", body: "", source: "", scope: "Nội bộ" });
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -24,7 +26,7 @@ export function KnowledgeCreatePage() {
     const e: FormErrors = {};
     if (!form.type) e.type = "Vui lòng chọn loại tài liệu";
     if (!form.title.trim()) e.title = "Tiêu đề không được để trống";
-    if (!form.domain) e.domain = "Vui lòng chọn domain";
+    if (!form.topic) e.topic = "Vui lòng chọn chủ đề";
     if (!form.body.trim()) e.body = "Nội dung không được để trống";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -103,19 +105,19 @@ export function KnowledgeCreatePage() {
           />
         </div>
 
-        {/* Domain */}
+        {/* Topic */}
         <div style={{ marginBottom: "var(--space-5)" }}>
           <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "var(--color-text-secondary)", marginBottom: "var(--space-2)" }}>
-            Domain <span style={{ color: "#DC2626" }}>*</span>
+            Chủ đề <span style={{ color: "#DC2626" }}>*</span>
           </label>
-          {errors.domain && <div style={{ fontSize: 12, color: "#DC2626", marginBottom: "var(--space-1)" }}>{errors.domain}</div>}
+          {errors.topic && <div style={{ fontSize: 12, color: "#DC2626", marginBottom: "var(--space-1)" }}>{errors.topic}</div>}
           <select
-            value={form.domain}
-            onChange={(e) => setForm((f) => ({ ...f, domain: e.target.value as Domain }))}
-            style={{ width: "100%", height: 40, padding: "0 12px", border: errors.domain ? "1px solid #DC2626" : "1px solid var(--color-border)", borderRadius: "var(--radius-sm)", fontSize: 14, color: "var(--color-text-primary)", background: "var(--color-bg-card)", boxSizing: "border-box" }}
+            value={form.topic}
+            onChange={(e) => setForm((f) => ({ ...f, topic: e.target.value as KnowledgeTopic }))}
+            style={{ width: "100%", height: 40, padding: "0 12px", border: errors.topic ? "1px solid #DC2626" : "1px solid var(--color-border)", borderRadius: "var(--radius-sm)", fontSize: 14, color: "var(--color-text-primary)", background: "var(--color-bg-card)", boxSizing: "border-box" }}
           >
-            <option value="">-- Chọn domain --</option>
-            {DOMAINS.map((d) => <option key={d} value={d}>{d}</option>)}
+            <option value="">-- Chọn chủ đề --</option>
+            {KNOWLEDGE_TOPICS.map((t) => <option key={t} value={t}>{t}</option>)}
           </select>
         </div>
 

@@ -17,9 +17,7 @@ import {
   Warehouse,
   ArrowRightLeft,
   BookOpen,
-  Search,
-  Clock,
-  Database,
+  MessageSquare,
 } from "lucide-react";
 
 const GROUPS = [
@@ -55,6 +53,12 @@ const GROUPS = [
     ],
   },
   {
+    label: "Omnichannel Inbox",
+    items: [
+      { to: "/inbox", icon: MessageSquare, label: "Hội thoại" },
+    ],
+  },
+  {
     label: "AI Workspace",
     items: [
       { to: "/ai/chat", icon: MessageSquareText, label: "Chat nội bộ" },
@@ -70,10 +74,7 @@ const GROUPS = [
   {
     label: "Knowledge Center",
     items: [
-      { to: "/knowledge", icon: BookOpen, label: "Tổng quan" },
-      { to: "/knowledge/library", icon: Search, label: "Thư viện" },
-      { to: "/knowledge/publishing-queue", icon: Clock, label: "Hàng chờ duyệt" },
-      { to: "/knowledge/sources", icon: Database, label: "Nguồn dữ liệu" },
+      { to: "/knowledge", icon: BookOpen, label: "Knowledge Center" },
     ],
   },
 ];
@@ -225,7 +226,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
                 key={to}
                 to={to}
                 end={
-                  to === "/crm" || to === "/ai/chat" || to === "/sales-advisor" || to === "/knowledge"
+                  to === "/crm" || to === "/inbox" || to === "/ai/chat" || to === "/sales-advisor" || to === "/knowledge"
                 }
                 title={collapsed ? label : undefined}
                 style={({ isActive }) => ({

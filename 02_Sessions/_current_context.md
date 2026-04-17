@@ -1,10 +1,10 @@
 # Current Active Context
 
 **Last Updated**: 2026-04-17
-**Active Workspace Topic**: Knowledge Center research materialization — unified `/knowledge` workspace, Import action, folder tree, and rich document assets
+**Active Workspace Topic**: UnifiedInbox UI refinement round 2 — clean/minimal conversation interface with controlled brand accents, avatars, and clearer hierarchy
 **Current Project**: `MIABOS`
-**Current Phase**: `PB-02 / PB-03 Research Documentation`
-**Latest Canonical Session Log**: [[2026-04-17_MIABOS_Knowledge_Center_Research_Artifact_Materialization]]
+**Current Phase**: `PB-04 FE Preview UI Refinement`
+**Latest Canonical Session Log**: [[2026-04-17_MIABOS_UnifiedInbox_UI_Refinement]]
 **Today's Daily Log**: [[2026-04-17_Daily_Log]]
 
 ## Latest Decisions
@@ -19,6 +19,8 @@
 - `Import tài liệu` là CTA chính; `Tạo thủ công` là CTA phụ.
 - SRS/PRD/Stories/UXUI/STB M08 đã được refine theo layout mới; FE preview hiện có `/knowledge/library`, `/knowledge/publishing-queue`, `/knowledge/sources`, `/knowledge/freshness` được xem là legacy/revision-required trước FE handoff tiếp theo.
 - Research chính thức đã được materialize tại `01_Projects/MIABOS/Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md` và link vào Research index.
+- UnifiedInbox `/inbox` đã được refine 2 vòng: vòng 1 neutral hóa; vòng 2 theo feedback BO đã đưa lại brand color ở mức vừa phải, dùng `Avatar` component xuyên suốt, thêm search thật sự chạy, giữ nguyên logic nghiệp vụ.
+- Build full qua `vite build` đang bị chặn bởi môi trường Node `v16.14.0`; `npx tsc -b` pass cho code mới.
 - Business Owner đã chốt 8 open questions ngày 2026-04-17 (retention, trigger, routing, action types, CTA set, approval, freshness SLA).
 - **12/12 UXUI Feature Specs** = Approved.
 - 8 SRS §22 đã được update với decisions chính thức của Business Owner.
@@ -49,6 +51,7 @@
 |---------|-----------------|--------|
 | F-M09-AIC-001 | /ai/chat | ✅ Built & Ready for Review |
 | F-M14-BIZ-001 | /analytics/executive | ✅ Built & Ready for Review |
+| UnifiedInbox (AI Workspace) | /inbox | ✅ UI refined round 2 (brand + avatar + search); needs BO review |
 | F-M08-KNW-001 | /knowledge | Built earlier, now needs revision for folder tree + Import + rich assets |
 | F-M08-KNW-002 | /knowledge?section=queue | Built earlier as `/knowledge/publishing-queue`; now needs consolidation |
 | F-M08-KNW-003 | /knowledge?category=FAQ / Library section | Built earlier as `/knowledge/library`; now needs consolidation |
@@ -63,6 +66,7 @@
 
 - **PM / Business Owner**: review enhanced Knowledge Center UX direction before FE revision.
 - **PM / Business Owner**: approve hoặc comment research artifact `RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md`.
+- **PM / Business Owner**: review `/inbox` UI refinement round 2 (brand + avatar + search) và chốt feedback cuối.
 - **A07 FE Builder**: revise M08 FE Preview into one `/knowledge` workspace with folder tree, `Import tài liệu`, content sections, rich document assets, and preview/detail panel.
 - **A07 FE Builder**: Build 5 features còn lại (mock/stub only): AIC-002, AIC-003, SLS-002, SLS-003, OBS-001.
 - Business Owner review FE Previews hiện có: M09 `/ai/chat`, M14 `/analytics/executive`; M08 should be reworked before final review.

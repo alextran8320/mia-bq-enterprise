@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M10-SLS-002 Suggested Actions and Next Best Action
 
 **Feature ID**: F-M10-SLS-002
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -10,10 +10,10 @@
 **Save to**: `Design/UXUI_Features/UXUI-F-M10-SLS-002_Suggested_Actions_And_Next_Best_Action.md`
 **Date**: 2026-04-16
 **Last Updated By**: Claude Code (claude-sonnet-4-6)
-**Last Reviewed By**: A01 PM Agent
+**Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
-**Approved By**: -
-**Last Status Change**: 2026-04-16
+**Approved By**: A01 PM Agent
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document for `F-M10-SLS-002` UXUI and FE Preview visual/interaction contract
 **Blocking Reason**: -
 
@@ -354,6 +354,6 @@ có giải thích tại sao,
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility attributes applied
 
-**A06 Design Sign-Off**: — (2026-04-16)
-**A05 Tech Sign-Off**: Pending
-**PM Gate**: Pending
+**A06 Design Sign-Off**: Approved (2026-04-17) — 4 action types đã được BO chốt; panel layout, 6 states, expired/blocked UX đầy đủ, max 3 cards rule rõ.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — Suggestion panel không block chat content; API contract khớp SRS; rule-based ranking đủ cho phase 1.
+**PM Gate**: Approved (2026-04-17) — Action taxonomy đã chốt. Ready for A07 FE build (mock/stub only).

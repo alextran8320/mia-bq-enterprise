@@ -27,11 +27,13 @@ export interface Customer {
   attributes: CustomerAttribute[];
   orders: OrderSummary[];
   tags: string[];
+  avatarUrl?: string;
 }
 
 export const CUSTOMERS: Customer[] = [
   {
     id: "CRM-001",
+    avatarUrl: "https://api.dicebear.com/9.x/notionists/svg?seed=CRM001&backgroundColor=b6e3f4",
     name: "Nguyễn Văn An",
     phone: "0901 234 567",
     email: "an.nguyen@gmail.com",
@@ -54,6 +56,7 @@ export const CUSTOMERS: Customer[] = [
   },
   {
     id: "CRM-002",
+    avatarUrl: "https://api.dicebear.com/9.x/notionists/svg?seed=CRM002&backgroundColor=ffd5dc",
     name: "Trần Thị Bích",
     phone: "0912 345 678",
     email: "bich.tran@yahoo.com",
@@ -73,6 +76,7 @@ export const CUSTOMERS: Customer[] = [
   },
   {
     id: "CRM-003",
+    avatarUrl: "https://api.dicebear.com/9.x/notionists/svg?seed=CRM003&backgroundColor=c0aede",
     name: "Lê Hoàng Minh",
     phone: "0938 456 789",
     email: "minh.le@outlook.com",
@@ -87,6 +91,7 @@ export const CUSTOMERS: Customer[] = [
   },
   {
     id: "CRM-004",
+    avatarUrl: "https://api.dicebear.com/9.x/notionists/svg?seed=CRM004&backgroundColor=ffdfbf",
     name: "Phạm Thùy Dung",
     phone: "0976 567 890",
     email: "dung.pham@gmail.com",
@@ -108,6 +113,7 @@ export const CUSTOMERS: Customer[] = [
   },
   {
     id: "CRM-005",
+    avatarUrl: "https://api.dicebear.com/9.x/notionists/svg?seed=CRM005&backgroundColor=d1d4f9",
     name: "Võ Quốc Hùng",
     phone: "0965 678 901",
     email: "",
@@ -126,6 +132,7 @@ export const CUSTOMERS: Customer[] = [
   },
   {
     id: "CRM-006",
+    avatarUrl: "https://api.dicebear.com/9.x/notionists/svg?seed=CRM006&backgroundColor=b6e3f4",
     name: "Đặng Minh Tuấn",
     phone: "0987 789 012",
     email: "tuan.dang@company.vn",
@@ -140,6 +147,7 @@ export const CUSTOMERS: Customer[] = [
   },
   {
     id: "CRM-007",
+    avatarUrl: "https://api.dicebear.com/9.x/notionists/svg?seed=CRM007&backgroundColor=ffd5dc",
     name: "Huỳnh Ngọc Lan",
     phone: "0923 890 123",
     email: "lan.huynh@gmail.com",
@@ -156,6 +164,7 @@ export const CUSTOMERS: Customer[] = [
   },
   {
     id: "CRM-008",
+    avatarUrl: "https://api.dicebear.com/9.x/notionists/svg?seed=CRM008&backgroundColor=c0aede",
     name: "Bùi Thanh Hải",
     phone: "0945 901 234",
     email: "hai.bui@gmail.com",

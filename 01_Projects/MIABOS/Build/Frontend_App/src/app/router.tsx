@@ -19,6 +19,13 @@ import { UsersAndRolesPage } from "@/modules/operations-and-governance/pages/Use
 import { OrderSummaryPage } from "@/modules/orders-and-service/pages/OrderSummaryPage";
 import { SalesAdvisorPage } from "@/modules/ai-workspace/pages/SalesAdvisorPage";
 import { BusinessAnalyticsPage } from "@/modules/insights-performance/pages/BusinessAnalyticsPage";
+import { KnowledgeHomePage } from "@/modules/knowledge-center/pages/KnowledgeHomePage";
+import { KnowledgeDocumentDetailPage } from "@/modules/knowledge-center/pages/KnowledgeDocumentDetailPage";
+import { KnowledgeCreatePage } from "@/modules/knowledge-center/pages/KnowledgeCreatePage";
+import { KnowledgePublishingQueuePage } from "@/modules/knowledge-center/pages/KnowledgePublishingQueuePage";
+import { KnowledgeLibraryPage } from "@/modules/knowledge-center/pages/KnowledgeLibraryPage";
+import { KnowledgeSourcesPage } from "@/modules/knowledge-center/pages/KnowledgeSourcesPage";
+import { KnowledgeFreshnessPage } from "@/modules/knowledge-center/pages/KnowledgeFreshnessPage";
 
 export const router = createBrowserRouter([
   {
@@ -101,6 +108,19 @@ export const router = createBrowserRouter([
       },
       { path: "funnel", element: <BusinessAnalyticsPage view="funnel" /> },
       { path: "ai-roi", element: <BusinessAnalyticsPage view="ai-roi" /> },
+    ],
+  },
+  {
+    path: "/knowledge",
+    element: <AppShell />,
+    children: [
+      { index: true, element: <KnowledgeHomePage /> },
+      { path: "create", element: <KnowledgeCreatePage /> },
+      { path: "library", element: <KnowledgeLibraryPage /> },
+      { path: "publishing-queue", element: <KnowledgePublishingQueuePage /> },
+      { path: "sources", element: <KnowledgeSourcesPage /> },
+      { path: "freshness", element: <KnowledgeFreshnessPage /> },
+      { path: ":id", element: <KnowledgeDocumentDetailPage /> },
     ],
   },
 ]);

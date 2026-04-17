@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M08-KNW-003 FAQ and Policy Library
 
 **Feature ID**: F-M08-KNW-003
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -10,10 +10,10 @@
 **Save to**: `Design/UXUI_Features/UXUI-F-M08-KNW-003_FAQ_And_Policy_Library.md`
 **Date**: 2026-04-16
 **Last Updated By**: Claude Code (claude-sonnet-4-6)
-**Last Reviewed By**: A01 PM Agent
+**Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
-**Approved By**: -
-**Last Status Change**: 2026-04-16
+**Approved By**: A01 PM Agent
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document for `F-M08-KNW-003` UXUI and FE Preview visual/interaction contract
 **Blocking Reason**: -
 
@@ -421,6 +421,6 @@ trong thư viện tri thức,
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility: role="search", headings hierarchy, aria-live
 
-**A06 Design Sign-Off**: — (2026-04-16)
-**A05 Tech Sign-Off**: Pending
-**PM Gate**: Pending
+**A06 Design Sign-Off**: Approved (2026-04-17) — Taxonomy theo domain (không phải persona); desktop-first; không tách public-safe FAQ ra riêng; no-result state có gap-report link đủ tốt.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — Search với debounce 300ms standard; scope filter = badge-based không cần ACL phức tạp cho FE Preview; domain menu static data.
+**PM Gate**: Approved (2026-04-17) — Taxonomy và mobile scope đã chốt. Ready for A07 FE build (mock/stub only).

@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M12-OBS-001 Audit And Observability
 
 **Feature ID**: F-M12-OBS-001
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -10,7 +10,10 @@
 **Save to**: `Design/UXUI_Features/UXUI-F-M12-OBS-001_Audit_And_Observability.md`
 **Date**: 2026-04-16
 **Last Updated By**: Claude Code (claude-sonnet-4-6)
-**Last Status Change**: 2026-04-16
+**Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
+**Approval Required**: PM Agent
+**Approved By**: A01 PM Agent
+**Last Status Change**: 2026-04-17
 
 > **Precondition Resolved**: Linked SRS `F-M12-OBS-001` đã ở `SRS Ready` (promoted 2026-04-16); spec này là visual/interaction authority cho FE Preview bằng mock/stub data. Bật từ ngày đầu pilot. BE/integration thật cần Integration Spec riêng trước khi promote lên `Build Ready`.
 
@@ -503,7 +506,7 @@ Chỉ hiển thị khi có alert trong 24h. Mỗi row:
 | Responsive | Pending | Grid 4→2→1 columns |
 | Data binding | Pending | Verify `overall_status` computation logic với BE |
 
-**A05 Sign-Off**: ___ (chờ SRS promote)
+**A05 Sign-Off**: Approved (2026-04-17) — SRS đã ở SRS Ready; dashboard 4-panel feasible với mock data
 
 ---
 
@@ -521,6 +524,6 @@ Chỉ hiển thị khi có alert trong 24h. Mỗi row:
 - [ ] 100% copy tiếng Việt
 - [ ] Accessibility attributes đầy đủ
 
-**A06 Design Sign-Off**: ___ (YYYY-MM-DD)
-**A05 Tech Sign-Off**: ___ (YYYY-MM-DD)
-**PM Gate**: ___ (YYYY-MM-DD)
+**A06 Design Sign-Off**: Approved (2026-04-17) — Dashboard 4-panel đủ, health badge rõ, drill-down có link, "Chưa đủ dữ liệu" được handle, không hiện 0 giả.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — Panel component hợp lệ, metric card từ design system, mock data feasible.
+**PM Gate**: Approved (2026-04-17) — Pilot observability bật từ ngày đầu. Ready for A07 FE build (mock/stub only).

@@ -102,7 +102,22 @@ function KpiCard({ item }: { item: KpiCardData }) {
   const TrendIcon = item.trend === "down" ? ArrowDownRight : ArrowUpRight;
 
   return (
-    <Card className="analytics-card" style={{ borderRadius: "var(--radius-sm)", padding: "var(--space-5)" }}>
+    <Card
+      className="analytics-card"
+      style={{
+        borderRadius: "var(--radius-sm)",
+        padding: "var(--space-5)",
+        transition: "box-shadow 0.18s, transform 0.18s",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow = "0 6px 20px rgba(1,54,82,0.09)";
+        (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow = "";
+        (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
+      }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between", gap: "var(--space-4)" }}>
         <div>
           <p
@@ -214,6 +229,22 @@ function Header({ view }: { view: DashboardView }) {
               color: view === tab.view ? "var(--color-primary)" : "var(--color-text-secondary)",
               background: view === tab.view ? "var(--color-primary-light)" : "transparent",
               fontWeight: view === tab.view ? 700 : 500,
+              fontSize: 13,
+              position: "relative",
+              transition: "background 0.15s, color 0.15s",
+              outline: "none",
+            }}
+            onMouseEnter={(e) => {
+              if (view !== tab.view) {
+                (e.currentTarget as HTMLAnchorElement).style.background = "var(--color-bg-surface)";
+                (e.currentTarget as HTMLAnchorElement).style.color = "var(--color-text-primary)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (view !== tab.view) {
+                (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+                (e.currentTarget as HTMLAnchorElement).style.color = "var(--color-text-secondary)";
+              }
             }}
           >
             {tab.label}

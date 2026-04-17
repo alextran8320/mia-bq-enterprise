@@ -32,6 +32,9 @@ export function Avatar({ name, size = 36, src }: AvatarProps) {
           height: size,
           borderRadius: "var(--radius-full)",
           objectFit: "cover",
+          flexShrink: 0,
+          overflow: "hidden",
+          background: "var(--color-bg-surface)",
         }}
       />
     );

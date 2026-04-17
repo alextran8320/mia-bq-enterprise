@@ -209,9 +209,18 @@ Trong retail BQ, giá trị của AI tư vấn chỉ trở thành doanh thu khi 
 
 ## 22. Open Questions
 
-- CTA set phase 1 chính xác gồm những lựa chọn nào?
-- Minimum payload theo từng channel có khác nhau không?
-- Routing ưu tiên theo branch, store owner, hay team sales chung?
+> **Đã chốt — 2026-04-17 bởi Business Owner.**
+
+| Câu hỏi | Quyết định |
+|---------|-----------|
+| CTA set phase 1 | **4 CTA:** Đặt lịch tư vấn trực tiếp · Yêu cầu báo giá · Kết nối nhân viên bán hàng ngay · Đặt hàng thử/mua thử |
+| Minimum payload per channel | Không phân biệt channel trong phase 1 — dùng 1 form chung |
+| Routing priority | **Nghiệp vụ/domain trước** (giống AIC-003); không phân theo branch |
+
+**Impact lên UXUI / FE:**
+- CTA Footer hiển thị tối đa 4 nút; bố cục 2+2 hoặc dạng list
+- 1 form chung cho tất cả CTA types — field set cố định ≤ 5 fields
+- Routing không cần branch selector trong UI
 
 ## 23. Definition of Done
 

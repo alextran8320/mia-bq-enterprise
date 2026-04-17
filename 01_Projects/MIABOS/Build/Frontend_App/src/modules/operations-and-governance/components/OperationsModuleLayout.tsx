@@ -21,7 +21,6 @@ import {
   LayoutDashboard,
   Search,
   ShieldAlert,
-  Sparkles,
   Users,
 } from "lucide-react";
 import { Badge, Button, Card, Input } from "@/shared/ui";

@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M08-KNW-004 Knowledge Documents and Source Governance
 
 **Feature ID**: F-M08-KNW-004
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -10,10 +10,10 @@
 **Save to**: `Design/UXUI_Features/UXUI-F-M08-KNW-004_Knowledge_Documents_And_Source_Governance.md`
 **Date**: 2026-04-16
 **Last Updated By**: Claude Code (claude-sonnet-4-6)
-**Last Reviewed By**: A01 PM Agent
+**Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
-**Approved By**: -
-**Last Status Change**: 2026-04-16
+**Approved By**: A01 PM Agent
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document for `F-M08-KNW-004` UXUI and FE Preview visual/interaction contract
 **Blocking Reason**: -
 
@@ -412,6 +412,6 @@ và xử lý được conflict hoặc stale source ngay trên dashboard,
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility: aria-label on status dots, focus trap, role="table"
 
-**A06 Design Sign-Off**: — (2026-04-16)
-**A05 Tech Sign-Off**: Pending
-**PM Gate**: Pending
+**A06 Design Sign-Off**: Approved (2026-04-17) — 3 source types (SAP B1/KiotViet/Excel); freshness threshold 1 giờ cho tất cả; Freshness Board và Source Registry screens đủ; Restrict modal impact-count là good UX.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — 1-hour threshold unified; 3 source types đơn giản hơn dự kiến; conflict resolution defer sang BE phase không ảnh hưởng FE Preview.
+**PM Gate**: Approved (2026-04-17) — Source types và freshness SLA đã chốt. Ready for A07 FE build (mock/stub only).

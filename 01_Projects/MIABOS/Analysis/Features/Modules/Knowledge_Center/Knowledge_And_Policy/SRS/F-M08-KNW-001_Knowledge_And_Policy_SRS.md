@@ -212,9 +212,18 @@ Theo BQ research pack, phase 1 phải giải quyết gói `chatbot nội bộ + 
 
 ## 22. Open Questions
 
-- Domain nào ở BQ cần dual approval thay vì single reviewer?
-- `review_cycle_days` chuẩn cho từng nhóm `Policy`, `SOP`, `FAQ`, `System Guide` là bao nhiêu?
-- `Excel-backed policy` có được dùng như temporary runtime source trong pilot hay chỉ để reviewer tham khảo?
+> **Đã chốt — 2026-04-17 bởi Business Owner.**
+
+| Câu hỏi | Quyết định |
+|---------|-----------|
+| Dual approval áp dụng cho domain nào? | **Không có dual approval** — approval workflow không nằm trên MIABOS; nằm ở SAP |
+| `review_cycle_days` per document type | Không áp dụng trong MIABOS; do SAP quản lý |
+| Excel-backed policy dùng làm runtime source? | Không áp dụng dual approval flow trong hệ thống này |
+
+**Impact lên UXUI / FE:**
+- Loại bỏ toàn bộ dual-approval UI (không có "Chờ duyệt 2" badge, không có dual-approver field)
+- Review queue trong KNW-002 chỉ cần 1-reviewer flow
+- Document create/edit form không có approval routing selector
 
 ## 23. Definition of Done
 

@@ -213,9 +213,18 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 
 ## 22. Open Questions
 
-- Domain nào tại BQ bắt buộc dual approval?
-- SLA review chuẩn cho `pricing`, `promotion`, `CSKH policy`, `store SOP` là bao lâu?
-- Khi rollback policy active, có cần auto-invalidate cache cho `M09` và `M10` ngay lập tức không?
+> **Đã chốt — 2026-04-17 bởi Business Owner.**
+
+| Câu hỏi | Quyết định |
+|---------|-----------|
+| Dual approval theo domain? | **Không có dual approval** — approval nằm ở SAP, không phải MIABOS |
+| SLA review chuẩn | **Không áp dụng SLA timer phân theo domain** — publishing queue chỉ dùng 1 SLA chung nếu cần |
+| Auto-invalidate cache khi rollback? | Defer sang BE/integration phase |
+
+**Impact lên UXUI / FE:**
+- Queue list không có "Dual Approval" badge hay "Cần 2 duyệt" state
+- SLA timer (nếu giữ) dùng 1 threshold duy nhất cho tất cả tài liệu
+- Approve/Reject flow: 1-step, 1-reviewer
 
 ## 23. Definition of Done
 

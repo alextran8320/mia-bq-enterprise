@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M10-SLS-003 Lead Capture and CTA Handoff
 
 **Feature ID**: F-M10-SLS-003
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -10,10 +10,10 @@
 **Save to**: `Design/UXUI_Features/UXUI-F-M10-SLS-003_Lead_Capture_And_CTA_Handoff.md`
 **Date**: 2026-04-16
 **Last Updated By**: Claude Code (claude-sonnet-4-6)
-**Last Reviewed By**: A01 PM Agent
+**Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
-**Approved By**: -
-**Last Status Change**: 2026-04-16
+**Approved By**: A01 PM Agent
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document for `F-M10-SLS-003` UXUI and FE Preview visual/interaction contract
 **Blocking Reason**: -
 
@@ -409,6 +409,6 @@ và biết rõ ai sẽ liên hệ lại với tôi,
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility attributes applied (aria-required, aria-invalid, focus trap)
 
-**A06 Design Sign-Off**: — (2026-04-16)
-**A05 Tech Sign-Off**: Pending
-**PM Gate**: Pending
+**A06 Design Sign-Off**: Approved (2026-04-17) — 4 CTA types chốt rõ; form chung ≤5 fields; duplicate state gentle; confirmation luôn có case ID.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — 1 form chung không cần routing selector; API contract POST /mia/leads + /mia/cta/handoff hợp lệ; domain-routing phù hợp với AIC-003.
+**PM Gate**: Approved (2026-04-17) — CTA set và routing priority đã chốt. Ready for A07 FE build (mock/stub only).

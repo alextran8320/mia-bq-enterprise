@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M08-KNW-001 Knowledge and Policy
 
 **Feature ID**: F-M08-KNW-001
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -10,10 +10,10 @@
 **Save to**: `Design/UXUI_Features/UXUI-F-M08-KNW-001_Knowledge_And_Policy.md`
 **Date**: 2026-04-16
 **Last Updated By**: Claude Code (claude-sonnet-4-6)
-**Last Reviewed By**: A01 PM Agent
+**Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
-**Approved By**: -
-**Last Status Change**: 2026-04-16
+**Approved By**: A01 PM Agent
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document for `F-M08-KNW-001` UXUI and FE Preview visual/interaction contract
 **Blocking Reason**: -
 
@@ -382,6 +382,6 @@ Thay vì dựa vào trí nhớ cá nhân hoặc file Excel không kiểm soát.
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility attributes applied
 
-**A06 Design Sign-Off**: — (2026-04-16)
-**A05 Tech Sign-Off**: Pending
-**PM Gate**: Pending
+**A06 Design Sign-Off**: Approved (2026-04-17) — 5 screens đủ; form create/edit progressive disclosure; stale/superseded banner rõ; citation panel ≤1s target hợp lý. Dual approval UI đã loại bỏ theo quyết định BO.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — Không có dual-approval routing phức tạp; 1-reviewer flow đơn giản hơn; API contract khớp SRS.
+**PM Gate**: Approved (2026-04-17) — Approval nằm ở SAP (không phải MIABOS). Ready for A07 FE build (mock/stub only).

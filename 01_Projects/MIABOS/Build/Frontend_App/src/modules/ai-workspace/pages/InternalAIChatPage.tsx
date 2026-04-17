@@ -502,16 +502,26 @@ function EmptyState({ onUsePrompt }: { onUsePrompt: (prompt: string) => void }) 
             type="button"
             onClick={() => onUsePrompt(prompt)}
             style={{
-              border: "none",
+              border: "1px solid rgba(47,100,246,0.12)",
               cursor: "pointer",
               padding: "10px 16px",
               borderRadius: "var(--radius-pill)",
               background: "#F6F9FF",
               color: "#013652",
-              boxShadow: "var(--shadow-ambient)",
               fontFamily: "var(--font-primary)",
               fontSize: 13,
               lineHeight: 1.4,
+              transition: "background 0.15s, border-color 0.15s, transform 0.1s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "#ECF4FF";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(47,100,246,0.3)";
+              (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "#F6F9FF";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(47,100,246,0.12)";
+              (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
             }}
           >
             {prompt}
@@ -753,6 +763,8 @@ export function InternalAIChatPage() {
 
         {actionNotice ? (
           <div
+            role="status"
+            aria-live="polite"
             style={{
               marginBottom: "var(--space-3)",
               borderRadius: "var(--radius-md)",
@@ -760,8 +772,13 @@ export function InternalAIChatPage() {
               color: "#013652",
               fontSize: 13,
               padding: "10px 14px",
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space-2)",
+              animation: "fadeSlideIn 0.2s ease-out",
             }}
           >
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#2F64F6", flexShrink: 0 }} />
             {actionNotice}
           </div>
         ) : null}
@@ -775,12 +792,12 @@ export function InternalAIChatPage() {
             display: "flex",
             alignItems: "center",
             gap: "var(--space-3)",
-            padding: "12px 16px",
+            padding: "10px 10px 10px 18px",
             borderRadius: "var(--radius-pill)",
-            background: "rgba(255,255,255,0.88)",
+            background: "rgba(255,255,255,0.92)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
-            boxShadow: "0 12px 24px rgba(1,54,82,0.08)",
+            boxShadow: "0 4px 24px rgba(1,54,82,0.1), 0 0 0 1px rgba(47,100,246,0.08)",
           }}
         >
           <input
@@ -803,7 +820,13 @@ export function InternalAIChatPage() {
             type="submit"
             disabled={!canSubmit}
             aria-label="Gửi câu hỏi"
-            style={{ opacity: canSubmit ? 1 : 0.4 }}
+            style={{
+              opacity: canSubmit ? 1 : 0.4,
+              transition: "opacity 0.15s, transform 0.1s",
+              transform: canSubmit ? "scale(1)" : "scale(0.97)",
+              borderRadius: "var(--radius-pill)",
+              padding: "10px 18px",
+            }}
           >
             <Send size={15} />
             Gửi
@@ -972,7 +995,7 @@ export function InternalAIChatPage() {
                   type="button"
                   onClick={() => handleJumpToHistory(item)}
                   style={{
-                    border: "none",
+                    border: "1px solid transparent",
                     borderRadius: "var(--radius-md)",
                     padding: "10px 12px",
                     background: "#F6F9FF",
@@ -980,6 +1003,15 @@ export function InternalAIChatPage() {
                     cursor: "pointer",
                     display: "grid",
                     gap: 6,
+                    transition: "background 0.15s, border-color 0.15s",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.background = "#ECF4FF";
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(47,100,246,0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLButtonElement).style.background = "#F6F9FF";
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "transparent";
                   }}
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", gap: "var(--space-3)" }}>

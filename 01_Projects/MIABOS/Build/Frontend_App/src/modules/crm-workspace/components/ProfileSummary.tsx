@@ -6,7 +6,7 @@ export function ProfileSummary({ customer }: { customer: Customer }) {
   return (
     <Card>
       <div style={{ display: "flex", gap: "var(--space-6)", alignItems: "flex-start" }}>
-        <Avatar name={customer.name} size={64} />
+        <Avatar name={customer.name} size={64} src={customer.avatarUrl} />
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", marginBottom: "var(--space-1)" }}>
             <h2 style={{ margin: 0 }}>{customer.name}</h2>

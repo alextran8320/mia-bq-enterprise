@@ -200,9 +200,18 @@ Pilot nội bộ chỉ có giá trị nếu BQ nhìn lại được answer histo
 
 ## 22. Open Questions
 
-- Full transcript/source snapshot nên giữ `90 ngày`, `180 ngày`, hay lâu hơn?
-- Team Lead có được xem full transcript của team hay chỉ masked transcript?
-- Verdict taxonomy có cần map thêm sang `knowledge gap`, `routing error`, `permission error` không?
+> **Đã chốt — 2026-04-17 bởi Business Owner.**
+
+| Câu hỏi | Quyết định |
+|---------|-----------|
+| Transcript retention period | **Lưu không thời hạn** — không tự xóa, không có expire state |
+| Team Lead xem transcript của team? | **Có — TL xem toàn bộ transcript không bị mask** |
+| Verdict taxonomy mở rộng? | Giữ nguyên 4 verdicts hiện tại trong phase 1 |
+
+**Impact lên UXUI / FE:**
+- Loại bỏ `retention-expired state` (S4 Masked) — không còn cần thiết
+- Role TL: `masked = false` cho transcript của toàn team
+- Masked state chỉ còn áp dụng khi user thường xem transcript người khác ngoài team
 
 ## 23. Definition of Done
 

@@ -14,7 +14,7 @@ const columns: Column<Customer>[] = [
     header: "Khách hàng",
     render: (c) => (
       <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
-        <Avatar name={c.name} size={32} />
+        <Avatar name={c.name} size={32} src={c.avatarUrl} />
         <div>
           <div style={{ fontWeight: 500 }}>{c.name}</div>
           <div style={{ fontSize: "11px", color: "var(--color-text-tertiary)", fontFamily: "var(--font-mono)" }}>

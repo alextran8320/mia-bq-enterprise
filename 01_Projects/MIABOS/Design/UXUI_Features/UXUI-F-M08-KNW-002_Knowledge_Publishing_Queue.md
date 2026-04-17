@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M08-KNW-002 Knowledge Publishing Queue
 
 **Feature ID**: F-M08-KNW-002
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -10,10 +10,10 @@
 **Save to**: `Design/UXUI_Features/UXUI-F-M08-KNW-002_Knowledge_Publishing_Queue.md`
 **Date**: 2026-04-16
 **Last Updated By**: Claude Code (claude-sonnet-4-6)
-**Last Reviewed By**: A01 PM Agent
+**Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
-**Approved By**: -
-**Last Status Change**: 2026-04-16
+**Approved By**: A01 PM Agent
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document for `F-M08-KNW-002` UXUI and FE Preview visual/interaction contract
 **Blocking Reason**: -
 
@@ -357,6 +357,6 @@ và approve / reject với comment rõ ràng,
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility: tabs, focus trap, aria-live
 
-**A06 Design Sign-Off**: — (2026-04-16)
-**A05 Tech Sign-Off**: Pending
-**PM Gate**: Pending
+**A06 Design Sign-Off**: Approved (2026-04-17) — Queue list + diff view + 1-reviewer approve/reject flow rõ. Dual approval UI loại bỏ theo quyết định BO. Rollback ROLLBACK confirmation text giữ lại cho safety.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — 1-reviewer flow đơn giản; SLA timer 1-threshold; diff view là UI-only component, không cần BE phức tạp.
+**PM Gate**: Approved (2026-04-17) — Approval workflow nằm ở SAP. Queue MIABOS chỉ là visibility layer. Ready for A07 FE build (mock/stub only).

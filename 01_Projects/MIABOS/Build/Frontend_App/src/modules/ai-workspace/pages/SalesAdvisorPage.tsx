@@ -245,6 +245,19 @@ function DiscoveryPanel({ onSelectScenario }: { onSelectScenario: (scenario: Sal
                   padding: "9px 12px",
                   fontFamily: "var(--font-primary)",
                   cursor: "pointer",
+                  fontSize: 13,
+                  fontWeight: 500,
+                  transition: "background 0.15s, border-color 0.15s, transform 0.1s",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "var(--color-primary-light)";
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--color-primary)";
+                  (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = "white";
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--color-border-ghost)";
+                  (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
                 }}
               >
                 {option}
@@ -261,7 +274,7 @@ function DiscoveryPanel({ onSelectScenario }: { onSelectScenario: (scenario: Sal
             type="button"
             onClick={() => onSelectScenario(scenario)}
             style={{
-              border: "none",
+              border: "1px solid transparent",
               background: "var(--color-primary-light)",
               color: "var(--color-text-primary)",
               borderRadius: "var(--radius-sm)",
@@ -269,6 +282,17 @@ function DiscoveryPanel({ onSelectScenario }: { onSelectScenario: (scenario: Sal
               fontFamily: "var(--font-primary)",
               textAlign: "left",
               cursor: "pointer",
+              fontSize: 13,
+              lineHeight: 1.5,
+              transition: "background 0.15s, border-color 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "#dde8ff";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(47,100,246,0.2)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "var(--color-primary-light)";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "transparent";
             }}
           >
             {scenario.userPrompt}
@@ -471,24 +495,34 @@ export function SalesAdvisorPage() {
               display: "flex",
               gap: "var(--space-3)",
               alignItems: "center",
-              padding: "var(--space-4) var(--space-6)",
-              background: "color-mix(in srgb, var(--color-bg-page) 88%, white)",
+              padding: "10px 10px 10px 16px",
+              background: "rgba(255,255,255,0.92)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              borderTop: "1px solid rgba(0,0,0,0.04)",
             }}
           >
-            <UserRound size={18} style={{ color: "var(--color-text-tertiary)" }} />
-            <div
+            <UserRound size={18} style={{ color: "var(--color-text-tertiary)", flexShrink: 0 }} />
+            <input
+              placeholder="Nhập câu hỏi hoặc mô tả nhu cầu..."
+              aria-label="Nhập câu hỏi tư vấn"
               style={{
                 flex: 1,
-                background: "white",
+                border: "none",
+                outline: "none",
+                background: "transparent",
+                font: "inherit",
+                fontSize: 13,
+                color: "var(--color-text-primary)",
+              }}
+            />
+            <Button
+              aria-label="Gửi"
+              style={{
+                padding: "10px 16px",
                 borderRadius: "var(--radius-pill)",
-                padding: "12px 16px",
-                color: "var(--color-text-tertiary)",
-                boxShadow: "var(--shadow-ambient)",
               }}
             >
-              Nhập câu hỏi hoặc mô tả nhu cầu...
-            </div>
-            <Button aria-label="Gửi" style={{ padding: "12px 16px" }}>
               <Send size={16} />
             </Button>
           </div>

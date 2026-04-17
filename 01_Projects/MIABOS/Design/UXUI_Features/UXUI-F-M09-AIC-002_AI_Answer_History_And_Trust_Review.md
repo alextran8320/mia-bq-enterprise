@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M09-AIC-002 AI Answer History and Trust Review
 
 **Feature ID**: F-M09-AIC-002
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -10,10 +10,10 @@
 **Save to**: `Design/UXUI_Features/UXUI-F-M09-AIC-002_AI_Answer_History_And_Trust_Review.md`
 **Date**: 2026-04-16
 **Last Updated By**: Claude Code (claude-sonnet-4-6)
-**Last Reviewed By**: A01 PM Agent
+**Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
-**Approved By**: -
-**Last Status Change**: 2026-04-16
+**Approved By**: A01 PM Agent
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document for `F-M09-AIC-002` UXUI and FE Preview visual/interaction contract
 **Blocking Reason**: -
 
@@ -399,6 +399,6 @@ và gắn đánh giá trust cho từng answer có rủi ro,
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility attributes applied
 
-**A06 Design Sign-Off**: — (2026-04-16)
-**A05 Tech Sign-Off**: Pending
-**PM Gate**: Pending
+**A06 Design Sign-Off**: Approved (2026-04-17) — Screens đầy đủ, flow rõ, copy tiếng Việt đủ, token chuẩn. Lưu ý: loại bỏ retention-expired state theo quyết định BO ngày 2026-04-17.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — Component mapping hợp lệ, API contract khớp SRS, animation nhẹ, responsive đủ.
+**PM Gate**: Approved (2026-04-17) — Open questions đã chốt. Ready for A07 FE build (mock/stub only).

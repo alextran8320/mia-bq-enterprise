@@ -205,9 +205,18 @@ BQ không chỉ cần chatbot; họ cần một bề mặt tri thức chuẩn đ
 
 ## 22. Open Questions
 
-- Taxonomy menu chính sẽ ưu tiên `domain`, `persona`, hay `job-to-be-done`?
-- Store staff có cần mobile-first library ngay phase 1 không?
-- Có nên tách riêng `public-safe FAQ` khỏi library nội bộ hay chỉ filter bằng badge/scope?
+> **Đã chốt — 2026-04-17 bởi Business Owner.**
+
+| Câu hỏi | Quyết định |
+|---------|-----------|
+| Taxonomy menu ưu tiên gì? | **Domain** (Giá / Sản phẩm / Đổi trả / Vận hành…) — không theo persona hay job-to-be-done |
+| Mobile-first cho store staff phase 1? | Không — desktop-first trong phase 1; mobile sau pilot |
+| Tách public-safe FAQ? | Không tách — dùng badge/scope filter trong cùng library |
+
+**Impact lên UXUI / FE:**
+- Library landing: menu theo domain (không phải role-based menu)
+- Responsive: desktop-first, mobile không cần optimize trong phase 1
+- Không có trang FAQ riêng public — dùng scope filter/badge trên library chung
 
 ## 23. Definition of Done
 

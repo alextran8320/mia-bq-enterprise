@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRightLeft, Clock3, LayoutDashboard, ShieldAlert, Sparkles } from "lucide-react";
+import { ArrowRightLeft, Clock3, LayoutDashboard, Sparkles } from "lucide-react";
 import { Badge, Button, Card } from "@/shared/ui";
 import {
   getConnectorHealthById,

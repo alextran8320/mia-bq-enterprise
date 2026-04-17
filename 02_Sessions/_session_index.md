@@ -3,6 +3,8 @@
 ### 2026-04-17
 
 - [[2026-04-17_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-17_MIABOS_BO_Decisions_And_UXUI_Approve|MIABOS BO Decisions And UXUI Approve]] - Business Owner chốt 8 open questions; §22 của 8 SRS updated; 9 UXUI Specs promoted Draft → Approved; _index.md updated. 12/12 specs Approved.
+- [[2026-04-17_MIABOS_Knowledge_Center_FE_Preview_Build|MIABOS Knowledge Center FE Preview Build]] - Build toàn bộ FE Preview M08 Knowledge Center (KNW-001→KNW-004): 7 pages, 3 mock data files, router + sidebar wired, build 0 errors, HTTP 200 tất cả 7 routes /knowledge/*.
 - [[2026-04-17_MIABOS_Catalog_Commerce_SRS_Audit|MIABOS Catalog Commerce SRS Audit]] - Audit đầy đủ 4 SRS của Catalog_And_Commerce (M01–M04): phát hiện 9 gaps, fix tất cả (checklists chuẩn hóa, Related PRD, Task Flow 5 steps, Test Scenarios cụ thể, Observability metrics), tạo Feature_Registry.md và nâng cấp \_index.md.
 
 ### 2026-04-16

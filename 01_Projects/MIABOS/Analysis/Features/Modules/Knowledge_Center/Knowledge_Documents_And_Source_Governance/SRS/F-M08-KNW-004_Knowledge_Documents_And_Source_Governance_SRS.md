@@ -215,9 +215,26 @@ BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `
 
 ## 22. Open Questions
 
-- Bộ source types chuẩn cho BQ phase 1 sẽ chốt ở mức nào?
-- Freshness SLA có cần tách riêng cho `Policy`, `FAQ`, `System Guide`, `Promo Note` không?
-- Khi conflict kéo dài chưa resolve, runtime nên `block`, `warn`, hay `fallback` theo từng domain?
+> **Đã chốt — 2026-04-17 bởi Business Owner.**
+
+| Câu hỏi | Quyết định |
+|---------|-----------|
+| Source types phase 1 | SAP B1 · KiotViet · Excel upload thủ công (3 sources chuẩn) |
+| Freshness SLA tách theo document type? | **Không tách** — dùng **1 giờ** cho tất cả source types |
+| Conflict chưa resolve: block/warn/fallback? | Defer sang BE/integration phase |
+
+**Freshness threshold áp dụng:**
+| Source | Stale sau |
+|--------|-----------|
+| SAP B1 | 1 giờ |
+| KiotViet | 1 giờ |
+| Excel upload | 1 giờ |
+| Tài liệu viết tay (FAQ, SOP) | 1 giờ |
+
+**Impact lên UXUI / FE:**
+- Freshness board: đánh dấu stale khi `last_sync > 1 giờ` — thống nhất tất cả source
+- Source Registry: 3 source types với badge tương ứng (SAP B1 / KiotViet / Excel)
+- Conflict behavior: không cần chọn block/warn trong UI phase 1
 
 ## 23. Definition of Done
 

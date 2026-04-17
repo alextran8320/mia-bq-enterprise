@@ -16,6 +16,10 @@ import {
   TicketPercent,
   Warehouse,
   ArrowRightLeft,
+  BookOpen,
+  Search,
+  Clock,
+  Database,
 } from "lucide-react";
 
 const GROUPS = [
@@ -63,6 +67,15 @@ const GROUPS = [
       { to: "/analytics/executive", icon: BarChart3, label: "Dashboard ROI" },
     ],
   },
+  {
+    label: "Knowledge Center",
+    items: [
+      { to: "/knowledge", icon: BookOpen, label: "Tổng quan" },
+      { to: "/knowledge/library", icon: Search, label: "Thư viện" },
+      { to: "/knowledge/publishing-queue", icon: Clock, label: "Hàng chờ duyệt" },
+      { to: "/knowledge/sources", icon: Database, label: "Nguồn dữ liệu" },
+    ],
+  },
 ];
 
 interface SidebarProps {
@@ -90,29 +103,53 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
       {/* Logo row */}
       <div
         style={{
-          padding: collapsed
-            ? "0 10px var(--space-6)"
-            : "0 var(--space-6) var(--space-6)",
+          padding: collapsed ? "0 10px var(--space-5)" : "0 var(--space-5) var(--space-5)",
           display: "flex",
           alignItems: "center",
           justifyContent: collapsed ? "center" : "space-between",
           gap: "var(--space-2)",
-          minHeight: 36,
+          minHeight: 44,
         }}
       >
-        {!collapsed && (
-          <span
+        {/* Logo mark — always visible */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-2)",
+            overflow: "hidden",
+            flexShrink: 0,
+          }}
+        >
+          <div
             style={{
-              fontSize: "18px",
-              fontWeight: 700,
-              color: "var(--color-primary)",
-              letterSpacing: "-0.02em",
-              whiteSpace: "nowrap",
+              width: 28,
+              height: 28,
+              borderRadius: "var(--radius-sm)",
+              background: "var(--color-primary)",
+              display: "grid",
+              placeItems: "center",
+              flexShrink: 0,
             }}
           >
-            MIA BOS
-          </span>
-        )}
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+              <path d="M2 2h5v5H2V2zm7 0h5v5H9V2zm0 7h5v5H9V9zm-7 0h5v5H2V9z" fill="white" />
+            </svg>
+          </div>
+          {!collapsed && (
+            <span
+              style={{
+                fontSize: "15px",
+                fontWeight: 700,
+                color: "var(--color-primary)",
+                letterSpacing: "-0.02em",
+                whiteSpace: "nowrap",
+              }}
+            >
+              MIA BOS
+            </span>
+          )}
+        </div>
         <button
           type="button"
           onClick={onToggleCollapse}
@@ -188,7 +225,7 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
                 key={to}
                 to={to}
                 end={
-                  to === "/crm" || to === "/ai/chat" || to === "/sales-advisor"
+                  to === "/crm" || to === "/ai/chat" || to === "/sales-advisor" || to === "/knowledge"
                 }
                 title={collapsed ? label : undefined}
                 style={({ isActive }) => ({

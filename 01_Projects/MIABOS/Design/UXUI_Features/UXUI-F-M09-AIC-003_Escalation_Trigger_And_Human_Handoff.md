@@ -1,7 +1,7 @@
 # UXUI Feature Spec: F-M09-AIC-003 Escalation Trigger and Human Handoff
 
 **Feature ID**: F-M09-AIC-003
-**Status**: Draft
+**Status**: Approved
 **Owner**: A06 UI/UX Agent
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
@@ -10,10 +10,10 @@
 **Save to**: `Design/UXUI_Features/UXUI-F-M09-AIC-003_Escalation_Trigger_And_Human_Handoff.md`
 **Date**: 2026-04-16
 **Last Updated By**: Claude Code (claude-sonnet-4-6)
-**Last Reviewed By**: A01 PM Agent
+**Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
-**Approved By**: -
-**Last Status Change**: 2026-04-16
+**Approved By**: A01 PM Agent
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document for `F-M09-AIC-003` UXUI and FE Preview visual/interaction contract
 **Blocking Reason**: -
 
@@ -377,6 +377,6 @@ và nhận xác nhận rõ ràng về ai sẽ xử lý tiếp,
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility attributes applied
 
-**A06 Design Sign-Off**: — (2026-04-16)
-**A05 Tech Sign-Off**: Pending
-**PM Gate**: Pending
+**A06 Design Sign-Off**: Approved (2026-04-17) — Screens đủ, Unrouted state rõ, dual-trigger (auto + manual) được thể hiện tốt, copy Vietnamese đầy đủ.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — Modal, RadioGroup, focus trap hợp lệ. API contract khớp SRS. Routing domain-first đã được ghi nhận.
+**PM Gate**: Approved (2026-04-17) — Trigger conditions và routing priority đã chốt. Ready for A07 FE build (mock/stub only).

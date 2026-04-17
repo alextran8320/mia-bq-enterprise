@@ -10,9 +10,24 @@ const STORES = [
 ];
 
 const NOTIFICATIONS = [
-  { id: "n1", text: "Đơn #HD-2051 chờ xác nhận giao hàng", time: "2 phút trước", unread: true },
-  { id: "n2", text: "Khách Nguyễn Văn A để lại thông tin tư vấn", time: "15 phút trước", unread: true },
-  { id: "n3", text: "Báo cáo ROI tháng 4 đã sẵn sàng", time: "1 giờ trước", unread: false },
+  {
+    id: "n1",
+    text: "Đơn #HD-2051 chờ xác nhận giao hàng",
+    time: "2 phút trước",
+    unread: true,
+  },
+  {
+    id: "n2",
+    text: "Khách Nguyễn Văn A để lại thông tin tư vấn",
+    time: "15 phút trước",
+    unread: true,
+  },
+  {
+    id: "n3",
+    text: "Báo cáo ROI tháng 4 đã sẵn sàng",
+    time: "1 giờ trước",
+    unread: false,
+  },
 ];
 
 const BREADCRUMB_MAP: Record<string, string> = {
@@ -34,7 +49,7 @@ const BREADCRUMB_MAP: Record<string, string> = {
   "/ai/chat": "Chat nội bộ",
   "/sales-advisor": "Tư vấn bán hàng",
   "/analytics": "Phân tích",
-  "/analytics/executive": "Bảng điều khiển",
+  "/analytics/executive": "Dashboard",
   "/knowledge": "Kiến thức",
 };
 
@@ -56,7 +71,9 @@ function getBreadcrumbs(pathname: string): { label: string; path: string }[] {
 
 export function TopBar() {
   const location = useLocation();
-  const [selectedStore, setSelectedStore] = useState<(typeof STORES)[number]>(STORES[0]!);
+  const [selectedStore, setSelectedStore] = useState<(typeof STORES)[number]>(
+    STORES[0]!,
+  );
   const [storeOpen, setStoreOpen] = useState(false);
   const [notiOpen, setNotiOpen] = useState(false);
   const [notifications, setNotifications] = useState(NOTIFICATIONS);
@@ -96,7 +113,10 @@ export function TopBar() {
       {/* Breadcrumbs */}
       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
         {breadcrumbs.map((crumb, i) => (
-          <span key={crumb.path} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span
+            key={crumb.path}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
             {i > 0 && (
               <span
                 style={{
@@ -184,7 +204,9 @@ export function TopBar() {
             padding: "8px 12px",
             border: "none",
             borderRadius: 10,
-            background: storeOpen ? "rgba(47,100,246,0.08)" : "rgba(145,158,171,0.08)",
+            background: storeOpen
+              ? "rgba(47,100,246,0.08)"
+              : "rgba(145,158,171,0.08)",
             color: storeOpen ? "#2F64F6" : "#637381",
             cursor: "pointer",
             fontSize: 13,
@@ -193,14 +215,23 @@ export function TopBar() {
             fontFamily: "var(--font-primary)",
           }}
           onMouseEnter={(e) => {
-            if (!storeOpen) e.currentTarget.style.background = "rgba(145,158,171,0.16)";
+            if (!storeOpen)
+              e.currentTarget.style.background = "rgba(145,158,171,0.16)";
           }}
           onMouseLeave={(e) => {
-            if (!storeOpen) e.currentTarget.style.background = "rgba(145,158,171,0.08)";
+            if (!storeOpen)
+              e.currentTarget.style.background = "rgba(145,158,171,0.08)";
           }}
         >
           <Store size={16} style={{ flexShrink: 0 }} />
-          <span style={{ whiteSpace: "nowrap", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis" }}>
+          <span
+            style={{
+              whiteSpace: "nowrap",
+              maxWidth: 140,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
             {selectedStore.label}
           </span>
           <ChevronDown
@@ -223,7 +254,8 @@ export function TopBar() {
               minWidth: 220,
               background: "#FFFFFF",
               borderRadius: 12,
-              boxShadow: "0 12px 28px -4px rgba(145,158,171,0.2), 0 0 2px rgba(145,158,171,0.1)",
+              boxShadow:
+                "0 12px 28px -4px rgba(145,158,171,0.2), 0 0 2px rgba(145,158,171,0.1)",
               zIndex: 100,
               padding: 4,
               border: "none",
@@ -243,9 +275,10 @@ export function TopBar() {
                   border: "none",
                   borderRadius: 8,
                   background:
-                    selectedStore.id === store.id ? "rgba(47,100,246,0.08)" : "transparent",
-                  color:
-                    selectedStore.id === store.id ? "#2F64F6" : "#212B36",
+                    selectedStore.id === store.id
+                      ? "rgba(47,100,246,0.08)"
+                      : "transparent",
+                  color: selectedStore.id === store.id ? "#2F64F6" : "#212B36",
                   cursor: "pointer",
                   fontSize: 13,
                   fontWeight: selectedStore.id === store.id ? 600 : 400,
@@ -295,7 +328,8 @@ export function TopBar() {
             transition: "all 0.2s",
           }}
           onMouseEnter={(e) => {
-            if (!notiOpen) e.currentTarget.style.background = "rgba(145,158,171,0.08)";
+            if (!notiOpen)
+              e.currentTarget.style.background = "rgba(145,158,171,0.08)";
           }}
           onMouseLeave={(e) => {
             if (!notiOpen) e.currentTarget.style.background = "transparent";
@@ -336,7 +370,8 @@ export function TopBar() {
               width: 360,
               background: "#FFFFFF",
               borderRadius: 12,
-              boxShadow: "0 12px 28px -4px rgba(145,158,171,0.2), 0 0 2px rgba(145,158,171,0.1)",
+              boxShadow:
+                "0 12px 28px -4px rgba(145,158,171,0.2), 0 0 2px rgba(145,158,171,0.1)",
               zIndex: 100,
               overflow: "hidden",
             }}
@@ -350,7 +385,9 @@ export function TopBar() {
               }}
             >
               <div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: "#212B36" }}>
+                <div
+                  style={{ fontSize: 16, fontWeight: 700, color: "#212B36" }}
+                >
                   Thông báo
                 </div>
                 {unreadCount > 0 && (
@@ -392,7 +429,9 @@ export function TopBar() {
                     display: "flex",
                     gap: 12,
                     padding: "14px 20px",
-                    background: n.unread ? "rgba(47,100,246,0.04)" : "transparent",
+                    background: n.unread
+                      ? "rgba(47,100,246,0.04)"
+                      : "transparent",
                     cursor: "pointer",
                     transition: "background 0.15s",
                   }}

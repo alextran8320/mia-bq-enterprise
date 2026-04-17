@@ -1,6 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppShell } from "./layouts/AppShell";
-import { DashboardPage } from "@/modules/crm-workspace/pages/DashboardPage";
 import { CustomerListPage } from "@/modules/crm-workspace/pages/CustomerListPage";
 import { CustomerProfilePage } from "@/modules/crm-workspace/pages/CustomerProfilePage";
 import { LeadListPage } from "@/modules/crm-workspace/pages/LeadListPage";
@@ -32,13 +31,13 @@ import { KnowledgeDocumentDetailPage } from "@/modules/knowledge-center/pages/Kn
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/crm" replace />,
+    element: <Navigate to="/analytics/executive" replace />,
   },
   {
     path: "/crm",
     element: <AppShell />,
     children: [
-      { index: true, element: <DashboardPage /> },
+      { index: true, element: <Navigate to="/crm/customers" replace /> },
       { path: "customers", element: <CustomerListPage /> },
       { path: "customers/:id", element: <CustomerProfilePage /> },
       { path: "leads", element: <LeadListPage /> },
@@ -69,7 +68,10 @@ export const router = createBrowserRouter([
     path: "/operations",
     element: <AppShell />,
     children: [
-      { index: true, element: <Navigate to="/operations/escalations" replace /> },
+      {
+        index: true,
+        element: <Navigate to="/operations/escalations" replace />,
+      },
       { path: "escalations", element: <EscalationQueuePage /> },
       { path: "escalations/:id", element: <EscalationDetailPage /> },
       { path: "users-roles", element: <UsersAndRolesPage /> },
@@ -122,11 +124,26 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <KnowledgeHomePage /> },
-      { path: "create", element: <Navigate to="/knowledge?section=create" replace /> },
-      { path: "library", element: <Navigate to="/knowledge?section=library" replace /> },
-      { path: "publishing-queue", element: <Navigate to="/knowledge?section=queue" replace /> },
-      { path: "sources", element: <Navigate to="/knowledge?section=sources" replace /> },
-      { path: "freshness", element: <Navigate to="/knowledge?section=freshness" replace /> },
+      {
+        path: "create",
+        element: <Navigate to="/knowledge?section=create" replace />,
+      },
+      {
+        path: "library",
+        element: <Navigate to="/knowledge?section=library" replace />,
+      },
+      {
+        path: "publishing-queue",
+        element: <Navigate to="/knowledge?section=queue" replace />,
+      },
+      {
+        path: "sources",
+        element: <Navigate to="/knowledge?section=sources" replace />,
+      },
+      {
+        path: "freshness",
+        element: <Navigate to="/knowledge?section=freshness" replace />,
+      },
       { path: ":id", element: <KnowledgeDocumentDetailPage /> },
     ],
   },

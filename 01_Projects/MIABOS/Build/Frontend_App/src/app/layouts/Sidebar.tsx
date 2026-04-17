@@ -20,6 +20,12 @@ import {
 
 const GROUPS = [
   {
+    label: "Phân tích",
+    items: [
+      { to: "/analytics/executive", icon: BarChart3, label: "Dashboard" },
+    ],
+  },
+  {
     label: "Quản lý khách hàng",
     items: [
       { to: "/crm/customers", icon: Users, label: "Khách hàng" },
@@ -75,12 +81,6 @@ const GROUPS = [
   {
     label: "AI Workspace",
     items: [{ to: "/ai/chat", icon: MessageSquareText, label: "Chat nội bộ" }],
-  },
-  {
-    label: "Phân tích",
-    items: [
-      { to: "/analytics/executive", icon: BarChart3, label: "Bảng điều khiển" },
-    ],
   },
   {
     label: "Trung tâm kiến thức",

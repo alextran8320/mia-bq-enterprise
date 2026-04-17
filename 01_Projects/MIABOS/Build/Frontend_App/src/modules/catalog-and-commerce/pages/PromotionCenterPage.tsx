@@ -14,6 +14,11 @@ import {
   WarningBanner,
   useCatalogContext,
 } from "@/modules/catalog-and-commerce/components/CatalogModuleLayout";
+import {
+  PromotionItemCard,
+  NoPromotionState,
+  ConflictDetailBanner,
+} from "@/modules/catalog-and-commerce/components/CatalogSharedComponents";
 
 export function PromotionCenterPage() {
   const { result, filters, selectedId, setSelectedId } = useCatalogContext();
@@ -168,80 +173,54 @@ export function PromotionCenterPage() {
             <section>
               <Eyebrow>Danh sách CTKM / voucher</Eyebrow>
               <div style={{ marginTop: "var(--space-3)", display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-                {getVisiblePromotions(selectedRecord, filters).map((promotion) => {
-                  const warningStyle =
-                    promotion.warningState === "none"
-                      ? null
-                      : WARNING_STYLES[promotion.warningState];
+                {(() => {
+                  const promos = getVisiblePromotions(selectedRecord, filters);
+                  if (promos.length === 0) {
+                    return <NoPromotionState context={`${selectedRecord.sku} · ${selectedRecord.collection}`} />;
+                  }
+
+                  const hasConflict = promos.some((p) => p.warningState === "conflict");
 
                   return (
-                    <div
-                      key={promotion.id}
-                      style={{
-                        borderRadius: "var(--radius-md)",
-                        background: "var(--color-bg-surface)",
-                        padding: "var(--space-4)",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "var(--space-3)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          gap: "var(--space-3)",
-                          alignItems: "flex-start",
-                        }}
-                      >
-                        <div>
-                          <div style={{ fontWeight: 600, marginBottom: "var(--space-1)" }}>
-                            {promotion.name}
-                          </div>
-                          <div style={{ fontSize: "13px", color: "var(--color-text-secondary)" }}>
-                            {promotion.scopeLabel}
-                          </div>
-                        </div>
-                        <Badge
-                          label={promotion.discountLabel}
-                          color="var(--color-primary)"
-                          bg="var(--color-primary-light)"
+                    <>
+                      {hasConflict && (
+                        <ConflictDetailBanner
+                          sources={promos
+                            .filter((p) => p.warningState !== "none")
+                            .map((p) => ({ system: p.source, value: `${p.name} — ${p.discountLabel}` }))}
+                          ctaLabel="Liên hệ Marketing"
                         />
-                      </div>
+                      )}
+                      {promos.map((promotion, index) => {
+                        const warningStyle =
+                          promotion.warningState === "none"
+                            ? null
+                            : WARNING_STYLES[promotion.warningState];
 
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-                        <Badge label={promotion.source} color="#0F766E" bg="#CCFBF1" />
-                        <Badge
-                          label={promotion.publicSafeLabel}
-                          color="var(--color-text-secondary)"
-                          bg="var(--color-bg-card)"
-                        />
-                        {warningStyle ? (
-                          <Badge
-                            label={warningStyle.label}
-                            color={warningStyle.color}
-                            bg={warningStyle.bg}
-                          />
-                        ) : null}
-                      </div>
-
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                          gap: "var(--space-3)",
-                        }}
-                      >
-                        <PromoCell label="Điều kiện" value={promotion.conditionLabel} />
-                        <PromoCell label="Hiệu lực" value={promotion.validRange} />
-                      </div>
-
-                      <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
-                        {promotion.note}
-                      </div>
-                    </div>
+                        return (
+                          <div
+                            key={promotion.id}
+                            style={{
+                              animation: `fadeIn 200ms ease-out ${Math.min(index, 7) * 50}ms both`,
+                            }}
+                          >
+                            <PromotionItemCard
+                              name={promotion.name}
+                              discountLabel={promotion.discountLabel}
+                              conditionLabel={promotion.conditionLabel}
+                              scopeLabel={promotion.scopeLabel}
+                              validRange={promotion.validRange}
+                              source={promotion.source}
+                              publicSafeLabel={promotion.publicSafeLabel}
+                              note={promotion.note}
+                              warningLabel={warningStyle?.label}
+                            />
+                          </div>
+                        );
+                      })}
+                    </>
                   );
-                })}
+                })()}
               </div>
             </section>
 

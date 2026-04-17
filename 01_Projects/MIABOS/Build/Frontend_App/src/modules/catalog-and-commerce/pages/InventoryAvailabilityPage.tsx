@@ -16,6 +16,10 @@ import {
   WarningBanner,
   useCatalogContext,
 } from "@/modules/catalog-and-commerce/components/CatalogModuleLayout";
+import {
+  AvailabilityStatusBadge,
+  FreshnessBadge,
+} from "@/modules/catalog-and-commerce/components/CatalogSharedComponents";
 
 export function InventoryAvailabilityPage() {
   const { result, filters, selectedId, setSelectedId } = useCatalogContext();
@@ -98,11 +102,7 @@ export function InventoryAvailabilityPage() {
                     </div>
                   </div>
                   {primaryInventory ? (
-                    <Badge
-                      label={primaryInventory.availabilityLabel}
-                      color="var(--color-primary)"
-                      bg="var(--color-primary-light)"
-                    />
+                    <AvailabilityStatusBadge label={primaryInventory.availabilityLabel} />
                   ) : null}
                 </div>
 
@@ -110,11 +110,7 @@ export function InventoryAvailabilityPage() {
                   <>
                     <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
                       <Badge label={primaryInventory.source} color="#0F766E" bg="#CCFBF1" />
-                      <Badge
-                        label={primaryInventory.freshnessLabel}
-                        color="var(--color-text-secondary)"
-                        bg="var(--color-bg-surface)"
-                      />
+                      <FreshnessBadge label={primaryInventory.freshnessLabel} />
                       {warningStyle ? (
                         <Badge
                           label={warningStyle.label}
@@ -248,20 +244,12 @@ export function InventoryAvailabilityPage() {
                             {location.scopeLabel}
                           </div>
                         </div>
-                        <Badge
-                          label={location.availabilityLabel}
-                          color="var(--color-primary)"
-                          bg="var(--color-primary-light)"
-                        />
+                        <AvailabilityStatusBadge label={location.availabilityLabel} />
                       </div>
 
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
                         <Badge label={location.source} color="#0F766E" bg="#CCFBF1" />
-                        <Badge
-                          label={location.freshnessLabel}
-                          color="var(--color-text-secondary)"
-                          bg="var(--color-bg-card)"
-                        />
+                        <FreshnessBadge label={location.freshnessLabel} />
                         {warningStyle ? (
                           <Badge
                             label={warningStyle.label}

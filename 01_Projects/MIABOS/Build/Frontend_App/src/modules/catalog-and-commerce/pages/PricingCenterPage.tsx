@@ -14,6 +14,10 @@ import {
   WarningBanner,
   useCatalogContext,
 } from "@/modules/catalog-and-commerce/components/CatalogModuleLayout";
+import {
+  PriceAnswerCard,
+  ConflictDetailBanner,
+} from "@/modules/catalog-and-commerce/components/CatalogSharedComponents";
 
 export function PricingCenterPage() {
   const { result, filters, selectedId, setSelectedId } = useCatalogContext();
@@ -170,78 +174,37 @@ export function PricingCenterPage() {
               </div>
             </section>
 
+            {selectedRecord.pricingContexts.some((c) => c.warningState === "conflict") && (
+              <ConflictDetailBanner
+                sources={selectedRecord.sourceTrace
+                  .filter((t) => t.field.toLowerCase().includes("price") || t.field.toLowerCase().includes("giá"))
+                  .map((t) => ({ system: t.system, value: t.value }))}
+                ctaLabel="Liên hệ Finance để xác nhận"
+              />
+            )}
+
             <section>
               <Eyebrow>Các mức giá hiện có</Eyebrow>
               <div style={{ marginTop: "var(--space-3)", display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-                {selectedRecord.pricingContexts.map((context) => {
-                  const warningStyle =
-                    context.warningState === "none"
-                      ? null
-                      : WARNING_STYLES[context.warningState];
-
-                  return (
-                    <div
-                      key={context.id}
-                      style={{
-                        borderRadius: "var(--radius-md)",
-                        background: "var(--color-bg-surface)",
-                        padding: "var(--space-4)",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "var(--space-3)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          gap: "var(--space-3)",
-                          alignItems: "flex-start",
-                        }}
-                      >
-                        <div>
-                          <div style={{ fontWeight: 600, marginBottom: "var(--space-1)" }}>
-                            {context.contextLabel}
-                          </div>
-                          <div style={{ fontSize: "13px", color: "var(--color-text-secondary)" }}>
-                            {context.source} • {context.syncedAt}
-                          </div>
-                        </div>
-                        <Badge
-                          label={context.finalPrice}
-                          color="var(--color-primary)"
-                          bg="var(--color-primary-light)"
-                        />
-                      </div>
-
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-                        <Badge
-                          label={`Giá cơ sở ${context.basePrice}`}
-                          color="var(--color-text-secondary)"
-                          bg="var(--color-bg-card)"
-                        />
-                        {context.promotionLabel ? (
-                          <Badge
-                            label={context.promotionLabel}
-                            color="#C2410C"
-                            bg="#FFEDD5"
-                          />
-                        ) : null}
-                        {warningStyle ? (
-                          <Badge
-                            label={warningStyle.label}
-                            color={warningStyle.color}
-                            bg={warningStyle.bg}
-                          />
-                        ) : null}
-                      </div>
-
-                      <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
+                {selectedRecord.pricingContexts.map((context) => (
+                  <div key={context.id}>
+                    <PriceAnswerCard
+                      basePrice={context.basePrice}
+                      finalPrice={context.finalPrice}
+                      promotionLabel={context.promotionLabel}
+                      contextLabel={context.contextLabel}
+                      source={context.source}
+                      syncedAt={context.syncedAt}
+                      freshnessLabel={context.syncedAt}
+                      hasConflict={context.warningState === "conflict"}
+                    />
+                    {context.traceNote && (
+                      <div style={{ fontSize: "12px", color: "var(--color-text-tertiary)", marginTop: "var(--space-2)", paddingLeft: "var(--space-3)" }}>
                         {context.traceNote}
                       </div>
-                    </div>
-                  );
-                })}
+                    )}
+                  </div>
+                ))}
               </div>
             </section>
 

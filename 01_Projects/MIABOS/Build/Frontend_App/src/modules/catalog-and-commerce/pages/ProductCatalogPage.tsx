@@ -17,6 +17,11 @@ import {
   WarningBanner,
   useCatalogContext,
 } from "@/modules/catalog-and-commerce/components/CatalogModuleLayout";
+import {
+  FreshnessBadge,
+  CrossModuleCTAs,
+  ConflictDetailBanner,
+} from "@/modules/catalog-and-commerce/components/CatalogSharedComponents";
 
 export function ProductCatalogPage() {
   const { result, filters, selectedId, setSelectedId } = useCatalogContext();
@@ -288,6 +293,13 @@ export function ProductCatalogPage() {
               </Card>
             </section>
 
+            {selectedRecord.warningState === "conflict" && (
+              <ConflictDetailBanner
+                sources={selectedRecord.sourceTrace.map((t) => ({ system: t.system, value: `${t.field}: ${t.value}` }))}
+                ctaLabel="Liên hệ Finance để xác nhận"
+              />
+            )}
+
             <section>
               <Eyebrow>Nguồn đối chiếu</Eyebrow>
               <div style={{ marginTop: "var(--space-3)", display: "grid", gap: "var(--space-3)" }}>
@@ -313,12 +325,19 @@ export function ProductCatalogPage() {
                       <div style={{ fontWeight: 600, marginBottom: "var(--space-1)" }}>
                         {item.field}
                       </div>
-                      <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
-                        {item.value} • {item.syncedAt}
+                      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", color: "var(--color-text-secondary)", fontSize: "13px" }}>
+                        {item.value} • <FreshnessBadge label={item.syncedAt} />
                       </div>
                     </div>
                   </div>
                 ))}
+              </div>
+            </section>
+
+            <section>
+              <Eyebrow>Liên kết module</Eyebrow>
+              <div style={{ marginTop: "var(--space-3)" }}>
+                <CrossModuleCTAs sku={selectedRecord.sku} />
               </div>
             </section>
           </div>

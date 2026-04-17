@@ -362,7 +362,7 @@ export const MESSAGES: Record<string, Message[]> = {
 export function getChannelLabel(channel: Channel): string {
   const map: Record<Channel, string> = {
     facebook: "FB",
-    zalo: "ZAL",
+    zalo: "ZALO",
     instagram: "IG",
     web: "WEB",
   };

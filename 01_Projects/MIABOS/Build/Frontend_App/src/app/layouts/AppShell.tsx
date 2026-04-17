@@ -7,11 +7,23 @@ export function AppShell() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="app-shell" style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
-      <Sidebar collapsed={collapsed} onToggleCollapse={() => setCollapsed((v) => !v)} />
+    <div
+      className="app-shell"
+      style={{ display: "flex", height: "100vh", overflow: "hidden" }}
+    >
+      <Sidebar
+        collapsed={collapsed}
+        onToggleCollapse={() => setCollapsed((v) => !v)}
+      />
       <div
         className="app-shell__content"
-        style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          minWidth: 0,
+        }}
       >
         <TopBar />
         <main
@@ -20,7 +32,7 @@ export function AppShell() {
             flex: 1,
             overflow: "auto",
             background: "var(--color-bg-page)",
-            padding: "32px var(--space-8) 20px",
+            padding: "32px var(--space-4) 20px",
           }}
         >
           <Outlet />

@@ -1,18 +1,18 @@
 # Feature SRS: F-M04-PRO-001 Promotion
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Claude Code (claude-sonnet-4-6)
+**Last Updated By**: Claude (Antigravity / claude-sonnet-4-6)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
-**Last Status Change**: 2026-04-15
+**Approved By**: Business Owner (answered 2026-04-17)
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document
-**Blocking Reason**: Chưa chốt source-priority rule cho CTKM và phạm vi public-safe exposure
+**Blocking Reason**: -
 **Module**: M04
 **Phase**: PB-02 / PB-03
 **Priority**: High
-**Document Role**: SRS high-level cho module Promotion của MIABOS
+**Document Role**: SRS canonical cho module Promotion của MIABOS
 
 ---
 
@@ -111,8 +111,10 @@ BQ pack ghi nhận: xác định CTKM phù hợp tại BQ hiện đang làm **th
 ## 11. Business Rules
 
 - CTKM chỉ được trả ra khi: còn hiệu lực, scope match với context người hỏi, và pass public-safe whitelist nếu cần.
-- Không được lộ internal-only promo (ví dụ: CTKM đặc biệt cho đại lý chiến lược) ra ngoài scope cho phép.
-- Khi có conflict giữa nguồn, hệ thống không được tự chọn — phải flag conflict và gợi ý confirm với `Marketing / Tài chính`.
+- **Public-safe exposure rule** (chốt bởi Business Owner 2026-04-17): **Tất cả CTKM đang active** được phép hiển thị trên chatbot đối ngoại (khách hỏi qua website/Zalo). Không áp dụng default-whitelist — default là show tất cả active, trừ các CTKM bị Marketing đánh dấu `internal_only`.
+- **Internal-only authority** (chốt bởi Business Owner 2026-04-17): **Marketing** là người quyết định CTKM nào là internal-only (ví dụ: CTKM đại lý chiến lược, CHS). Mọi CTKM không có flag `internal_only` do Marketing set thì mặc định là public-safe.
+- **Promotion source master** (chốt bởi Business Owner 2026-04-17): `KiotViet` là master cho CTKM store/POS. `Haravan` sync theo KiotViet cho channel online — không được xem Haravan là independent source of truth cho CTKM store.
+- Khi có conflict giữa nguồn (sau khi biết KiotViet là master), hệ thống flag `PRO-002` và gợi ý confirm với `Marketing` — không tự chọn Haravan.
 - CTKM hết hiệu lực phải được filter out khỏi `promotion_read_model` theo schedule, không để stale promo ảnh hưởng đến answer.
 - Điều kiện áp dụng (tối thiểu mua bao nhiêu, loại khách nào, channel nào) phải được hiển thị đầy đủ — không trả "có CTKM" mà không nói điều kiện.
 
@@ -188,11 +190,23 @@ Nội bộ trước, sales-safe sau.
 
 ## 22. Open Questions
 
-Owner cuối của CTKM theo từng channel là gì?
+> ✅ **Đã được Business Owner chốt ngày 2026-04-17:**
+>
+> - **Public-safe scope**: Tất cả CTKM đang active được phép hiển thị trên chatbot ngoài. Default là show all active; Marketing đánh `internal_only` mới bị ẩn.
+> - **Internal-only authority**: Marketing là người quyết định CTKM nào là internal-only.
+> - **Promotion source master**: KiotViet là master. Haravan sync theo KiotViet — không phải independent source.
+
+_Không còn open question blocking UXUI._
 
 ## 23. Definition of Done
 
-Promotion module trả lời được cho phase 1.
+Module Promotion được coi là đạt khi:
+- query được CTKM theo `sku + channel + store_type + date` với hiệu lực và điều kiện đầy đủ
+- default show tất cả CTKM active; ẩn đúng những CTKM có flag `internal_only` từ Marketing
+- đọc CTKM store-level từ KiotViet là nguồn master; Haravan chỉ là sync layer
+- conflict giữa KiotViet và Haravan được flag, không tự resolve
+- CTKM hết hiệu lực bị filter ra trước khi render
+- không có CTKM nào ra chatbot mà không có `điều kiện` và `hiệu lực` rõ ràng
 
 ## 24. Ready-for-UXUI Checklist
 

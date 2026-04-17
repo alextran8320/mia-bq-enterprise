@@ -1,18 +1,18 @@
 # Feature SRS: F-M03-PRC-001 Pricing
 
-**Status**: Draft
+**Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Claude Code (claude-sonnet-4-6)
+**Last Updated By**: Claude (Antigravity / claude-sonnet-4-6)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
-**Approved By**: -
-**Last Status Change**: 2026-04-15
+**Approved By**: Business Owner (answered 2026-04-17)
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document
-**Blocking Reason**: Chưa chốt source-priority rule cho giá theo kênh và loại cửa hàng
+**Blocking Reason**: -
 **Module**: M03
 **Phase**: PB-02 / PB-03
 **Priority**: High
-**Document Role**: SRS high-level cho module Pricing của MIABOS
+**Document Role**: SRS canonical cho module Pricing của MIABOS
 
 ---
 
@@ -108,10 +108,12 @@ BQ pack ghi nhận rõ: BQ áp dụng `chính sách 1 giá` nhưng CTKM khác nh
 ## 11. Business Rules
 
 - Giá cơ sở (SAP B1) là authoritative base price — các nguồn khác chỉ được phép có CTKM overlay, không được override giá cơ sở im lặng.
+- **Price conflict resolver** (chốt bởi Business Owner 2026-04-17): khi giá SAP B1 ≠ giá Haravan ngoài CTKM đã biết, **Finance (Tài chính)** và **Ban điều hành** là người quyết định giá nào đúng. Hệ thống không được tự chọn — phải flag conflict `PRC-002` và hiển thị CTA "liên hệ Finance để xác nhận".
+- **CTKM tại cửa hàng** (chốt bởi Business Owner 2026-04-17): `KiotViet` là nguồn master cho CTKM tại điểm bán (store/POS). Dữ liệu CTKM store-level phải đọc từ `I04 KiotViet` trước, không suy diễn từ SAP B1 hay Haravan.
+- **Giá nhập / giá vốn** (chốt bởi Business Owner 2026-04-17): **Không bao giờ** được trả qua chatbot, cho bất kỳ role nào, kể cả Sales nội bộ. Chỉ xem được trực tiếp trong hệ thống có quyền tương ứng (SAP B1, báo cáo Finance). Field này phải bị mask hoàn toàn trong mọi pricing projection từ module này.
 - Nếu chưa có source-priority rule cho context (channel/store type) cụ thể, hệ thống không được tự suy diễn — phải trả warning và gợi ý escalation.
 - CTKM chỉ được tính khi có hiệu lực hợp lệ và scope match với context người hỏi.
 - Giá tại cửa hàng chính hãng và đại lý có thể khác nhau do CTKM riêng — UI phải phân biệt rõ hai context này, không gộp chung.
-- Không được trả giá nhập hoặc margin cho user ngoài scope `Tài chính / pricing control`.
 
 ## 12. API Contract Excerpt + Canonical Links
 
@@ -186,11 +188,23 @@ Nội bộ trước, AI bán hàng sau.
 
 ## 22. Open Questions
 
-Source owner cuối cùng của giá theo từng channel là gì?
+> ✅ **Đã được Business Owner chốt ngày 2026-04-17:**
+>
+> - **Price conflict resolver**: Finance + Ban điều hành quyết định khi SAP B1 ≠ Haravan ngoài CTKM. Hệ thống flag conflict, không tự chọn.
+> - **CTKM store-level source**: KiotViet là master cho CTKM tại cửa hàng/POS.
+> - **Giá nhập / giá vốn**: Không bao giờ trả qua chatbot, mọi role.
+
+_Không còn open question blocking UXUI._
 
 ## 23. Definition of Done
 
-Có pricing answer đáng tin cậy cho phase 1.
+Module Pricing được coi là đạt khi:
+- resolve được giá theo `sku + channel + store_type + date` với source trace rõ ràng
+- chỉ dùng SAP B1 làm base price authoritative
+- đọc CTKM store-level từ KiotViet trước
+- không bao giờ trả giá nhập/giá vốn/margin qua bất kỳ projection nào
+- flag conflict và hướng escalation đến Finance khi giá lệch ngoài CTKM đã biết
+- stale pricing hiển thị badge rõ ràng
 
 ## 24. Ready-for-UXUI Checklist
 

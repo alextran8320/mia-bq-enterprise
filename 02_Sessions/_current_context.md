@@ -63,3 +63,22 @@
 
 - Review/Approve file F-M11 UXUI Spec và các UI Screen trên figma/UI layout.
 - Or proceed with another feature.
+  **Last Updated**: 2026-04-16
+  **Active Workspace Topic**: Operations And Governance — module riêng `/operations` với 5 page P1
+  **Current Project**: `MIABOS`
+  **Current Phase**: `PB-04 Build (Operations And Governance FE Module)`
+  **Latest Canonical Session Log**: [[2026-04-16_MIABOS_Operations_And_Governance_FE_Module_Implementation]]
+  **Today's Daily Log**: [[2026-04-16_Daily_Log]]
+
+## Latest Decisions
+
+- `Operations & Governance` đã được materialize thành module riêng với route tree `/operations/escalations`, `/operations/users-roles`, `/operations/scope-rules`, `/operations/integration-ops`, `/operations/source-mapping`.
+- Sidebar có group mới `Operations & Governance`, không gộp capability này vào `CRM`, `Catalog`, hay `Orders`.
+- Module shell dùng chung search context, quick queries, metrics, tabs và warning model cho 5 page P1.
+- `npm exec vite build` pass cho module mới; `npm run build` toàn app chưa rerun và vẫn có blocker cũ ngoài phạm vi tại `src/modules/ai-workspace/pages/InternalAIChatPage.tsx`.
+
+## Next Actions
+
+- Review trực tiếp các route `/operations/*` trong browser.
+- Nếu cần, mở work block riêng cho visual polish tiếp theo của `Operations & Governance`.
+- Tiếp tục giữ boundary: không sửa `AI Workspace` trừ khi mở task riêng cho blocker build toàn app.

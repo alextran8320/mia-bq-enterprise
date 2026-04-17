@@ -44,6 +44,11 @@
 - [[2026-04-16_MIABOS_Knowledge_Center_And_AI_Workspace_SRS_Enhancement|MIABOS Knowledge Center And AI Workspace SRS Enhancement]] - Enhance láº¡i toÃ n bá»™ 10 SRS cá»§a `Knowledge_Center` vÃ  `AI_Workspace` theo quy trÃ¬nh SRS má»›i: thÃªm `Â§0B`, neo BQ context/source map, vÃ  má»Ÿ rá»™ng flow/rule/NFR/AC nhÆ°ng giá»¯ `Draft` vÃ¬ blocker nghiá»‡p vá»¥ cÃ²n má»Ÿ.
 - [[2026-04-16_MIABOS_Remaining_SRS_Enhancement|MIABOS Remaining SRS Enhancement]] - Enhance 9 SRS cÃ²n láº¡i (M01-M07, M11, M12) theo quy trÃ¬nh SRS má»›i: thÃªm Â§0B, neo BQ context, Ä‘á»§ depth gate cho toÃ n bá»™ SRS pack.
 - [[2026-04-16_MIABOS_Insights_And_Performance_SRS_Completion|MIABOS Insights And Performance SRS Completion]] - Materialize `F-M14-BIZ-001 Business Analytics And ROI` Ä‘á»ƒ hoÃ n thiá»‡n surface `Insights_And_Performance`; workspace MIABOS giá» cÃ³ Ä‘á»§ 20 SRS.
+- [[2026-04-16_MIABOS_M05_Order_Summary_POC|MIABOS M05 Order Summary POC]] - Implement màn `Order Summary` theo hướng product-like với data gần thực tế, rồi tách `Đơn hàng` khỏi `CRM Workspace` và đổi route chính sang `/orders`.
+- [[2026-04-16_MIABOS_Catalog_And_Commerce_FE_Module_Implementation|MIABOS Catalog And Commerce FE Module Implementation]] - Implement module FE riêng `Danh mục & Thương mại` với route `/catalog/*`, shared shell, mock data giàu ngữ cảnh và 4 page P1.
+- [[2026-04-16_MIABOS_Catalog_And_Commerce_Copy_And_Layout_Refinement|MIABOS Catalog And Commerce Copy And Layout Refinement]] - Refine hero copy, làm sạch wording nội bộ/POC và sửa layout cụm box nguồn dữ liệu của module `Catalog & Commerce`.
+- [[2026-04-16_MIABOS_Catalog_Source_Card_Height_Alignment|MIABOS Catalog Source Card Height Alignment]] - Căn lại layout hero của `Catalog & Commerce` để 4 source cards có cùng chiều cao trong cùng một hàng.
+- [[2026-04-16_MIABOS_Operations_And_Governance_FE_Module_Implementation|MIABOS Operations And Governance FE Module Implementation]] - Implement module FE riêng `Operations & Governance` với route `/operations/*`, shared shell, mock data điều hành và 5 page P1.
 
 ### 2026-04-15
 

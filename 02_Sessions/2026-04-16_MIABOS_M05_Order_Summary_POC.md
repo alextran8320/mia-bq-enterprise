@@ -29,6 +29,7 @@ Session này deliberately giữ phạm vi ở mức `POC first`:
 - **Decision Point C**: Mức fidelity của POC -> Chọn `FE POC only` với mock search service nội bộ -> đủ để review UX/state/copy mà không bị kéo vào blocker integration.
 - **Decision Point D**: Copy user-facing có được nhắc trực tiếp `POC`, `mock`, hoặc backend chưa có hay không -> Business Owner reject hướng này vì màn sẽ dùng để demo với khách -> Session được refine thêm một vòng để bỏ toàn bộ wording nội bộ khỏi UI và đổi toàn bộ tiếng Việt không dấu thành tiếng Việt có dấu.
 - **Decision Point E**: Mức độ "thật" của màn `Đơn hàng` nên dừng ở flow review hay nâng lên bề mặt sản phẩm hoàn chỉnh hơn -> Business Owner yêu cầu "Hãy làm như là 1 sản phẩm hoàn chỉnh, data như thật" -> Session được mở rộng thêm một vòng để làm giàu data model, tăng chiều sâu dữ liệu đơn hàng, và nâng UI từ card demo thành workspace vận hành có overview metrics, ngữ cảnh CSKH/Ops, line items, giao vận, owner team, và service note.
+- **Decision Point F**: `Đơn hàng` có nên nằm trong `CRM Workspace` hay đứng thành module riêng -> Business Owner chốt đây là module độc lập -> Session được refine thêm để tách navigation `Đơn hàng` khỏi nhóm `CRM Workspace` và đổi route chính từ `/crm/orders` sang `/orders`.
 - **Alternative Approaches Rejected**:
   - Gắn trực tiếp vào `Customer 360`: không phù hợp cho luồng tra cứu đơn hàng độc lập.
   - Chỉ làm answer card trong chat: phụ thuộc `Internal AI Chat` nhiều hơn mức cần thiết cho POC này.
@@ -40,8 +41,8 @@ Session này deliberately giữ phạm vi ở mức `POC first`:
 |----------|-------------------------|------------|----------------------------|
 | Orders mock module | `01_Projects/MIABOS/Build/Frontend_App/src/mocks/orders/orders.ts` | Tạo data model giàu hơn cho `M05`: `customer tier`, `sales channel`, `branch`, `owner team`, `external ref`, `delivery partner`, `tracking code`, `service note`, `line items`, `overview metrics`, rồi refine toàn bộ copy visible sang tiếng Việt có dấu | 9 |
 | Orders page | `01_Projects/MIABOS/Build/Frontend_App/src/modules/orders-and-service/pages/OrderSummaryPage.tsx` | Nâng page `Tra cứu đơn hàng` thành workspace product-like với overview metrics, search panel giàu ngữ cảnh, result cards thực tế hơn, detail panel nhiều section, line items, và service context; đồng thời remove toàn bộ wording kiểu `POC/mock/demo nội bộ` khỏi UI | 9 |
-| Router | `01_Projects/MIABOS/Build/Frontend_App/src/app/router.tsx` | Thêm route `/crm/orders` vào app shell hiện có | 10 |
-| Sidebar | `01_Projects/MIABOS/Build/Frontend_App/src/app/layouts/Sidebar.tsx` | Thêm nav item `Don hang` trong `CRM Workspace` | 10 |
+| Router | `01_Projects/MIABOS/Build/Frontend_App/src/app/router.tsx` | Tách `Order Summary` khỏi `CRM` route tree và expose thành route độc lập `/orders` dùng chung app shell | 10 |
+| Sidebar | `01_Projects/MIABOS/Build/Frontend_App/src/app/layouts/Sidebar.tsx` | Tách nav item `Đơn hàng` ra khỏi nhóm `CRM Workspace` và đặt vào nhóm riêng `Orders & Service` | 10 |
 | Current context | `02_Sessions/_current_context.md` | Mở work block cho `M05 Order Summary` POC rồi sync lại trạng thái cuối session | 10 |
 
 ## 🔁 Status Decisions
@@ -56,6 +57,8 @@ Session này deliberately giữ phạm vi ở mức `POC first`:
 - [ ] **Layout Audit**: Chưa có screenshot browser trong session này. Terminal hiện tại không có browser capture tool tích hợp, nên visual proof vẫn là open item cần review sau.
 - [x] **Tone Audit**: Page mới bám palette/tokens/card system hiện có của `Frontend_App` (`primary blue`, `surface/card`, inline style pattern).
 - [x] **Logic Audit**: `npm run build` pass sau khi sửa helper search tương thích `ES2020`; route `/crm/orders` và các imports mới compile sạch. Build tiếp tục pass sau vòng refine copy demo-safe và vẫn pass sau vòng nâng cấp product-like/data-realistic.
+- [x] **IA Audit**: `Đơn hàng` không còn nằm dưới `CRM Workspace`; route chính hiện là `/orders` để phản ánh đúng module boundary.
+- [ ] **Current Build State**: Sau khi Business Owner yêu cầu không sửa phần không liên quan, session đã hoàn tác một fix ngoài phạm vi ở `AI Workspace`; build hiện fail lại vì lỗi có sẵn ở `src/modules/ai-workspace/pages/InternalAIChatPage.tsx` dùng `.at()` không tương thích target hiện tại.
 
 ## 💭 Business Owner Feedback & Sentiments
 
@@ -69,6 +72,10 @@ Paraphrased từ trao đổi trực tiếp trong session:
 
 > "Hãy làm như là 1 sản phẩm hoàn chỉnh, data như thật."
 
+> "Phần order là 1 tính năng riêng (đã chia là 1 module, crm là 1 module), tại sao làm phần order trong crm"
+
+> "Tách navigation Đơn hàng ra khỏi nhóm CRM Workspace, đổi route khỏi /crm/orders"
+
 Ngoài ra Business Owner đã dừng để làm rõ nhầm lẫn về câu `Orders page, khong phai chat answer card va khong embed vao Customer 360`, cho thấy cần tách rõ `surface demo` với `module business` khi trao đổi tiếp theo.
 
 ## ⚖️ Rules Extracted (for Knowledge Bank)
@@ -77,6 +84,7 @@ Ngoài ra Business Owner đã dừng để làm rõ nhầm lẫn về câu `Orde
 
 ## ⏩ Next Steps
 
-- [ ] Review trực tiếp page `/crm/orders` trong browser để chốt layout, copy, và interaction expectation cho POC.
+- [ ] Review trực tiếp page `/orders` trong browser để chốt layout, copy, và interaction expectation cho module `Orders & Service`.
 - [ ] Nếu Business Owner đồng ý hướng này, bước tiếp theo là quyết định nối tiếp theo hướng `UXUI polish`, `Customer 360 linkage`, hay `M09 answer-card integration`.
+- [ ] Nếu cần xác nhận build pass toàn app, xử lý riêng lỗi có sẵn ở `src/modules/ai-workspace/pages/InternalAIChatPage.tsx` theo work block khác.
 - [ ] Quyết định có giữ `tsconfig.tsbuildinfo` như build artifact local hay bổ sung ignore rule cho FE workspace.

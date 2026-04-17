@@ -1,5 +1,7 @@
 import { NavLink } from "react-router-dom";
 import {
+  CircleDollarSign,
+  CircleAlert,
   Users,
   UserPlus,
   LayoutDashboard,
@@ -9,6 +11,11 @@ import {
   BarChart3,
   PanelLeftClose,
   PanelLeftOpen,
+  Package,
+  ShieldAlert,
+  TicketPercent,
+  Warehouse,
+  ArrowRightLeft,
 } from "lucide-react";
 
 const GROUPS = [
@@ -16,9 +23,31 @@ const GROUPS = [
     label: "CRM Workspace",
     items: [
       { to: "/crm", icon: LayoutDashboard, label: "Tổng quan" },
-      { to: "/crm/orders", icon: PackageSearch, label: "Đơn hàng" },
       { to: "/crm/customers", icon: Users, label: "Khách hàng" },
       { to: "/crm/leads", icon: UserPlus, label: "Leads" },
+    ],
+  },
+  {
+    label: "Orders & Service",
+    items: [{ to: "/orders", icon: PackageSearch, label: "Đơn hàng" }],
+  },
+  {
+    label: "Danh mục & Thương mại",
+    items: [
+      { to: "/catalog/products", icon: Package, label: "Sản phẩm" },
+      { to: "/catalog/inventory", icon: Warehouse, label: "Tồn kho" },
+      { to: "/catalog/pricing", icon: CircleDollarSign, label: "Giá bán" },
+      { to: "/catalog/promotions", icon: TicketPercent, label: "Khuyến mãi" },
+    ],
+  },
+  {
+    label: "Operations & Governance",
+    items: [
+      { to: "/operations/escalations", icon: CircleAlert, label: "Escalation Queue" },
+      { to: "/operations/users-roles", icon: Users, label: "Users And Roles" },
+      { to: "/operations/scope-rules", icon: ShieldAlert, label: "Scope Rules" },
+      { to: "/operations/integration-ops", icon: LayoutDashboard, label: "Integration Ops" },
+      { to: "/operations/source-mapping", icon: ArrowRightLeft, label: "Source Mapping" },
     ],
   },
   {

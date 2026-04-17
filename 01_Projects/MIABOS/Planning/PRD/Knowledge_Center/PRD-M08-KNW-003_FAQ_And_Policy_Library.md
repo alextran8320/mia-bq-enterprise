@@ -2,7 +2,7 @@
 
 **Status**: Draft — Research Approved, Pending Business Owner PRD Approval
 **Owner**: A02 Product Owner Agent
-**Last Updated By**: A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: Business Owner
 **Approved By**: -
@@ -145,16 +145,19 @@ Library và Chatbot là 2 entry points song song cho cùng 1 knowledge base — 
 | **AI Chatbot** | User KHÔNG biết mình cần đọc tài liệu gì — hỏi tự nhiên | "Chính sách đổi trả là gì?" |
 | **Library Browse** | User BIẾT mình cần tài liệu gì — mở trực tiếp | Mở folder Policy > Đổi trả |
 
-3 Interaction Modes cho library (xem [RES-M08-KNW_UX_Patterns_And_IA.md](../../../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md) §3):
+3 Interaction Modes cho library (xem [RES-M08-KNW_UX_Patterns_And_IA.md](../../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md) §3):
 - **Mode A: Instant lookup** — search keyword → detail panel ngay
 - **Mode B: Guided browse** — category tree → folder → article → step-by-step
 - **Mode C: Exploration** — overview card → drill-down sections
 
-UX patterns bắt buộc trong library:
-- **Quick reply chips**: sau search result, suggest related topics
-- **Step-by-step guided flow**: cho tài liệu SOP — interactive checklist, không dump text
-- **Stale content warning**: badge rõ khi tài liệu quá expiry date
-- **Human escalation path**: nút "Báo nội dung sai / thiếu" luôn visible — không để dead-end
+UX patterns bắt buộc trong library và source-reference deep link:
+- **Source Citation Block**: detail panel luôn hiện document title, version/effective date, owner, freshness, và source backing để user tự xác minh.
+- **Quick Reply Chips**: sau search/result/detail, suggest related topics/questions như `Nghỉ/đổi trả ngoại lệ?`, `SOP xử lý?`, `Liên hệ owner?`.
+- **Step-by-step Guided Flow**: tài liệu SOP render theo ordered SOP steps, không dump body dài.
+- **Role-Aware Header**: detail panel thể hiện `Áp dụng cho: CSKH / Store / Ecommerce / Pricing Control` để user biết policy có đúng vai trò không.
+- **Stale Content Warning**: badge rõ khi document/source vượt freshness threshold.
+- **Uncertainty / No-Result Signal**: no-result state nói rõ đã search trong Knowledge Base nội bộ và không tìm thấy source phù hợp.
+- **Human Escalation + Feedback Loop**: `Hỏi người thật` / `Gửi phản hồi` luôn visible ở no-result, stale, restricted, và document detail.
 
 ### 9.2 UX / IA Direction
 
@@ -176,18 +179,21 @@ Library vẫn filter theo `knowledge topic`, nhưng không dùng tên collection
 - Detail panel với rule chính + metadata + rich content images/tables/attachments
 - Related docs + deprecated handling
 - SOP Step display cho tài liệu SOP
-- Contact/escalation path khi không tìm thấy nội dung
+- Quick reply chips / related question suggestions
+- Contact/escalation path khi không tìm thấy nội dung hoặc user đánh giá tài liệu chưa đủ rõ
 
 ### 9.3 Operational Rules
 
 - Chỉ tài liệu `Published` mới hiển thị mặc định
 - Deprecated doc phải cảnh báo rõ và dẫn sang replacement nếu có
 - Kết quả search phải qua permission / sensitivity filter
+- Không tìm thấy kết quả không được trả thông báo chung chung; phải có scope searched, suggestions, và escalation/contact owner
 
 ### 9.4 Technical Constraints for Downstream Teams
 
 - Search index cần đủ nhanh cho tra cứu hàng ngày
 - Deep-link từ `M09` sang library detail phải ổn định
+- Search/detail payload phải giữ đúng `version_reference` mà M09 đã cite, không tự nhảy sang latest version khi user mở từ answer source reference
 - Analytics search/open/no-result nếu cần thuộc `M12`; M08 không sở hữu usage analytics object
 
 ## 10. Assumptions and Dependencies
@@ -221,6 +227,7 @@ Library vẫn filter theo `knowledge topic`, nhưng không dùng tên collection
 | Date | Decision | Made By | Reason |
 |------|----------|---------|--------|
 | 2026-04-15 | Library được tách riêng khỏi knowledge core | Codex CLI / A01 PM Agent | Self-service lookup là một job khác với governance / publish |
+| 2026-04-17 | Library align với `RES-M08-KNW_UX_Patterns_And_IA`: no-result = uncertainty signal, detail = source citation + role-aware + feedback, SOP = guided steps | Codex CLI / A01 PM Agent | Đảm bảo library và chatbot dùng cùng trust patterns |
 
 ## 14. Linked Artifacts
 
@@ -231,6 +238,8 @@ Library vẫn filter theo `knowledge topic`, nhưng không dùng tên collection
 - UXUI specs: `-`
 - Architecture / Integration Specs: `-`
 - Research / Evidence:
+  - [RES-M08-KNW_UX_Patterns_And_IA.md](../../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md)
+  - [RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md](../../../Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md)
   - [2026-04-13_BQ_Customer_Research_Pack.md](../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Customer_Research_Pack.md)
   - [2026-04-13_BQ_Raw_Notes.md](../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Raw_Notes.md)
 

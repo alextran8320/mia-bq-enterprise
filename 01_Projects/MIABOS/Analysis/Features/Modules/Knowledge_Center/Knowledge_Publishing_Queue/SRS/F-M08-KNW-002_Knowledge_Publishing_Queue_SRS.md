@@ -74,16 +74,17 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 1. `Knowledge Owner` submit version mới cùng `change summary`, `effective date`, `source links`, `affected domains`, `affected channels`.
 2. Hệ thống kiểm tra metadata bắt buộc, xác định reviewer theo domain như `pricing control`, `CSKH`, `Ecommerce / omnichannel`, hoặc `PM Governance`.
 3. Reviewer mở diff compare, đối chiếu source backing, kiểm tra policy impact và sensitivity.
-4. Reviewer chọn `Approve`, `Reject`, hoặc `Request Changes`; mọi decision đều phải có comment.
-5. Nếu `Approve`, hệ thống chạy publish job, re-index runtime, và xác nhận active version mới.
-6. Nếu publish job thất bại, request chuyển sang `Publish Failed` thay vì `Published`.
-7. Nếu có incident sau publish, `PM Governance` có thể `Freeze Runtime` hoặc `Rollback` sang version trước, đồng thời tạo incident log.
+4. Reviewer kiểm tra thêm `AI Answer Preview`: answer summary, source citation, freshness/stale state, role-aware guidance, quick replies, và escalation owner trước khi quyết định.
+5. Reviewer chọn `Approve`, `Reject`, hoặc `Request Changes`; mọi decision đều phải có comment.
+6. Nếu `Approve`, hệ thống chạy publish job, re-index runtime, và xác nhận active version mới.
+7. Nếu publish job thất bại, request chuyển sang `Publish Failed` thay vì `Published`.
+8. Nếu có incident sau publish, `PM Governance` có thể `Freeze Runtime` hoặc `Rollback` sang version trước, đồng thời tạo incident log.
 
 ## 6. Alternate Flows
 
-- Domain nhạy cảm như `pricing` cần thêm reviewer thứ hai trước khi publish.
+- Domain nhạy cảm như `pricing` cần reviewer đúng domain trong MIABOS visibility layer; approval workflow chính thức nằm ở SAP và không tạo dual-approval UI trong MIABOS phase 1.
 - Request bị reject nhưng owner sửa minor issue và resubmit trên cùng lineage.
-- Publish thành công nhưng cần `freeze` tạm thời do conflict từ source system.
+- Publish thành công nhưng cần `freeze` tạm thời do source mismatch hoặc source risk.
 - Một request chỉ thay metadata hoặc effective date mà không đổi body chính.
 
 ## 7. Error Flows
@@ -103,8 +104,9 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 
 - Queue list nằm trong `/knowledge` section `Chờ duyệt`, không tách khỏi Knowledge Center workspace.
 - Queue list phải hiển thị `category`, `knowledge_topic`, `document type`, `requested by`, `effective date`, `review SLA`, `current reviewer`, `publish risk`.
-- Review detail phải có tab `Summary`, `Diff`, `Rich Content`, `Source Evidence`, `Impact Scope`, `Approval History`.
+- Review detail phải có tab `Summary`, `Diff`, `Rich Content`, `Source Evidence`, `AI Answer Preview`, `Impact Scope`, `Approval History`.
 - Tab `Rich Content` phải preview được text, heading, image, table, attachment của version sẽ publish và warning asset lỗi nếu có.
+- Tab `AI Answer Preview` phải cho thấy answer summary ≤ 4 dòng, scope statement, source citation block, role-aware header, stale/uncertainty state, quick reply chips, feedback/escalation action.
 - Rollback/freeze action phải có confirmation modal mô tả rõ `runtime impact`, `target version`, `expected downstream effect`.
 
 ## 10. Role / Permission Rules
@@ -125,6 +127,8 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 - Nếu rollback được kích hoạt, runtime version mới phải bị de-activate trước khi target version cũ được re-activate.
 - Nếu source backing chính chỉ là `Excel`, reviewer phải đánh dấu `temporary evidence accepted`; nếu không, request không được approve.
 - Mọi reject phải có comment có cấu trúc để owner biết cần sửa metadata, source evidence, hay business rule.
+- Request không được publish cho AI runtime nếu thiếu `source citation metadata`, `scope_statement`, `freshness_status`, hoặc `escalation_owner`.
+- Nếu `AI Answer Preview` đang ở trạng thái `uncertain` do thiếu source hoặc role scope, reviewer phải reject/request changes thay vì approve.
 
 ## 12. API Contract Excerpt + Canonical Links
 
@@ -133,7 +137,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 - `POST /mia/knowledge/publish-request`
   - Input: `document_id`, `version_id`, `change_summary`, `effective_date`, `source_links[]`, `impact_scope`
 - `POST /mia/knowledge/approve`
-  - Input: `request_id`, `approval_note`, `reviewer_role`, `approval_level`
+  - Input: `request_id`, `approval_note`, `reviewer_role`, `decision_type`
 - `POST /mia/knowledge/reject`
   - Input: `request_id`, `reason_code`, `comment`
 - `POST /mia/knowledge/rollback`
@@ -156,7 +160,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 - `knowledge_publish_request`
   - `request_id`, `document_id`, `version_id`, `status`, `knowledge_topic`, `requested_by`, `effective_date`, `review_sla_due_at`
 - `knowledge_publish_approval`
-  - `request_id`, `approval_level`, `reviewer_department`, `decision`, `comment`, `decided_at`
+  - `request_id`, `reviewer_department`, `decision_type`, `decision`, `comment`, `decided_at`
 - `knowledge_document_version`
   - Active version lineage, rollback target metadata
 - `knowledge_publish_incident`
@@ -173,6 +177,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 - Approve chỉ hợp lệ nếu actor nằm trong approval matrix của domain đó.
 - Publish complete chỉ hợp lệ khi active runtime version = approved version ID.
 - Rollback chỉ hợp lệ khi target version còn nguyên document/source reference metadata.
+- Publish request chỉ hợp lệ khi `AI Answer Preview` có đủ citation/freshness/scope/escalation metadata và không ở trạng thái `uncertain`.
 
 ## 16. Error Codes
 
@@ -180,7 +185,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 - `KPQ-002`: Reviewer không đủ quyền phê duyệt domain này.
 - `KPQ-003`: Publish runtime/index thất bại.
 - `KPQ-004`: Rollback target không hợp lệ.
-- `KPQ-005`: Freeze hoặc unfreeze state conflict.
+- `KPQ-005`: Freeze hoặc unfreeze state không hợp lệ.
 
 ## 17. Non-Functional Requirements
 
@@ -193,6 +198,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 
 - Owner submit được publish request có đủ `change summary`, `effective date`, `source links`, và request xuất hiện đúng trong queue.
 - Reviewer đúng domain approve hoặc reject được request và mọi decision đều có comment lưu lại.
+- Reviewer nhìn thấy `AI Answer Preview` trước khi approve, gồm source citation, stale/uncertainty state, role-aware guidance, quick replies, và escalation action.
 - Nếu publish thành công, version mới trở thành active runtime version; nếu publish lỗi, request phải ở trạng thái `Publish Failed`.
 - PM Governance rollback được về version trước và runtime phản ánh đúng version sau rollback.
 - Queue hiển thị được review SLA và phân biệt rõ `Submitted`, `In Review`, `Published`, `Rolled Back`, `Publish Failed`.
@@ -200,6 +206,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 ## 19. Test Scenarios
 
 - Submit request thiếu source evidence.
+- Submit request thiếu answer-ready metadata và xác minh bị chặn publish.
 - Approve request pricing với reviewer không đúng phòng ban.
 - Publish thành công rồi kiểm tra active runtime version.
 - Publish lỗi và xác minh queue chuyển sang `Publish Failed`.
@@ -212,7 +219,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 ## 21. Rollout / Feature Flag
 
 - Rollout cùng wave đầu của `Knowledge_Center`.
-- `Dual approval` và `freeze runtime` có thể bật sau khi PM chốt approval matrix.
+- `Freeze runtime` có thể bật sau khi PM chốt incident workflow. Dual approval không nằm trong MIABOS phase 1 vì Business Owner đã chốt approval workflow ở SAP.
 
 ## 22. Open Questions
 
@@ -239,8 +246,8 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 
 ## 25. Ready-for-FE-Preview Checklist
 
-- [ ] FE Preview có mock `submitted`, `in review`, `published`, `publish failed`, `frozen`, `rolled back`
-- [ ] Stub payload đủ `knowledge_topic`, `review_sla_due_at`, `reviewer_department`, `change_summary`, `publish_risk`
+- [ ] FE Preview có mock `submitted`, `in review`, `published`, `publish failed`, `frozen`, `rolled back`, `answer preview blocked`
+- [ ] Stub payload đủ `knowledge_topic`, `review_sla_due_at`, `reviewer_department`, `change_summary`, `publish_risk`, `answer_preview`, `source_citation`, `quick_reply_suggestions`, `escalation_owner`
 
 ## 26. Ready-for-BE / Integration Promotion Checklist
 

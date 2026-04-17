@@ -2,8 +2,14 @@
 
 **Feature ID**: F-M09-AIC-001
 **Status**: Approved
-**Status**: Approved
 **Owner**: A06 UI/UX Agent
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
+**Last Reviewed By**: A01 PM Agent
+**Approval Required**: PM Agent / Business Owner for design sign-off
+**Approved By**: A01 PM Agent - Approved for FE Preview with mock/stub data
+**Last Status Change**: 2026-04-17
+**Source of Truth**: This document for `F-M09-AIC-001` visual/interaction behavior in FE Preview
+**Blocking Reason**: -
 **Implementation Reviewer**: A05 Tech Lead
 **Implemented By**: A07 FE Builder
 **Product**: MIA Smart
@@ -72,6 +78,14 @@ và nhận câu trả lời có nguồn rõ, freshness, và hướng xử lý ti
 | Artifact    | Location                                                                                                                                                                                                       | Status    |
 | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
 | Feature SRS | [`Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md`](../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md) | SRS Ready |
+| User Story  | [`Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat.md`](../../Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat.md)                                                                   | Approved  |
+| Subtask Board | [`Planning/Subtask_Boards/STB-M09-AIC-001_Internal_AI_Chat_FE_Preview.md`](../../Planning/Subtask_Boards/STB-M09-AIC-001_Internal_AI_Chat_FE_Preview.md)                                                     | In Review |
+| Research Concept | [`Research/Knowledge_Center/RES-M08-KNW_Internal_Chatbot_Concept.md`](../../Research/Knowledge_Center/RES-M08-KNW_Internal_Chatbot_Concept.md)                                                        | Approved |
+| Research UX Pattern | [`Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md`](../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md)                                                                    | Approved |
+
+### Research Alignment Note
+
+UXUI này triển khai concept `Trusted Knowledge Companion`: answer-first, source citation, freshness, role-aware answer, uncertainty/fallback rõ, feedback, và escalation. Các card `Data` / `Mixed` chỉ là read-only data snapshot cho BQ phase 1; UI không được thiết kế như Gen 4 action bot và không tự tạo ticket/update CRM/SAP trong scope này.
 
 ---
 
@@ -337,7 +351,7 @@ Hai khối dùng `grid grid-cols-2 gap-4` trên desktop, stack trên mobile.
 | Warning badge       | `POST /mia/chat/query`          | `warnings[]`               | `{code, message}`                                  | Chỉ render nếu `warnings.length > 0`                  |
 | Next action buttons | `POST /mia/chat/query`          | `next_actions[]`           | `{label, type, payload}`                           |                                                       |
 | Escalation CTA      | `POST /mia/chat/query`          | `escalation_available`     | boolean                                            | Chỉ render nếu `true`                                 |
-| Source Trace list   | `GET /mia/chat/suggestions/:id` | `source_trace[]`           | `{source_id, freshness, trust_level, excerpt}`     | Lazy-load khi mở panel                                |
+| Source Trace list   | `POST /mia/chat/query`          | `source_trace[]` / answer snapshot | `{source_id, freshness, trust_level, excerpt}` | Render từ snapshot của answer; `GET /mia/chat/suggestions/:id` chỉ dùng cho follow-up/clarifying prompts |
 | Feedback            | `POST /mia/chat/feedback`       | `answer_id, feedback_type` | —                                                  | 👍 / 👎                                               |
 
 ---

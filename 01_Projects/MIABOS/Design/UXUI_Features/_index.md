@@ -43,5 +43,5 @@
 |------------|-----------|--------|-------------------|-------------------|-------|
 | `F-M08-KNW-001` | [UXUI-F-M08-KNW-001_Knowledge_And_Policy.md](./UXUI-F-M08-KNW-001_Knowledge_And_Policy.md) | Approved | SRS Ready | Open for A07 FE build | No dual-approval UI (SAP handles); 1-reviewer flow |
 | `F-M08-KNW-002` | [UXUI-F-M08-KNW-002_Knowledge_Publishing_Queue.md](./UXUI-F-M08-KNW-002_Knowledge_Publishing_Queue.md) | Approved | SRS Ready | Open for A07 FE build | 1-reviewer queue; SLA timer 1-threshold; diff view UI-only |
-| `F-M08-KNW-003` | [UXUI-F-M08-KNW-003_FAQ_And_Policy_Library.md](./UXUI-F-M08-KNW-003_FAQ_And_Policy_Library.md) | Approved | SRS Ready | Open for A07 FE build | Taxonomy: domain-based; desktop-first; scope filter via badge |
+| `F-M08-KNW-003` | [UXUI-F-M08-KNW-003_FAQ_And_Policy_Library.md](./UXUI-F-M08-KNW-003_FAQ_And_Policy_Library.md) | Approved | SRS Ready | Open for A07 FE build | Taxonomy: knowledge-topic based; desktop-first; scope filter via badge; includes citation/quick replies/feedback |
 | `F-M08-KNW-004` | [UXUI-F-M08-KNW-004_Knowledge_Documents_And_Source_Governance.md](./UXUI-F-M08-KNW-004_Knowledge_Documents_And_Source_Governance.md) | Approved | SRS Ready | Open for A07 FE build | 3 source types (SAP B1/KiotViet/Excel); freshness = 1 giờ cho tất cả |

@@ -1,5 +1,10 @@
 # Session Index
 
+### 2026-04-18
+
+- [[2026-04-18_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-18_MIABOS_Internal_Chatbot_Concept_Alignment|MIABOS Internal Chatbot Concept Alignment]] - Audited Internal Chatbot Concept against related SRS/UXUI; synced research status, added research alignment notes, and fixed Source Trace binding in M09 UXUI.
+
 ### 2026-04-17
 
 - [[2026-04-17_Daily_Log|Daily Log]] - All AI interactions for this day.
@@ -8,7 +13,9 @@
 - [[2026-04-17_MIABOS_Knowledge_Center_Object_Model_Refinement|MIABOS Knowledge Center Object Model Refinement]] - Refine BA object model theo feedback BO: `Domain` → `Knowledge Topic`, làm rõ `SOP Step`, bỏ persistence/API contracts cho Citation Snapshot / Knowledge Gap Report / Knowledge Usage Log / Conflict Case trong M08.
 - [[2026-04-17_MIABOS_Knowledge_Center_Layout_Research_And_UXUI_Refinement|MIABOS Knowledge Center Layout Research And UXUI Refinement]] - Research sâu Knowledge Center layout patterns và refine M08 SRS/PRD/Stories/UXUI/STB: `/knowledge` là single workspace, có folder tree SOP/FAQ/Policy/System Guide, `Import tài liệu`, rich document assets, và FE preview cũ được đánh dấu legacy/revision-required.
 - [[2026-04-17_MIABOS_Knowledge_Center_Research_Artifact_Materialization|MIABOS Knowledge Center Research Artifact Materialization]] - Materialize research đã dùng cho Knowledge Center layout/rich documents vào `01_Projects/MIABOS/Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md` và cập nhật Research index.
+- [[2026-04-17_MIABOS_Knowledge_Center_UX_Pattern_IA_Alignment|MIABOS Knowledge Center UX Pattern IA Alignment]] - Checked and rewrote M08 PRD/SRS/UXUI against `RES-M08-KNW_UX_Patterns_And_IA`: added AI answer-ready metadata, source citation, scope/uncertainty/stale states, quick replies, role-aware guidance, feedback/escalation, AI Preview tab, and 1-hour freshness alignment.
 - [[2026-04-17_MIABOS_UnifiedInbox_UI_Refinement|MIABOS UnifiedInbox UI Refinement]] - Refine `/inbox` qua 2 vòng: (1) clean/minimal neutral; (2) reintroduce brand accents + avatar + search thực thi và hierarchy rõ hơn theo feedback BO, giữ nguyên behavior logic; `npx tsc -b` pass.
+- [[2026-04-17_MIABOS_Internal_AI_Chat_Doc_Cleanup|MIABOS Internal AI Chat Doc Cleanup]] - Dọn canonical chain trước BO review: Feature Registry chỉ còn 1 row `F-M09-AIC-001`, gom 2 user stories thành 1 story chính, xóa duplicate `_FE_Preview`, sửa link active và chuẩn hóa metadata UXUI.
 - [[2026-04-17_MIABOS_Catalog_Commerce_SRS_Audit|MIABOS Catalog Commerce SRS Audit]] - Audit đầy đủ 4 SRS của Catalog_And_Commerce (M01–M04): phát hiện 9 gaps, fix tất cả (checklists chuẩn hóa, Related PRD, Task Flow 5 steps, Test Scenarios cụ thể, Observability metrics), tạo Feature_Registry.md và nâng cấp \_index.md.
 
 ### 2026-04-16

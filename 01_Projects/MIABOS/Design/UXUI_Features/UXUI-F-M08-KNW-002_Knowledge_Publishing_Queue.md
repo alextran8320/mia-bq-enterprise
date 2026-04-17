@@ -9,7 +9,7 @@
 **Design System Reference**: [`Design/Design_System.md`](../Design_System.md)
 **Save to**: `Design/UXUI_Features/UXUI-F-M08-KNW-002_Knowledge_Publishing_Queue.md`
 **Date**: 2026-04-16
-**Last Updated By**: A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI, incorporating research 2026-04-17)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
 **Approved By**: A01 PM Agent
@@ -89,7 +89,7 @@ và approve / reject với comment rõ ràng,
 | Research Doc | Link | Key Principles Applied |
 |-------------|------|----------------------|
 | Paradigm & Benchmark | [RES-M08-KNW_Paradigm_And_Benchmark.md](../../Research/Knowledge_Center/RES-M08-KNW_Paradigm_And_Benchmark.md) | Guru verification workflow — reviewer accountable cho từng card |
-| UX Patterns & IA | [RES-M08-KNW_UX_Patterns_And_IA.md](../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md) | Structured cards output; action confirmation patterns; UX Idempotency |
+| UX Patterns & IA | [RES-M08-KNW_UX_Patterns_And_IA.md](../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md) | Source Citation, Stale/Uncertainty, Role-Aware, Quick Replies, Feedback readiness for publish |
 | Layout & Rich Document | [RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md](../../Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md) | Queue là section trong /knowledge — không phải route riêng; Rich content preview bắt buộc |
 
 ### UX Patterns bắt buộc trong spec này
@@ -97,9 +97,10 @@ và approve / reject với comment rõ ràng,
 | Pattern | Implemented ở | Status |
 |---------|--------------|--------|
 | Rich Content Preview trong review (image/table/attachment) | S2 Tab "Rich Content" | ✅ |
+| AI Answer Preview before publish | S2 Tab "AI Preview" | ✅ |
 | Explicit confirmation cho action không thể undo (Rollback) | S4 Rollback Modal + confirmation text | ✅ |
 | Decision Log — không approve/reject im lặng | S3 Comment bắt buộc | ✅ |
-| UX Idempotency — tránh duplicate action | S3 Modal disable button sau submit | ⚠ Cần verify A07 |
+| UX Idempotency — tránh duplicate action | S3 Modal disable button sau submit | ✅ |
 | SLA urgency signal rõ | S1 color-coded SLA timer | ✅ |
 
 ---
@@ -109,7 +110,7 @@ và approve / reject với comment rõ ràng,
 | # | Screen Name | Route/Path | Purpose | Notes |
 |---|-------------|-----------|---------|-------|
 | S1 | Publishing Queue Section | `/knowledge?section=queue` | Danh sách requests với SLA, status trong workspace chung | Section trong `/knowledge` |
-| S2 | Review Detail Panel | `/knowledge/review/:id` | Diff compare, rich content preview, source evidence, approval history | Panel/drawer trong workspace |
+| S2 | Review Detail Panel | `/knowledge/review/:id` | Diff compare, rich content preview, source evidence, AI answer preview, approval history | Panel/drawer trong workspace |
 | S3 | Approve / Reject Modal | Modal overlay trong S2 | Submit decision với comment | Decision action |
 | S4 | Rollback / Freeze Modal | Modal overlay | Confirm rollback/freeze với impact preview | Emergency action |
 | S5 | Publish Failed State | State trong S1/S2 | Hiển thị khi publish job lỗi | Error state |
@@ -123,13 +124,14 @@ và approve / reject với comment rõ ràng,
 | Step | User Action | System Response | Field Visibility | Notes |
 |------|------------|-----------------|-----------------|-------|
 | 1 | Mở `/knowledge` và chọn section `Chờ duyệt` | List sorted by: SLA breach risk → category/topic → date | SLA timer, category/topic, status | Entry |
-| 2 | Click vào request | Mở S2 Review Detail Panel trong cùng workspace | Tabs: Summary, Diff, Rich Content, Source Evidence, Impact, History | Review |
+| 2 | Click vào request | Mở S2 Review Detail Panel trong cùng workspace | Tabs: Summary, Diff, Rich Content, Source Evidence, AI Preview, Impact, History | Review |
 | 3 | Xem tab Diff | Hiển thị side-by-side: version cũ vs mới, với changes highlight | Diff view | Core action |
 | 4 | Xem tab Rich Content | Preview text, images, tables, attachments của version sẽ publish | Asset preview | Verify imported content |
 | 5 | Xem tab Source Evidence | Danh sách sources, trust level, freshness | Source metadata | Verify |
-| 6 | Click "Phê duyệt" hoặc "Từ chối" | Mở S3 Modal | Comment textarea, approval level | Decision |
-| 7 | Nhập comment và submit | Ghi audit, publish / reject, trả về queue | — | Done |
-| 8B | PM Governance: Click "Rollback" | Mở S4 Rollback Modal | Target version, runtime impact preview | Emergency |
+| 6 | Xem tab AI Preview | Preview answer summary, citation, role scope, stale/uncertainty, quick replies, feedback/escalation action | AI answer-ready check | Trust |
+| 7 | Click "Phê duyệt" hoặc "Từ chối" | Mở S3 Modal | Comment textarea, decision type | Decision |
+| 8 | Nhập comment và submit | Ghi audit, publish / reject, trả về queue | Submit button disabled while loading | Done |
+| 9B | PM Governance: Click "Rollback" | Mở S4 Rollback Modal | Target version, runtime impact preview | Emergency |
 
 ### Decision Points & Branching
 
@@ -209,6 +211,20 @@ và approve / reject với comment rõ ràng,
 └─────────────────────────────────────────────────────────────┘
 ```
 
+#### Tab AI Preview (trong S2)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ AI Preview                                                  │
+│ [CSKH view] Chính sách đổi trả áp dụng trong 14 ngày...     │
+│ Nguồn: Chính sách đổi trả Q2 2026 · v2.1 · Tài chính        │
+│ Scope: Knowledge Base nội bộ / Policy / CSKH                │
+│ Độ mới: ● Còn mới                                           │
+│ Câu hỏi tiếp theo: [SOP đổi trả] [Ngoại lệ] [Hỏi người thật]│
+│ Feedback: enabled                                           │
+└─────────────────────────────────────────────────────────────┘
+```
+
 #### Design Token Values
 
 | Element | Property | Token / Value |
@@ -230,7 +246,7 @@ và approve / reject với comment rõ ràng,
 │ Nhận xét (bắt buộc): *                                     │
 │ [Đã kiểm tra source SAP B1, policy nhất quán...]            │
 │                                                             │
-│ Cấp phê duyệt: ● Cấp 1 (Reviewer)  ○ Cấp 2 (PM Confirm)  │
+│ Loại quyết định: Reviewer domain                            │
 │                                                             │
 │              [Hủy]  [Xác nhận phê duyệt →]                 │
 └─────────────────────────────────────────────────────────────┘
@@ -268,8 +284,8 @@ và approve / reject với comment rõ ràng,
 | UI Element | API Endpoint | Field | Format |
 |-----------|-------------|-------|--------|
 | Queue list | `GET /mia/knowledge/publishing-queue` | `status`, `category`, `knowledge_topic`, `reviewer`, `priority`, `effective_date`, `review_sla_due_at` | List |
-| Review detail | `GET /mia/knowledge/publishing-queue/:id` | Full request metadata + diff + `assets[]` + source evidence | Object |
-| Approve | `POST /mia/knowledge/approve` | `request_id`, `approval_note`, `reviewer_role`, `approval_level` | POST body |
+| Review detail | `GET /mia/knowledge/publishing-queue/:id` | Full request metadata + diff + `assets[]` + source evidence + `ai_answer_preview` | Object |
+| Approve | `POST /mia/knowledge/approve` | `request_id`, `approval_note`, `reviewer_role`, `decision_type` | POST body |
 | Reject | `POST /mia/knowledge/reject` | `request_id`, `reason_code`, `comment` | POST body |
 | Rollback | `POST /mia/knowledge/rollback` | `request_id`, `target_version_id`, `incident_note` | POST body |
 
@@ -323,6 +339,7 @@ và approve / reject với comment rõ ràng,
 | Approve modal title | Xác nhận phê duyệt | 22 chars |
 | Reject modal title | Xác nhận từ chối | 20 chars |
 | Comment label | Nhận xét (bắt buộc) | 22 chars |
+| AI Preview tab | AI Preview | 12 chars |
 | Rollback modal title | Xác nhận hoàn nguyên phiên bản | 35 chars |
 | Publish Failed label | Lỗi xuất bản | 15 chars |
 | Publish Failed message | Tài liệu chưa được kích hoạt trên runtime do lỗi xuất bản. Liên hệ IT để xử lý. | 90 chars |
@@ -372,8 +389,9 @@ và approve / reject với comment rõ ràng,
 ## 10. Pre-Delivery Checklist (A07)
 
 - [ ] Queue section trong `/knowledge` với SLA timer + color-coded urgency
-- [ ] Tabs trong review detail (Summary, Diff, Rich Content, Source Evidence, Impact, History)
+- [ ] Tabs trong review detail (Summary, Diff, Rich Content, Source Evidence, AI Preview, Impact, History)
 - [ ] Rich Content tab render image/table/attachment warnings
+- [ ] AI Preview tab render answer summary, source citation, scope, freshness, quick replies, feedback/escalation
 - [ ] Diff view side-by-side với highlight changes
 - [ ] Approve/Reject modal với bắt buộc comment
 - [ ] Publish Failed state rõ ràng

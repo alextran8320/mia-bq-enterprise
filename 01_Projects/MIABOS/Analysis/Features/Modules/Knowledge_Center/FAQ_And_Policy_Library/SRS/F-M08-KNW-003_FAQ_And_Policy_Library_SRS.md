@@ -75,8 +75,9 @@ BQ không chỉ cần chatbot; họ cần một bề mặt tri thức chuẩn đ
 2. Hệ thống hiển thị folder tree theo `SOP`, `FAQ`, `Policy`, `System Guide`, `Imported / Chờ phân loại`, kèm quick filters theo nhóm tri thức như `Pricing Policy`, `Promotion Policy`, `CSKH Policy`, `Ecommerce Service`, `Store SOP`, `System Guide`.
 3. User chọn folder hoặc nhập keyword/áp filter theo `document type`, `knowledge topic`, `channel`, `owner department`, `updated recently`.
 4. Hệ thống trả search results đã qua permission filter và sắp xếp theo `relevance + freshness + published status`.
-5. User mở document detail panel, xem rule chính, scope, ngoại lệ, owner, effective date, related docs, và rich content nếu tài liệu có hình ảnh/bảng/attachment.
-6. User copy link, mở related docs, hoặc dùng escalation/contact path nếu tài liệu thiếu/chưa đúng.
+5. User mở document detail panel, xem rule chính, scope, ngoại lệ, owner, effective date, source citation, role scope, related docs, và rich content nếu tài liệu có hình ảnh/bảng/attachment.
+6. UI hiển thị quick reply chips/related questions để user đi tiếp sang SOP, FAQ, policy liên quan hoặc escalation owner.
+7. User copy link, mở related docs, đánh giá hữu ích/không hữu ích, hoặc dùng escalation/contact path nếu tài liệu thiếu/chưa đúng.
 
 ## 6. Alternate Flows
 
@@ -106,6 +107,11 @@ BQ không chỉ cần chatbot; họ cần một bề mặt tri thức chuẩn đ
 - Detail panel phải ưu tiên `kết luận/rule chính`, rồi `scope áp dụng`, `ngoại lệ`, `chi tiết đầy đủ`, `hình ảnh/bảng/attachment`, `related documents`.
 - Nếu là SOP, detail panel phải hiển thị `SOP Step` theo thứ tự thao tác, actor, kết quả kỳ vọng, và exception path.
 - `No-result state` phải gợi ý knowledge topic gần đúng và contact/escalation path.
+- `No-result state` phải hoạt động như `Uncertainty Signal`: nói rõ đã search trong Knowledge Base nội bộ nhưng không có source phù hợp, kèm suggestions và `Hỏi người thật`.
+- Detail panel phải có `Source Citation Block`: document/version/effective date/owner/freshness/source backing.
+- Detail panel phải có `Role-Aware Header`: tài liệu áp dụng cho role/channel nào và user hiện tại có đang nằm trong scope không.
+- Detail panel phải có feedback loop tối thiểu: `Hữu ích` / `Không hữu ích` hoặc `Gửi phản hồi`, không tạo object analytics riêng trong M08.
+- Tài liệu SOP phải dùng `Step-by-step Guided Flow` khi có `sop_steps[]`.
 
 ## 10. Role / Permission Rules
 
@@ -123,16 +129,18 @@ BQ không chỉ cần chatbot; họ cần một bề mặt tri thức chuẩn đ
 - Nếu user mở từ AI source reference, detail panel phải neo đúng document/version đã được answer tham chiếu, không tự động nhảy sang latest version nếu khác thời điểm.
 - Nếu document có bản thay thế active, UI phải hiển thị banner `Đã có bản mới` và link sang version mới.
 - Nếu document có assets, UI phải render asset hợp lệ và cảnh báo rõ asset lỗi.
+- Quick reply/related topic suggestions phải qua permission filter trước khi render.
+- Khi mở từ AI source reference, detail panel phải giữ đúng version được cite trong answer và hiển thị nếu đang không phải latest.
 
 ## 12. API Contract Excerpt + Canonical Links
 
 - `POST /mia/knowledge/query`
   - Input: `q`, `folder_id`, `knowledge_topic`, `document_type`, `channel`, `department`, `freshness_status`
-  - Output: search results + filters + counts + no-result suggestions
+  - Output: search results + filters + counts + no-result suggestions + `scope_statement` + `quick_reply_suggestions[]`
 - `GET /mia/knowledge/tree`
   - Output: category/folder/topic tree + counts
 - `GET /mia/knowledge/documents/:id`
-  - Output: detail, metadata, related docs, access flags, version reference, assets
+  - Output: detail, metadata, source citation, role scope, related docs, quick reply suggestions, feedback action, access flags, version reference, assets
 - `GET /mia/knowledge/faqs`
   - Output: FAQ topic grouping, summary answers, linked documents
 - Canonical consumers:
@@ -168,6 +176,8 @@ BQ không chỉ cần chatbot; họ cần một bề mặt tri thức chuẩn đ
 - Detail panel phải render được assets hoặc hiện warning nếu assets lỗi.
 - Related docs chỉ hiện các tài liệu cùng scope quyền và không bị deprecated cứng.
 - No-result state phải có wording và contact/escalation path rõ; logging analytics thuộc M12 nếu được mở scope.
+- Source citation block không được thiếu `owner`, `version/effective date`, và `freshness_status`.
+- Feedback action phải hiện ở document detail và no-result state nhưng không tạo `knowledge_gap_report` hoặc usage log object trong M08.
 
 ## 16. Error Codes
 
@@ -192,6 +202,8 @@ BQ không chỉ cần chatbot; họ cần một bề mặt tri thức chuẩn đ
 - No-result state gợi ý keyword/knowledge topic gần đúng và có contact/escalation path rõ.
 - SOP detail hiển thị được danh sách `SOP Step` theo đúng thứ tự thao tác.
 - Document detail render được hình ảnh/bảng/attachment của tài liệu import.
+- Document detail hiển thị source citation block, role-aware header, quick reply chips, và feedback action.
+- Khi không tìm thấy kết quả, no-result state phải nói rõ scope đã search và có `Hỏi người thật` / contact owner.
 
 ## 19. Test Scenarios
 
@@ -199,7 +211,9 @@ BQ không chỉ cần chatbot; họ cần một bề mặt tri thức chuẩn đ
 - Search `SOP cửa hàng` từ role `Store / retail operations`.
 - Mở tài liệu từ AI source reference và kiểm tra version reference.
 - Search không có kết quả và kiểm tra contact/escalation path.
+- Search không có kết quả và kiểm tra uncertainty/scope statement.
 - Mở tài liệu restricted và xác minh blocked state.
+- Mở document detail và kiểm tra source citation + role-aware header + feedback action.
 - Mở tài liệu import có hình ảnh/bảng/attachment và xác minh detail panel không mất rich content.
 
 ## 20. Observability

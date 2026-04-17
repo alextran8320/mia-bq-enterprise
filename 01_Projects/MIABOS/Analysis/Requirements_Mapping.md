@@ -18,7 +18,7 @@
 - **Project**: MIABOS / AI Workspace
 - **SRS Reference**: [Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md](./Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md)
 - **PRD Reference**: [Planning/PRD/AI_Workspace/PRD-M09-AIC-001_Internal_AI_Chat.md](../Planning/PRD/AI_Workspace/PRD-M09-AIC-001_Internal_AI_Chat.md)
-- **User Story Reference**: [Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md](../Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md)
+- **User Story Reference**: [Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat.md](../Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat.md)
 
 ---
 
@@ -90,7 +90,7 @@ Before passing Gate 2, verify:
 ## Reference
 
 - PRD: [Planning/PRD/AI_Workspace/PRD-M09-AIC-001_Internal_AI_Chat.md](../Planning/PRD/AI_Workspace/PRD-M09-AIC-001_Internal_AI_Chat.md)
-- User Story: [Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md](../Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat_FE_Preview.md)
+- User Story: [Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat.md](../Planning/Stories/AI_Workspace/US-M09-AIC-001_Internal_AI_Chat.md)
 - SRS: [Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md](./Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md)
 - Gate 2 requirements: `../../../../00_Agent_OS/Rules/Quality_Gates.md` (line 22)
 - Playbook: `../../../../00_Agent_OS/Playbooks/PB-01_Clarify_and_Scope.md`

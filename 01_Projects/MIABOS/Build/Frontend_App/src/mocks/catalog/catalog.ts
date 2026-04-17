@@ -87,6 +87,8 @@ export interface PromotionOffer {
   note: string;
 }
 
+export type SyncStatus = "success" | "failed" | "syncing";
+
 export interface CatalogRecord {
   id: string;
   canonicalId: string;
@@ -104,6 +106,20 @@ export interface CatalogRecord {
   ownerTeam: string;
   serviceNote: string;
   description: string;
+  /** Ảnh sản phẩm */
+  imageUrl: string;
+  /** Ngành hàng */
+  industry: string;
+  /** Tồn treo */
+  stockPending: number;
+  /** Tồn có sẵn */
+  stockAvailable: number;
+  /** Tồn thực tế */
+  stockActual: number;
+  /** VAT % */
+  vat: number;
+  /** Trạng thái đồng bộ */
+  syncStatus: SyncStatus;
   summaryItems: CatalogSummaryItem[];
   attributes: CatalogAttribute[];
   variants: CatalogVariant[];
@@ -152,6 +168,7 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
     sku: "BQ-SNE-184",
     barcode: "8936027001848",
     name: "Sneaker Velocity",
+    imageUrl: "/images/products/sneaker-velocity.jpg",
     category: "Giày sneaker nữ",
     collection: "Urban Ease",
     season: "Xuân Hè 2026",
@@ -165,6 +182,12 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
       "Sản phẩm đang được đẩy mạnh trong bộ sưu tập mùa hè, thường được Sales hỏi cùng size 37-39.",
     description:
       "Mẫu sneaker nữ cổ thấp cho nhu cầu đi làm hằng ngày, phối tông trắng kem và đế nhẹ.",
+    industry: "Giày dép nữ",
+    stockPending: 12,
+    stockAvailable: 145,
+    stockActual: 157,
+    vat: 10,
+    syncStatus: "success",
     summaryItems: [
       { label: "Danh mục", value: "Sneaker nữ" },
       { label: "Bộ sưu tập", value: "Urban Ease" },
@@ -328,6 +351,7 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
     sku: "BQ-SND-205",
     barcode: "8936027002050",
     name: "Sandal Luna Strap",
+    imageUrl: "/images/products/sandal-luna.jpg",
     category: "Sandal nữ",
     collection: "Daily Breeze",
     season: "Xuân Hè 2026",
@@ -341,6 +365,12 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
       "Model này thường bị hỏi dồn vào cuối tuần, nhưng nguồn kho trung tâm cập nhật chậm hơn cửa hàng.",
     description:
       "Sandal quai mảnh cho nhu cầu đi phố, tập trung size 36-39 và màu kem, nâu sáng.",
+    industry: "Giày dép nữ",
+    stockPending: 5,
+    stockAvailable: 38,
+    stockActual: 43,
+    vat: 10,
+    syncStatus: "failed",
     summaryItems: [
       { label: "Danh mục", value: "Sandal nữ" },
       { label: "Bộ sưu tập", value: "Daily Breeze" },
@@ -462,6 +492,7 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
     sku: "BQ-LFR-229",
     barcode: "8936027002296",
     name: "Loafer Heritage",
+    imageUrl: "/images/products/loafer-heritage.jpg",
     category: "Giày loafer nam",
     collection: "Boardroom Classic",
     season: "Bốn mùa",
@@ -475,6 +506,12 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
       "Đang có tình huống hỏi giá chênh giữa website và store, cần giữ warning rõ để Sales không trả sai.",
     description:
       "Loafer nam da bò thật, form ôm chân, thường phục vụ nhóm khách công sở và đối tác doanh nghiệp.",
+    industry: "Giày dép nam",
+    stockPending: 0,
+    stockAvailable: 72,
+    stockActual: 72,
+    vat: 10,
+    syncStatus: "success",
     summaryItems: [
       { label: "Danh mục", value: "Loafer nam" },
       { label: "Bộ sưu tập", value: "Boardroom Classic" },
@@ -643,6 +680,7 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
     sku: "BQ-HEL-241",
     barcode: "8936027002418",
     name: "Elegance Heel",
+    imageUrl: "/images/products/elegance-heel.jpg",
     category: "Giày cao gót",
     collection: "Evening Muse",
     season: "Xuân Hè 2026",
@@ -656,6 +694,12 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
       "Có CTKM riêng cho cửa hàng chính hãng và script tư vấn size, nhưng một phần campaign không nên lộ ngoài phạm vi.",
     description:
       "Giày cao gót basic cho nhu cầu dự tiệc và công sở, có sức bán tốt ở store chính hãng dịp cuối tuần.",
+    industry: "Giày dép nữ",
+    stockPending: 3,
+    stockAvailable: 24,
+    stockActual: 27,
+    vat: 10,
+    syncStatus: "syncing",
     summaryItems: [
       { label: "Danh mục", value: "Cao gót nữ" },
       { label: "Bộ sưu tập", value: "Evening Muse" },
@@ -789,6 +833,7 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
     sku: "BQ-BAG-312",
     barcode: "8936027003125",
     name: "Signature Crossbody",
+    imageUrl: "/images/products/crossbody-bag.jpg",
     category: "Túi xách nữ",
     collection: "City Accent",
     season: "Quanh năm",
@@ -802,6 +847,12 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
       "Sản phẩm bán kèm tốt, nhưng tồn một số điểm bán bị lệch nhẹ nên cần note review khi khách hỏi gấp.",
     description:
       "Túi đeo chéo mini cho nhu cầu đi làm và đi chơi, thường được bán kèm với sneaker và loafer nữ.",
+    industry: "Phụ kiện",
+    stockPending: 8,
+    stockAvailable: 56,
+    stockActual: 64,
+    vat: 10,
+    syncStatus: "success",
     summaryItems: [
       { label: "Danh mục", value: "Túi xách nữ" },
       { label: "Bộ sưu tập", value: "City Accent" },

@@ -1,26 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { Badge, Card, DataTable, Input } from "@/shared/ui";
+import type { Column } from "@/shared/ui";
 import {
-  ArrowUpRight,
-  CircleAlert,
-  Clock3,
-  MessageSquareText,
-  ShieldAlert,
-  UserRound,
-} from "lucide-react";
-import { Badge, Button, Card } from "@/shared/ui";
-import {
-  getEscalationById,
-  searchEscalations,
+  ESCALATION_RECORDS,
   type EscalationRecord,
 } from "@/mocks/operations/operations";
-import {
-  DetailRow,
-  EmptyResultCard,
-  Eyebrow,
-  WARNING_STYLES,
-  WarningBanner,
-  useOperationsContext,
-} from "@/modules/operations-and-governance/components/OperationsModuleLayout";
 
 const STATUS_STYLES: Record<string, { color: string; bg: string }> = {
   "Đang xử lý": { color: "var(--color-primary)", bg: "var(--color-primary-light)" },
@@ -29,274 +15,313 @@ const STATUS_STYLES: Record<string, { color: string; bg: string }> = {
   "Cần đối soát": { color: "var(--color-error)", bg: "#FFE4E6" },
 };
 
-function StatusChip({ label }: { label: string }) {
-  const style = STATUS_STYLES[label] ?? {
-    color: "var(--color-text-secondary)",
-    bg: "var(--color-bg-surface)",
-  };
+const DOMAIN_STYLES: Record<string, { color: string; bg: string }> = {
+  inventory: { color: "#0F766E", bg: "#CCFBF1" },
+  pricing: { color: "#7C3AED", bg: "#F3E8FF" },
+  policy: { color: "#C2410C", bg: "#FFEDD5" },
+  customer: { color: "var(--color-primary)", bg: "var(--color-primary-light)" },
+};
 
-  return <Badge label={label} color={style.color} bg={style.bg} />;
+const DOMAIN_LABELS: Record<string, string> = {
+  inventory: "Tồn kho",
+  pricing: "Giá",
+  policy: "Chính sách",
+  customer: "Khách hàng",
+};
+
+function Eyebrow({ children }: { children: string }) {
+  return (
+    <span
+      style={{
+        fontSize: "11px",
+        fontWeight: 500,
+        color: "var(--color-text-tertiary)",
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function FilterSelect<T extends string>({
+  value,
+  options,
+  onChange,
+}: {
+  value: T;
+  options: { value: T; label: string }[];
+  onChange: (v: T) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const selectedLabel = options.find((o) => o.value === value)?.label ?? "";
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "10px 14px",
+          borderRadius: "var(--radius-sm)",
+          border: open ? "1.5px solid var(--color-text-primary)" : "1.5px solid transparent",
+          background: "var(--color-bg-card)",
+          color: "var(--color-text-primary)",
+          fontSize: "14px",
+          fontFamily: "var(--font-primary)",
+          fontWeight: 400,
+          cursor: "pointer",
+          boxShadow: "var(--shadow-ambient)",
+          minWidth: 140,
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span style={{ flex: 1, textAlign: "left" }}>{selectedLabel}</span>
+        {open ? (
+          <ChevronUp size={16} color="var(--color-text-tertiary)" />
+        ) : (
+          <ChevronDown size={16} color="var(--color-text-tertiary)" />
+        )}
+      </button>
+
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(100% + 4px)",
+            left: 0,
+            zIndex: 10,
+            background: "#fff",
+            borderRadius: "var(--radius-sm)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.06)",
+            minWidth: "100%",
+            padding: "4px 0",
+            overflow: "hidden",
+          }}
+        >
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                onChange(opt.value);
+                setOpen(false);
+              }}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "10px 16px",
+                border: "none",
+                background: opt.value === value ? "var(--color-bg-page)" : "transparent",
+                color: "var(--color-text-primary)",
+                fontSize: "14px",
+                fontFamily: "var(--font-primary)",
+                fontWeight: opt.value === value ? 600 : 400,
+                textAlign: "left",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                if (opt.value !== value)
+                  e.currentTarget.style.background = "var(--color-bg-page)";
+              }}
+              onMouseLeave={(e) => {
+                if (opt.value !== value)
+                  e.currentTarget.style.background = "transparent";
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+type StatusFilter = "all" | "active" | "attention" | "resolved";
+type DomainFilter = "all" | "inventory" | "pricing" | "policy" | "customer";
+
+const STATUS_FILTERS: { value: StatusFilter; label: string }[] = [
+  { value: "all", label: "Tất cả" },
+  { value: "active", label: "Đang xử lý" },
+  { value: "attention", label: "Cần chú ý" },
+  { value: "resolved", label: "Đã xử lý" },
+];
+
+const DOMAIN_FILTERS: { value: DomainFilter; label: string }[] = [
+  { value: "all", label: "Tất cả" },
+  { value: "inventory", label: "Tồn kho" },
+  { value: "pricing", label: "Giá" },
+  { value: "policy", label: "Chính sách" },
+  { value: "customer", label: "Khách hàng" },
+];
+
+const columns: Column<EscalationRecord>[] = [
+  {
+    key: "id",
+    header: "Mã",
+    render: (r) => (
+      <div>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontWeight: 600,
+            fontSize: "13px",
+          }}
+        >
+          {r.id}
+        </div>
+        <div
+          style={{
+            fontSize: "12px",
+            color: "var(--color-text-secondary)",
+            marginTop: 2,
+          }}
+        >
+          {r.subject}
+        </div>
+      </div>
+    ),
+    width: "26%",
+  },
+  {
+    key: "domain",
+    header: "Lĩnh vực",
+    render: (r) => {
+      const s = DOMAIN_STYLES[r.domain] ?? { color: "var(--color-text-secondary)", bg: "var(--color-bg-surface)" };
+      return <Badge label={DOMAIN_LABELS[r.domain] ?? r.domain} color={s.color} bg={s.bg} />;
+    },
+  },
+  {
+    key: "actor",
+    header: "Người tạo",
+    render: (r) => <span style={{ fontSize: "13px" }}>{r.actor}</span>,
+  },
+  {
+    key: "assignee",
+    header: "Phân công",
+    render: (r) => <span style={{ fontSize: "13px" }}>{r.assignee}</span>,
+  },
+  {
+    key: "statusLabel",
+    header: "Trạng thái",
+    render: (r) => {
+      const s = STATUS_STYLES[r.statusLabel] ?? { color: "var(--color-text-secondary)", bg: "var(--color-bg-surface)" };
+      return <Badge label={r.statusLabel} color={s.color} bg={s.bg} />;
+    },
+  },
+  {
+    key: "ageLabel",
+    header: "Tuổi ticket",
+    render: (r) => (
+      <span style={{ fontSize: "12px", color: "var(--color-text-tertiary)" }}>
+        {r.ageLabel}
+      </span>
+    ),
+  },
+];
+
+function normalize(v: string) {
+  return v.trim().toLowerCase();
 }
 
 export function EscalationQueuePage() {
-  const { filters } = useOperationsContext();
-  const records = searchEscalations(filters);
-  const [selectedId, setSelectedId] = useState<string | null>(records[0]?.id ?? null);
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [domainFilter, setDomainFilter] = useState<DomainFilter>("all");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!records.some((item) => item.id === selectedId)) {
-      setSelectedId(records[0]?.id ?? null);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [search]);
+
+  const records = ESCALATION_RECORDS.filter((r) => {
+    if (statusFilter !== "all" && r.statusGroup !== statusFilter) return false;
+    if (domainFilter !== "all" && r.domain !== domainFilter) return false;
+    if (debouncedSearch.trim()) {
+      const kw = normalize(debouncedSearch);
+      const haystack = [r.id, r.subject, r.assignee, r.actor, r.domain, ...r.tags].map(normalize);
+      if (!haystack.some((h) => h.includes(kw))) return false;
     }
-  }, [records, selectedId]);
-
-  if (records.length === 0) {
-    return (
-      <EmptyResultCard
-        title="Không có escalation phù hợp với bộ lọc hiện tại"
-        description="Thử đổi domain hoặc trạng thái để xem các ticket đang mở, các case đã giải quyết hoặc các escalation đang được fallback sang queue nội bộ."
-      />
-    );
-  }
-
-  const selectedRecord = getEscalationById(selectedId ?? records[0]?.id ?? null);
+    return true;
+  });
 
   return (
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(0, 1.08fr) minmax(340px, 0.92fr)",
+        display: "flex",
+        flexDirection: "column",
         gap: "var(--space-6)",
-        alignItems: "start",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-        {records.map((record) => {
-          const warningStyle =
-            record.warningState === "none" ? null : WARNING_STYLES[record.warningState];
-
-          return (
-            <Card
-              key={record.id}
-              style={{
-                cursor: "pointer",
-                background:
-                  record.id === selectedRecord?.id
-                    ? "#FFF7ED"
-                    : "var(--color-bg-card)",
-                boxShadow:
-                  record.id === selectedRecord?.id
-                    ? "0 18px 32px rgba(194, 65, 12, 0.14)"
-                    : "var(--shadow-ambient)",
-              }}
-            >
-              <button
-                onClick={() => setSelectedId(record.id)}
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  padding: 0,
-                  width: "100%",
-                  textAlign: "left",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "var(--space-4)",
-                  cursor: "pointer",
-                  fontFamily: "var(--font-primary)",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: "var(--space-4)",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "13px",
-                        fontWeight: 600,
-                        marginBottom: "var(--space-1)",
-                      }}
-                    >
-                      {record.id}
-                    </div>
-                    <h3 style={{ marginBottom: "var(--space-1)" }}>{record.subject}</h3>
-                    <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
-                      {record.sourceModule} • {record.createdAt}
-                    </div>
-                  </div>
-                  <StatusChip label={record.statusLabel} />
-                </div>
-
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-                  <Badge label={record.domain} color="#9A3412" bg="#FFEDD5" />
-                  <Badge label={record.assignee} color="#0F766E" bg="#CCFBF1" />
-                  <Badge
-                    label={record.destinationLabel}
-                    color="var(--color-text-secondary)"
-                    bg="var(--color-bg-surface)"
-                  />
-                  {warningStyle ? (
-                    <Badge
-                      label={warningStyle.label}
-                      color={warningStyle.color}
-                      bg={warningStyle.bg}
-                    />
-                  ) : null}
-                </div>
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                    gap: "var(--space-3)",
-                  }}
-                >
-                  <InfoCell label="Người tạo" value={record.actor} />
-                  <InfoCell label="Tuổi ticket" value={record.ageLabel} />
-                  <InfoCell label="Điểm đến" value={record.destinationRef} />
-                </div>
-
-                <div style={{ color: "var(--color-text-secondary)", fontSize: "13px", lineHeight: 1.6 }}>
-                  {record.summary}
-                </div>
-              </button>
-            </Card>
-          );
-        })}
+      <div style={{ marginBottom: "var(--space-2)" }}>
+        <Eyebrow>Vận hành</Eyebrow>
+        <h1 style={{ marginTop: "var(--space-2)", marginBottom: 0 }}>
+          Hàng đợi xử lý
+        </h1>
       </div>
 
-      <Card style={{ position: "sticky", top: 0 }}>
-        {selectedRecord ? (
-          <EscalationDetail record={selectedRecord} />
-        ) : (
-          <div>
-            <Eyebrow>Escalation Queue</Eyebrow>
-            <h2 style={{ marginTop: "var(--space-2)", marginBottom: "var(--space-3)" }}>
-              Chọn 1 escalation để xem chi tiết
-            </h2>
-            <p style={{ color: "var(--color-text-secondary)" }}>
-              Chọn một ticket bên trái để xem context đóng gói, assignee, timeline và bước xử lý tiếp theo.
-            </p>
-          </div>
-        )}
+      <div
+        style={{
+          display: "flex",
+          gap: "var(--space-4)",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <Input
+          icon={<Search size={16} />}
+          placeholder="Tìm mã ticket, chủ đề, người tạo..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: 320 }}
+        />
+
+        <FilterSelect
+          value={statusFilter}
+          options={STATUS_FILTERS}
+          onChange={setStatusFilter}
+        />
+
+        <FilterSelect
+          value={domainFilter}
+          options={DOMAIN_FILTERS}
+          onChange={setDomainFilter}
+        />
+      </div>
+
+      <Card style={{ padding: 0, overflow: "hidden" }}>
+        <DataTable
+          columns={columns}
+          data={records}
+          rowKey={(r) => r.id}
+          onRowClick={(r) => navigate(`/operations/escalations/${r.id}`)}
+        />
       </Card>
-    </div>
-  );
-}
-
-function EscalationDetail({ record }: { record: EscalationRecord }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-5)" }}>
-      <div>
-        <Eyebrow>Escalation</Eyebrow>
-        <h2 style={{ marginTop: "var(--space-2)", marginBottom: "var(--space-1)" }}>
-          {record.subject}
-        </h2>
-        <div style={{ color: "var(--color-text-secondary)" }}>
-          {record.id} • {record.destinationRef}
-        </div>
-      </div>
-
-      <WarningBanner warningState={record.warningState} customText={record.blockedReason} />
-
-      <section>
-        <Eyebrow>Tóm tắt điều phối</Eyebrow>
-        <div style={{ marginTop: "var(--space-3)", display: "grid", gap: "var(--space-3)" }}>
-          <DetailRow icon={<CircleAlert size={15} />} label="Trạng thái" value={record.statusLabel} />
-          <DetailRow icon={<UserRound size={15} />} label="Người tạo" value={`${record.actor} • ${record.actorRole}`} />
-          <DetailRow icon={<ShieldAlert size={15} />} label="Người xử lý" value={record.assignee} />
-          <DetailRow icon={<ArrowUpRight size={15} />} label="Điểm đến" value={`${record.destinationLabel} • ${record.destinationRef}`} />
-          <DetailRow icon={<Clock3 size={15} />} label="Tuổi ticket" value={record.ageLabel} />
-        </div>
-      </section>
-
-      <section>
-        <Eyebrow>Context đóng gói</Eyebrow>
-        <div style={{ marginTop: "var(--space-3)", display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-          <Card style={{ background: "var(--color-bg-surface)", padding: "var(--space-4)" }}>
-            <div style={{ fontSize: "11px", color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              Câu hỏi gốc
-            </div>
-            <div style={{ marginTop: "var(--space-1)", lineHeight: 1.6 }}>{record.question}</div>
-          </Card>
-          <Card style={{ background: "var(--color-bg-surface)", padding: "var(--space-4)" }}>
-            <div style={{ fontSize: "11px", color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              Answer snapshot
-            </div>
-            <div style={{ marginTop: "var(--space-1)", lineHeight: 1.6 }}>{record.answerSnapshot}</div>
-          </Card>
-        </div>
-      </section>
-
-      <section>
-        <Eyebrow>Dòng thời gian xử lý</Eyebrow>
-        <div style={{ marginTop: "var(--space-3)", display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-          {record.timeline.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                padding: "var(--space-4)",
-                borderRadius: "var(--radius-md)",
-                background: "var(--color-bg-surface)",
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", gap: "var(--space-3)" }}>
-                <div>
-                  <div style={{ fontWeight: 600 }}>{item.title}</div>
-                  <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
-                    {item.owner}
-                  </div>
-                </div>
-                <div style={{ fontSize: "12px", color: "var(--color-text-tertiary)" }}>{item.time}</div>
-              </div>
-              <div style={{ marginTop: "var(--space-2)", color: "var(--color-text-secondary)", fontSize: "13px", lineHeight: 1.6 }}>
-                {item.note}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <Eyebrow>Hướng xử lý tiếp theo</Eyebrow>
-        <Card style={{ marginTop: "var(--space-3)", background: "var(--color-bg-surface)", padding: "var(--space-4)" }}>
-          <div style={{ fontWeight: 600, marginBottom: "var(--space-2)" }}>{record.nextAction}</div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)", marginBottom: "var(--space-3)" }}>
-            {record.tags.map((tag) => (
-              <Badge key={tag} label={tag} color="var(--color-text-secondary)" bg="var(--color-bg-card)" />
-            ))}
-          </div>
-          <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
-            <Button variant="secondary">
-              <ArrowUpRight size={16} /> Mở điểm đến
-            </Button>
-            <Button variant="secondary">
-              <MessageSquareText size={16} /> Chuyển người xử lý
-            </Button>
-          </div>
-        </Card>
-      </section>
-    </div>
-  );
-}
-
-function InfoCell({ label, value }: { label: string; value: string }) {
-  return (
-    <div
-      style={{
-        padding: "var(--space-3)",
-        borderRadius: "var(--radius-md)",
-        background: "var(--color-bg-surface)",
-      }}
-    >
-      <div style={{ fontSize: "11px", color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-        {label}
-      </div>
-      <div style={{ marginTop: "var(--space-1)", fontWeight: 500 }}>{value}</div>
     </div>
   );
 }

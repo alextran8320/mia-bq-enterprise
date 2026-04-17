@@ -5,18 +5,24 @@ import { CustomerListPage } from "@/modules/crm-workspace/pages/CustomerListPage
 import { CustomerProfilePage } from "@/modules/crm-workspace/pages/CustomerProfilePage";
 import { LeadListPage } from "@/modules/crm-workspace/pages/LeadListPage";
 import { InternalAIChatPage } from "@/modules/ai-workspace/pages/InternalAIChatPage";
-import { CatalogModuleLayout } from "@/modules/catalog-and-commerce/components/CatalogModuleLayout";
-import { InventoryAvailabilityPage } from "@/modules/catalog-and-commerce/pages/InventoryAvailabilityPage";
 import { PricingCenterPage } from "@/modules/catalog-and-commerce/pages/PricingCenterPage";
+import { PricingDetailPage } from "@/modules/catalog-and-commerce/pages/PricingDetailPage";
 import { ProductCatalogPage } from "@/modules/catalog-and-commerce/pages/ProductCatalogPage";
+import { ProductDetailPage } from "@/modules/catalog-and-commerce/pages/ProductDetailPage";
 import { PromotionCenterPage } from "@/modules/catalog-and-commerce/pages/PromotionCenterPage";
-import { OperationsModuleLayout } from "@/modules/operations-and-governance/components/OperationsModuleLayout";
+import { PromotionDetailPage } from "@/modules/catalog-and-commerce/pages/PromotionDetailPage";
 import { EscalationQueuePage } from "@/modules/operations-and-governance/pages/EscalationQueuePage";
+import { EscalationDetailPage } from "@/modules/operations-and-governance/pages/EscalationDetailPage";
 import { IntegrationOpsPage } from "@/modules/operations-and-governance/pages/IntegrationOpsPage";
+import { ConnectorDetailPage } from "@/modules/operations-and-governance/pages/ConnectorDetailPage";
 import { ScopeAndSensitivityRulesPage } from "@/modules/operations-and-governance/pages/ScopeAndSensitivityRulesPage";
+import { RuleDetailPage } from "@/modules/operations-and-governance/pages/RuleDetailPage";
 import { SourceOfTruthAndMappingPage } from "@/modules/operations-and-governance/pages/SourceOfTruthAndMappingPage";
+import { MappingDetailPage } from "@/modules/operations-and-governance/pages/MappingDetailPage";
 import { UsersAndRolesPage } from "@/modules/operations-and-governance/pages/UsersAndRolesPage";
+import { UserDetailPage } from "@/modules/operations-and-governance/pages/UserDetailPage";
 import { OrderSummaryPage } from "@/modules/orders-and-service/pages/OrderSummaryPage";
+import { OrderDetailPage } from "@/modules/orders-and-service/pages/OrderDetailPage";
 import { SalesAdvisorPage } from "@/modules/ai-workspace/pages/SalesAdvisorPage";
 import { UnifiedInboxPage } from "@/modules/ai-workspace/pages/UnifiedInboxPage";
 import { BusinessAnalyticsPage } from "@/modules/insights-performance/pages/BusinessAnalyticsPage";
@@ -41,39 +47,39 @@ export const router = createBrowserRouter([
   {
     path: "/orders",
     element: <AppShell />,
-    children: [{ index: true, element: <OrderSummaryPage /> }],
+    children: [
+      { index: true, element: <OrderSummaryPage /> },
+      { path: ":id", element: <OrderDetailPage /> },
+    ],
   },
   {
     path: "/catalog",
     element: <AppShell />,
     children: [
-      {
-        element: <CatalogModuleLayout />,
-        children: [
-          { index: true, element: <Navigate to="/catalog/products" replace /> },
-          { path: "products", element: <ProductCatalogPage /> },
-          { path: "inventory", element: <InventoryAvailabilityPage /> },
-          { path: "pricing", element: <PricingCenterPage /> },
-          { path: "promotions", element: <PromotionCenterPage /> },
-        ],
-      },
+      { index: true, element: <Navigate to="/catalog/products" replace /> },
+      { path: "products", element: <ProductCatalogPage /> },
+      { path: "products/:id", element: <ProductDetailPage /> },
+      { path: "pricing", element: <PricingCenterPage /> },
+      { path: "pricing/:id", element: <PricingDetailPage /> },
+      { path: "promotions", element: <PromotionCenterPage /> },
+      { path: "promotions/:id", element: <PromotionDetailPage /> },
     ],
   },
   {
     path: "/operations",
     element: <AppShell />,
     children: [
-      {
-        element: <OperationsModuleLayout />,
-        children: [
-          { index: true, element: <Navigate to="/operations/escalations" replace /> },
-          { path: "escalations", element: <EscalationQueuePage /> },
-          { path: "users-roles", element: <UsersAndRolesPage /> },
-          { path: "scope-rules", element: <ScopeAndSensitivityRulesPage /> },
-          { path: "integration-ops", element: <IntegrationOpsPage /> },
-          { path: "source-mapping", element: <SourceOfTruthAndMappingPage /> },
-        ],
-      },
+      { index: true, element: <Navigate to="/operations/escalations" replace /> },
+      { path: "escalations", element: <EscalationQueuePage /> },
+      { path: "escalations/:id", element: <EscalationDetailPage /> },
+      { path: "users-roles", element: <UsersAndRolesPage /> },
+      { path: "users-roles/:id", element: <UserDetailPage /> },
+      { path: "scope-rules", element: <ScopeAndSensitivityRulesPage /> },
+      { path: "scope-rules/:id", element: <RuleDetailPage /> },
+      { path: "integration-ops", element: <IntegrationOpsPage /> },
+      { path: "integration-ops/:id", element: <ConnectorDetailPage /> },
+      { path: "source-mapping", element: <SourceOfTruthAndMappingPage /> },
+      { path: "source-mapping/:id", element: <MappingDetailPage /> },
     ],
   },
   {

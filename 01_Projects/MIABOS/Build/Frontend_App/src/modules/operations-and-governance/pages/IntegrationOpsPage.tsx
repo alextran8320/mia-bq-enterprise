@@ -1,19 +1,12 @@
-import { useEffect, useState } from "react";
-import { ArrowRightLeft, Clock3, LayoutDashboard, Sparkles } from "lucide-react";
-import { Badge, Button, Card } from "@/shared/ui";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { Badge, Card, DataTable, Input } from "@/shared/ui";
+import type { Column } from "@/shared/ui";
 import {
-  getConnectorHealthById,
-  searchConnectorHealth,
+  CONNECTOR_HEALTH_RECORDS,
   type ConnectorHealthRecord,
 } from "@/mocks/operations/operations";
-import {
-  DetailRow,
-  EmptyResultCard,
-  Eyebrow,
-  WARNING_STYLES,
-  WarningBanner,
-  useOperationsContext,
-} from "@/modules/operations-and-governance/components/OperationsModuleLayout";
 
 const STATUS_STYLES: Record<string, { color: string; bg: string }> = {
   "Ổn định": { color: "var(--color-success)", bg: "#DCFCE7" },
@@ -21,227 +14,293 @@ const STATUS_STYLES: Record<string, { color: string; bg: string }> = {
   "Gián đoạn cục bộ": { color: "var(--color-error)", bg: "#FFE4E6" },
 };
 
-function StatusChip({ label }: { label: string }) {
-  const style = STATUS_STYLES[label] ?? {
-    color: "var(--color-text-secondary)",
-    bg: "var(--color-bg-surface)",
-  };
+function Eyebrow({ children }: { children: string }) {
+  return (
+    <span
+      style={{
+        fontSize: "11px",
+        fontWeight: 500,
+        color: "var(--color-text-tertiary)",
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
 
-  return <Badge label={label} color={style.color} bg={style.bg} />;
+function FilterSelect<T extends string>({
+  value,
+  options,
+  onChange,
+}: {
+  value: T;
+  options: { value: T; label: string }[];
+  onChange: (v: T) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const selectedLabel = options.find((o) => o.value === value)?.label ?? "";
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "10px 14px",
+          borderRadius: "var(--radius-sm)",
+          border: open ? "1.5px solid var(--color-text-primary)" : "1.5px solid transparent",
+          background: "var(--color-bg-card)",
+          color: "var(--color-text-primary)",
+          fontSize: "14px",
+          fontFamily: "var(--font-primary)",
+          fontWeight: 400,
+          cursor: "pointer",
+          boxShadow: "var(--shadow-ambient)",
+          minWidth: 140,
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span style={{ flex: 1, textAlign: "left" }}>{selectedLabel}</span>
+        {open ? (
+          <ChevronUp size={16} color="var(--color-text-tertiary)" />
+        ) : (
+          <ChevronDown size={16} color="var(--color-text-tertiary)" />
+        )}
+      </button>
+
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(100% + 4px)",
+            left: 0,
+            zIndex: 10,
+            background: "#fff",
+            borderRadius: "var(--radius-sm)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.06)",
+            minWidth: "100%",
+            padding: "4px 0",
+            overflow: "hidden",
+          }}
+        >
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                onChange(opt.value);
+                setOpen(false);
+              }}
+              style={{
+                display: "block",
+                width: "100%",
+                padding: "10px 16px",
+                border: "none",
+                background: opt.value === value ? "var(--color-bg-page)" : "transparent",
+                color: "var(--color-text-primary)",
+                fontSize: "14px",
+                fontFamily: "var(--font-primary)",
+                fontWeight: opt.value === value ? 600 : 400,
+                textAlign: "left",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                if (opt.value !== value)
+                  e.currentTarget.style.background = "var(--color-bg-page)";
+              }}
+              onMouseLeave={(e) => {
+                if (opt.value !== value)
+                  e.currentTarget.style.background = "transparent";
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+type StatusFilter = "all" | "active" | "attention" | "blocked";
+
+const STATUS_FILTERS: { value: StatusFilter; label: string }[] = [
+  { value: "all", label: "Tất cả" },
+  { value: "active", label: "Ổn định" },
+  { value: "attention", label: "Cảnh báo" },
+  { value: "blocked", label: "Gián đoạn" },
+];
+
+const STATUS_FILTER_MAP: Record<StatusFilter, string | null> = {
+  all: null,
+  active: "Ổn định",
+  attention: "Đang cảnh báo",
+  blocked: "Gián đoạn cục bộ",
+};
+
+const columns: Column<ConnectorHealthRecord>[] = [
+  {
+    key: "id",
+    header: "Mã",
+    render: (r) => (
+      <div>
+        <div
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontWeight: 600,
+            fontSize: "13px",
+          }}
+        >
+          {r.id}
+        </div>
+        <div
+          style={{
+            fontSize: "12px",
+            color: "var(--color-text-secondary)",
+            marginTop: 2,
+          }}
+        >
+          {r.name}
+        </div>
+      </div>
+    ),
+    width: "20%",
+  },
+  {
+    key: "statusLabel",
+    header: "Trạng thái",
+    render: (r) => {
+      const s = STATUS_STYLES[r.statusLabel] ?? { color: "var(--color-text-secondary)", bg: "var(--color-bg-surface)" };
+      return <Badge label={r.statusLabel} color={s.color} bg={s.bg} />;
+    },
+  },
+  {
+    key: "successRate",
+    header: "Tỷ lệ thành công",
+    render: (r) => (
+      <span style={{ fontWeight: 600, fontFamily: "var(--font-mono)" }}>
+        {r.successRate}
+      </span>
+    ),
+  },
+  {
+    key: "retryQueue",
+    header: "Hàng đợi retry",
+    render: (r) => <span style={{ fontSize: "13px" }}>{r.retryQueue}</span>,
+  },
+  {
+    key: "deadLetter",
+    header: "Dead-letter",
+    render: (r) => <span style={{ fontSize: "13px" }}>{r.deadLetter}</span>,
+  },
+  {
+    key: "lastRun",
+    header: "Lần chạy cuối",
+    render: (r) => (
+      <span style={{ fontSize: "12px", color: "var(--color-text-tertiary)" }}>
+        {r.lastRun}
+      </span>
+    ),
+  },
+];
+
+function normalize(v: string) {
+  return v.trim().toLowerCase();
 }
 
 export function IntegrationOpsPage() {
-  const { filters } = useOperationsContext();
-  const records = searchConnectorHealth(filters);
-  const [selectedId, setSelectedId] = useState<string | null>(records[0]?.id ?? null);
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!records.some((item) => item.id === selectedId)) {
-      setSelectedId(records[0]?.id ?? null);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [search]);
+
+  const records = CONNECTOR_HEALTH_RECORDS.filter((r) => {
+    if (statusFilter !== "all") {
+      const expected = STATUS_FILTER_MAP[statusFilter];
+      if (expected && r.statusLabel !== expected) return false;
     }
-  }, [records, selectedId]);
-
-  if (records.length === 0) {
-    return (
-      <EmptyResultCard
-        title="Không có connector nào phù hợp với bộ lọc hiện tại"
-        description="Thử tìm theo tên connector hoặc bỏ lọc domain để xem health của SAP B1, KiotViet, Haravan và Lark Workflow."
-      />
-    );
-  }
-
-  const selectedRecord = getConnectorHealthById(selectedId ?? records[0]?.id ?? null);
+    if (debouncedSearch.trim()) {
+      const kw = normalize(debouncedSearch);
+      const haystack = [r.id, r.name, r.owner, ...r.sourceSystems].map(normalize);
+      if (!haystack.some((h) => h.includes(kw))) return false;
+    }
+    return true;
+  });
 
   return (
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(0, 1.06fr) minmax(340px, 0.94fr)",
+        display: "flex",
+        flexDirection: "column",
         gap: "var(--space-6)",
-        alignItems: "start",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-        {records.map((record) => {
-          const warningStyle =
-            record.warningState === "none" ? null : WARNING_STYLES[record.warningState];
-
-          return (
-            <Card
-              key={record.id}
-              style={{
-                cursor: "pointer",
-                background:
-                  record.id === selectedRecord?.id
-                    ? "#F8FAFC"
-                    : "var(--color-bg-card)",
-                boxShadow:
-                  record.id === selectedRecord?.id
-                    ? "0 18px 30px rgba(15, 118, 110, 0.12)"
-                    : "var(--shadow-ambient)",
-              }}
-            >
-              <button
-                onClick={() => setSelectedId(record.id)}
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  padding: 0,
-                  width: "100%",
-                  textAlign: "left",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "var(--space-4)",
-                  cursor: "pointer",
-                  fontFamily: "var(--font-primary)",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", gap: "var(--space-4)", alignItems: "flex-start" }}>
-                  <div>
-                    <div style={{ fontFamily: "var(--font-mono)", fontWeight: 600, fontSize: "13px", marginBottom: "var(--space-1)" }}>
-                      {record.id}
-                    </div>
-                    <h3 style={{ marginBottom: "var(--space-1)" }}>{record.name}</h3>
-                    <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
-                      {record.owner} • Last run {record.lastRun}
-                    </div>
-                  </div>
-                  <StatusChip label={record.statusLabel} />
-                </div>
-
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-                  <Badge label={record.successRate} color="#0F766E" bg="#CCFBF1" />
-                  <Badge label={`Retry ${record.retryQueue}`} color="var(--color-text-secondary)" bg="var(--color-bg-surface)" />
-                  <Badge label={`Dead-letter ${record.deadLetter}`} color="#9A3412" bg="#FFEDD5" />
-                  {warningStyle ? (
-                    <Badge label={warningStyle.label} color={warningStyle.color} bg={warningStyle.bg} />
-                  ) : null}
-                </div>
-
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "var(--space-3)" }}>
-                  <InfoCell label="Webhook" value={record.webhookBacklog} />
-                  <InfoCell label="Retry queue" value={record.retryQueue} />
-                  <InfoCell label="Dead-letter" value={record.deadLetter} />
-                </div>
-
-                <div style={{ color: "var(--color-text-secondary)", fontSize: "13px", lineHeight: 1.6 }}>
-                  {record.note}
-                </div>
-              </button>
-            </Card>
-          );
-        })}
+      <div style={{ marginBottom: "var(--space-2)" }}>
+        <Eyebrow>Vận hành</Eyebrow>
+        <h1 style={{ marginTop: "var(--space-2)", marginBottom: 0 }}>
+          Tích hợp hệ thống
+        </h1>
       </div>
 
-      <Card style={{ position: "sticky", top: 0 }}>
-        {selectedRecord ? (
-          <ConnectorDetail record={selectedRecord} />
-        ) : (
-          <div>
-            <Eyebrow>Integration Ops</Eyebrow>
-            <h2 style={{ marginTop: "var(--space-2)", marginBottom: "var(--space-3)" }}>
-              Chọn 1 connector để xem chi tiết
-            </h2>
-            <p style={{ color: "var(--color-text-secondary)" }}>
-              Chọn một connector bên trái để xem health, backlog, recent runs và bước xử lý tiếp theo.
-            </p>
-          </div>
-        )}
+      <div
+        style={{
+          display: "flex",
+          gap: "var(--space-4)",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <Input
+          icon={<Search size={16} />}
+          placeholder="Tìm tên connector, hệ thống nguồn..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: 320 }}
+        />
+
+        <FilterSelect
+          value={statusFilter}
+          options={STATUS_FILTERS}
+          onChange={setStatusFilter}
+        />
+      </div>
+
+      <Card style={{ padding: 0, overflow: "hidden" }}>
+        <DataTable
+          columns={columns}
+          data={records}
+          rowKey={(r) => r.id}
+          onRowClick={(r) => navigate(`/operations/integration-ops/${r.id}`)}
+        />
       </Card>
-    </div>
-  );
-}
-
-function ConnectorDetail({ record }: { record: ConnectorHealthRecord }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-5)" }}>
-      <div>
-        <Eyebrow>Integration Ops</Eyebrow>
-        <h2 style={{ marginTop: "var(--space-2)", marginBottom: "var(--space-1)" }}>
-          {record.name}
-        </h2>
-        <div style={{ color: "var(--color-text-secondary)" }}>
-          {record.owner} • {record.lastRun}
-        </div>
-      </div>
-
-      <WarningBanner warningState={record.warningState} customText={record.nextAction} />
-
-      <section>
-        <Eyebrow>Sức khỏe kết nối</Eyebrow>
-        <div style={{ marginTop: "var(--space-3)", display: "grid", gap: "var(--space-3)" }}>
-          <DetailRow icon={<LayoutDashboard size={15} />} label="Trạng thái" value={record.statusLabel} />
-          <DetailRow icon={<Sparkles size={15} />} label="Owner" value={record.owner} />
-          <DetailRow icon={<Clock3 size={15} />} label="Lần chạy gần nhất" value={record.lastRun} />
-          <DetailRow icon={<ArrowRightLeft size={15} />} label="Success rate" value={record.successRate} />
-        </div>
-      </section>
-
-      <section>
-        <Eyebrow>Queue và backlog</Eyebrow>
-        <div style={{ marginTop: "var(--space-3)", display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "var(--space-3)" }}>
-          <InfoCell label="Retry" value={record.retryQueue} />
-          <InfoCell label="Dead-letter" value={record.deadLetter} />
-          <InfoCell label="Webhook" value={record.webhookBacklog} />
-        </div>
-      </section>
-
-      <section>
-        <Eyebrow>Domain phụ trách</Eyebrow>
-        <Card style={{ marginTop: "var(--space-3)", background: "var(--color-bg-surface)", padding: "var(--space-4)" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-            {record.sourceSystems.map((item) => (
-              <Badge key={item} label={item} color="var(--color-text-secondary)" bg="var(--color-bg-card)" />
-            ))}
-          </div>
-        </Card>
-      </section>
-
-      <section>
-        <Eyebrow>Recent runs</Eyebrow>
-        <div style={{ marginTop: "var(--space-3)", display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-          {record.recentRuns.map((run) => (
-            <div key={run.id} style={{ padding: "var(--space-4)", borderRadius: "var(--radius-md)", background: "var(--color-bg-surface)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: "var(--space-3)", alignItems: "flex-start" }}>
-                <div>
-                  <div style={{ fontWeight: 600 }}>{run.label}</div>
-                  <div style={{ color: "var(--color-text-secondary)", fontSize: "13px" }}>
-                    {run.statusLabel} • {run.startedAt}
-                  </div>
-                </div>
-                <Badge label={run.duration} color="var(--color-text-secondary)" bg="var(--color-bg-card)" />
-              </div>
-              <div style={{ marginTop: "var(--space-2)", color: "var(--color-text-secondary)", fontSize: "13px", lineHeight: 1.6 }}>
-                {run.note}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <Eyebrow>Thao tác</Eyebrow>
-        <Card style={{ marginTop: "var(--space-3)", background: "var(--color-bg-surface)", padding: "var(--space-4)" }}>
-          <div style={{ color: "var(--color-text-secondary)", lineHeight: 1.6, marginBottom: "var(--space-3)" }}>
-            {record.nextAction}
-          </div>
-          <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
-            <Button variant="secondary">Retry queue</Button>
-            <Button variant="secondary">Mở dead-letter</Button>
-          </div>
-        </Card>
-      </section>
-    </div>
-  );
-}
-
-function InfoCell({ label, value }: { label: string; value: string }) {
-  return (
-    <div style={{ padding: "var(--space-3)", borderRadius: "var(--radius-md)", background: "var(--color-bg-surface)" }}>
-      <div style={{ fontSize: "11px", color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-        {label}
-      </div>
-      <div style={{ marginTop: "var(--space-1)", fontWeight: 500 }}>{value}</div>
     </div>
   );
 }

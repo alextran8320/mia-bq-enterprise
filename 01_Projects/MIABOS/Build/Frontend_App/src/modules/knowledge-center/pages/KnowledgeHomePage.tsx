@@ -3,8 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Search, Upload, Plus, ChevronRight, ChevronDown,
   AlertTriangle, Clock, CheckCircle, FileText,
-  BookOpen, Database, ThumbsUp, ThumbsDown, X,
-  ArrowUpRight, Info, RotateCcw,
+  BookOpen, Database, X, RotateCcw,
+  ClipboardList, HelpCircle, Shield, MonitorPlay, FolderInput,
 } from "lucide-react";
 import { KNOWLEDGE_DOCS, FOLDER_CATEGORIES, isStaleDoc, type KnowledgeDoc, type FolderCategory } from "@/mocks/knowledge/documents";
 import { PUBLISHING_QUEUE } from "@/mocks/knowledge/publishingQueue";
@@ -18,15 +18,16 @@ const TYPE_CONFIG: Record<string, { bg: string; color: string }> = {
   "System Guide":{ bg: "#F0FDF4", color: "#15803D" },
 };
 
-// ── Folder tree ──────────────────────────────────────────────
-const FOLDER_ICONS: Record<FolderCategory, string> = {
-  SOP: "📋",
-  FAQ: "❓",
-  Policy: "📜",
-  "System Guide": "🔧",
-  Imported: "📥",
+// ── Folder tree icons ────────────────────────────────────────
+const FOLDER_ICONS: Record<FolderCategory, { icon: React.ReactNode; color: string }> = {
+  SOP: { icon: <ClipboardList size={13} />, color: "#6D28D9" },
+  FAQ: { icon: <HelpCircle size={13} />, color: "#0369A1" },
+  Policy: { icon: <Shield size={13} />, color: "#1D4ED8" },
+  "System Guide": { icon: <MonitorPlay size={13} />, color: "#15803D" },
+  Imported: { icon: <FolderInput size={13} />, color: "#94A3B8" },
 };
 
+// ── Folder tree ──────────────────────────────────────────────
 function FolderTree({
   selected,
   onSelect,
@@ -83,7 +84,7 @@ function FolderTree({
                 ? <ChevronDown size={12} style={{ color: "var(--color-text-tertiary)" }} />
                 : <ChevronRight size={12} style={{ color: "var(--color-text-tertiary)" }} />
               }
-              {FOLDER_ICONS[folder]} {folder}
+              <span style={{ color: FOLDER_ICONS[folder].color }}>{FOLDER_ICONS[folder].icon}</span> {folder}
             </span>
             <span style={{ fontSize: 11, background: "var(--color-bg-surface)", padding: "1px 6px", borderRadius: 10, color: "var(--color-text-tertiary)" }}>
               {counts[folder] ?? 0}
@@ -125,24 +126,36 @@ function FolderTree({
 }
 
 // ── Document row ─────────────────────────────────────────────
-function DocRow({ doc, selected, onClick }: { doc: KnowledgeDoc; selected: boolean; onClick: () => void }) {
+function DocRow({ doc, onClick }: { doc: KnowledgeDoc; onClick: () => void }) {
   const stale = isStaleDoc(doc);
   const effectiveStatus = stale && doc.status === "Published" ? "Stale" : doc.status;
   void effectiveStatus;
   const typeCfg = (TYPE_CONFIG[doc.type] ?? TYPE_CONFIG["FAQ"])!;
+  const folderCfg = FOLDER_ICONS[doc.folder as FolderCategory];
 
   return (
     <div
       onClick={onClick}
       style={{
-        display: "flex", alignItems: "center", gap: 12, padding: "10px 16px",
+        display: "flex", alignItems: "center", gap: 12, padding: "12px 16px",
         cursor: "pointer", borderBottom: "1px solid var(--color-border)",
-        background: selected ? "var(--color-primary-light)" : "transparent",
-        transition: "background 0.1s",
+        background: "transparent",
+        transition: "background 0.15s",
       }}
-      onMouseEnter={(e) => { if (!selected) (e.currentTarget as HTMLDivElement).style.background = "var(--color-bg-surface)"; }}
-      onMouseLeave={(e) => { if (!selected) (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
+      onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "var(--color-bg-surface)"; }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
     >
+      {/* Type icon */}
+      <div
+        style={{
+          width: 36, height: 36, borderRadius: "var(--radius-sm)",
+          background: typeCfg.bg, display: "flex", alignItems: "center", justifyContent: "center",
+          color: typeCfg.color, flexShrink: 0,
+        }}
+      >
+        {folderCfg ? folderCfg.icon : <FileText size={16} />}
+      </div>
+
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
           <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 4, background: typeCfg.bg, color: typeCfg.color }}>
@@ -167,191 +180,6 @@ function DocRow({ doc, selected, onClick }: { doc: KnowledgeDoc; selected: boole
         </div>
       </div>
       <ChevronRight size={14} style={{ color: "var(--color-text-tertiary)", flexShrink: 0 }} />
-    </div>
-  );
-}
-
-// ── Source Citation Block ─────────────────────────────────────
-function SourceCitationBlock({ doc }: { doc: KnowledgeDoc }) {
-  const daysSince = Math.floor((Date.now() - new Date(doc.lastUpdated).getTime()) / (1000 * 60 * 60 * 24));
-  const isOld = daysSince > doc.reviewCycleDays;
-  return (
-    <div style={{ background: isOld ? "#FEF2F2" : "#F0F9FF", border: `1px solid ${isOld ? "#FCA5A5" : "#BAE6FD"}`, borderRadius: "var(--radius-xs)", padding: "8px 12px", display: "flex", gap: 8, alignItems: "flex-start" }}>
-      <Info size={13} style={{ color: isOld ? "#B91C1C" : "#0369A1", marginTop: 1, flexShrink: 0 }} />
-      <div style={{ fontSize: 12, color: isOld ? "#7F1D1D" : "#0C4A6E" }}>
-        <strong>Nguồn:</strong> {doc.sourceType} &nbsp;·&nbsp;
-        <strong>Cập nhật:</strong> {new Date(doc.lastUpdated).toLocaleDateString("vi-VN")} &nbsp;·&nbsp;
-        <strong>Phụ trách:</strong> {doc.owner}
-        {isOld && <span style={{ marginLeft: 8, fontWeight: 600 }}>⚠ Chưa review {daysSince} ngày</span>}
-      </div>
-    </div>
-  );
-}
-
-// ── Feedback widget ───────────────────────────────────────────
-function FeedbackWidget({ docId: _docId }: { docId: string }) {
-  const [voted, setVoted] = useState<"up" | "down" | null>(null);
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <span style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>Nội dung hữu ích không?</span>
-      {(["up", "down"] as const).map((v) => (
-        <button
-          key={v}
-          onClick={() => setVoted(voted === v ? null : v)}
-          title={v === "up" ? "Hữu ích" : "Không hữu ích"}
-          style={{
-            display: "flex", alignItems: "center", justifyContent: "center",
-            width: 28, height: 28, borderRadius: "var(--radius-xs)", border: "1px solid var(--color-border)",
-            background: voted === v ? (v === "up" ? "#F0FDF4" : "#FEF2F2") : "var(--color-bg-card)",
-            color: voted === v ? (v === "up" ? "#15803D" : "#B91C1C") : "var(--color-text-tertiary)",
-            cursor: "pointer",
-          }}
-        >
-          {v === "up" ? <ThumbsUp size={13} /> : <ThumbsDown size={13} />}
-        </button>
-      ))}
-      {voted && <span style={{ fontSize: 11, color: "var(--color-text-tertiary)" }}>Cảm ơn phản hồi!</span>}
-    </div>
-  );
-}
-
-// ── Detail Panel ──────────────────────────────────────────────
-function DetailPanel({ doc, onClose }: { doc: KnowledgeDoc; onClose: () => void }) {
-  const navigate = useNavigate();
-  const stale = isStaleDoc(doc);
-  const supersededDoc = doc.supersededBy ? KNOWLEDGE_DOCS.find((d) => d.id === doc.supersededBy) : null;
-  const typeCfg = (TYPE_CONFIG[doc.type] ?? TYPE_CONFIG["FAQ"])!;
-
-  const steps = doc.type === "SOP"
-    ? doc.body.split("\n").filter(l => l.trim().match(/^Bước \d+/))
-    : [];
-  const nonStepBody = doc.type === "SOP"
-    ? doc.body.split("\n").filter(l => !l.trim().match(/^Bước \d+/)).join("\n")
-    : doc.body;
-
-  return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      {/* Header */}
-      <div style={{ padding: "14px 16px", borderBottom: "1px solid var(--color-border)", display: "flex", alignItems: "flex-start", gap: 10 }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-            <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 4, background: typeCfg.bg, color: typeCfg.color }}>
-              {doc.type}
-            </span>
-            <span style={{ fontSize: 11, color: "var(--color-text-tertiary)" }}>{doc.topic}</span>
-          </div>
-          <h2 style={{ fontSize: 15, fontWeight: 700, color: "var(--color-text-primary)", margin: 0, lineHeight: 1.4 }}>
-            {doc.title}
-          </h2>
-        </div>
-        <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-          <button
-            onClick={() => navigate(`/knowledge/${doc.id}`)}
-            title="Mở trang đầy đủ"
-            style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 10px", borderRadius: "var(--radius-xs)", border: "1px solid var(--color-border)", background: "var(--color-bg-card)", color: "var(--color-text-secondary)", fontSize: 12, cursor: "pointer" }}
-          >
-            <ArrowUpRight size={12} /> Mở
-          </button>
-          <button onClick={onClose} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: "var(--radius-xs)", border: "1px solid var(--color-border)", background: "var(--color-bg-card)", color: "var(--color-text-tertiary)", cursor: "pointer" }}>
-            <X size={13} />
-          </button>
-        </div>
-      </div>
-
-      {/* Scrollable content */}
-      <div style={{ flex: 1, overflow: "auto", padding: "14px 16px", display: "flex", flexDirection: "column", gap: 12 }}>
-
-        {/* Superseded banner */}
-        {doc.status === "Superseded" && supersededDoc && (
-          <div role="alert" style={{ display: "flex", gap: 8, background: "#FEF3C7", border: "1px solid #D97706", borderRadius: "var(--radius-xs)", padding: "8px 12px" }}>
-            <AlertTriangle size={13} style={{ color: "#D97706", flexShrink: 0, marginTop: 1 }} />
-            <div style={{ fontSize: 12, color: "#78350F" }}>
-              Tài liệu này đã được thay thế bởi{" "}
-              <button onClick={() => navigate(`/knowledge/${supersededDoc.id}`)} style={{ color: "var(--color-primary)", fontWeight: 600, background: "none", border: "none", cursor: "pointer", padding: 0, textDecoration: "underline", fontSize: 12 }}>
-                {supersededDoc.title}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Stale banner */}
-        {stale && doc.status !== "Superseded" && (
-          <div role="alert" style={{ display: "flex", gap: 8, background: "#FEF2F2", border: "1px solid #FCA5A5", borderRadius: "var(--radius-xs)", padding: "8px 12px" }}>
-            <AlertTriangle size={13} style={{ color: "#B91C1C", flexShrink: 0, marginTop: 1 }} />
-            <div style={{ fontSize: 12, color: "#7F1D1D" }}>
-              Tài liệu này chưa được review theo chu kỳ. Xác nhận với Knowledge Owner trước khi áp dụng.
-            </div>
-          </div>
-        )}
-
-        {/* Metadata block */}
-        <div style={{ background: "var(--color-bg-surface)", borderRadius: "var(--radius-xs)", padding: "10px 12px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 16px" }}>
-          {[
-            { label: "Phụ trách", value: doc.owner },
-            { label: "Hiệu lực", value: doc.effectiveDate },
-            { label: "Nguồn", value: doc.sourceType },
-            { label: "Phạm vi", value: doc.scope },
-          ].map(({ label, value }) => (
-            <div key={label}>
-              <span style={{ fontSize: 10, color: "var(--color-text-tertiary)", display: "block", marginBottom: 1 }}>{label}</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: "var(--color-text-primary)" }}>{value}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* SOP steps or body */}
-        {doc.type === "SOP" && steps.length > 0 ? (
-          <div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Các bước thực hiện</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {steps.map((step, i) => (
-                <div key={i} style={{ display: "flex", gap: 10, padding: "8px 12px", background: "var(--color-bg-card)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-xs)", borderLeft: "3px solid var(--color-primary)" }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "var(--color-primary)", minWidth: 16 }}>{i + 1}</span>
-                  <span style={{ fontSize: 13, color: "var(--color-text-primary)", lineHeight: 1.5 }}>
-                    {step.replace(/^Bước \d+:\s*/, "")}
-                  </span>
-                </div>
-              ))}
-            </div>
-            {nonStepBody.trim() && (
-              <div style={{ marginTop: 10, fontSize: 13, color: "var(--color-text-secondary)", lineHeight: 1.7, whiteSpace: "pre-line" }}>
-                {nonStepBody}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div style={{ fontSize: 13, lineHeight: 1.7, color: "var(--color-text-primary)", whiteSpace: "pre-line" }}>
-            {doc.body}
-          </div>
-        )}
-
-        {/* Source citation */}
-        <SourceCitationBlock doc={doc} />
-
-        {/* Related docs */}
-        {(() => {
-          const related = KNOWLEDGE_DOCS.filter(d => d.id !== doc.id && d.topic === doc.topic && d.status === "Published").slice(0, 3);
-          if (!related.length) return null;
-          return (
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Xem thêm</div>
-              {related.map(r => (
-                <button key={r.id} onClick={() => navigate(`/knowledge/${r.id}`)} style={{ display: "flex", alignItems: "center", gap: 6, width: "100%", textAlign: "left", padding: "6px 8px", borderRadius: "var(--radius-xs)", border: "none", background: "transparent", color: "var(--color-primary)", fontSize: 12, cursor: "pointer", marginBottom: 2 }}>
-                  <ChevronRight size={12} /> {r.title}
-                </button>
-              ))}
-            </div>
-          );
-        })()}
-      </div>
-
-      {/* Footer — feedback */}
-      <div style={{ padding: "10px 16px", borderTop: "1px solid var(--color-border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <FeedbackWidget docId={doc.id} />
-        <button style={{ fontSize: 11, color: "var(--color-text-tertiary)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>
-          Báo nội dung sai
-        </button>
-      </div>
     </div>
   );
 }
@@ -429,10 +257,10 @@ function SourceHealthPanel() {
 
 // ── Main page ─────────────────────────────────────────────────
 export function KnowledgeHomePage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [searchQ, setSearchQ] = useState("");
   const [selectedFolder, setSelectedFolder] = useState<FolderCategory | "all" | "queue" | "sources">("all");
-  const [selectedDoc, setSelectedDoc] = useState<KnowledgeDoc | null>(null);
   const [showImportBanner, setShowImportBanner] = useState(false);
 
   // section from URL param
@@ -462,7 +290,7 @@ export function KnowledgeHomePage() {
   return (
     <div style={{ display: "flex", height: "100%", overflow: "hidden", background: "var(--color-bg-page)" }}>
 
-      {/* ── Left: Folder tree (260px) ── */}
+      {/* ── Left: Folder tree ── */}
       <div style={{ width: 240, borderRight: "1px solid var(--color-border)", background: "var(--color-bg-card)", display: "flex", flexDirection: "column", flexShrink: 0 }}>
         <div style={{ padding: "14px 12px 8px", borderBottom: "1px solid var(--color-border)" }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
@@ -472,13 +300,13 @@ export function KnowledgeHomePage() {
         <div style={{ flex: 1, overflow: "auto", padding: "8px 8px" }}>
           <FolderTree
             selected={selectedFolder as FolderCategory | "all"}
-            onSelect={(f) => { setSelectedFolder(f as never); setSelectedDoc(null); }}
+            onSelect={(f) => { setSelectedFolder(f as never); }}
             counts={folderCounts}
           />
         </div>
       </div>
 
-      {/* ── Center: Content area ── */}
+      {/* ── Center: Content area (full width) ── */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}>
 
         {/* Command bar */}
@@ -566,8 +394,7 @@ export function KnowledgeHomePage() {
                       <DocRow
                         key={doc.id}
                         doc={doc}
-                        selected={selectedDoc?.id === doc.id}
-                        onClick={() => setSelectedDoc(selectedDoc?.id === doc.id ? null : doc)}
+                        onClick={() => navigate(`/knowledge/${doc.id}`)}
                       />
                     ))
                   )}
@@ -584,7 +411,7 @@ export function KnowledgeHomePage() {
                     {recentDocs.map(doc => (
                       <button
                         key={doc.id}
-                        onClick={() => setSelectedDoc(doc)}
+                        onClick={() => navigate(`/knowledge/${doc.id}`)}
                         style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", background: "var(--color-bg-card)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-xs)", cursor: "pointer", textAlign: "left" }}
                       >
                         <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 7px", borderRadius: 4, background: TYPE_CONFIG[doc.type]?.bg, color: TYPE_CONFIG[doc.type]?.color, whiteSpace: "nowrap" }}>{doc.type}</span>
@@ -599,13 +426,6 @@ export function KnowledgeHomePage() {
           )}
         </div>
       </div>
-
-      {/* ── Right: Detail panel (380px) ── */}
-      {selectedDoc && (
-        <div style={{ width: 380, borderLeft: "1px solid var(--color-border)", background: "var(--color-bg-card)", flexShrink: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
-          <DetailPanel doc={selectedDoc} onClose={() => setSelectedDoc(null)} />
-        </div>
-      )}
     </div>
   );
 }

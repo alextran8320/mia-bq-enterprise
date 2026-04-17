@@ -10,6 +10,23 @@ export type KnowledgeTopic =
 export type FolderCategory = "SOP" | "FAQ" | "Policy" | "System Guide" | "Imported";
 export type DocStatus = "Published" | "Pending Review" | "Stale" | "Superseded";
 
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface PolicySection {
+  heading: string;
+  content: string;
+}
+
+export interface GuideStep {
+  title: string;
+  description: string;
+  videoUrl?: string;
+  screenshotUrl?: string;
+}
+
 export interface KnowledgeDoc {
   id: string;
   title: string;
@@ -25,6 +42,12 @@ export interface KnowledgeDoc {
   sourceType: "SAP B1" | "KiotViet" | "Excel" | "Manual";
   scope: "Nội bộ" | "Store staff" | "Tất cả";
   supersededBy?: string;
+  // Type-specific structured content
+  faqItems?: FAQItem[];
+  policySections?: PolicySection[];
+  guideSteps?: GuideStep[];
+  guideVideoUrl?: string;
+  attachments?: { name: string; type: string; url: string }[];
 }
 
 export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
@@ -42,6 +65,16 @@ export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
     body: "Chiết khấu áp dụng cho đại lý cấp 1: 15% trên giá niêm yết. Đại lý cấp 2: 10%. Điều kiện: đơn hàng tối thiểu 50 triệu/tháng. Không áp dụng cùng các chương trình khuyến mãi khác.",
     sourceType: "SAP B1",
     scope: "Nội bộ",
+    policySections: [
+      { heading: "Phạm vi áp dụng", content: "Áp dụng cho tất cả đại lý cấp 1 và cấp 2 của Giày BQ trên toàn quốc, hiệu lực từ Q2/2026." },
+      { heading: "Mức chiết khấu", content: "Đại lý cấp 1: 15% trên giá niêm yết.\nĐại lý cấp 2: 10% trên giá niêm yết." },
+      { heading: "Điều kiện áp dụng", content: "Đơn hàng tối thiểu 50 triệu/tháng.\nKhông áp dụng cùng các chương trình khuyến mãi khác.\nThanh toán trong vòng 30 ngày kể từ ngày xuất hóa đơn." },
+      { heading: "Trường hợp loại trừ", content: "Sản phẩm đang trong đợt sale-off.\nSản phẩm limited edition.\nĐơn hàng dưới mức tối thiểu." },
+    ],
+    attachments: [
+      { name: "Bang_chiet_khau_Q2_2026.xlsx", type: "excel", url: "#" },
+      { name: "Hop_dong_dai_ly_mau.pdf", type: "pdf", url: "#" },
+    ],
   },
   {
     id: "knw-002",
@@ -72,6 +105,12 @@ export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
     body: "H: Sản phẩm hết hàng có thể đặt trước không?\nA: Có, khách có thể đặt trước với cọc 30%. Thời gian có hàng dự kiến 7-14 ngày làm việc.\n\nH: Thời gian giao hàng nội thành?\nA: 1-2 ngày làm việc. Ngoại thành: 3-5 ngày làm việc.",
     sourceType: "KiotViet",
     scope: "Tất cả",
+    faqItems: [
+      { question: "Sản phẩm hết hàng có thể đặt trước không?", answer: "Có, khách có thể đặt trước với cọc 30%. Thời gian có hàng dự kiến 7-14 ngày làm việc." },
+      { question: "Thời gian giao hàng nội thành?", answer: "1-2 ngày làm việc. Ngoại thành: 3-5 ngày làm việc." },
+      { question: "Phí giao hàng là bao nhiêu?", answer: "Nội thành TP.HCM/HN: miễn phí cho đơn từ 500K. Ngoại thành: 30,000đ/đơn." },
+      { question: "Có thể kiểm tra hàng trước khi nhận không?", answer: "Có, với đơn Ship COD khách được kiểm tra ngoại quan trước khi thanh toán." },
+    ],
   },
   {
     id: "knw-004",
@@ -87,6 +126,13 @@ export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
     body: "Đăng nhập: Mở trình duyệt, truy cập pos.kiotviet.vn. Nhập tài khoản và mật khẩu cửa hàng.\n\nTạo đơn hàng: Nhấn F2 hoặc biểu tượng '+'. Tìm sản phẩm theo mã vạch hoặc tên.\n\nXác nhận thanh toán và in hóa đơn.",
     sourceType: "Manual",
     scope: "Store staff",
+    guideVideoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    guideSteps: [
+      { title: "Đăng nhập hệ thống", description: "Mở trình duyệt, truy cập pos.kiotviet.vn. Nhập tài khoản và mật khẩu cửa hàng được cấp.", screenshotUrl: "https://placehold.co/600x340/EFF6FF/2563EB?text=Login+Screen" },
+      { title: "Tạo đơn hàng mới", description: "Nhấn phím F2 hoặc click biểu tượng '+' trên thanh công cụ. Hệ thống sẽ mở form đơn hàng mới.", screenshotUrl: "https://placehold.co/600x340/F0FDF4/16A34A?text=New+Order+Form" },
+      { title: "Tìm và thêm sản phẩm", description: "Quét mã vạch bằng scanner hoặc nhập tên sản phẩm vào ô tìm kiếm. Click chọn sản phẩm để thêm vào đơn.", screenshotUrl: "https://placehold.co/600x340/FEF3C7/D97706?text=Product+Search" },
+      { title: "Thanh toán và in hóa đơn", description: "Chọn phương thức thanh toán (Tiền mặt / Chuyển khoản / Quẹt thẻ). Nhấn 'Thanh toán' và in hóa đơn cho khách.", screenshotUrl: "https://placehold.co/600x340/F5F3FF/7C3AED?text=Payment+Screen" },
+    ],
   },
   {
     id: "knw-005",
@@ -103,6 +149,9 @@ export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
     sourceType: "Manual",
     scope: "Tất cả",
     supersededBy: "knw-006",
+    policySections: [
+      { heading: "Thời hạn bảo hành", content: "Lỗi đế: 6 tháng.\nLỗi da: 3 tháng." },
+    ],
   },
   {
     id: "knw-006",
@@ -118,6 +167,12 @@ export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
     body: "Bảo hành 12 tháng cho lỗi đế do sản xuất. Bảo hành 6 tháng cho lỗi da do sản xuất. Không bảo hành lỗi do sử dụng không đúng cách. Xuất trình hóa đơn khi yêu cầu bảo hành.",
     sourceType: "Manual",
     scope: "Tất cả",
+    policySections: [
+      { heading: "Thời hạn bảo hành", content: "Lỗi đế do sản xuất: 12 tháng kể từ ngày mua.\nLỗi da do sản xuất: 6 tháng kể từ ngày mua." },
+      { heading: "Điều kiện bảo hành", content: "Xuất trình hóa đơn mua hàng hợp lệ.\nSản phẩm còn nguyên tem, nhãn mác.\nLỗi phải được xác định là do sản xuất." },
+      { heading: "Trường hợp không bảo hành", content: "Lỗi do sử dụng không đúng cách.\nSản phẩm đã qua sửa chữa bên ngoài.\nHết thời hạn bảo hành.\nKhông có hóa đơn mua hàng." },
+      { heading: "Quy trình bảo hành", content: "1. Mang sản phẩm đến cửa hàng BQ gần nhất.\n2. Nhân viên kiểm tra và xác nhận lỗi.\n3. Chuyển về trung tâm bảo hành trong 3 ngày.\n4. Trả hàng sau bảo hành trong 7-10 ngày làm việc." },
+    ],
   },
   {
     id: "knw-007",
@@ -133,6 +188,11 @@ export const KNOWLEDGE_DOCS: KnowledgeDoc[] = [
     body: "Hạng Bạc (chi tiêu 5-15tr/năm): chiết khấu 5%. Hạng Vàng (15-30tr/năm): chiết khấu 8%. Hạng Kim Cương (>30tr/năm): chiết khấu 12% + ưu tiên hàng mới.",
     sourceType: "Manual",
     scope: "Tất cả",
+    policySections: [
+      { heading: "Hạng thành viên & Chiết khấu", content: "Hạng Bạc (chi tiêu 5-15 triệu/năm): chiết khấu 5%.\nHạng Vàng (chi tiêu 15-30 triệu/năm): chiết khấu 8%.\nHạng Kim Cương (chi tiêu >30 triệu/năm): chiết khấu 12% + ưu tiên hàng mới." },
+      { heading: "Điều kiện duy trì hạng", content: "Tổng chi tiêu trong 12 tháng gần nhất đạt mức quy định.\nĐánh giá lại mỗi quý.\nKhách hàng bị hạ hạng nếu không đạt mức chi tiêu tối thiểu trong 2 quý liên tiếp." },
+      { heading: "Quyền lợi bổ sung", content: "Hạng Kim Cương: Mời sự kiện VIP, quà sinh nhật, tư vấn riêng.\nHạng Vàng: Quà sinh nhật, ưu tiên đổi trả.\nHạng Bạc: Tích điểm đổi quà." },
+    ],
   },
   {
     id: "knw-008",

@@ -11,7 +11,9 @@ export function OrderTimeline({ orders }: { orders: OrderSummary[] }) {
     return (
       <Card>
         <h3 style={{ marginBottom: "var(--space-3)" }}>Lịch sử đơn hàng</h3>
-        <p style={{ color: "var(--color-text-tertiary)", fontSize: "13px" }}>Chưa có đơn hàng.</p>
+        <p style={{ color: "var(--color-text-tertiary)", fontSize: "13px" }}>
+          Chưa có đơn hàng.
+        </p>
       </Card>
     );
   }
@@ -19,7 +21,13 @@ export function OrderTimeline({ orders }: { orders: OrderSummary[] }) {
   return (
     <Card>
       <h3 style={{ marginBottom: "var(--space-4)" }}>Lịch sử đơn hàng</h3>
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--space-4)",
+        }}
+      >
         {orders.map((o) => (
           <div
             key={o.id}
@@ -42,22 +50,41 @@ export function OrderTimeline({ orders }: { orders: OrderSummary[] }) {
                 flexShrink: 0,
               }}
             >
-              <ShoppingBag size={16} style={{ color: "var(--color-primary)" }} />
+              <ShoppingBag
+                size={16}
+                style={{ color: "var(--color-primary)" }}
+              />
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 500, fontSize: "13px" }}>
                 {o.id} — {o.channel}
               </div>
-              <div style={{ fontSize: "11px", color: "var(--color-text-tertiary)" }}>{o.date}</div>
+              <div
+                style={{
+                  fontSize: "11px",
+                  color: "var(--color-text-tertiary)",
+                }}
+              >
+                {o.date}
+              </div>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontWeight: 600, fontFamily: "var(--font-mono)", fontSize: "13px" }}>
+              <div
+                style={{
+                  fontWeight: 600,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "13px",
+                }}
+              >
                 {formatVND(o.total)}
               </div>
               <div
                 style={{
                   fontSize: "11px",
-                  color: o.status === "Returned" ? "var(--color-error)" : "var(--color-success)",
+                  color:
+                    o.status === "Returned"
+                      ? "var(--color-error)"
+                      : "var(--color-success)",
                 }}
               >
                 {o.status}

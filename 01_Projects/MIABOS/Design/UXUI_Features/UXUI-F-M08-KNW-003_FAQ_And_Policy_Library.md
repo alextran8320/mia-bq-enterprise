@@ -9,7 +9,7 @@
 **Design System Reference**: [`Design/Design_System.md`](../Design_System.md)
 **Save to**: `Design/UXUI_Features/UXUI-F-M08-KNW-003_FAQ_And_Policy_Library.md`
 **Date**: 2026-04-16
-**Last Updated By**: Claude Code (claude-sonnet-4-6)
+**Last Updated By**: A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI, incorporating research 2026-04-17)
 **Last Reviewed By**: A06 UI/UX Agent · A05 Tech Lead · A01 PM Agent
 **Approval Required**: PM Agent
 **Approved By**: A01 PM Agent
@@ -43,7 +43,7 @@
 |--------|--------|---------|
 | Search → document found | ≤ 30s | Đo từ mở library đến đọc document |
 | No-result rate | ≤ 20% searches | Tỉ lệ search không ra kết quả |
-| Feedback submission | ≥ 5% of no-result | Tỉ lệ user báo gap sau no-result |
+| Feedback submission | ≥ 5% of no-result | Tỉ lệ user gửi phản hồi/escalation sau no-result |
 
 ### Failure Indicators
 
@@ -51,6 +51,8 @@
 - User mở document nhưng không tìm được rule chính trong 10 giây
 - User share link document nhưng link hết hạn hoặc sai version
 - User thấy document deprecated nhưng không biết có bản mới
+- User không thấy hình ảnh/bảng/attachment trong tài liệu đã import
+- User phải nhớ nhiều route riêng thay vì vào một Knowledge Center chung
 
 ---
 
@@ -58,7 +60,7 @@
 
 ### Purpose
 
-Thư viện self-service cho nhân viên nội bộ tra cứu FAQ, SOP, Policy, System Guide theo domain và role. Entry point cả từ navigation và từ AI citation trong M09/M10.
+Thư viện self-service là section trong page chung `/knowledge`, cho nhân viên nội bộ tra cứu FAQ, SOP, Policy, System Guide theo folder/category, knowledge topic, và role. Entry point từ navigation, cây nội dung, global search, và từ source reference trong M09/M10.
 
 ### User Persona
 
@@ -68,12 +70,32 @@ Nhân viên CSKH hoặc cửa hàng BQ — đang phục vụ khách, cần tra n
 
 ```
 Là nhân viên CSKH tại Giày BQ,
-Tôi muốn tìm nhanh chính sách đổi trả hoặc SOP xử lý khiếu nại
-trong thư viện tri thức,
+Tôi muốn tìm nhanh chính sách đổi trả hoặc SOP xử lý khiếu nại trong Trung tâm tri thức,
 Để trả lời khách chính xác mà không phải nhắn tin hỏi leader.
 ```
 
-### Linked Artifacts
+### Linked Artifacts — Research Compliance
+
+> Spec này phải tuân thủ 4 Research docs đã được Business Owner approve ngày 2026-04-17:
+
+| Research Doc | Link | Key Principles Applied |
+|-------------|------|----------------------|
+| Internal Chatbot Concept | [RES-M08-KNW_Internal_Chatbot_Concept.md](../../Research/Knowledge_Center/RES-M08-KNW_Internal_Chatbot_Concept.md) | Library là Mode B (Guided Browse) và Mode C (Exploration) — bổ sung cho chatbot Mode A |
+| UX Patterns & IA | [RES-M08-KNW_UX_Patterns_And_IA.md](../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md) | Quick Reply Chips; Step-by-Step Guided Flow (SOP); Stale Warning; Human Escalation path |
+| Layout & Rich Document | [RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md](../../Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md) | Right sidebar TOC cho article dài; Callout blocks; Toggle/accordion FAQ; Related Articles block |
+
+### UX Patterns bắt buộc trong spec này
+
+| Pattern | Implemented ở | Status |
+|---------|--------------|--------|
+| Quick Reply Chips (related topics sau search) | Search result page | ⚠ Cần verify A07 |
+| Step-by-step Guided Flow cho SOP | SOP document view | ✅ per SRS SOP Step model |
+| Stale Content Warning | Document detail badge/banner | ✅ |
+| Human Escalation Path (no dead-end) | No-result state + deprecated state | ✅ |
+| Right Sidebar TOC (article dài) | Document detail view | ⚠ Cần thêm nếu chưa có |
+| Feedback Loop (thumbs up/down) | Document detail view | ⚠ Cần bổ sung |
+
+### Linked SRS Artifacts
 
 | Artifact | Location | Status |
 |----------|----------|--------|
@@ -85,13 +107,13 @@ trong thư viện tri thức,
 
 | # | Screen Name | Route/Path | Purpose | Notes |
 |---|-------------|-----------|---------|-------|
-| S1 | Library Landing | `/knowledge/library` | Search bar + quick topics + recent | Entry point |
-| S2 | Search Results | `/knowledge/library?q=...` | Danh sách kết quả với badges | Filter + sort |
-| S3 | Document Detail | `/knowledge/library/:id` | Nội dung đầy đủ + metadata | Read view |
-| S4 | No-Result State | State trong S2 | Không tìm thấy kết quả | Guidance + gap report |
+| S1 | Library Section | `/knowledge` | Search + folder tree + quick topics + recent docs trong workspace chung | Entry section |
+| S2 | Search Results Section | `/knowledge?q=...` | Danh sách kết quả với badges trong center column | Filter + sort |
+| S3 | Document Detail Panel | `/knowledge/:id` | Nội dung đầy đủ + metadata + rich content trong right panel/drawer | Read view |
+| S4 | No-Result State | State trong S2 | Không tìm thấy kết quả | Guidance + contact/escalation path |
 | S5 | Restricted State | State trong S3 | Không đủ quyền xem full content | Access info |
 | S6 | Superseded State | State trong S3 | Đang xem bản cũ | Banner + redirect |
-| S7 | FAQ Topic List | `/knowledge/library/faqs` | Nhóm FAQ theo topic | Browse |
+| S7 | FAQ Topic Section | `/knowledge?category=FAQ` | Nhóm FAQ theo topic trong cây nội dung | Browse |
 
 ---
 
@@ -101,12 +123,12 @@ trong thư viện tri thức,
 
 | Step | User Action | System Response | Field Visibility | Notes |
 |------|------------|-----------------|-----------------|-------|
-| 1 | Mở library hoặc click từ AI citation | S1 Library Landing với search bar focus | Search bar, quick topics, popular docs | Entry |
+| 1 | Mở `/knowledge` hoặc click từ AI source reference | S1 Library Section với search bar và folder tree | Search bar, folder tree, quick topics, popular docs | Entry |
 | 2 | Gõ keyword (VD: "đổi trả") | Live search suggestions sau 300ms | Suggested results | Type |
-| 3 | Press Enter hoặc chọn suggestion | S2 Search Results với filters | Result list + filter chips | Results |
+| 3 | Press Enter hoặc chọn suggestion | S2 Search Results trong center column | Result list + filter chips | Results |
 | 4 | Áp thêm filter (document type, owner department) | List update | Filter applied | Narrow |
-| 5 | Click document | S3 Document Detail | Rule chính ở đầu, scope, ngoại lệ, body | Read |
-| 6 | Share link hoặc gửi feedback | Copy link hoặc mở gap report form | — | Done |
+| 5 | Click document | S3 Document Detail Panel cập nhật trong cùng page | Rule chính ở đầu, scope, ngoại lệ, body, rich content | Read |
+| 6 | Share link hoặc mở contact/escalation path | Copy link hoặc xem hướng dẫn liên hệ owner | — | Done |
 
 ### Decision Points & Branching
 
@@ -115,38 +137,36 @@ trong thư viện tri thức,
 | Step 3 | Không có kết quả | S4 No-Result State |
 | Step 5 | User không đủ quyền xem full | S5 Restricted State |
 | Step 5 | Document bị superseded | S6 Superseded banner |
-| Step 1 | Đến từ AI citation | S3 trực tiếp, neo đúng version answer đã dùng |
+| Step 1 | Đến từ AI source reference | S3 trực tiếp, neo đúng version answer đã dùng |
 
 ### Progressive Disclosure Rules
 
 - **Required**: Rule chính, scope áp dụng — luôn ở đầu S3
 - **Optional**: Ngoại lệ, chi tiết đầy đủ — ở giữa S3
-- **Advanced**: Version history, source links — collapse ở cuối S3
+- **Advanced**: Version history, source links, attachment list — collapse ở cuối S3
 
 ---
 
 ## 3. Visual Specification (Per Screen)
 
-### Screen S1: Library Landing
+### Screen S1: Library Section In `/knowledge`
 
 #### Layout (ASCII Wireframe)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ PageHeader: "Thư viện tri thức"                             │
+│ /knowledge workspace                                         │
+│ Left tree: SOP / FAQ / Policy / System Guide / Imported      │
 ├─────────────────────────────────────────────────────────────┤
-│ 🔍 [Tìm kiếm tài liệu, FAQ, chính sách...]                 │
-├─────────────────────────────────────────────────────────────┤
-│ Chủ đề phổ biến:                                           │
-│ [Đổi trả] [Bảo hành] [Giá & CTKM] [SOP cửa hàng]          │
-│ [Đặt hàng online] [Hướng dẫn hệ thống]                     │
-├─────────────────────────────────────────────────────────────┤
+│ Center section: Library                                      │
+│ 🔍 [Tìm kiếm tài liệu, FAQ, chính sách...]                  │
+│ Chủ đề: [Đổi trả] [Bảo hành] [Giá & CTKM] [SOP cửa hàng]   │
 │ Cập nhật gần đây:                                           │
-│ [Policy] Chính sách đổi trả Q2   → CSKH, Ecomm  14/4      │
-│ [SOP]    Kiểm hàng đầu ca        → Cửa hàng     13/4      │
+│ [Policy] Chính sách đổi trả Q2   → CSKH, Ecomm  14/4       │
+│ [SOP]    Kiểm hàng đầu ca        → Cửa hàng     13/4       │
 │ [FAQ]    FAQ đặt hàng online     → Ecommerce    12/4       │
 ├─────────────────────────────────────────────────────────────┤
-│ Xem thêm: [FAQ theo chủ đề →]                              │
+│ Right panel: preview document hoặc trạng thái chọn folder     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -224,13 +244,14 @@ trong thư viện tri thức,
 │ • Hàng sale giảm > 50% không áp dụng                       │
 ├─────────────────────────────────────────────────────────────┤
 │ Nội dung đầy đủ [...]                                       │
+│ [Ảnh minh họa / bảng / attachment nếu tài liệu import có]  │
 ├─────────────────────────────────────────────────────────────┤
 │ Tài liệu liên quan:                                        │
 │ [SOP xử lý đổi trả] [FAQ đổi trả online]                   │
 ├─────────────────────────────────────────────────────────────┤
 │ Nguồn: SAP B1 ✓ | KiotViet ✓ [Xem thêm ▼]                 │
 │ Phiên bản: v2.1 (hiện tại) | v2.0 | v1.3 [Xem lịch sử ▼] │
-│                           [Báo thiếu / sai thông tin]       │
+│                                      [Gửi phản hồi]         │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -244,7 +265,8 @@ trong thư viện tri thức,
 | Related docs | Body Small 13px/500, --color-primary link | Max 3 |
 | Source badge | Caption 11px/400 + icon | Check ✓ = fresh, ⚠ = warning |
 | Copy link button | Ghost button, Caption 12px/500 | Copy to clipboard |
-| Gap report link | Text link, Caption 12px/400, --color-text-secondary | Bottom |
+| Feedback link | Text link, Caption 12px/400, --color-text-secondary | Bottom |
+| Rich media block | Figure/table/attachment row | Render inline images, imported tables, and original file links |
 
 ---
 
@@ -259,7 +281,7 @@ trong thư viện tri thức,
 │ • Lọc theo lĩnh vực: CSKH                                  │
 │ • Xem FAQ theo chủ đề                                      │
 │                                                             │
-│ [Báo thiếu tài liệu →]                                    │
+│ [Gửi phản hồi →]                                          │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -292,11 +314,12 @@ trong thư viện tri thức,
 
 | UI Element | API Endpoint | Field | Format |
 |-----------|-------------|-------|--------|
-| Search | `GET /mia/knowledge/library` | `q`, `domain`, `document_type`, `department`, `freshness_status` | Query params |
+| Search | `POST /mia/knowledge/query` | `q`, `knowledge_topic`, `document_type`, `department`, `freshness_status`, `folder_id` | Query params/body |
+| Folder tree | `GET /mia/knowledge/tree` | `category`, `folder`, `counts` | Tree |
 | Results | Response | `document_type`, `title`, `owner_department`, `effective_date`, `freshness_status` | Array |
-| Document detail | `GET /mia/knowledge/policies/:id` | `detail`, `metadata`, `related_docs`, `access_flags`, `version_reference` | Object |
+| Document detail | `GET /mia/knowledge/documents/:id` | `detail`, `metadata`, `related_docs`, `access_flags`, `version_reference`, `assets[]` | Object |
 | FAQ list | `GET /mia/knowledge/faqs` | `topic_grouping`, `summary_answers`, `linked_documents` | Object |
-| Feedback | `POST /mia/knowledge/library-feedback` | `document_id`, `feedback_type`, `comment`, `entry_point` | POST body |
+| SOP steps | `GET /mia/knowledge/documents/:id` | `sop_steps[]` with `actor`, `action`, `expected_output`, `exception_note` | Array |
 
 ---
 
@@ -330,17 +353,19 @@ trong thư viện tri thức,
 
 | Error ID | At Step | Error Description | System Assistance | Recovery Action |
 |----------|---------|-------------------|-------------------|----------------|
-| E1 | Step 3 | No result | S4 với keyword suggestions và gap report | User báo gap hoặc thử lại |
+| E1 | Step 3 | No result | S4 với keyword suggestions và contact/escalation path | User liên hệ owner hoặc thử lại |
 | E2 | Step 5 | Access restricted | S5 với hướng dẫn xin quyền | Liên hệ PM |
 | E3 | Step 5 | Document đã superseded | S6 banner với link sang mới | Click link mới |
 | E4 | Step 6 | Copy link fail | Toast "Không thể copy. Hãy copy thủ công." + URL text | Hiện URL rõ |
+| E5 | Step 5 | Imported image/table/attachment missing | Warning block trong detail panel | Mở asset list hoặc báo owner xử lý |
 
 ### Dead-End Prevention Checklist
 
-- [x] No-result state gợi ý keyword + gap report — không để user bí
+- [x] No-result state gợi ý keyword + contact/escalation path — không để user bí
 - [x] Restricted state giải thích rõ + hướng dẫn tiếp theo
 - [x] Superseded state dẫn sang version mới ngay
 - [x] Mọi document có related docs để user tiếp tục browse
+- [x] Rich document không mất hình ảnh/bảng/attachment âm thầm
 
 ---
 
@@ -354,13 +379,14 @@ trong thư viện tri thức,
 | Recent label | Cập nhật gần đây | 20 chars |
 | No-result title | Không tìm thấy kết quả cho "[keyword]" | 40+keyword |
 | No-result suggest | Bạn có thể thử: | 20 chars |
-| Gap report link | Báo thiếu tài liệu | 22 chars |
+| Feedback link | Gửi phản hồi | 15 chars |
 | Restricted title | Bạn không có quyền xem tài liệu này | 45 chars |
 | Superseded banner | Đây không phải phiên bản mới nhất. | 40 chars |
 | Superseded CTA | Xem phiên bản mới nhất | 25 chars |
 | Copy link button | Copy link | 10 chars |
 | Copy success | Đã copy link thành công | 25 chars |
-| Feedback button | Báo thiếu / sai thông tin | 30 chars |
+| Feedback button | Gửi phản hồi | 15 chars |
+| Missing asset warning | Tài liệu có nội dung chưa tải được. | 38 chars |
 
 ---
 
@@ -385,6 +411,8 @@ trong thư viện tri thức,
 - [x] Superseded banner: `role="alert"` để screen reader đọc
 - [x] Restricted state: không hiển thị hidden content với screen reader
 - [x] Related docs links: descriptive text, không phải "xem thêm"
+- [x] Inline images có alt text/caption nếu source có dữ liệu; nếu thiếu, vẫn có filename hoặc context label
+- [x] Folder tree inherited từ KNW-001 phải keyboard navigable theo tree view pattern
 
 ---
 
@@ -405,22 +433,23 @@ trong thư viện tri thức,
 
 ## 10. Pre-Delivery Checklist (A07)
 
-- [ ] Library landing với search focus và quick topics
+- [ ] Library section trong `/knowledge` với search focus, folder tree, quick topics
 - [ ] Live search suggestions (debounce 300ms)
 - [ ] Search results với freshness badges
 - [ ] Filter by type và department
 - [ ] Document detail: rule chính ở đầu, progressive disclosure
-- [ ] No-result state với keyword suggestions + gap report
+- [ ] No-result state với keyword suggestions + contact/escalation path
 - [ ] Restricted state với hướng dẫn
 - [ ] Superseded banner với link sang version mới
 - [ ] Copy link to clipboard
-- [ ] Feedback gap report form
-- [ ] FAQ topic list (/knowledge/library/faqs)
+- [ ] SOP step display trong document detail khi document type = SOP
+- [ ] FAQ topic section trong `/knowledge?category=FAQ`
+- [ ] Rich content render: image/table/attachment trong document detail
 - [ ] Responsive: filters collapse ở mobile; single column
 - [ ] 100% Vietnamese copy
 - [ ] `prefers-reduced-motion` handled
 - [ ] Accessibility: role="search", headings hierarchy, aria-live
 
-**A06 Design Sign-Off**: Approved (2026-04-17) — Taxonomy theo domain (không phải persona); desktop-first; không tách public-safe FAQ ra riêng; no-result state có gap-report link đủ tốt.
-**A05 Tech Sign-Off**: Approved (2026-04-17) — Search với debounce 300ms standard; scope filter = badge-based không cần ACL phức tạp cho FE Preview; domain menu static data.
+**A06 Design Sign-Off**: Approved (2026-04-17) — Library là section trong `/knowledge`; taxonomy theo knowledge topic, không dùng product/category taxonomy của Catalog & Commerce; desktop-first; rich content render required; no-result state dùng contact/escalation path.
+**A05 Tech Sign-Off**: Approved (2026-04-17) — Search với debounce 300ms standard; scope filter = badge-based không cần ACL phức tạp cho FE Preview; knowledge topic menu static data.
 **PM Gate**: Approved (2026-04-17) — Taxonomy và mobile scope đã chốt. Ready for A07 FE build (mock/stub only).

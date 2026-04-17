@@ -1,14 +1,14 @@
 # PRD: Knowledge Documents and Source Governance
 
-**Status**: Draft
+**Status**: Draft — Research Approved, Pending Business Owner PRD Approval
 **Owner**: A02 Product Owner Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-15
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document
-**Blocking Reason**: Chưa chốt source types, freshness SLA theo nguồn, và rule source nào được phép cho internal AI vs external AI
+**Blocking Reason**: Chưa chốt final external exposure boundary
 **Project**: MIABOS
 **Module ID**: M08
 **Phase**: PB-02 / PB-03
@@ -22,9 +22,9 @@
 
 ## 0. Executive Summary
 
-- What is being proposed: Xây lớp `Source Governance` để Knowledge Center biết nguồn nào đáng tin, còn mới, được phép cho kênh nào, và conflict nào cần xử lý.
+- What is being proposed: Xây lớp `Source Governance` như section `Source Health` trong `/knowledge`, để Knowledge Center biết nguồn nào đáng tin, còn mới, được phép cho kênh/persona nào, và tài liệu/assets nào đang phụ thuộc vào nguồn đó.
 - Why now: BQ có tri thức và dữ liệu rải ở SAP B1, Haravan, KiotViet, Excel, và tài liệu nội bộ; không có source governance thì AI sẽ mất trust rất nhanh.
-- Expected business and user outcome: AI chỉ dùng đúng nguồn được phép, stale/conflict được phát hiện sớm, và PM/Ops kiểm soát được trust layer.
+- Expected business and user outcome: AI chỉ dùng đúng nguồn được phép, stale/restricted source được phát hiện sớm, và PM/Ops kiểm soát được trust layer.
 - Recommended decision: Approve source governance như P0 foundation cùng `Knowledge Core`, nhưng giữ `Draft` đến khi source types và freshness policy được chốt.
 
 ## 1. Business Context
@@ -35,14 +35,15 @@ BQ có nhiều nguồn khác nhau cho tri thức và dữ liệu. Requirement pa
 
 ### 1.2 Problem Statement
 
-Nếu không có source registry và rule trust/freshness, cùng một domain knowledge có thể bị trả từ các nguồn mâu thuẫn hoặc đã cũ, đặc biệt ở pricing, CTKM, và hướng dẫn vận hành.
+Nếu không có source registry và rule trust/freshness, cùng một knowledge topic có thể bị trả từ nguồn đã cũ hoặc chưa được phép, đặc biệt ở pricing policy, CTKM, và hướng dẫn vận hành. Dữ liệu sản phẩm/tồn/giá/đơn đã nằm ở Catalog & Commerce và hệ nguồn; Knowledge Center chỉ lưu source metadata/linking cho tài liệu tri thức.
 
 ### 1.3 Why This Matters
 
 Source governance giúp:
 - xác định nguồn nào được phép dùng
-- phát hiện `stale` và `conflict`
+- phát hiện `stale` và `restricted source`
 - phân biệt source cho `internal AI` và `external AI`
+- nhìn được tài liệu import/hình ảnh/attachment nào bị ảnh hưởng khi source stale/restricted
 
 ### 1.4 Why Now
 
@@ -52,17 +53,17 @@ Nếu để source governance sau khi AI đã vận hành, đội dự án sẽ 
 
 | Persona | Role | Primary Pain | Desired Outcome | Priority |
 |---------|------|--------------|-----------------|----------|
-| PM / Governance | Người kiểm soát trust layer | Không biết nguồn nào đang được AI dùng | Có source registry, rule, stale/conflict view | P0 |
+| PM / Governance | Người kiểm soát trust layer | Không biết nguồn nào đang được AI dùng | Có source registry, rule, stale/restricted view | P0 |
 | Knowledge Owner | Người gắn tài liệu với nguồn | Khó chứng minh tài liệu đến từ đâu | Có source link và owner rõ | P0 |
-| Ops / Reviewer | Người kiểm tra vận hành | Khó phát hiện nguồn cũ / mâu thuẫn | Có alert và corrective-action path | P1 |
+| Ops / Reviewer | Người kiểm tra vận hành | Khó phát hiện nguồn cũ hoặc nguồn bị hạn chế | Có alert và corrective-action path | P1 |
 
 ## 3. Jobs To Be Done
 
 | Persona | Job To Be Done | Current Friction | Product Opportunity |
 |---------|----------------|------------------|---------------------|
-| PM / Governance | Biết nguồn nào được AI dùng và vì sao | Không có registry / rule rõ | Source registry + rule engine |
-| Knowledge Owner | Gắn knowledge với nguồn đáng tin | Metadata và ownership mơ hồ | Bắt buộc owner / source type / trust level |
-| Ops / Reviewer | Phát hiện stale / conflict trước khi lan ra runtime | Không có dashboard/case rõ | Freshness board + conflict case list |
+| PM / Governance | Biết nguồn nào được AI dùng và vì sao | Không có registry / rule rõ | Source registry + rule engine trong `/knowledge` |
+| Knowledge Owner | Gắn knowledge/assets với nguồn đáng tin | Metadata và ownership mơ hồ | Bắt buộc owner / source type / trust level |
+| Ops / Reviewer | Phát hiện stale/restricted source trước khi lan ra runtime | Không có health view rõ | Freshness board + source health status |
 
 ## 4. User Task Flows  ⚠ Mandatory
 
@@ -70,19 +71,19 @@ Nếu để source governance sau khi AI đã vận hành, đội dự án sẽ 
 
 | Step | Task | Task Type | Success Indicator |
 |------|------|-----------|------------------|
-| 1 | Đăng ký hoặc rà soát source trong registry | Configuration | Source có metadata đầy đủ |
+| 1 | Mở `/knowledge`, vào section `Source Health`, đăng ký hoặc rà soát source trong registry | Configuration | Source có metadata đầy đủ |
 | 2 | Cấu hình trust level, freshness rule, allowed channel | Configuration | Rule áp vào đúng source |
-| 3 | Xem stale / conflict cases | Reporting | Thấy rõ nguồn nào có vấn đề |
-| 4 | Quyết định restrict / resolve / escalate | Exception Handling | Runtime chỉ dùng nguồn safe |
+| 3 | Xem stale/restricted source health | Reporting | Thấy rõ nguồn nào có vấn đề |
+| 4 | Quyết định restrict/unrestrict hoặc escalate ngoài M08 | Exception Handling | Runtime chỉ dùng nguồn safe |
 
 ### Knowledge Owner
 
 | Step | Task | Task Type | Success Indicator |
 |------|------|-----------|------------------|
-| 1 | Liên kết knowledge item với source | Configuration | Document có source hợp lệ |
+| 1 | Liên kết knowledge item và imported assets với source | Configuration | Document có source hợp lệ |
 | 2 | Kiểm tra source còn active và đủ trust không | Quick Action | Không link nhầm source stale |
 | 3 | Cập nhật source note khi có thay đổi | Configuration | Metadata luôn mới |
-| 4 | Phối hợp xử lý conflict nếu bị cảnh báo | Exception Handling | Conflict được resolve trước publish |
+| 4 | Phối hợp xử lý source health warning nếu bị cảnh báo | Exception Handling | Source được cập nhật hoặc restrict trước runtime |
 
 ## 5. Product Goals and Success Metrics
 
@@ -90,7 +91,7 @@ Nếu để source governance sau khi AI đã vận hành, đội dự án sẽ 
 |------|--------------|----------|--------|--------|
 | Chuẩn hóa source ownership | `% source có owner + trust rule + freshness rule` | Chưa đo | `100%` | `knowledge_source_registry` |
 | Giảm rủi ro source stale | `% source stale vượt SLA` | Chưa đo | `<= 10%` | `M12 / freshness monitor` |
-| Kiểm soát conflict | `open conflict backlog` | Chưa đo | `< 5 case P1 kéo dài > 7 ngày` | `knowledge_conflict_case` |
+| Giảm rủi ro nguồn bị hạn chế | `% source restricted không được runtime dùng` | Chưa đo | `100%` | `knowledge_source_registry` |
 
 ## 6. Scope Boundaries
 
@@ -98,14 +99,14 @@ Nếu để source governance sau khi AI đã vận hành, đội dự án sẽ 
 
 - Source registry
 - Source type / trust / freshness / allowed channel rules
-- Link document với source
-- Stale / conflict / restricted states
+- Link document/assets với source
+- Stale / restricted states
 
 ### 6.2 Out of Scope
 
 - Integration implementation chi tiết của từng hệ
 - Business analytics/ROI dashboards
-- Tự động resolve conflict bằng AI
+- Tự động reconcile dữ liệu giữa SAP/KiotViet/Haravan bằng AI
 
 ### 6.3 Non-Goals
 
@@ -117,31 +118,48 @@ Nếu để source governance sau khi AI đã vận hành, đội dự án sẽ 
 | Slice | Goal | Included Features | Excluded Features | Dependency |
 |-------|------|-------------------|-------------------|------------|
 | `P1 Source Registry` | Có danh mục nguồn và rule tối thiểu | source registry, owner, trust level, allowed channel | advanced automation | `I05`, `M07` |
-| `P1.5 Freshness and Conflict` | Nhìn ra stale / conflict sớm | freshness rule, stale flag, conflict case | automated auto-fix | `M12` |
+| `P1.5 Freshness and Source Health` | Nhìn ra stale/restricted source sớm | freshness rule, stale flag, restricted state | automated auto-fix | `M12` |
 | `P2 External-safe Governance` | Tách source cho internal vs external AI | channel-specific source rules | broad public exposure | sales-safe policy |
 
 ## 8. Linked Features
 
 | Feature ID | Feature Name | Purpose | Priority | Planned Status |
 |------------|--------------|---------|----------|----------------|
-| `F-M08-KNW-004` | Knowledge Documents and Source Governance | Source registry + freshness + conflict | P0 | Draft |
+| `F-M08-KNW-004` | Knowledge Documents and Source Governance | Source registry + freshness + restricted-source governance | P0 | Draft |
 | `F-M08-KNW-001` | Knowledge and Policy | Consumer của source governance | P0 | Draft |
 | `F-I05-INT-001` | Canonical Mapping and Source of Truth | Mapping/priority logic giữa các hệ | P0 | Draft |
 | `F-M07-SEC-001` | Access Control and Sensitivity | Allowed persona/channel filter | P0 | Draft |
-| `F-M12-OBS-001` | Audit and Observability | stale/conflict monitoring | P1 | Draft |
+| `F-M12-OBS-001` | Audit and Observability | stale/restricted monitoring nếu scope analytics mở | P1 | Draft |
 
 ## 9. Solution Direction
 
-### 9.1 UX / IA Direction
+### 9.1 Source Governance & Chatbot Trust (từ Research Approved 2026-04-17)
 
-Source governance là bề mặt cho PM/Ops/Governance, không phải user-facing module. UI phải ưu tiên `registry`, `freshness`, `conflict`, và `restricted state` hơn là editing comfort.
+Source governance là tầng **trust infrastructure** cho chatbot Gen 3 RAG. Từ research benchmark:
+- **Verified Knowledge > Volume**: ít tài liệu nhưng được verify và có owner còn tốt hơn nhiều tài liệu stale (Guru lesson)
+- **Trust = Citation + Honesty**: chatbot chỉ cite source có valid trust level — source stale/restricted → chatbot dùng Uncertainty Signal thay vì trả lời từ nguồn cũ
+- Freshness signal từ source governance feed trực tiếp vào **Stale Content Warning** pattern ở chatbot và library
+
+Mapping source → chatbot behavior:
+| Source Status | Chatbot Behavior |
+|--------------|-----------------|
+| Active + fresh | Retrieve bình thường + cite |
+| Active + stale (warning) | Retrieve + hiển thị stale badge + "chưa được review X tháng" |
+| Restricted | Không retrieve — Uncertainty Signal + escalation path |
+| Inactive | Không retrieve |
+
+Xem [RES-M08-KNW_Internal_Chatbot_Concept.md](../../../../Research/Knowledge_Center/RES-M08-KNW_Internal_Chatbot_Concept.md) §3 Pillar 2 và [RES-M08-KNW_Paradigm_And_Benchmark.md](../../../../Research/Knowledge_Center/RES-M08-KNW_Paradigm_And_Benchmark.md) §6 Insight 1.
+
+### 9.2 UX / IA Direction
+
+Source governance là bề mặt cho PM/Ops/Governance trong `/knowledge`, không phải user-facing module rời. UI phải ưu tiên `registry`, `freshness`, `restricted state`, và affected documents/assets hơn là editing comfort.
 
 ### 9.2 Functional Capabilities
 
 - Register/update source
 - Define trust / freshness / allowed usage rules
-- Link documents to sources
-- Detect stale / conflict / restricted cases
+- Link documents/assets to sources
+- Detect stale / restricted source status
 
 ### 9.3 Operational Rules
 
@@ -153,7 +171,7 @@ Source governance là bề mặt cho PM/Ops/Governance, không phải user-facin
 ### 9.4 Technical Constraints for Downstream Teams
 
 - Cần interlock với `I05` để không nhân đôi source-of-truth logic
-- Stale/conflict events phải feed `M12`
+- Stale/restricted events có thể feed `M12` nếu scope observability mở
 - Runtime source filtering phải áp được theo channel và persona
 
 ## 10. Assumptions and Dependencies
@@ -169,8 +187,9 @@ Source governance là bề mặt cho PM/Ops/Governance, không phải user-facin
 | Risk | Type | Impact | Mitigation | Owner |
 |------|------|--------|------------|-------|
 | Source types quá nhiều hoặc mơ hồ | Product / Data | Rule governance rối | Chốt taxonomy source types theo P1 | PM / A02 |
-| Freshness SLA không khả thi | Operational | Cảnh báo stale vô nghĩa | Phân lớp SLA theo source type / domain | PM / Ops |
-| Conflict nhiều nhưng không ai sở hữu | Governance | AI trả lời thiếu tin cậy | Gắn owner và escalation rule cho conflict case | PM |
+| Freshness SLA không khả thi | Operational | Cảnh báo stale vô nghĩa | Phân lớp SLA theo source type / knowledge topic | PM / Ops |
+| Data reconciliation bị kéo vào Knowledge Center | Governance | M08 phình scope, trùng Catalog & Commerce | Chỉ lưu source metadata/linking; reconciliation thuộc integration/Catalog & Commerce hoặc BE phase | PM |
+| Không thấy asset impact khi source stale | UX / Governance | Tài liệu import có hình ảnh/attachment lỗi nhưng governance không thấy | Source detail hiển thị linked documents/assets và affected counts | A03 / A06 |
 
 ## 12. Open Questions
 
@@ -185,6 +204,7 @@ Source governance là bề mặt cho PM/Ops/Governance, không phải user-facin
 | Date | Decision | Made By | Reason |
 |------|----------|---------|--------|
 | 2026-04-15 | Source governance được tách riêng khỏi knowledge core | Codex CLI / A01 PM Agent | Trust layer cần artifact riêng để gate kiến trúc và operational rules |
+| 2026-04-17 | Source governance là section `Source Health` trong `/knowledge` và phải hiển thị affected documents/assets | Codex CLI / A01 PM Agent | Giữ Knowledge Center thống nhất và hỗ trợ tài liệu import rich content |
 
 ## 14. Linked Artifacts
 

@@ -1,49 +1,62 @@
 :root {
-  /* ── Primary Palette (MIA Brand Blue) ── */
-  --color-primary: #2F64F6;
-  --color-primary-hover: #2552CC;
-  --color-primary-active: #1A3B99;
-  --color-primary-light: #ECF2FE;
-  --color-primary-muted: #D3E1FC;
+  /* ── Primary Palette (MIA Brand Blue — Tailwind blue-600) ── */
+  --color-primary:        #2563EB;   /* blue-600  — main brand */
+  --color-primary-hover:  #1D4ED8;   /* blue-700  — hover */
+  --color-primary-active: #1E40AF;   /* blue-800  — pressed */
+  --color-primary-light:  #EFF6FF;   /* blue-50   — active nav bg, badge bg */
+  --color-primary-muted:  #BFDBFE;   /* blue-200  — hover fill, focus ring */
 
-  /* ── Neutral Palette (Cool Slate) ── */
-  --color-bg-page: #F6F9FF;
-  --color-bg-surface: #ECF4FF;
-  --color-bg-card: #FFFFFF;
-  --color-text-primary: #013652;
-  --color-text-secondary: #3A6381;
-  --color-text-tertiary: #8EB6D9;
-  --color-border-ghost: rgba(142, 182, 217, 0.15);
+  /* ── Neutral Palette (Cool Slate — B2B Service) ── */
+  --color-bg-page:        #F8FAFC;   /* slate-50  — page canvas */
+  --color-bg-surface:     #F1F5F9;   /* slate-100 — sidebar, section bg */
+  --color-bg-card:        #FFFFFF;   /* pure white — cards, panels */
+  --color-text-primary:   #0F172A;   /* slate-900  — contrast 16:1 on white */
+  --color-text-secondary: #475569;   /* slate-600  — contrast 7:1 on white */
+  --color-text-tertiary:  #94A3B8;   /* slate-400  — placeholder, meta */
+  --color-border:         #E2E8F0;   /* slate-200  — card/input borders */
+  --color-border-ghost:   rgba(226,232,240,0.6); /* for subtle dividers */
 
   /* ── Semantic Colors ── */
-  --color-success: #22C55E;
-  --color-error: #E11D48;
-  --color-warning: #F59E0B;
+  --color-success:        #16A34A;   /* green-700 — stronger than 22C55E for contrast */
+  --color-error:          #DC2626;   /* red-600 */
+  --color-warning:        #D97706;   /* amber-600 — stronger for contrast */
 
-  /* ── Elevation ── */
-  --shadow-0: none;
-  --shadow-ambient: 0 12px 24px rgba(1, 54, 82, 0.04);
-  --shadow-glass: blur(20px);
+  /* ── Elevation (consistent scale) ── */
+  --shadow-0:       none;
+  --shadow-ambient: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+  --shadow-card:    0 4px 16px rgba(37,99,235,0.06), 0 1px 3px rgba(15,23,42,0.05);
+  --shadow-dropdown: 0 8px 24px rgba(15,23,42,0.10), 0 2px 6px rgba(15,23,42,0.06);
+  --shadow-glass:   blur(20px);
 
-  /* ── Spacing (4px base) ── */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
+  /* ── Spacing (4px base — Material 8dp rhythm) ── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
   --space-10: 40px;
   --space-12: 48px;
 
   /* ── Radius ── */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-xs:   6px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
   --radius-pill: 9999px;
   --radius-full: 9999px;
 
   /* ── Typography ── */
   --font-primary: "Be Vietnam Pro", "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-mono:    "JetBrains Mono", monospace;
+
+  /* ── Z-index scale ── */
+  --z-base:     0;
+  --z-elevated: 10;
+  --z-sticky:   20;
+  --z-dropdown: 100;
+  --z-modal:    200;
+  --z-toast:    300;
 }

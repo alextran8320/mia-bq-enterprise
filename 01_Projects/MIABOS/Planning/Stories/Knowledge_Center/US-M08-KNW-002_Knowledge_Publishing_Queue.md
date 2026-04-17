@@ -10,13 +10,13 @@
 ## US-KNW-002-01 — Xem Queue List
 
 **As** Domain Reviewer,
-**I want** mở `/knowledge/publishing-queue` và thấy danh sách tài liệu chờ duyệt,
+**I want** mở `/knowledge` và chọn section `Chờ duyệt`,
 **So that** tôi biết cần review cái nào và theo thứ tự nào.
 
 **Acceptance Criteria (mock/stub):**
-- List có: Title, Type, Domain, Submitted by, Time waiting, SLA indicator
+- List có: Title, Type, Knowledge Topic, Submitted by, Time waiting, SLA indicator
 - SLA badge: Gấp (đỏ) / Bình thường (xám)
-- Click row → mở Review Detail
+- Click row → mở Review Detail panel trong cùng `/knowledge` workspace
 
 ---
 
@@ -27,6 +27,7 @@
 **So that** chỉ tài liệu đúng mới được publish lên hệ thống.
 
 **Acceptance Criteria (mock/stub):**
-- Tab: Summary / Nội dung / Lịch sử
+- Tab: Summary / Diff / Rich Content / Source Evidence / Lịch sử
+- Rich Content tab preview hình ảnh/bảng/attachment nếu tài liệu được import
 - Approve button → toast "Đã duyệt"
 - Reject button → yêu cầu comment → toast "Đã từ chối"

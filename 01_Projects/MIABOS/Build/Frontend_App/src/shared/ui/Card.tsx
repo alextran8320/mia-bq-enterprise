@@ -12,7 +12,14 @@ export function Card({ children, style, ...rest }: CardProps) {
         borderRadius: "var(--radius-lg)",
         padding: "var(--space-6)",
         boxShadow: "var(--shadow-ambient)",
+        transition: "box-shadow 0.15s",
         ...style,
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow = "var(--shadow-card)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow = "var(--shadow-ambient)";
       }}
       {...rest}
     >

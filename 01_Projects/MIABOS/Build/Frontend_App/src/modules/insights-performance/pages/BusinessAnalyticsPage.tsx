@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import ReactApexChart from "react-apexcharts";
+import type { ApexOptions } from "apexcharts";
 import {
   AlertTriangle,
   ArrowDownRight,
@@ -59,42 +61,112 @@ const tabs: Array<{ to: string; label: string; view: DashboardView }> = [
 ];
 
 const toneColor: Record<MetricTone, string> = {
-  positive: "var(--color-success)",
-  negative: "var(--color-error)",
-  neutral: "var(--color-text-tertiary)",
-  warning: "var(--color-warning)",
+  positive: "#16A34A",
+  negative: "#DC2626",
+  neutral: "#94A3B8",
+  warning: "#D97706",
 };
 
 const toneBackground: Record<MetricTone, string> = {
-  positive: "rgba(34, 197, 94, 0.12)",
-  negative: "rgba(225, 29, 72, 0.12)",
-  neutral: "var(--color-bg-surface)",
-  warning: "rgba(245, 158, 11, 0.14)",
+  positive: "rgba(22, 163, 74, 0.10)",
+  negative: "rgba(220, 38, 38, 0.10)",
+  neutral: "#F1F5F9",
+  warning: "rgba(217, 119, 6, 0.12)",
 };
 
-function Sparkline({ points, tone }: { points: number[]; tone: MetricTone }) {
-  const max = Math.max(...points);
-  const min = Math.min(...points);
-  const range = Math.max(max - min, 1);
-  const polyline = points
-    .map((point, index) => {
-      const x = (index / Math.max(points.length - 1, 1)) * 120;
-      const y = 36 - ((point - min) / range) * 28;
-      return `${x},${y}`;
-    })
-    .join(" ");
+const toneChartColor: Record<MetricTone, string> = {
+  positive: "#2563EB",
+  negative: "#DC2626",
+  neutral: "#94A3B8",
+  warning: "#D97706",
+};
 
+// ── Shared ApexCharts base options ──────────────────────────────────────────
+const chartFont = '"Be Vietnam Pro", "Inter", system-ui, sans-serif';
+
+function sparklineOptions(tone: MetricTone): ApexOptions {
+  const color = toneChartColor[tone];
+  return {
+    chart: {
+      type: "area",
+      sparkline: { enabled: true },
+      animations: { enabled: true, speed: 400 },
+      toolbar: { show: false },
+    },
+    stroke: { curve: "smooth", width: 2 },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.25,
+        opacityTo: 0.02,
+        stops: [0, 100],
+      },
+    },
+    colors: [color],
+    tooltip: {
+      enabled: false,
+    },
+  };
+}
+
+function columnChartOptions(labels: string[], color: string): ApexOptions {
+  return {
+    chart: {
+      type: "bar",
+      toolbar: { show: false },
+      animations: { enabled: true, speed: 400 },
+      fontFamily: chartFont,
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 4,
+        columnWidth: "56%",
+      },
+    },
+    dataLabels: { enabled: false },
+    colors: [color],
+    xaxis: {
+      categories: labels,
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: {
+        style: { colors: "#94A3B8", fontSize: "11px", fontFamily: chartFont },
+      },
+    },
+    yaxis: {
+      labels: {
+        style: { colors: "#94A3B8", fontSize: "11px", fontFamily: chartFont },
+      },
+    },
+    grid: {
+      borderColor: "#E2E8F0",
+      strokeDashArray: 4,
+      yaxis: { lines: { show: true } },
+      xaxis: { lines: { show: false } },
+    },
+    tooltip: {
+      theme: "light",
+      style: { fontSize: "12px", fontFamily: chartFont },
+    },
+    states: {
+      hover: { filter: { type: "darken" } },
+    },
+  };
+}
+
+// ── Components ───────────────────────────────────────────────────────────────
+
+function Sparkline({ points, tone }: { points: number[]; tone: MetricTone }) {
   return (
-    <svg aria-hidden="true" viewBox="0 0 120 40" style={{ width: "100%", height: 42, marginTop: "var(--space-3)" }}>
-      <polyline
-        fill="none"
-        stroke={toneColor[tone]}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="3"
-        points={polyline}
+    <div style={{ marginTop: "var(--space-3)" }}>
+      <ReactApexChart
+        type="area"
+        height={44}
+        series={[{ data: points }]}
+        options={sparklineOptions(tone)}
       />
-    </svg>
+    </div>
   );
 }
 
@@ -110,11 +182,11 @@ function KpiCard({ item }: { item: KpiCardData }) {
         transition: "box-shadow 0.18s, transform 0.18s",
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow = "0 6px 20px rgba(1,54,82,0.09)";
+        (e.currentTarget as HTMLDivElement).style.boxShadow = "var(--shadow-card)";
         (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)";
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow = "";
+        (e.currentTarget as HTMLDivElement).style.boxShadow = "var(--shadow-ambient)";
         (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
       }}
     >
@@ -125,29 +197,31 @@ function KpiCard({ item }: { item: KpiCardData }) {
               color: "var(--color-text-secondary)",
               fontSize: 11,
               fontWeight: 700,
-              letterSpacing: 0,
               textTransform: "uppercase",
+              letterSpacing: "0.06em",
               marginBottom: "var(--space-4)",
             }}
           >
             {item.label}
           </p>
           <div style={{ display: "flex", alignItems: "flex-end", gap: "var(--space-3)" }}>
-            <strong style={{ color: "var(--color-text-primary)", fontSize: 28, lineHeight: 1 }}>{item.value}</strong>
+            <strong style={{ color: "var(--color-text-primary)", fontSize: 28, lineHeight: 1 }}>
+              {item.value}
+            </strong>
             <span
               style={{
                 color: toneColor[item.tone],
                 background: toneBackground[item.tone],
-                borderRadius: "var(--radius-sm)",
+                borderRadius: "var(--radius-xs)",
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 4,
-                padding: "4px 8px",
+                gap: 3,
+                padding: "3px 7px",
                 fontSize: 12,
-                fontWeight: 700,
+                fontWeight: 600,
               }}
             >
-              <TrendIcon size={14} />
+              <TrendIcon size={13} />
               {item.change}
             </span>
           </div>
@@ -168,7 +242,9 @@ function KpiCard({ item }: { item: KpiCardData }) {
         </div>
       </div>
       <Sparkline points={item.series} tone={item.tone} />
-      <p style={{ color: "var(--color-text-secondary)", fontSize: 13 }}>{item.helper}</p>
+      <p style={{ color: "var(--color-text-secondary)", fontSize: 13, marginTop: "var(--space-2)" }}>
+        {item.helper}
+      </p>
     </Card>
   );
 }
@@ -182,7 +258,7 @@ function Header({ view }: { view: DashboardView }) {
       <div style={{ display: "flex", justifyContent: "space-between", gap: "var(--space-5)", alignItems: "flex-start" }}>
         <div>
           <div style={{ marginBottom: "var(--space-2)" }}>
-            <span style={{ color: "var(--color-text-tertiary)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0 }}>
+            <span style={{ color: "var(--color-text-tertiary)", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
               {config.label}
             </span>
           </div>
@@ -230,7 +306,6 @@ function Header({ view }: { view: DashboardView }) {
               background: view === tab.view ? "var(--color-primary-light)" : "transparent",
               fontWeight: view === tab.view ? 700 : 500,
               fontSize: 13,
-              position: "relative",
               transition: "background 0.15s, color 0.15s",
               outline: "none",
             }}
@@ -291,13 +366,188 @@ function StateStrip() {
   );
 }
 
+const WEEK_LABELS = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+
+function SellThroughChart({ values }: { values: number[] }) {
+  const options: ApexOptions = {
+    ...columnChartOptions(WEEK_LABELS, "#2563EB"),
+    chart: {
+      ...columnChartOptions(WEEK_LABELS, "#2563EB").chart,
+      type: "bar",
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 5,
+        columnWidth: "52%",
+        distributed: true,
+      },
+    },
+    colors: values.map((_, i) =>
+      i === values.length - 1 ? "#2563EB" : "#BFDBFE"
+    ),
+    legend: { show: false },
+    yaxis: {
+      min: 0,
+      max: 100,
+      tickAmount: 5,
+      labels: {
+        formatter: (v) => `${v}%`,
+        style: { colors: "#94A3B8", fontSize: "11px", fontFamily: chartFont },
+      },
+    },
+    tooltip: {
+      theme: "light",
+      y: { formatter: (v) => `${v}%` },
+      style: { fontSize: "12px", fontFamily: chartFont },
+    },
+  };
+
+  return (
+    <ReactApexChart
+      type="bar"
+      height={220}
+      series={[{ name: "Sell-through", data: values }]}
+      options={options}
+    />
+  );
+}
+
+function AiSuccessChart({ values }: { values: number[] }) {
+  const options: ApexOptions = {
+    chart: {
+      type: "area",
+      toolbar: { show: false },
+      animations: { enabled: true, speed: 500 },
+      fontFamily: chartFont,
+    },
+    stroke: { curve: "smooth", width: 2.5 },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.20,
+        opacityTo: 0.02,
+        stops: [0, 100],
+      },
+    },
+    colors: ["#2563EB"],
+    xaxis: {
+      categories: WEEK_LABELS,
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: { style: { colors: "#94A3B8", fontSize: "11px", fontFamily: chartFont } },
+    },
+    yaxis: {
+      min: 60,
+      max: 100,
+      tickAmount: 4,
+      labels: {
+        formatter: (v) => `${v}%`,
+        style: { colors: "#94A3B8", fontSize: "11px", fontFamily: chartFont },
+      },
+    },
+    grid: {
+      borderColor: "#E2E8F0",
+      strokeDashArray: 4,
+      yaxis: { lines: { show: true } },
+      xaxis: { lines: { show: false } },
+    },
+    markers: { size: 4, colors: ["#ffffff"], strokeColors: "#2563EB", strokeWidth: 2 },
+    dataLabels: { enabled: false },
+    tooltip: {
+      theme: "light",
+      y: { formatter: (v) => `${v}%` },
+      style: { fontSize: "12px", fontFamily: chartFont },
+    },
+  };
+
+  return (
+    <ReactApexChart
+      type="area"
+      height={220}
+      series={[{ name: "Tỉ lệ thành công", data: values }]}
+      options={options}
+    />
+  );
+}
+
+function FunnelChart() {
+  const labels = funnelStages.map((s) => s.label);
+  const values = funnelStages.map((s) => s.value);
+
+  const options: ApexOptions = {
+    chart: {
+      type: "bar",
+      toolbar: { show: false },
+      fontFamily: chartFont,
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        borderRadius: 4,
+        barHeight: "55%",
+        distributed: true,
+      },
+    },
+    colors: ["#2563EB", "#3B82F6", "#60A5FA", "#BFDBFE"],
+    dataLabels: {
+      enabled: true,
+      formatter: (val: number) => val.toLocaleString("vi-VN"),
+      style: { fontSize: "12px", fontFamily: chartFont, fontWeight: "600" },
+      dropShadow: { enabled: false },
+    },
+    legend: { show: false },
+    xaxis: {
+      categories: labels,
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: { style: { colors: "#94A3B8", fontSize: "11px", fontFamily: chartFont } },
+    },
+    yaxis: {
+      labels: {
+        style: { colors: "#0F172A", fontSize: "13px", fontFamily: chartFont, fontWeight: "500" },
+      },
+    },
+    grid: {
+      borderColor: "#E2E8F0",
+      strokeDashArray: 4,
+      xaxis: { lines: { show: true } },
+      yaxis: { lines: { show: false } },
+    },
+    tooltip: {
+      theme: "light",
+      y: {
+        formatter: (val: number, opts?: { dataPointIndex: number }) => {
+          const rate = funnelStages[opts?.dataPointIndex ?? 0]?.rate ?? "";
+          return `${val.toLocaleString("vi-VN")} (${rate})`;
+        },
+      },
+      style: { fontSize: "12px", fontFamily: chartFont },
+    },
+  };
+
+  return (
+    <ReactApexChart
+      type="bar"
+      height={240}
+      series={[{ name: "Khách hàng", data: values }]}
+      options={options}
+    />
+  );
+}
+
 function ExecutiveView() {
   return (
     <>
-      <div className="analytics-kpi-grid">{executiveKpis.map((item) => <KpiCard key={item.id} item={item} />)}</div>
+      <div className="analytics-kpi-grid">
+        {executiveKpis.map((item) => <KpiCard key={item.id} item={item} />)}
+      </div>
       <StateStrip />
       <div className="analytics-two-column">
-        <ChartPanel title="Sell-through weekly" values={[42, 48, 51, 57, 62, 66, 68]} />
+        <Card style={{ borderRadius: "var(--radius-sm)" }}>
+          <SectionTitle title="Sell-through theo tuần" note="% hàng bán được trên tổng nhập kho" />
+          <SellThroughChart values={[42, 48, 51, 57, 62, 66, 68]} />
+        </Card>
         <PromoSummary />
       </div>
     </>
@@ -319,34 +569,11 @@ function PerformanceView() {
 }
 
 function FunnelView() {
-  const max = Math.max(...funnelStages.map((stage) => stage.value));
-
   return (
     <div className="analytics-two-column">
       <Card style={{ borderRadius: "var(--radius-sm)" }}>
-        <SectionTitle title="Conversion Funnel" note="Lead -> Contacted -> Proposal -> Converted" />
-        <div style={{ display: "grid", gap: "var(--space-4)" }}>
-          {funnelStages.map((stage) => (
-            <div key={stage.label}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, color: "var(--color-text-secondary)" }}>
-                <span>{stage.label}</span>
-                <strong style={{ color: "var(--color-text-primary)" }}>
-                  {stage.value.toLocaleString("vi-VN")} · {stage.rate}
-                </strong>
-              </div>
-              <div style={{ height: 16, borderRadius: "var(--radius-sm)", background: "var(--color-bg-surface)", overflow: "hidden" }}>
-                <div
-                  style={{
-                    width: `${Math.max((stage.value / max) * 100, 8)}%`,
-                    height: "100%",
-                    background: "var(--color-primary)",
-                    borderRadius: "var(--radius-sm)",
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+        <SectionTitle title="Conversion Funnel" note="Lead → Contacted → Proposal → Converted" />
+        <FunnelChart />
       </Card>
       <Card style={{ borderRadius: "var(--radius-sm)" }}>
         <SectionTitle title="Segment Performance" note="Không hiển thị 0 khi chưa đủ dữ liệu" />
@@ -361,9 +588,14 @@ function FunnelView() {
 function AiRoiView() {
   return (
     <>
-      <div className="analytics-kpi-grid">{aiRoiKpis.map((item) => <KpiCard key={item.id} item={item} />)}</div>
+      <div className="analytics-kpi-grid">
+        {aiRoiKpis.map((item) => <KpiCard key={item.id} item={item} />)}
+      </div>
       <div className="analytics-two-column">
-        <ChartPanel title="Answer success rate trend" values={[76, 79, 82, 84, 88, 91, 94]} />
+        <Card style={{ borderRadius: "var(--radius-sm)" }}>
+          <SectionTitle title="AI answer success rate" note="7 ngày gần nhất" />
+          <AiSuccessChart values={[76, 79, 82, 84, 88, 91, 94]} />
+        </Card>
         <Card style={{ borderRadius: "var(--radius-sm)" }}>
           <SectionTitle title="Phương pháp ước tính" note="Mock note cho Business Owner review" />
           <p style={{ color: "var(--color-text-secondary)" }}>
@@ -399,6 +631,7 @@ function MetricRow({ label, value, badge, warning }: { label: string; value: str
         alignItems: "center",
         gap: "var(--space-4)",
         padding: "12px 0",
+        borderBottom: "1px solid var(--color-border)",
       }}
     >
       <div>
@@ -408,7 +641,7 @@ function MetricRow({ label, value, badge, warning }: { label: string; value: str
       <Badge
         label={badge}
         color={warning ? "var(--color-warning)" : "var(--color-success)"}
-        bg={warning ? "rgba(245, 158, 11, 0.14)" : "rgba(34, 197, 94, 0.12)"}
+        bg={warning ? "rgba(217, 119, 6, 0.12)" : "rgba(22, 163, 74, 0.10)"}
       />
     </div>
   );
@@ -432,9 +665,9 @@ function BranchTable() {
             <span>{branch.scope === "denied" ? "-" : branch.orders}</span>
             <span>
               {branch.scope === "denied" ? (
-                <Badge label="Bạn không có quyền xem khu vực này" color="var(--color-error)" bg="rgba(225, 29, 72, 0.12)" />
+                <Badge label="Bạn không có quyền xem khu vực này" color="var(--color-error)" bg="rgba(220, 38, 38, 0.10)" />
               ) : branch.sellThrough === null ? (
-                <Badge label="Chưa đủ dữ liệu" color="var(--color-warning)" bg="rgba(245, 158, 11, 0.14)" />
+                <Badge label="Chưa đủ dữ liệu" color="var(--color-warning)" bg="rgba(217, 119, 6, 0.12)" />
               ) : (
                 `${branch.sellThrough}% · ${branch.trend}`
               )}
@@ -467,6 +700,7 @@ function PromoSummary({ expanded }: { expanded?: boolean }) {
                 gap: "var(--space-3)",
                 alignItems: "center",
                 color: disabled ? "var(--color-text-tertiary)" : "var(--color-text-primary)",
+                cursor: disabled ? "not-allowed" : "pointer",
               }}
             >
               <input
@@ -486,7 +720,7 @@ function PromoSummary({ expanded }: { expanded?: boolean }) {
                 </small>
               </span>
               {disabled ? (
-                <Badge label="Chưa đủ dữ liệu" color="var(--color-warning)" bg="rgba(245, 158, 11, 0.14)" />
+                <Badge label="Chưa đủ dữ liệu" color="var(--color-warning)" bg="rgba(217, 119, 6, 0.12)" />
               ) : (
                 <CheckCircle2 size={17} color="var(--color-success)" />
               )}
@@ -494,7 +728,7 @@ function PromoSummary({ expanded }: { expanded?: boolean }) {
           );
         })}
       </div>
-      {expanded ? (
+      {expanded && (
         <div className="analytics-compare">
           {compared.map((promo) => (
             <div key={promo.id} style={{ background: "var(--color-bg-surface)", borderRadius: "var(--radius-sm)", padding: "var(--space-4)" }}>
@@ -505,33 +739,7 @@ function PromoSummary({ expanded }: { expanded?: boolean }) {
             </div>
           ))}
         </div>
-      ) : null}
-    </Card>
-  );
-}
-
-function ChartPanel({ title, values }: { title: string; values: number[] }) {
-  const max = Math.max(...values);
-
-  return (
-    <Card style={{ borderRadius: "var(--radius-sm)" }}>
-      <SectionTitle title={title} note="Chart mock dùng SVG local, không gọi API" />
-      <div style={{ display: "flex", alignItems: "end", gap: "var(--space-3)", height: 210 }}>
-        {values.map((value, index) => (
-          <div
-            // Stable mock series for visual review.
-            key={`${title}-${index}-${value}`}
-            style={{
-              flex: 1,
-              height: `${Math.max((value / max) * 100, 8)}%`,
-              background: index === values.length - 1 ? "var(--color-primary)" : "var(--color-primary-muted)",
-              borderRadius: "var(--radius-sm)",
-              minWidth: 18,
-            }}
-            aria-label={`Điểm dữ liệu ${index + 1}: ${value}`}
-          />
-        ))}
-      </div>
+      )}
     </Card>
   );
 }
@@ -540,10 +748,10 @@ export function BusinessAnalyticsPage({ view }: BusinessAnalyticsPageProps) {
   return (
     <div>
       <Header view={view} />
-      {view === "executive" ? <ExecutiveView /> : null}
-      {view === "performance" ? <PerformanceView /> : null}
-      {view === "funnel" ? <FunnelView /> : null}
-      {view === "ai-roi" ? <AiRoiView /> : null}
+      {view === "executive" && <ExecutiveView />}
+      {view === "performance" && <PerformanceView />}
+      {view === "funnel" && <FunnelView />}
+      {view === "ai-roi" && <AiRoiView />}
       <Card style={{ borderRadius: "var(--radius-sm)", marginTop: "var(--space-6)", background: "var(--color-primary-light)" }}>
         <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start" }}>
           <AlertTriangle size={18} style={{ color: "var(--color-primary)", marginTop: 2 }} />

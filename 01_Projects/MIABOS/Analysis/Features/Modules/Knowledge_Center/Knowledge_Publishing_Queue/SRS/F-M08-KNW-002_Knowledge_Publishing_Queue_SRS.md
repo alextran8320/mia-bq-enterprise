@@ -2,11 +2,11 @@
 
 **Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Claude Code (claude-sonnet-4-6)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
 **Approved By**: A01 PM Agent — Promoted to SRS Ready 2026-04-16; approval matrix per domain + SLA specifics deferred to BE/integration phase per BQ pilot scope decision
-**Last Status Change**: 2026-04-16
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document
 **Blocking Reason**: -
 **Module**: M08
@@ -21,7 +21,7 @@
 - Feature ID: `F-M08-KNW-002`
 - Related User Story: `US-M08-KNW-002`
 - Related PRD: [PRD-M08-KNW-002_Knowledge_Publishing_Queue.md](../../../../../../Planning/PRD/Knowledge_Center/PRD-M08-KNW-002_Knowledge_Publishing_Queue.md)
-- Related Screens: publishing queue, review detail, version diff compare, approval history, rollback confirmation
+- Related Screens: `/knowledge` publishing queue section, review detail panel, version diff compare, rich content preview, approval history, rollback confirmation
 - Related APIs: `GET /mia/knowledge/publishing-queue`, `POST /mia/knowledge/publish-request`, `POST /mia/knowledge/approve`, `POST /mia/knowledge/reject`, `POST /mia/knowledge/rollback`
 - Related Tables: `knowledge_publish_request`, `knowledge_publish_approval`, `knowledge_document_version`, `knowledge_publish_incident`
 - Related Events: `knowledge.publish.requested`, `knowledge.publish.approved`, `knowledge.publish.rejected`, `knowledge.publish.rolled_back`, `knowledge.publish.failed`
@@ -48,7 +48,7 @@ Là `Knowledge Owner`, `Tài chính / kế toán / pricing control`, `CSKH`, `Ec
 |------|-----------|--------|-----------|-------|
 | 1 | Knowledge Owner | Gửi draft hoặc version mới vào queue cùng change summary, source evidence, effective date | Configuration | Submit |
 | 2 | Hệ thống | Tạo request, tính domain reviewer theo approval matrix, và gắn SLA review | Configuration | Routing |
-| 3 | Reviewer | Mở review detail, xem diff giữa version cũ và version mới, source backing, affected personas/channels | Quick Action | Review |
+| 3 | Reviewer | Mở review detail panel trong `/knowledge`, xem diff giữa version cũ và version mới, rich content preview, source backing, affected personas/channels | Quick Action | Review |
 | 4 | Reviewer | Approve, reject, hoặc request changes với comment có cấu trúc | Quick Action | Decision |
 | 5 | Hệ thống | Nếu approved thì publish bản mới sang runtime index, cập nhật active version, và ghi audit | Configuration | Publish |
 | 6 | PM / Governance | Nếu có incident sau publish thì freeze hoặc rollback sang version trước | Exception Handling | Control |
@@ -91,8 +91,9 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 - Request thiếu source evidence hoặc effective date.
 - Reviewer không đúng domain cố approve request.
 - Publish job chạy xong nhưng runtime index chưa xác nhận active version.
-- Rollback target đã bị deprecated cứng hoặc thiếu source snapshot.
+- Rollback target đã bị deprecated cứng hoặc thiếu source reference metadata.
 - Freeze được bật nhưng `M09` hoặc `M10` vẫn cache answer từ version vừa lỗi.
+- Imported image/table/attachment lỗi nhưng reviewer không được cảnh báo.
 
 ## 8. State Machine
 
@@ -100,8 +101,10 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 
 ## 9. UX / Screen Behavior
 
-- Queue list phải hiển thị `domain`, `document type`, `requested by`, `effective date`, `review SLA`, `current reviewer`, `publish risk`.
-- Review detail phải có tab `Summary`, `Diff`, `Source Evidence`, `Impact Scope`, `Approval History`.
+- Queue list nằm trong `/knowledge` section `Chờ duyệt`, không tách khỏi Knowledge Center workspace.
+- Queue list phải hiển thị `category`, `knowledge_topic`, `document type`, `requested by`, `effective date`, `review SLA`, `current reviewer`, `publish risk`.
+- Review detail phải có tab `Summary`, `Diff`, `Rich Content`, `Source Evidence`, `Impact Scope`, `Approval History`.
+- Tab `Rich Content` phải preview được text, heading, image, table, attachment của version sẽ publish và warning asset lỗi nếu có.
 - Rollback/freeze action phải có confirmation modal mô tả rõ `runtime impact`, `target version`, `expected downstream effect`.
 
 ## 10. Role / Permission Rules
@@ -126,7 +129,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 ## 12. API Contract Excerpt + Canonical Links
 
 - `GET /mia/knowledge/publishing-queue`
-  - Filter: `status`, `domain`, `reviewer`, `priority`, `effective_date`
+  - Filter: `status`, `knowledge_topic`, `reviewer`, `priority`, `effective_date`
 - `POST /mia/knowledge/publish-request`
   - Input: `document_id`, `version_id`, `change_summary`, `effective_date`, `source_links[]`, `impact_scope`
 - `POST /mia/knowledge/approve`
@@ -151,7 +154,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 ## 14. Data / DB Impact Excerpt + Canonical Links
 
 - `knowledge_publish_request`
-  - `request_id`, `document_id`, `version_id`, `status`, `domain`, `requested_by`, `effective_date`, `review_sla_due_at`
+  - `request_id`, `document_id`, `version_id`, `status`, `knowledge_topic`, `requested_by`, `effective_date`, `review_sla_due_at`
 - `knowledge_publish_approval`
   - `request_id`, `approval_level`, `reviewer_department`, `decision`, `comment`, `decided_at`
 - `knowledge_document_version`
@@ -169,7 +172,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 - Submit request phải map tới version `Draft` hợp lệ và chưa bị deprecated.
 - Approve chỉ hợp lệ nếu actor nằm trong approval matrix của domain đó.
 - Publish complete chỉ hợp lệ khi active runtime version = approved version ID.
-- Rollback chỉ hợp lệ khi target version còn nguyên citation/source snapshot.
+- Rollback chỉ hợp lệ khi target version còn nguyên document/source reference metadata.
 
 ## 16. Error Codes
 
@@ -204,7 +207,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 
 ## 20. Observability
 
-- Theo dõi `queue size`, `review SLA breach`, `publish success rate`, `publish failure by domain`, `rollback count`, `temporary Excel-backed approvals`.
+- Theo dõi `queue size`, `review SLA breach`, `publish success rate`, `publish failure by knowledge_topic`, `rollback count`, `temporary Excel-backed approvals`.
 
 ## 21. Rollout / Feature Flag
 
@@ -237,7 +240,7 @@ BQ có nhiều policy nhạy cảm ở `pricing`, `promotion`, `đổi trả`, v
 ## 25. Ready-for-FE-Preview Checklist
 
 - [ ] FE Preview có mock `submitted`, `in review`, `published`, `publish failed`, `frozen`, `rolled back`
-- [ ] Stub payload đủ `domain`, `review_sla_due_at`, `reviewer_department`, `change_summary`, `publish_risk`
+- [ ] Stub payload đủ `knowledge_topic`, `review_sla_due_at`, `reviewer_department`, `change_summary`, `publish_risk`
 
 ## 26. Ready-for-BE / Integration Promotion Checklist
 

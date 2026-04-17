@@ -176,7 +176,7 @@ export function TopBar() {
         onFocusCapture={(e) => {
           (e.currentTarget as HTMLDivElement).style.borderColor = "var(--color-primary)";
           (e.currentTarget as HTMLDivElement).style.boxShadow =
-            "0 0 0 3px rgba(47,100,246,0.08)";
+            "0 0 0 3px var(--color-primary-muted)";
         }}
         onBlurCapture={(e) => {
           (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(0,0,0,0.07)";
@@ -265,7 +265,7 @@ export function TopBar() {
                 height: 7,
                 borderRadius: "50%",
                 background: "#E11D48",
-                border: "2px solid rgba(246,249,255,0.92)",
+                border: "2px solid #FFFFFF",
               }}
             />
           )}

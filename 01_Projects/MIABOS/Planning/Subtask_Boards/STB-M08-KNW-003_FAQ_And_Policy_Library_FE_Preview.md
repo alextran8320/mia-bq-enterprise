@@ -10,21 +10,28 @@
 
 ---
 
+## Design Change Notice — 2026-04-17
+
+Library không còn là page riêng `/knowledge/library`. Nó là section trong `/knowledge`, dùng folder tree `SOP / FAQ / Policy / System Guide / Imported`, search ở command bar, results ở center column, và document detail panel bên phải.
+
 ## Subtasks
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
 | 1 | Mock data: library docs | Done | Dùng chung `documents.ts` |
-| 2 | Page: KnowledgeLibraryPage (`/knowledge/library`) | Done | Domain menu + search + results |
-| 3 | Router: add `/knowledge/library` | Done | `router.tsx` |
-| 4 | Build verify | Pending | |
+| 2 | Page: KnowledgeLibraryPage (`/knowledge/library`) | Legacy Done | Keep only if needed for backwards deep-link; not main UX |
+| 3 | Library section inside KnowledgeHomePage (`/knowledge`) | Pending | Search + folder context + results + detail panel |
+| 4 | Rich content render in detail panel | Pending | image/table/attachment |
+| 5 | Build verify | Pending | |
 
 ---
 
 ## Evidence Gate
 
 - [ ] `npm run build` pass
-- [ ] `/knowledge/library` HTTP 200
+- [ ] `/knowledge` library section usable
+- [ ] `/knowledge?category=FAQ` deep-link state works
+- [ ] `/knowledge/library` is removed, redirected, or clearly marked legacy before FE handoff
 
 ---
 

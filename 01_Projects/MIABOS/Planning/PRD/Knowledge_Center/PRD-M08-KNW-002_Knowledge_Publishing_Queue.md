@@ -1,8 +1,8 @@
 # PRD: Knowledge Publishing Queue
 
-**Status**: Draft
+**Status**: Draft — Research Approved, Pending Business Owner PRD Approval
 **Owner**: A02 Product Owner Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: Business Owner
 **Approved By**: -
@@ -22,7 +22,7 @@
 
 ## 0. Executive Summary
 
-- What is being proposed: Xây `Publishing Queue` để mọi knowledge item đều đi qua submit -> review -> approve / reject -> publish / rollback.
+- What is being proposed: Xây `Publishing Queue` như section `Chờ duyệt` trong `/knowledge`, để mọi knowledge item đều đi qua submit -> review -> approve / reject -> publish / rollback.
 - Why now: Nếu knowledge được publish trực tiếp, BQ sẽ không kiểm soát được policy sai hoặc bản chưa duyệt lọt vào AI runtime.
 - Expected business and user outcome: Giảm rủi ro publish sai policy, tăng khả năng audit, và tạo nhịp review rõ cho domain owners.
 - Recommended decision: Approve queue ở mức P0 foundation, giữ `Draft` đến khi approval matrix và rollback authority được chốt.
@@ -43,6 +43,7 @@ Publishing Queue là lớp governance giúp:
 - chặn draft chưa duyệt vào runtime
 - lưu lý do approve / reject / rollback
 - đảm bảo đội vận hành biết chính sách nào vừa được thay đổi
+- reviewer xem được rich content preview gồm hình ảnh/bảng/attachment trước khi duyệt
 
 ### 1.4 Why Now
 
@@ -61,7 +62,7 @@ Queue phải được định nghĩa song song với knowledge core; nếu để
 | Persona | Job To Be Done | Current Friction | Product Opportunity |
 |---------|----------------|------------------|---------------------|
 | Knowledge Owner | Gửi bản mới để đưa vào runtime | Dễ gửi nhầm bản hoặc thiếu metadata | Queue chuẩn hóa submit package |
-| Reviewer | So sánh bản cũ và bản mới trước khi approve | Khó review nếu không có diff và metadata | Review detail / diff / impact view |
+| Reviewer | So sánh bản cũ và bản mới trước khi approve | Khó review nếu không có diff, metadata, rich content preview | Review detail / diff / rich content / impact view |
 | PM / Governance | Can thiệp khi publish sai | Không có rollback contract rõ | Force rollback và audit trail trong cùng hệ |
 
 ## 4. User Task Flows  ⚠ Mandatory
@@ -79,8 +80,8 @@ Queue phải được định nghĩa song song với knowledge core; nếu để
 
 | Step | Task | Task Type | Success Indicator |
 |------|------|-----------|------------------|
-| 1 | Mở queue và lọc request theo domain / priority | Quick Action | Chọn đúng request cần review |
-| 2 | Xem diff, metadata, impact | Reporting | Đủ thông tin để ra quyết định |
+| 1 | Mở `/knowledge` và chọn section `Chờ duyệt`, lọc request theo category/topic/priority | Quick Action | Chọn đúng request cần review |
+| 2 | Xem diff, metadata, rich content preview, impact | Reporting | Đủ thông tin để ra quyết định |
 | 3 | Approve / reject với lý do | Quick Action | Request có decision log rõ |
 | 4 | Rollback nếu phát hiện publish sai | Exception Handling | Runtime quay về bản đúng |
 
@@ -98,6 +99,7 @@ Queue phải được định nghĩa song song với knowledge core; nếu để
 
 - Submit request publish
 - Review detail và diff compare
+- Rich content preview cho tài liệu import có hình ảnh/bảng/attachment
 - Approve / reject với reason
 - Publish confirmation và rollback
 
@@ -131,14 +133,29 @@ Queue phải được định nghĩa song song với knowledge core; nếu để
 
 ## 9. Solution Direction
 
-### 9.1 UX / IA Direction
+### 9.1 Chatbot Concept Connection (từ Research Approved 2026-04-17)
 
-Queue cần là một workspace vận hành, không phải chỉ là danh sách tài liệu. Reviewer cần thấy `priority`, `domain`, `effective date`, `change summary`, và `diff` trước khi quyết định.
+Publishing Queue là lớp **governance bắt buộc** để đảm bảo chatbot Gen 3 RAG chỉ retrieve knowledge đã được verify. Nguyên tắc từ research benchmark:
+- **Guru model**: mỗi knowledge card có verification workflow — ai responsible, review khi nào
+- Chatbot chỉ được dùng item có status `Published` — queue là gate duy nhất
+- Reviewer phải thấy **rich content preview** (hình ảnh, bảng, attachment) trước khi approve — không duyệt text-only sẽ bỏ sót ngữ cảnh
+
+Xem [RES-M08-KNW_Paradigm_And_Benchmark.md](../../../../Research/Knowledge_Center/RES-M08-KNW_Paradigm_And_Benchmark.md) §2.1 cho Guru verification workflow detail.
+
+### 9.2 UX / IA Direction
+
+Queue là section vận hành trong `/knowledge`, không phải page rời. Reviewer cần thấy `category`, `priority`, `knowledge_topic`, `effective date`, `change summary`, `diff`, rich content preview, và source evidence trước khi quyết định.
+
+UX patterns bắt buộc trong review interface:
+- **Diff view**: so sánh bản cũ và bản mới side-by-side
+- **Rich content preview tab**: render đầy đủ hình ảnh, bảng, attachment — không được text-only
+- **Impact declaration**: hiển thị bao nhiêu AI queries/tháng đang dùng knowledge item này (để reviewer hiểu độ rủi ro)
+- **Decision log**: approve/reject phải có reason — không được one-click silent
 
 ### 9.2 Functional Capabilities
 
 - Submit request với metadata bắt buộc
-- Review detail + diff
+- Review detail + diff + rich content preview
 - Approve / reject có lý do
 - Publish status + rollback path
 
@@ -169,6 +186,7 @@ Queue cần là một workspace vận hành, không phải chỉ là danh sách 
 | Approval matrix quá phức tạp | Product / Ops | Queue chậm, người dùng bỏ quy trình | Bắt đầu bằng single approval per domain | A02 / PM |
 | Reviewer thiếu SLA | Operational | Request backlog tăng | Định nghĩa SLA + dashboard queue | PM |
 | Rollback không đủ rõ | Governance | Sai policy kéo dài ở runtime | Thiết kế rollback state từ P1.5 | A05 / A08 |
+| Review không thấy hình ảnh/attachment | UX / Governance | Duyệt thiếu ngữ cảnh từ tài liệu import | Bắt buộc tab rich content trong review detail | A03 / A06 |
 
 ## 12. Open Questions
 
@@ -183,6 +201,7 @@ Queue cần là một workspace vận hành, không phải chỉ là danh sách 
 | Date | Decision | Made By | Reason |
 |------|----------|---------|--------|
 | 2026-04-15 | Tách publishing governance thành PRD riêng | Codex CLI / A01 PM Agent | Cần gate governance độc lập thay vì ẩn trong knowledge core |
+| 2026-04-17 | Queue là section `Chờ duyệt` trong `/knowledge`, không phải workspace rời | Codex CLI / A01 PM Agent | Giữ reviewer trong cùng Knowledge Center và hỗ trợ rich content review |
 
 ## 14. Linked Artifacts
 

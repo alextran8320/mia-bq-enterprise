@@ -1,14 +1,24 @@
 # Current Active Context
 
 **Last Updated**: 2026-04-17
-**Active Workspace Topic**: Knowledge Center FE Preview Built — M08 KNW-001→KNW-004 live at /knowledge/*
+**Active Workspace Topic**: Knowledge Center research materialization — unified `/knowledge` workspace, Import action, folder tree, and rich document assets
 **Current Project**: `MIABOS`
-**Current Phase**: `PB-04 / FE Build`
-**Latest Canonical Session Log**: [[2026-04-17_MIABOS_Knowledge_Center_FE_Preview_Build]]
+**Current Phase**: `PB-02 / PB-03 Research Documentation`
+**Latest Canonical Session Log**: [[2026-04-17_MIABOS_Knowledge_Center_Research_Artifact_Materialization]]
 **Today's Daily Log**: [[2026-04-17_Daily_Log]]
 
 ## Latest Decisions
 
+- Business Owner yêu cầu Knowledge Center không duplicate Catalog & Commerce taxonomy/data; `Knowledge Category / Domain` phải được diễn giải lại thành taxonomy tri thức nội bộ.
+- Business Owner yêu cầu bỏ `Citation Snapshot`, `Knowledge Gap Report`, `Knowledge Usage Log`, và `Conflict Case` khỏi object set của Knowledge Center.
+- `SOP Step` cần được giải thích lại là bước hướng dẫn thao tác trong tài liệu SOP, không phải workflow/task execution engine.
+- A03 BA đã sync SRS/PRD/Stories/UXUI Knowledge Center để dùng `Knowledge Topic`, tách analytics sang M12 nếu cần, và đẩy data reconciliation/conflict handling ra khỏi M08.
+- Business Owner yêu cầu Knowledge Center hỗ trợ tài liệu rich content có hình ảnh/bảng/attachment vì tài liệu sync từ phòng ban khác chắc chắn có hình ảnh.
+- Knowledge Center được chốt lại là **một page chung `/knowledge`** với folder tree, command/search bar, content sections, và preview/detail panel.
+- Root folder tree chính: `SOP`, `FAQ`, `Policy`, `System Guide`, `Imported / Chờ phân loại`.
+- `Import tài liệu` là CTA chính; `Tạo thủ công` là CTA phụ.
+- SRS/PRD/Stories/UXUI/STB M08 đã được refine theo layout mới; FE preview hiện có `/knowledge/library`, `/knowledge/publishing-queue`, `/knowledge/sources`, `/knowledge/freshness` được xem là legacy/revision-required trước FE handoff tiếp theo.
+- Research chính thức đã được materialize tại `01_Projects/MIABOS/Research/Knowledge_Center/RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md` và link vào Research index.
 - Business Owner đã chốt 8 open questions ngày 2026-04-17 (retention, trigger, routing, action types, CTA set, approval, freshness SLA).
 - **12/12 UXUI Feature Specs** = Approved.
 - 8 SRS §22 đã được update với decisions chính thức của Business Owner.
@@ -28,10 +38,10 @@
 | F-M10-SLS-003 | **Approved** | Open for A07 FE build |
 | F-M12-OBS-001 | **Approved** | Open for A07 FE build |
 | F-M14-BIZ-001 | Approved | Ready for Review at `/analytics/executive` |
-| F-M08-KNW-001 | **Approved** | Open for A07 FE build |
-| F-M08-KNW-002 | **Approved** | Open for A07 FE build |
-| F-M08-KNW-003 | **Approved** | Open for A07 FE build |
-| F-M08-KNW-004 | **Approved** | Open for A07 FE build |
+| F-M08-KNW-001 | **Approved, revised 2026-04-17** | Needs FE preview revision to unified `/knowledge` |
+| F-M08-KNW-002 | **Approved, revised 2026-04-17** | Needs FE preview revision as `/knowledge` section |
+| F-M08-KNW-003 | **Approved, revised 2026-04-17** | Needs FE preview revision as `/knowledge` section |
+| F-M08-KNW-004 | **Approved, revised 2026-04-17** | Needs FE preview revision as `/knowledge` section |
 
 ## FE Build Status
 
@@ -39,10 +49,10 @@
 |---------|-----------------|--------|
 | F-M09-AIC-001 | /ai/chat | ✅ Built & Ready for Review |
 | F-M14-BIZ-001 | /analytics/executive | ✅ Built & Ready for Review |
-| F-M08-KNW-001 | /knowledge | ✅ Built & Verified (2026-04-17) |
-| F-M08-KNW-002 | /knowledge/publishing-queue | ✅ Built & Verified (2026-04-17) |
-| F-M08-KNW-003 | /knowledge/library | ✅ Built & Verified (2026-04-17) |
-| F-M08-KNW-004 | /knowledge/sources + /knowledge/freshness | ✅ Built & Verified (2026-04-17) |
+| F-M08-KNW-001 | /knowledge | Built earlier, now needs revision for folder tree + Import + rich assets |
+| F-M08-KNW-002 | /knowledge?section=queue | Built earlier as `/knowledge/publishing-queue`; now needs consolidation |
+| F-M08-KNW-003 | /knowledge?category=FAQ / Library section | Built earlier as `/knowledge/library`; now needs consolidation |
+| F-M08-KNW-004 | /knowledge?section=sources + /knowledge?section=freshness | Built earlier as `/knowledge/sources` + `/knowledge/freshness`; now needs consolidation |
 | F-M09-AIC-002 | TBD | 🔲 Open for A07 FE build |
 | F-M09-AIC-003 | TBD | 🔲 Open for A07 FE build |
 | F-M10-SLS-002 | TBD | 🔲 Open for A07 FE build |
@@ -51,6 +61,9 @@
 
 ## Next Actions
 
+- **PM / Business Owner**: review enhanced Knowledge Center UX direction before FE revision.
+- **PM / Business Owner**: approve hoặc comment research artifact `RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md`.
+- **A07 FE Builder**: revise M08 FE Preview into one `/knowledge` workspace with folder tree, `Import tài liệu`, content sections, rich document assets, and preview/detail panel.
 - **A07 FE Builder**: Build 5 features còn lại (mock/stub only): AIC-002, AIC-003, SLS-002, SLS-003, OBS-001.
-- Business Owner review FE Previews hiện có: M09 `/ai/chat`, M14 `/analytics/executive`, M08 `/knowledge/*`.
+- Business Owner review FE Previews hiện có: M09 `/ai/chat`, M14 `/analytics/executive`; M08 should be reworked before final review.
 - Không mở backend/integration cho đến khi BO mở gate riêng.

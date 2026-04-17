@@ -1,14 +1,14 @@
 # PRD: FAQ and Policy Library
 
-**Status**: Draft
+**Status**: Draft — Research Approved, Pending Business Owner PRD Approval
 **Owner**: A02 Product Owner Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: A01 PM Agent (Claude Sonnet 4.6 — Claude Code CLI)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-15
+**Last Status Change**: 2026-04-17
 **Source of Truth**: This document
-**Blocking Reason**: Chưa chốt taxonomy library, search/filter model theo vai trò, và boundary giữa policy nội bộ với policy public-safe
+**Blocking Reason**: Chưa chốt external exposure boundary
 **Project**: MIABOS
 **Module ID**: M08
 **Phase**: PB-02 / PB-03
@@ -22,10 +22,10 @@
 
 ## 0. Executive Summary
 
-- What is being proposed: Xây `FAQ and Policy Library` để Sales / CSKH / Store / Ops có thể tự tra cứu policy, FAQ, SOP mà không phải luôn đi qua chat.
+- What is being proposed: Xây `FAQ and Policy Library` như một section trong page chung `/knowledge`, để Sales / CSKH / Store / Ops có thể tự tra cứu policy, FAQ, SOP mà không phải luôn đi qua chat.
 - Why now: BQ cần internal AI phase 1, nhưng không phải mọi nhu cầu tri thức đều nên qua chat; library là bề mặt tự phục vụ song song để tăng adoption và giảm friction.
-- Expected business and user outcome: Giảm câu hỏi lặp lại, tăng self-service, và tạo một bề mặt tham chiếu trực tiếp cho citation của AI.
-- Recommended decision: Approve library như P1 capability trong `Knowledge_Center`, mở desktop nội bộ trước, mobile/store sau.
+- Expected business and user outcome: Giảm câu hỏi lặp lại, tăng self-service, và tạo một bề mặt tham chiếu trực tiếp cho source reference của AI.
+- Recommended decision: Approve library như P1 capability trong `Knowledge_Center`, nhưng không tách thành page riêng; đặt trong workspace `/knowledge` với cây thư mục category và preview/detail panel.
 
 ## 1. Business Context
 
@@ -42,7 +42,8 @@ Nếu không có thư viện chuẩn, người dùng sẽ phải tìm tài liệ
 Library giúp:
 - tự phục vụ cho user nội bộ
 - giảm tải cho người có kinh nghiệm
-- tạo một bề mặt đích khi user bấm vào citation từ AI answer
+- tạo một bề mặt đích khi user bấm vào source reference từ AI answer
+- đọc được tài liệu rich content có hình ảnh, bảng, attachment mà không phải tải file gốc ngay
 
 ### 1.4 Why Now
 
@@ -53,16 +54,16 @@ Library nên được định nghĩa cùng wave với knowledge core để UX / 
 | Persona | Role | Primary Pain | Desired Outcome | Priority |
 |---------|------|--------------|-----------------|----------|
 | Sales / CSKH | Người cần tra policy nhanh | Mất thời gian hỏi người khác | Search nhanh, mở detail rõ | P0 |
-| Store Lead / Ops | Người xử lý SOP tại điểm bán | Tài liệu phân mảnh, khó biết bản mới nhất | Có library filter theo domain / cửa hàng / kênh | P1 |
-| Knowledge Owner | Người duy trì nội dung | Khó biết user có tìm thấy nội dung không | Theo dõi no-result và feedback gap | P1 |
+| Store Lead / Ops | Người xử lý SOP tại điểm bán | Tài liệu phân mảnh, khó biết bản mới nhất | Có library filter theo knowledge topic / cửa hàng / kênh | P1 |
+| Knowledge Owner | Người duy trì nội dung | Khó biết tài liệu nào cần bổ sung | Có contact/escalation path từ no-result state | P1 |
 
 ## 3. Jobs To Be Done
 
 | Persona | Job To Be Done | Current Friction | Product Opportunity |
 |---------|----------------|------------------|---------------------|
 | Sales / CSKH | Tra một policy hoặc FAQ ngay trong lúc xử lý khách | Tìm nhiều nguồn, không chắc bản mới nhất | Search + filter + detail với metadata rõ |
-| Store Lead / Ops | Mở SOP hoặc policy đúng cho bối cảnh vận hành | Thiếu taxonomy và filter theo role / branch | Library có domain, doc type, related docs |
-| Knowledge Owner | Nhìn chỗ nào user hay không tìm thấy | Không có no-result signal | Thu thập search/open/gap events |
+| Store Lead / Ops | Mở SOP hoặc policy đúng cho bối cảnh vận hành | Thiếu taxonomy và filter theo role / branch | Library có knowledge topic, doc type, related docs |
+| Knowledge Owner | Bổ sung nội dung khi user không tìm thấy | No-result chưa có owner xử lý | No-result có contact/escalation path, không tạo gap object trong M08 |
 
 ## 4. User Task Flows  ⚠ Mandatory
 
@@ -70,37 +71,40 @@ Library nên được định nghĩa cùng wave với knowledge core để UX / 
 
 | Step | Task | Task Type | Success Indicator |
 |------|------|-----------|------------------|
-| 1 | Mở library hoặc search theo keyword | Quick Action | Có kết quả phù hợp ban đầu |
-| 2 | Lọc theo domain / doc type | Quick Action | Thu hẹp đúng nhóm policy cần xem |
-| 3 | Mở detail và đọc rule chính | Reporting | Xác định được policy cần áp dụng |
-| 4 | Copy link hoặc mở related doc khi cần | Quick Action | Reuse được ngay trong công việc |
+| 1 | Mở `/knowledge`, search theo keyword hoặc chọn folder trong cây nội dung | Quick Action | Có kết quả phù hợp ban đầu |
+| 2 | Lọc theo category `SOP / FAQ / Policy / System Guide`, knowledge topic, hoặc role scope | Quick Action | Thu hẹp đúng nhóm policy cần xem |
+| 3 | Click tài liệu để xem preview/detail panel trong cùng page | Reporting | Xác định được policy cần áp dụng |
+| 4 | Đọc rule chính, hình ảnh, bảng, attachment nếu tài liệu có rich content | Reporting | Không mất ngữ cảnh từ tài liệu gốc |
+| 5 | Copy link hoặc mở related doc khi cần | Quick Action | Reuse được ngay trong công việc |
 
 ### Store Lead / Ops
 
 | Step | Task | Task Type | Success Indicator |
 |------|------|-----------|------------------|
-| 1 | Mở library theo domain vận hành | Quick Action | Vào đúng khu vực SOP / policy |
+| 1 | Mở `/knowledge`, chọn folder `SOP / Store Operation` hoặc knowledge topic vận hành | Quick Action | Vào đúng khu vực SOP / policy |
 | 2 | Xem tài liệu gần nhất hoặc most viewed | Reporting | Nhanh thấy tài liệu quan trọng |
 | 3 | Mở tài liệu deprecated / replacement nếu cần | Exception Handling | Không dùng nhầm policy cũ |
-| 4 | Gửi feedback nếu nội dung thiếu / sai | Exception Handling | Gap được ghi nhận |
+| 4 | Dùng contact/escalation path nếu nội dung thiếu / sai | Exception Handling | Có người xử lý tiếp |
 
 ## 5. Product Goals and Success Metrics
 
 | Goal | KPI / Metric | Baseline | Target | Source |
 |------|--------------|----------|--------|--------|
-| Tăng self-service | `% search dẫn tới mở document detail` | Chưa đo | `>= 65%` | `knowledge_usage_log` |
-| Giảm no-result | `no-result rate` | Chưa đo | `<= 15%` sau pilot | `M12 / knowledge search events` |
-| Tăng reuse citation | `% AI citation được mở detail khi cần` | Chưa đo | `>= 30%` | `knowledge.library.document_opened` |
+| Tăng self-service | `% search dẫn tới mở document detail` | Chưa đo | `>= 65%` | `M12 / observability nếu bật` |
+| Giảm no-result | `no-result rate` | Chưa đo | `<= 15%` sau pilot | `M12 / observability nếu bật` |
+| Tăng reuse từ AI answer | `% AI document/source reference được mở detail khi cần` | Chưa đo | `>= 30%` | `M12 / observability nếu bật` |
 
 ## 6. Scope Boundaries
 
 ### 6.1 In Scope
 
 - Search / filter / library list
+- Folder tree trong `/knowledge`, root gồm `SOP`, `FAQ`, `Policy`, `System Guide`, `Imported / Chờ phân loại`
 - Policy / FAQ / SOP detail
+- Rich document render: text, heading, table, image, attachment preview/link
 - Related documents
 - Empty state / access denied / deprecated state
-- Feedback gap từ library
+- Contact/escalation path từ no-result state; không tạo object xử lý thiếu tri thức riêng trong M08
 
 ### 6.2 Out of Scope
 
@@ -118,7 +122,7 @@ Library nên được định nghĩa cùng wave với knowledge core để UX / 
 | Slice | Goal | Included Features | Excluded Features | Dependency |
 |-------|------|-------------------|-------------------|------------|
 | `P1 Internal Desktop Library` | Cho đội nội bộ tra cứu trực tiếp | search, filter, detail, related docs | mobile/store optimization | `F-M08-KNW-001`, `F-M07-SEC-001` |
-| `P1.5 Citation Deep-Link` | Mở detail từ AI answer trơn tru | anchor / deep-link / metadata trust | advanced personalization | `M09` |
+| `P1.5 Source Reference Deep-Link` | Mở detail từ AI answer trơn tru | anchor / deep-link / metadata trust | advanced personalization | `M09` |
 | `P2 Wider Access` | Mở rộng sang store/mobile hoặc public-safe subset | role-based variants | full public library | policy approval |
 
 ## 8. Linked Features
@@ -132,17 +136,47 @@ Library nên được định nghĩa cùng wave với knowledge core để UX / 
 
 ## 9. Solution Direction
 
-### 9.1 UX / IA Direction
+### 9.1 Chatbot + Library Relationship (từ Research Approved 2026-04-17)
 
-Library phải được thiết kế theo `job-first taxonomy`, không theo tên collection hay module code. User nên bắt đầu từ domain công việc hoặc keyword, không phải từ cấu trúc hệ thống.
+Library và Chatbot là 2 entry points song song cho cùng 1 knowledge base — không thay thế nhau:
+
+| Entry Point | Khi nào dùng | Mental model |
+|-------------|-------------|--------------|
+| **AI Chatbot** | User KHÔNG biết mình cần đọc tài liệu gì — hỏi tự nhiên | "Chính sách đổi trả là gì?" |
+| **Library Browse** | User BIẾT mình cần tài liệu gì — mở trực tiếp | Mở folder Policy > Đổi trả |
+
+3 Interaction Modes cho library (xem [RES-M08-KNW_UX_Patterns_And_IA.md](../../../../Research/Knowledge_Center/RES-M08-KNW_UX_Patterns_And_IA.md) §3):
+- **Mode A: Instant lookup** — search keyword → detail panel ngay
+- **Mode B: Guided browse** — category tree → folder → article → step-by-step
+- **Mode C: Exploration** — overview card → drill-down sections
+
+UX patterns bắt buộc trong library:
+- **Quick reply chips**: sau search result, suggest related topics
+- **Step-by-step guided flow**: cho tài liệu SOP — interactive checklist, không dump text
+- **Stale content warning**: badge rõ khi tài liệu quá expiry date
+- **Human escalation path**: nút "Báo nội dung sai / thiếu" luôn visible — không để dead-end
+
+### 9.2 UX / IA Direction
+
+Library là **content section trong `/knowledge`**, không phải `/knowledge/library` page riêng. User nên bắt đầu từ cây category hoặc keyword:
+
+- `SOP`: quy trình thao tác, có SOP Step theo thứ tự
+- `FAQ`: câu hỏi thường gặp, câu trả lời ngắn + link detail
+- `Policy`: quy định, scope, exception, owner, effective date
+- `System Guide`: hướng dẫn dùng SAP B1 / KiotViet / Haravan / MIABOS
+- `Imported / Chờ phân loại`: tài liệu vừa sync/import chưa được owner phân loại
+
+Library vẫn filter theo `knowledge topic`, nhưng không dùng tên collection, module code, hoặc taxonomy của Catalog & Commerce. User không phải đi theo product category/SKU hierarchy khi mục tiêu là tìm tri thức chính sách/quy trình.
 
 ### 9.2 Functional Capabilities
 
 - Search keyword
-- Filter theo domain / doc type / role scope
-- Detail page với rule chính + metadata
+- Browse bằng folder tree category/folder/topic
+- Filter theo knowledge topic / doc type / role scope
+- Detail panel với rule chính + metadata + rich content images/tables/attachments
 - Related docs + deprecated handling
-- Feedback gap
+- SOP Step display cho tài liệu SOP
+- Contact/escalation path khi không tìm thấy nội dung
 
 ### 9.3 Operational Rules
 
@@ -154,29 +188,31 @@ Library phải được thiết kế theo `job-first taxonomy`, không theo tên
 
 - Search index cần đủ nhanh cho tra cứu hàng ngày
 - Deep-link từ `M09` sang library detail phải ổn định
-- Events search/open/no-result phải feed được `M12`
+- Analytics search/open/no-result nếu cần thuộc `M12`; M08 không sở hữu usage analytics object
 
 ## 10. Assumptions and Dependencies
 
 | ID | Assumption / Dependency | Risk if Wrong | Owner |
 |----|-------------------------|---------------|-------|
 | `A-001` | User nội bộ có nhu cầu lookup-first bên cạnh chat | Nếu sai, library bị dùng ít | A02 / PM |
-| `A-002` | Taxonomy có thể nhóm theo domain công việc | Nếu không, UX filter sẽ rối | A02 / A06 |
+| `A-002` | Taxonomy có thể nhóm theo knowledge topic công việc | Nếu không, UX filter sẽ rối | A02 / A06 |
 | `D-001` | Permission filter từ `M07` sẵn sàng | Có thể lộ tài liệu sai scope | A05 / A08 |
 
 ## 11. Risks and Mitigations
 
 | Risk | Type | Impact | Mitigation | Owner |
 |------|------|--------|------------|-------|
-| Taxonomy quá kỹ thuật | UX | User không tìm thấy tài liệu | Dùng nhãn theo job / domain công việc | A02 / A06 |
+| Taxonomy quá giống Catalog & Commerce | UX | User lẫn giữa tài liệu tri thức và dữ liệu sản phẩm | Dùng knowledge topic như Pricing Policy / Store SOP / System Usage | A02 / A06 |
 | Deprecated handling không rõ | Product | User dùng nhầm policy cũ | Bắt buộc banner + replacement link | A03 / A06 |
-| Search chậm hoặc no-result cao | Adoption | User quay lại cách hỏi thủ công | Theo dõi no-result và bổ sung taxonomy/content | A10 / Knowledge Owner |
+| Search chậm hoặc no-result cao | Adoption | User quay lại cách hỏi thủ công | M12 đo nếu scope analytics mở; Knowledge Owner bổ sung content theo feedback/escalation | A10 / Knowledge Owner |
+| Library bị tách khỏi Knowledge Center | UX | User phải nhớ nhiều route và mất context | Library là section trong `/knowledge`; detail mở ở panel/drawer | A06 / A07 |
+| Tài liệu có hình ảnh nhưng detail chỉ render text | UX | SOP/policy có thể thiếu bước minh họa quan trọng | Detail panel phải render asset list và inline images | A03 / A06 |
 
 ## 12. Open Questions
 
 | ID | Question | Blocking? | Owner | Target Resolution Date |
 |----|----------|-----------|-------|------------------------|
-| `OQ-001` | Filter chính nên theo domain, persona, hay mixed model? | Yes | PM / A06 | 2026-04-18 |
+| `OQ-001` | Filter chính nên theo knowledge topic, persona, hay mixed model? | No | PM / A06 | 2026-04-18 |
 | `OQ-002` | Có cần tách policy nội bộ và policy public-safe ngay từ P1 không? | Yes | Business Owner / PM | 2026-04-18 |
 | `OQ-003` | P1 có cần support mobile/store trực tiếp không? | No | PM | 2026-04-20 |
 

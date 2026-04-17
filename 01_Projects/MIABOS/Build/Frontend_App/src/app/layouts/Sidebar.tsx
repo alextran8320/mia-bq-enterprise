@@ -233,33 +233,49 @@ export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
                   alignItems: "center",
                   gap: collapsed ? 0 : "var(--space-3)",
                   justifyContent: collapsed ? "center" : "flex-start",
-                  padding: collapsed ? "10px" : "10px var(--space-5)",
-                  margin: collapsed ? "2px 8px" : "2px var(--space-3)",
-                  borderRadius: "var(--radius-sm)",
+                  padding: collapsed ? "9px 0" : "9px var(--space-5)",
+                  paddingLeft: collapsed ? 0 : isActive ? "calc(var(--space-5) - 3px)" : "var(--space-5)",
+                  margin: "1px 0",
+                  borderLeft: isActive
+                    ? "3px solid var(--color-primary)"
+                    : "3px solid transparent",
+                  borderRadius: collapsed ? "var(--radius-sm)" : 0,
+                  marginLeft: collapsed ? 8 : 0,
+                  marginRight: collapsed ? 8 : 0,
                   fontSize: "13.5px",
                   fontWeight: isActive ? 600 : 400,
                   color: isActive
-                    ? "var(--color-primary)"
+                    ? "var(--color-primary-hover)"
                     : "var(--color-text-secondary)",
                   background: isActive
                     ? "var(--color-primary-light)"
                     : "transparent",
                   textDecoration: "none",
-                  transition: "background 0.15s, color 0.15s",
+                  transition: "background 0.15s, color 0.15s, border-color 0.15s",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                 })}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLAnchorElement;
+                  const isActiveEl = el.style.borderLeftColor === "var(--color-primary)" ||
+                    el.style.background === "var(--color-primary-light)";
+                  if (!isActiveEl) {
+                    el.style.background = "var(--color-bg-surface)";
+                    el.style.color = "var(--color-text-primary)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLAnchorElement;
+                  const isActiveEl = el.style.background === "var(--color-bg-surface)";
+                  if (isActiveEl) {
+                    el.style.background = "transparent";
+                    el.style.color = "var(--color-text-secondary)";
+                  }
+                }}
               >
                 <Icon size={18} style={{ flexShrink: 0 }} />
                 {!collapsed && (
-                  <span
-                    style={{
-                      opacity: collapsed ? 0 : 1,
-                      transition: "opacity 150ms",
-                    }}
-                  >
-                    {label}
-                  </span>
+                  <span style={{ transition: "opacity 150ms" }}>{label}</span>
                 )}
               </NavLink>
             ))}

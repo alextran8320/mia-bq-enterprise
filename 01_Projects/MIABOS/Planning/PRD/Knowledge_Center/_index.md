@@ -2,13 +2,13 @@
 
 **Status**: Draft
 **Owner**: A02 Product Owner Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-15
+**Last Status Change**: 2026-04-17
 **Source of Truth**: Entry point for Knowledge Center PRD artifacts
-**Blocking Reason**: Chưa chốt approval matrix, taxonomy knowledge, source types, freshness SLA, và external exposure boundary
+**Blocking Reason**: Chưa chốt final source-type boundary và external exposure boundary
 
 ---
 
@@ -16,14 +16,16 @@
 
 Folder này gom các PRD của surface `Knowledge_Center` để A02/A01 có lớp product-definition rõ ràng trước khi đi tiếp sang backlog, story sequencing, và design.
 
+**UX/IA decision 2026-04-17**: Knowledge Center là một page chung `/knowledge`, không chia thành nhiều page rời. Các capability bên dưới là section/panel trong cùng workspace: folder tree bên trái, search/command bar phía trên, content sections ở giữa, preview/detail panel bên phải. Tài liệu import từ nguồn ngoài phải preserve hình ảnh, bảng, và attachment dưới dạng document assets.
+
 ## PRD Map
 
 | PRD | Capability | Linked SRS | Status |
 |-----|------------|------------|--------|
-| [PRD-M08-KNW-001_Knowledge_And_Policy.md](./PRD-M08-KNW-001_Knowledge_And_Policy.md) | Knowledge core, citation, version, policy answer | `F-M08-KNW-001` | Draft |
-| [PRD-M08-KNW-002_Knowledge_Publishing_Queue.md](./PRD-M08-KNW-002_Knowledge_Publishing_Queue.md) | Review, approve, publish, rollback governance | `F-M08-KNW-002` | Draft |
-| [PRD-M08-KNW-003_FAQ_And_Policy_Library.md](./PRD-M08-KNW-003_FAQ_And_Policy_Library.md) | Search / filter / detail library cho SOP, FAQ, policy | `F-M08-KNW-003` | Draft |
-| [PRD-M08-KNW-004_Knowledge_Documents_And_Source_Governance.md](./PRD-M08-KNW-004_Knowledge_Documents_And_Source_Governance.md) | Source registry, freshness, trust, conflict governance | `F-M08-KNW-004` | Draft |
+| [PRD-M08-KNW-001_Knowledge_And_Policy.md](./PRD-M08-KNW-001_Knowledge_And_Policy.md) | `/knowledge` workspace, Import action, rich document assets, document/version/source reference | `F-M08-KNW-001` | Draft |
+| [PRD-M08-KNW-002_Knowledge_Publishing_Queue.md](./PRD-M08-KNW-002_Knowledge_Publishing_Queue.md) | Review, approve, publish, rollback governance as `Chờ duyệt` section | `F-M08-KNW-002` | Draft |
+| [PRD-M08-KNW-003_FAQ_And_Policy_Library.md](./PRD-M08-KNW-003_FAQ_And_Policy_Library.md) | Search / filter / detail section cho SOP, FAQ, policy, rich documents | `F-M08-KNW-003` | Draft |
+| [PRD-M08-KNW-004_Knowledge_Documents_And_Source_Governance.md](./PRD-M08-KNW-004_Knowledge_Documents_And_Source_Governance.md) | Source registry, freshness, trust, restricted-source governance as Source Health section | `F-M08-KNW-004` | Draft |
 
 ## Shared Inputs
 

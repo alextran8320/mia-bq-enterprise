@@ -7,7 +7,6 @@ import {
   LayoutDashboard,
   MessageSquareText,
   PackageSearch,
-  ShoppingBag,
   BarChart3,
   PanelLeftClose,
   PanelLeftOpen,

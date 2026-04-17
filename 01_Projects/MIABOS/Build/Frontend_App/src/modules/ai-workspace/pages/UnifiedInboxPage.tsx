@@ -9,18 +9,15 @@ import {
   AlertCircle,
   Bot,
   BookOpen,
-  Brain,
   Check,
   CheckCheck,
   ChevronDown,
   ChevronRight,
   FileText,
-  Globe,
   History,
   Info,
   Loader2,
   Mail,
-  MessageCircle,
   MessageSquare,
   Paperclip,
   Phone,
@@ -397,7 +394,7 @@ const MOCK_AI_DETAIL = {
         title:
           "HOW TO DETERMINE IF THIS IS THE FIRST TURN (MANDATORY GREETING RULE)",
         snippet:
-          'Count the number of messages in conversationHistory. IF ZERO (0) AGENT MESSAGES: This is the very first response. You MUST start with a greeting.',
+          "Count the number of messages in conversationHistory. IF ZERO (0) AGENT MESSAGES: This is the very first response. You MUST start with a greeting.",
       },
       {
         title: "CONSULTATION SCRIPTS BY MAIN NEED",
@@ -409,10 +406,7 @@ const MOCK_AI_DETAIL = {
 };
 
 function AiDetailPopup({ onClose }: { onClose: () => void }) {
-  const sectionHeading = (
-    icon: ReactElement,
-    label: string,
-  ): ReactElement => (
+  const sectionHeading = (icon: ReactElement, label: string): ReactElement => (
     <div
       style={{
         display: "flex",
@@ -616,10 +610,25 @@ function AiDetailPopup({ onClose }: { onClose: () => void }) {
               "Cơ sở phản hồi",
             )}
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {sourceChip(<FileText size={13} />, "Prompt", "#16A34A", "#BBF7D0")}
+              {sourceChip(
+                <FileText size={13} />,
+                "Prompt",
+                "#16A34A",
+                "#BBF7D0",
+              )}
               {sourceChip(<Tag size={13} />, "Dịch vụ", "#16A34A", "#BBF7D0")}
-              {sourceChip(<ShieldCheck size={13} />, "Quy tắc", "#EA580C", "#FED7AA")}
-              {sourceChip(<BookOpen size={13} />, "Kiến thức", "#2563EB", "#BFDBFE")}
+              {sourceChip(
+                <ShieldCheck size={13} />,
+                "Quy tắc",
+                "#EA580C",
+                "#FED7AA",
+              )}
+              {sourceChip(
+                <BookOpen size={13} />,
+                "Kiến thức",
+                "#2563EB",
+                "#BFDBFE",
+              )}
             </div>
           </div>
 
@@ -651,9 +660,32 @@ function AiDetailPopup({ onClose }: { onClose: () => void }) {
           <div>
             {sectionHeading(
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <rect x="1" y="9" width="3" height="6" rx="1" fill="var(--color-primary)" />
-                <rect x="6" y="5" width="3" height="10" rx="1" fill="var(--color-primary)" opacity="0.6" />
-                <rect x="11" y="1" width="3" height="14" rx="1" fill="var(--color-primary)" opacity="0.35" />
+                <rect
+                  x="1"
+                  y="9"
+                  width="3"
+                  height="6"
+                  rx="1"
+                  fill="var(--color-primary)"
+                />
+                <rect
+                  x="6"
+                  y="5"
+                  width="3"
+                  height="10"
+                  rx="1"
+                  fill="var(--color-primary)"
+                  opacity="0.6"
+                />
+                <rect
+                  x="11"
+                  y="1"
+                  width="3"
+                  height="14"
+                  rx="1"
+                  fill="var(--color-primary)"
+                  opacity="0.35"
+                />
               </svg>,
               "Phân tích ngữ cảnh",
             )}
@@ -727,14 +759,44 @@ function AiDetailPopup({ onClose }: { onClose: () => void }) {
             {/* Meta chips */}
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {metaChip("Ngôn ngữ", MOCK_AI_DETAIL.context.language)}
-              {metaChip("Trạng thái KH", MOCK_AI_DETAIL.context.customerStatus, "#DC2626", "#FECACA")}
-              {metaChip("Mức sẵn sàng", MOCK_AI_DETAIL.context.readiness, "#EA580C", "#FED7AA")}
-              {metaChip("Hành trình KH", MOCK_AI_DETAIL.context.journey, "#2563EB", "#BFDBFE")}
+              {metaChip(
+                "Trạng thái KH",
+                MOCK_AI_DETAIL.context.customerStatus,
+                "#DC2626",
+                "#FECACA",
+              )}
+              {metaChip(
+                "Mức sẵn sàng",
+                MOCK_AI_DETAIL.context.readiness,
+                "#EA580C",
+                "#FED7AA",
+              )}
+              {metaChip(
+                "Hành trình KH",
+                MOCK_AI_DETAIL.context.journey,
+                "#2563EB",
+                "#BFDBFE",
+              )}
             </div>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
-              {metaChip("Cập nhật booking", MOCK_AI_DETAIL.context.bookingUpdate)}
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+                marginTop: 8,
+              }}
+            >
+              {metaChip(
+                "Cập nhật booking",
+                MOCK_AI_DETAIL.context.bookingUpdate,
+              )}
               {metaChip("Cập nhật KH", MOCK_AI_DETAIL.context.customerUpdate)}
-              {metaChip("Giới tính KH", MOCK_AI_DETAIL.context.gender, "#9333EA", "#E9D5FF")}
+              {metaChip(
+                "Giới tính KH",
+                MOCK_AI_DETAIL.context.gender,
+                "#9333EA",
+                "#E9D5FF",
+              )}
             </div>
           </div>
 
@@ -742,14 +804,32 @@ function AiDetailPopup({ onClose }: { onClose: () => void }) {
           <div>
             {sectionHeading(
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M2 3.5C2 2.67 2.67 2 3.5 2h9c.83 0 1.5.67 1.5 1.5v9c0 .83-.67 1.5-1.5 1.5h-9A1.5 1.5 0 012 12.5v-9z" fill="#F59E0B" opacity="0.2" stroke="#F59E0B" strokeWidth="1.2" />
-                <path d="M5 6h6M5 8.5h4" stroke="#F59E0B" strokeWidth="1.2" strokeLinecap="round" />
+                <path
+                  d="M2 3.5C2 2.67 2.67 2 3.5 2h9c.83 0 1.5.67 1.5 1.5v9c0 .83-.67 1.5-1.5 1.5h-9A1.5 1.5 0 012 12.5v-9z"
+                  fill="#F59E0B"
+                  opacity="0.2"
+                  stroke="#F59E0B"
+                  strokeWidth="1.2"
+                />
+                <path
+                  d="M5 6h6M5 8.5h4"
+                  stroke="#F59E0B"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                />
               </svg>,
               "Tài nguyên sử dụng",
             )}
 
             {/* Kiến thức */}
-            <p style={{ fontSize: 12, color: "var(--color-text-tertiary)", margin: "0 0 8px", fontWeight: 500 }}>
+            <p
+              style={{
+                fontSize: 12,
+                color: "var(--color-text-tertiary)",
+                margin: "0 0 8px",
+                fontWeight: 500,
+              }}
+            >
               Kiến thức ({MOCK_AI_DETAIL.sources.knowledge.length})
             </p>
             {MOCK_AI_DETAIL.sources.knowledge.map((k, i) => (
@@ -764,7 +844,14 @@ function AiDetailPopup({ onClose }: { onClose: () => void }) {
             ))}
 
             {/* Dịch vụ */}
-            <p style={{ fontSize: 12, color: "var(--color-text-tertiary)", margin: "12px 0 8px", fontWeight: 500 }}>
+            <p
+              style={{
+                fontSize: 12,
+                color: "var(--color-text-tertiary)",
+                margin: "12px 0 8px",
+                fontWeight: 500,
+              }}
+            >
               Dịch vụ ({MOCK_AI_DETAIL.sources.services.length})
             </p>
             {MOCK_AI_DETAIL.sources.services.map((s, i) => (
@@ -779,7 +866,14 @@ function AiDetailPopup({ onClose }: { onClose: () => void }) {
             ))}
 
             {/* Quy tắc */}
-            <p style={{ fontSize: 12, color: "var(--color-text-tertiary)", margin: "12px 0 8px", fontWeight: 500 }}>
+            <p
+              style={{
+                fontSize: 12,
+                color: "var(--color-text-tertiary)",
+                margin: "12px 0 8px",
+                fontWeight: 500,
+              }}
+            >
               Quy tắc ({MOCK_AI_DETAIL.sources.rules.length})
             </p>
             {MOCK_AI_DETAIL.sources.rules.map((r, i) => (
@@ -1002,16 +1096,6 @@ export function UnifiedInboxPage() {
       e.preventDefault();
       handleSend();
     }
-  }
-
-  function handleResolve() {
-    if (!selectedId) return;
-    setConversations((prev) =>
-      prev.map((c) =>
-        c.id === selectedId ? { ...c, status: "resolved", unreadCount: 0 } : c,
-      ),
-    );
-    // setSelectedId(null);
   }
 
   const totalUnread = conversations.reduce((acc, c) => acc + c.unreadCount, 0);
@@ -1792,8 +1876,12 @@ export function UnifiedInboxPage() {
                               opacity: 0.85,
                               transition: "opacity 0.15s",
                             }}
-                            onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-                            onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.85")}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.opacity = "1")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.opacity = "0.85")
+                            }
                           >
                             <Info size={12} />
                             Chi tiết

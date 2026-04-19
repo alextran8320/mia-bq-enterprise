@@ -2,11 +2,11 @@
 
 **Status**: Draft
 **Owner**: A01 PM Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: -
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-13
+**Last Status Change**: 2026-04-19
 **Source of Truth**: This file
 **Blocking Reason**: -
 
@@ -63,10 +63,10 @@ Workshop đầu tiên gần như chắc chắn nên có:
 
 ## 4. Hàm ý khi đưa vào proposal
 
-Proposal nên mô tả BQ không phải như một case chatbot cho một phòng ban đơn lẻ, mà là một cơ hội `AI operating layer đa phòng ban` với rollout theo phase.
+Proposal nên mô tả BQ không phải như một case chatbot cho một phòng ban đơn lẻ, mà là một cơ hội triển khai `MIABOS Core AI CRM Platform` theo phase: bắt đầu từ AI Internal Chatbot cho nhóm nội bộ/content, sau đó mở rộng sang AI External Chatbot cho Social + Ecommerce, AI Automation cho các khối vận hành, và Forecasting khi Data Warehouse của BQ đủ sẵn sàng.
 
 Điều này quan trọng vì:
 
-- data source nằm ở nhiều phòng ban
+- source data nằm ở các hệ thống BQ đang sở hữu và Data Warehouse BQ dự kiến, không nằm trong MIABOS ngoại trừ `Conversation` và `Knowledge`
 - policy ownership nằm ở nhiều phòng ban
-- chatbot chỉ được tin nếu câu trả lời nhất quán giữa nhiều chức năng
+- chatbot chỉ được tin nếu câu trả lời nhất quán giữa nhiều chức năng và đúng boundary dữ liệu BQ

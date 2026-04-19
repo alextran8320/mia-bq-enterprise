@@ -9,7 +9,7 @@ graph TD
         I02[I02 SAP B1 Connector]
         I03[I03 Haravan Connector]
         I04[I04 KiotViet Connector]
-        I05[I05 Canonical Mapping and Source of Truth]
+        I05[I05 Canonical Mapping and Source Boundary]
     end
 
     subgraph Business_Modules

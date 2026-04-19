@@ -513,7 +513,7 @@ flowchart LR
 2. Dữ liệu nào từ KiotViet được phép dùng cho chatbot tư vấn bán hàng ngoài `còn hàng / hết hàng`?
 3. Có cho phép chatbot tư vấn bán hàng trả `giá bán` và `CTKM` hay chỉ nội bộ mới được xem?
 4. Có cần mở dữ liệu khách hàng cho CSKH và Store Manager hay giới hạn theo vai trò hẹp hơn?
-5. Escalation sau chatbot sẽ đẩy sang đâu: Lark, email, ticket system, hay workflow nội bộ của MIA?
+5. Escalation sau chatbot sẽ giữ trong MIABOS internal queue hay đẩy sang ticket/workflow system nào khác do BQ xác nhận sau?
 6. Dữ liệu nào được xem là nhạy cảm trong KiotViet: công nợ, doanh thu, loyalty, voucher, lịch sử mua hàng, hay tất cả?
 7. Có cần hỗ trợ câu hỏi về báo cáo quản lý chi nhánh trong phase 1 hay để phase sau?
 8. Có danh mục tài liệu SOP / policy nào đã duyệt để import vào knowledge layer chưa?

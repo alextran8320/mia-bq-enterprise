@@ -161,7 +161,7 @@ Neu khong co lop nay, `M06 Customer 360` se thieu order context, `M09` se tra lo
 ## 3. Preconditions
 
 - `M06 Customer and CRM` da co customer identity toi thieu de resolve khach theo phone / ten / order relation.
-- `I05 Canonical Mapping and Source of Truth` da co rule map giua `Haravan`, `KiotViet`, `SAP B1`, va `mia_order_id`.
+- `I05 Canonical Mapping and Source Boundary` da co rule map giua `Haravan`, `KiotViet`, `SAP B1`, planned `BQ Data Warehouse`, va `mia_order_id`.
 - `M03 Pricing` va `M04 Promotion` da co source-priority rule de M05 biet cach doc `promotion outcome summary`.
 - `M08 Knowledge and Policy` da publish chinh sach doi tra / bao hanh / sau ban de M05 co policy citation.
 - `M07 Access Control and Sensitivity` da co rule mask field nhay cam theo role / chi nhanh / cua hang / kenh.
@@ -716,7 +716,7 @@ Output:
 - Reads `I02` (SAP B1 Connector)
 - Reads `I03` (Haravan Connector)
 - Reads `I04` (KiotViet Connector)
-- Reads `I05` (Canonical Mapping and Source of Truth)
+- Reads `I05` (Canonical Mapping and Source Boundary)
 - Reads `F-M03-PRC-001` cho amount interpretation context
 - Reads `F-M04-PRO-001` cho promotion interpretation context
 - Reads `F-M06-CRM-001` de resolve customer / order relationship

@@ -1,8 +1,8 @@
 # Catalog And Commerce — Module Index
 
 **Status**: Active
-**Last Updated**: 2026-04-17
-**Last Updated By**: Claude (Antigravity / claude-sonnet-4-6)
+**Last Updated**: 2026-04-19
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Phase**: PB-02 / PB-03
 **Source of Truth**: [Feature_Registry.md](Feature_Registry.md)
 
@@ -45,12 +45,12 @@ M04 (Promotion) → requires M01, M03, M07, M08
 
 ## BQ Requirement Coverage
 
-| BQ Pain Point | Module Giải Quyết |
+| BQ Need / Use Case | Module Hỗ Trợ |
 |---|---|
 | Dữ liệu sản phẩm phân mảnh giữa SAP B1/KiotViet/Haravan | M01 |
 | Tồn kho phân tán — "mã nào, size nào, ở đâu, có nên chuyển không" | M02 |
-| Chính sách 1 giá nhưng CTKM khác theo kênh — hỏi cùng câu nhận trả lời khác nhau | M03 |
-| Xác định CTKM đang làm thủ công — làm chậm sell-through | M04 |
+| Chính sách 1 giá nhưng CTKM khác theo kênh là cách BQ vận hành — cần trả đúng context | M03 |
+| Tra cứu/tư vấn CTKM đang hiệu lực đúng scope, channel, thời điểm | M04 |
 
 ---
 
@@ -62,4 +62,4 @@ M04 (Promotion) → requires M01, M03, M07, M08
 
 ---
 
-_Last Updated: 2026-04-17_
+_Last Updated: 2026-04-19_

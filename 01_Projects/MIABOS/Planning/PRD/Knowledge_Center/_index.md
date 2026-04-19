@@ -33,5 +33,5 @@ Folder này gom các PRD của surface `Knowledge_Center` để A02/A01 có lớ
 
 - [BQ Customer Research Pack](../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Customer_Research_Pack.md)
 - [BQ Raw Notes](../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Raw_Notes.md)
-- [Portal CRM Module And Sitemap Recommendation](../../../Analysis/Features/Briefs/Portal_CRM_Module_And_Sitemap_Recommendation.md)
+- [MIABOS Core AI CRM Platform - Module And Sitemap Recommendation](../../../Analysis/Features/Briefs/Portal_CRM_Module_And_Sitemap_Recommendation.md)
 - `Knowledge_Center` SRS pack trong `Analysis/Features/Modules/Knowledge_Center/`

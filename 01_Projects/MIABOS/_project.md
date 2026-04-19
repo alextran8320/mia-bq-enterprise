@@ -1,15 +1,15 @@
 # MIABOS - Project Workspace
 
 **Status**: Active Workspace
-**Last Updated**: 2026-04-17
+**Last Updated**: 2026-04-19
 
 ## Project Identity
 
 - **Project Name**: MIABOS
 - **Client**: Giay BQ
 - **Client Segment**: Retail
-- **Project Scope**: AI platform for Marketing, Sales, and Customer Service operations
-- **Business Context**: MIABOS is being positioned here as an AI operating workspace tailored to a retail client rather than as a generic multi-product internal platform description.
+- **Project Scope**: Core AI CRM Platform for BQ, covering Internal AI Q&A, External Sales Chatbot, AI Automation, Knowledge, Conversation, and later Forecasting support.
+- **Business Context**: MIABOS is being positioned here as a Core AI CRM Platform tailored to Giày BQ. BQ keeps source-of-truth ownership in its existing systems and planned Data Warehouse; MIABOS creates and governs only Conversation and Knowledge data plus AI interaction/audit metadata.
 
 ## Retained Assets
 
@@ -35,7 +35,11 @@ The following documentation layers were intentionally removed on 2026-04-13:
 
 - Prioritize project descriptions that reference **Giay BQ** explicitly.
 - Treat the active domain as **Retail**.
-- Describe MIABOS in this workspace as serving **Marketing, Sales, and Customer Service** workflows for the client.
+- Describe MIABOS in this workspace as a **Core AI CRM Platform** for BQ, not as a generic AI operating layer and not as BQ's Data Warehouse.
+- Treat source-of-truth business data as owned by BQ systems / planned BQ Data Warehouse. MIABOS does not create operational source data outside `Conversation` and `Knowledge`.
+- Do not include Lark as a BQ operation system or workflow destination.
+- Treat CTKM as a data/use-case domain, not as a BQ pain point.
+- Rollout sequence should start with BQ internal/content teams before broad deployment to other departments.
 
 ## Requirement Source
 
@@ -46,6 +50,10 @@ The following documentation layers were intentionally removed on 2026-04-13:
 
 | Date       | Session Log                                                                                                                                                     | Summary                                                                                                                                                                                                                                                             |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-19 | [2026-04-19_MIABOS_AI_Data_Linkage_Labeling_Setup](../../02_Sessions/2026-04-19_MIABOS_AI_Data_Linkage_Labeling_Setup.md) | Created Analysis/Data_Setup artifact defining how Master Data, Knowledge Center content, and Interaction/Eval Data should be linked and labeled through canonical IDs, source mappings, relationship edges, metadata-filtered RAG, graph expansion, and source-priority rules. |
+| 2026-04-19 | [2026-04-19_MIABOS_BQ_AI_Training_Research_Materialization](../../02_Sessions/2026-04-19_MIABOS_BQ_AI_Training_Research_Materialization.md) | Materialized BQ brand research and AI training/data-readiness recommendation into `Research/BQ_AI_Training/RES-BQ-AIT-001`, covering dataset catalog, file types, size/batch guidance, and RAG/API/fine-tune/forecasting mechanism split. |
+| 2026-04-19 | [2026-04-19_MIABOS_BQ_Solution_Repositioning](../../02_Sessions/2026-04-19_MIABOS_BQ_Solution_Repositioning.md) | Updated BQ/MIABOS artifacts per Business Owner feedback: CTKM is not a pain point, no Lark/HQ framing, BQ Data Warehouse owns source-of-truth, and MIABOS is positioned as Core AI CRM Platform with Conversation + Knowledge as its created data. |
+| 2026-04-19 | [2026-04-19_BQ_Vietnamese_Diacritics_Normalization](../../02_Sessions/2026-04-19_BQ_Vietnamese_Diacritics_Normalization.md) | Converted selected active BQ/MIABOS docs from unaccented Vietnamese to accented Vietnamese while preserving content: BQ README, BQ Raw Notes quote block, and SAP B1 Internal Chatbot Integration POC. |
 | 2026-04-18 | [2026-04-18_MIABOS_Internal_Chatbot_Concept_Alignment](../../02_Sessions/2026-04-18_MIABOS_Internal_Chatbot_Concept_Alignment.md)                               | Audited Internal Chatbot Concept against related SRS/UXUI; synced research status to Approved, clarified M09 as Trusted Knowledge Companion plus read-only data snapshot, and fixed UXUI Source Trace binding. |
 | 2026-04-16 | [2026-04-16_MIABOS_CRM_UXUI_Detailing](../../02_Sessions/2026-04-16_MIABOS_CRM_UXUI_Detailing.md)                                                               | Deepened the four CRM UXUI specs with explicit on-screen information, search/filter/sort logic, detailed actions, and UX behavior for implementation and wireframing.                                                                                               |
 | 2026-04-17 | [2026-04-17_MIABOS_Knowledge_Center_Object_Model_Refinement](../../02_Sessions/2026-04-17_MIABOS_Knowledge_Center_Object_Model_Refinement.md)                   | Refined Knowledge Center BA object model per Business Owner feedback: `Domain` → `Knowledge Topic`, clarified `SOP Step`, removed old persistence/API contracts for gap/usage/conflict/citation-snapshot objects, and synced SRS/PRD/Stories/UXUI.                |
@@ -103,7 +111,7 @@ The following documentation layers were intentionally removed on 2026-04-13:
 | Date | Session Log | Summary |
 |------|-------------|---------|
 | 2026-04-17 | [2026-04-17_MIABOS_Escalation_UXUI_Spec_Draft](../../02_Sessions/2026-04-17_MIABOS_Escalation_UXUI_Spec_Draft.md) | Tạo draft UXUI spec cho `F-M11-ESC-001` tại `Design/UXUI_Features`: route composer dạng Drawer, screen inventory S1-S5, interaction pattern và đầy đủ 5 behavioral sections bắt buộc. Giá trị Status là Draft. |
-| 2026-04-17 | [2026-04-17_MIABOS_Escalation_And_Workflow_SRS_Refinement](../../02_Sessions/2026-04-17_MIABOS_Escalation_And_Workflow_SRS_Refinement.md) | Refine sâu F-M11-ESC-001: neo BQ Context với SAP/KiotViet, phân định Lark là External Destination, thiết lập Fallback Queue nội bộ tại MIABOS DB, và chốt AC, Error codes. |
+| 2026-04-17 | [2026-04-17_MIABOS_Escalation_And_Workflow_SRS_Refinement](../../02_Sessions/2026-04-17_MIABOS_Escalation_And_Workflow_SRS_Refinement.md) | Refine sâu F-M11-ESC-001. Note 2026-04-19: mọi framing Lark trong work block cũ đã bị Business Owner supersede; BQ không dùng Lark, escalation hiện phải hiểu là MIABOS internal queue hoặc destination do BQ xác nhận sau. |
 | 2026-04-16 | [2026-04-16_MIABOS_Access_Control_And_Sensitivity_UXUI_Spec_Draft](../../02_Sessions/2026-04-16_MIABOS_Access_Control_And_Sensitivity_UXUI_Spec_Draft.md) | Tạo draft UXUI spec cho `F-M07-SEC-001` tại `Design/UXUI_Features`: route `/governance/phan-quyen-du-lieu`, screen inventory cho governance UI, simulator outcome `allow/mask/summary_only/deny/escalation_only`, và giữ `Draft` vì linked SRS chưa `SRS Ready`. |
 | 2026-04-16 | [2026-04-16_MIABOS_Inventory_Availability_Phase1_Rule_Closure](../../02_Sessions/2026-04-16_MIABOS_Inventory_Availability_Phase1_Rule_Closure.md) | Chot tam bo rule phase 1 cho `F-M02-INV-001`: quantity_hint, freshness SLA theo nguon, conflict threshold, va dong bo cac rule nay sang validation/AC/test/checklist. |
 | 2026-04-16 | [2026-04-16_MIABOS_Inventory_Availability_SRS_Rewrite](../../02_Sessions/2026-04-16_MIABOS_Inventory_Availability_SRS_Rewrite.md) | Rewrite sach file `F-M02-INV-001_Inventory_Availability_SRS.md` trong module `Inventory_Availability`, loai bo loi encoding va lam ro lai toan bo semantics, flow, rules, va contract. |

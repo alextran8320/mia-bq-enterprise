@@ -2,11 +2,11 @@
 
 **Status**: Draft
 **Owner**: A01 PM Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: -
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-13
+**Last Status Change**: 2026-04-19
 **Source of Truth**: This file
 **Blocking Reason**: -
 
@@ -36,7 +36,7 @@ Bộ câu hỏi này dùng để làm rõ phạm vi thực tế của `chatbot n
 
 ## 4. Hệ thống và dữ liệu
 
-- Hệ thống nào là source of truth cho tồn kho, sản phẩm, giá, CTKM, trạng thái đơn hàng, và thông tin khách hàng?
+- BQ đang dự định xây Data Warehouse để làm source-of-truth riêng cho dữ liệu từ SAP B1, KiotViet, Haravan. Trong giai đoạn chưa hoàn tất Data Warehouse, hệ thống/source nào đang được BQ chỉ định là nguồn ưu tiên cho tồn kho, sản phẩm, giá, CTKM, trạng thái đơn hàng, và thông tin khách hàng?
 - Hôm nay `SAP B1`, `KiotViet`, `Haravan`, và Excel đang lệch nhau ở những điểm nào?
 - Những file Excel nào đang rất quan trọng về mặt vận hành dù nằm ngoài hệ thống chính?
 
@@ -55,7 +55,7 @@ Bộ câu hỏi này dùng để làm rõ phạm vi thực tế của `chatbot n
 ## 7. Hành động sau khi trả lời
 
 - Phase 1 chatbot có nên giữ read-only không?
-- Nếu về sau cần action, chatbot được phép làm gì: tạo task, raise issue, đề xuất chuyển kho, gợi ý CTKM, hay khởi tạo luồng phê duyệt?
+- Nếu về sau cần action, chatbot được phép làm gì: tạo ticket nội bộ MIABOS, raise issue, đề xuất chuyển kho, gợi ý CTKM theo context, hay khởi tạo luồng phê duyệt trên hệ thống BQ xác nhận?
 - Hành động nào bắt buộc phải được quản lý duyệt?
 
 ## 8. Bảo mật và audit

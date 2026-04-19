@@ -33,7 +33,8 @@
       "Bash(rm -f '/Users/tranduchoang/Library/CloudStorage/GoogleDrive-alextran8320@gmail.com/My Drive/MIABOS/01_Projects/MIABOS/Design/UXUI_Features/*.md')",
       "Bash(npx tsc:*)",
       "Bash(python3 \"/Users/tranduchoang/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"B2B SaaS CRM customer management modern international premium\" --design-system -p \"MIABOS\" -f markdown)",
-      "Bash(python3 \"/Users/tranduchoang/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"CRM dashboard metric cards gradient status badge premium\" --domain style -n 3)"
+      "Bash(python3 \"/Users/tranduchoang/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"CRM dashboard metric cards gradient status badge premium\" --domain style -n 3)",
+      "mcp__tavily-search__tavily_extract"
     ]
   }
 }

@@ -2,11 +2,11 @@
 
 **Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Claude (Antigravity / claude-sonnet-4-6)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
 **Approved By**: Business Owner (answered 2026-04-17)
-**Last Status Change**: 2026-04-17
+**Last Status Change**: 2026-04-19
 **Source of Truth**: This document
 **Blocking Reason**: -
 **Module**: M03
@@ -53,7 +53,7 @@ Là Sales, Marketing, Finance, hoặc AI bán hàng, tôi muốn biết giá áp
 
 ## 2. Business Context
 
-BQ pack ghi nhận rõ: BQ áp dụng `chính sách 1 giá` nhưng CTKM khác nhau theo loại cửa hàng (ví dụ: 20% riêng cho cửa hàng chính hãng). Giá cơ sở nằm ở SAP B1, giá ecommerce ở Haravan, giá tại POS ở KiotViet — và việc xác định CTKM phù hợp hiện đang làm **thủ công**. Nếu chatbot trả lời giá mà không resolve đúng context (channel / loại cửa hàng / thời điểm), người dùng sẽ nhận được giá sai và mất tin tưởng vào AI.
+BQ áp dụng `chính sách 1 giá` nhưng CTKM có thể khác nhau theo loại cửa hàng/kênh. Business Owner đã clarify ngày 2026-04-19 rằng đây là cách BQ vận hành, không phải pain point. Giá cơ sở nằm ở hệ thống/source do BQ xác định (SAP B1 hoặc Data Warehouse khi sẵn sàng), giá ecommerce ở Haravan, giá tại POS ở KiotViet. Nếu chatbot trả lời giá mà không resolve đúng context (channel / loại cửa hàng / thời điểm), người dùng sẽ nhận được giá sai và mất tin tưởng vào AI.
 
 ## 3. Preconditions
 

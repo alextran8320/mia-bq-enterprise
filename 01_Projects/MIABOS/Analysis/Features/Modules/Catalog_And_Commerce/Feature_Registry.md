@@ -2,8 +2,8 @@
 
 **Status**: Active
 **Owner**: A01 PM Agent
-**Last Updated By**: Claude (Antigravity / claude-sonnet-4-6)
-**Last Updated**: 2026-04-17 11:10
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
+**Last Updated**: 2026-04-19
 **Source of Truth**: This document
 **Blocking Reason**: -
 **Module Group**: Catalog_And_Commerce
@@ -23,8 +23,8 @@ Registry này theo dõi toàn bộ Feature SRS trong nhóm Catalog & Commerce, t
 |---|---|---|---|---|---|---|---|---|
 | F-M01-PRD-001 | Product Catalog & Query | M01 | High | **SRS Ready** | **UXUI Approved** | §3.1 Dữ liệu phân mảnh; §3.6 Phụ thuộc tri thức nội bộ | [SRS](Product/SRS/F-M01-PRD-001_Product_SRS.md) | [UXUI](Product/UXUI/UXUI-F-M01-PRD-001_Product_Catalog_Query.md) |
 | F-M02-INV-001 | Inventory Availability | M02 | High | **SRS Ready** | **UXUI Approved** | §3.2 Khả năng nhìn tồn kho; "mã nào, size nào, ở đâu, có nên chuyển không" | [SRS](Inventory_Availability/SRS/F-M02-INV-001_Inventory_Availability_SRS.md) | [UXUI](Inventory_Availability/UXUI/UXUI-F-M02-INV-001_Inventory_Availability.md) |
-| F-M03-PRC-001 | Pricing Resolution | M03 | High | **SRS Ready** | **UXUI Approved** | §3.3 Độ phức tạp giá và CTKM; chính sách 1 giá + CTKM theo kênh | [SRS](Pricing/SRS/F-M03-PRC-001_Pricing_SRS.md) | [UXUI](Pricing/UXUI/UXUI-F-M03-PRC-001_Pricing_Resolution.md) |
-| F-M04-PRO-001 | Promotion & Voucher | M04 | High | **SRS Ready** | **UXUI Approved** | §3.4 Quyết định CTKM còn thủ công | [SRS](Promotion/SRS/F-M04-PRO-001_Promotion_SRS.md) | [UXUI](Promotion/UXUI/UXUI-F-M04-PRO-001_Promotion_Voucher.md) |
+| F-M03-PRC-001 | Pricing Resolution | M03 | High | **SRS Ready** | **UXUI Approved** | §3.3 Giá và CTKM là miền dữ liệu vận hành; chính sách 1 giá + CTKM theo kênh là cách BQ vận hành | [SRS](Pricing/SRS/F-M03-PRC-001_Pricing_SRS.md) | [UXUI](Pricing/UXUI/UXUI-F-M03-PRC-001_Pricing_Resolution.md) |
+| F-M04-PRO-001 | Promotion & Voucher | M04 | High | **SRS Ready** | **UXUI Approved** | §3.3/§3.4 CTKM là use case tra cứu/tư vấn theo context, không phải pain point | [SRS](Promotion/SRS/F-M04-PRO-001_Promotion_SRS.md) | [UXUI](Promotion/UXUI/UXUI-F-M04-PRO-001_Promotion_Voucher.md) |
 
 ---
 
@@ -56,8 +56,8 @@ Registry này theo dõi toàn bộ Feature SRS trong nhóm Catalog & Commerce, t
 |---|---|---|---|
 | F-M01-PRD-001 | Dữ liệu sản phẩm phân mảnh giữa 3 hệ thống — cùng mã hàng trả lời khác nhau | Customer Research Pack §3.1, §3.6 | SAP B1, Haravan, KiotViet |
 | F-M02-INV-001 | Bài toán tồn không phải "có/không" mà là "mã nào, size nào, ở đâu, có nên chuyển không" | Customer Research Pack §3.2; Systems Landscape §8 | SAP B1, KiotViet, Haravan |
-| F-M03-PRC-001 | Chính sách 1 giá nhưng CTKM khác theo kênh/loại cửa hàng — người dùng nội bộ hỏi cùng câu nhưng nhận trả lời khác nhau | Customer Research Pack §3.3 | SAP B1, Haravan, KiotViet, M08 |
-| F-M04-PRO-001 | Xác định CTKM phù hợp hiện đang làm thủ công — làm chậm phản ứng với markdown và sell-through | Customer Research Pack §3.4 | SAP B1, Haravan, KiotViet, M08 |
+| F-M03-PRC-001 | Tra cứu giá/CTKM đúng context theo kênh, loại cửa hàng, và scope người hỏi; CTKM khác nhau là vận hành bình thường của BQ | Customer Research Pack §3.3 | SAP B1, Haravan, KiotViet, BQ Data Warehouse, M08 |
+| F-M04-PRO-001 | Hỗ trợ hỏi đáp/tư vấn CTKM đang hiệu lực theo context, không định vị CTKM là pain point | Customer Research Pack §3.3/§3.4 | SAP B1, Haravan, KiotViet, BQ Data Warehouse, M08 |
 
 ---
 
@@ -86,4 +86,4 @@ Registry này theo dõi toàn bộ Feature SRS trong nhóm Catalog & Commerce, t
 
 ---
 
-_Last Updated: 2026-04-17 11:10 by Claude (Antigravity / claude-sonnet-4-6) — A05 cross-check complete, 4 UXUI specs promoted to Approved_
+_Last Updated: 2026-04-19 by Codex CLI (GPT-5.4 Codex environment) — Reframed CTKM as operating data/use case, not BQ pain point._

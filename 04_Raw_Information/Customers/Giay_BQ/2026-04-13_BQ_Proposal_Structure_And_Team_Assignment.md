@@ -2,11 +2,11 @@
 
 **Status**: Draft
 **Owner**: A01 PM Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: -
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-13
+**Last Status Change**: 2026-04-19
 **Source of Truth**: This file
 **Blocking Reason**: -
 
@@ -24,12 +24,12 @@
 6. Vì sao cần một roadmap AI theo phase
 7. Tầm nhìn chuyển đổi AI cho BQ
 8. Tổng quan roadmap 4 phase
-9. Phase 1: AI chatbot nội bộ
+9. Phase 1: AI Internal Chatbot cho nội bộ/content team
 10. Kiến trúc kỹ thuật của Phase 1
-11. Phase 2: CRM + external AI chatbot
-12. Phase 3: Marketing AI + AI automation
+11. Phase 2: Core AI CRM + AI External Chatbot cho Social + Ecommerce
+12. Phase 3: AI Automation cho kế toán, tài chính, HR và các việc lặp lại
 13. Phase 4: Forecasting
-14. Chiến lược tích hợp giữa `SAP B1`, `KiotViet`, `Haravan`, Excel, và Lark
+14. Chiến lược tích hợp giữa `SAP B1`, `KiotViet`, `Haravan`, Excel, và Data Warehouse của BQ
 15. Cách triển khai và logic rollout
 16. Governance, team dự án, và bước tiếp theo
 
@@ -43,21 +43,23 @@
 
 ### Phase 1
 
-- Xây lớp truy vấn AI nội bộ và knowledge layer trước
-- Tập trung vào FAQ, tồn kho, giá, CTKM, sản phẩm, logistics, và hướng dẫn dùng hệ thống
+- Xây AI Internal Chatbot và knowledge layer trước cho các bộ phận nội dung/nội bộ của BQ
+- Tập trung vào FAQ, tồn kho, giá, CTKM theo context, sản phẩm, logistics, và hướng dẫn dùng hệ thống
+- Làm rõ MIABOS là Core AI CRM Platform, không phải Data Warehouse và không phải source system của BQ
 
 ### Phase 2
 
-- Mở rộng sang CRM và AI hướng khách hàng
+- Mở rộng sang Core AI CRM và AI External Chatbot hướng khách hàng
 - Dựa trên nền tri thức nội bộ và data mapping sạch hơn
+- Launch chatbot tư vấn bán hàng trên Social + Ecommerce ở mức public-safe
 
 ### Phase 3
 
-- Mở rộng sang Marketing AI và automation cho công việc lặp lại
+- Mở rộng sang AI Automation cho kế toán, tài chính, HR, marketing/content và các công việc lặp lại
 
 ### Phase 4
 
-- Triển khai forecasting sau khi data foundation đủ mạnh
+- Triển khai forecasting sau khi Data Warehouse / data foundation của BQ đủ mạnh
 
 ## 3. Phân vai trong team
 
@@ -65,7 +67,7 @@
 |---------|-------------------|-----------------------|
 | Business Owner | Narrative thương mại và chiến lược | Executive message, strategic framing, phần close proposal |
 | PO | Chủ proposal về mặt storyline | Flow slide, roadmap, merge deck, logic bước tiếp theo |
-| BA | Chủ business problem và use case | Bối cảnh business, pain points, use case, source-of-truth business mapping |
+| BA | Chủ business problem và use case | Bối cảnh business, business needs, use case, source-of-truth / Data Warehouse boundary |
 | Tech Lead | Chủ feasibility kỹ thuật | Chiến lược tích hợp, dependency, risk, giới hạn khả thi |
 | Solution Architect | Chủ kiến trúc | Diagram kiến trúc, target state theo phase, flow hệ thống |
 
@@ -85,13 +87,13 @@
 
 ### BA
 
-- draft phần bối cảnh business và pain point của BQ
+- draft phần bối cảnh business và bài toán của BQ, tránh ghi CTKM là pain point
 - viết use-case summary cho cả 4 phase
 - chuẩn bị data-source mapping và FAQ mapping cho Phase 1
 
 ### Tech Lead
 
-- xác định ranh giới tích hợp cho `SAP B1`, `KiotViet`, `Haravan`, Excel, và Lark
+- xác định ranh giới tích hợp cho `SAP B1`, `KiotViet`, `Haravan`, Excel, và Data Warehouse của BQ
 - draft technical assumptions và risks
 - xác nhận mức khả thi theo từng phase
 
@@ -104,6 +106,8 @@
 ## 5. Lưu ý khi delivery
 
 - Tránh positioning proposal như một chatbot đơn lẻ.
-- Nên positioning đây là một `AI operating layer theo phase cho BQ`.
+- Nên positioning đây là một `Core AI CRM Platform theo phase cho BQ`.
 - Phase 1 phải đủ cụ thể và đủ demo-able.
-- Forecasting cần được giữ ở phase sau, phụ thuộc vào data readiness.
+- Forecasting cần được giữ ở phase sau, phụ thuộc vào Data Warehouse / data readiness của BQ.
+- Không đưa Lark vào operation hoặc kiến trúc BQ.
+- CTKM là miền dữ liệu/use case để tra cứu, không phải pain point của BQ.

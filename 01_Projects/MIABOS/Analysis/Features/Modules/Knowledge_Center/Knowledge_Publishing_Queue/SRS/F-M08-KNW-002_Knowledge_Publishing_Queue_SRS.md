@@ -36,7 +36,7 @@
 | `KiotViet` | Store operations evidence | So sánh SOP cửa hàng và tình huống retail | Operational evidence | Hữu ích cho branch/store SOP |
 | `Haravan` | Ecommerce workflow evidence | Verify policy/order flow cho omnichannel | Channel evidence | Dùng cho CSKH/ecommerce policies |
 | `Excel` | Temporary promo/policy tables | Chỉ làm supporting attachment | Temporary evidence | Bắt buộc reviewer xác nhận khi dùng |
-| `Lark` | Approval workflow notes | Hỗ trợ comment/decision context | Workflow support | Không thay thế publish audit trong MIABOS |
+| `Internal workflow memo / department note` | Approval workflow notes nếu BQ cung cấp | Hỗ trợ comment/decision context | Workflow support | BQ không sử dụng Lark; không thay thế publish audit trong MIABOS |
 
 ## 1. User Story
 

@@ -35,7 +35,7 @@
 | `KiotViet` | POS/store-level operational notes, cửa hàng, retail exceptions | Bổ sung SOP vận hành cửa hàng và bối cảnh retail execution | Operational source | Dùng để neo SOP theo ngữ cảnh cửa hàng |
 | `Haravan` | Ecommerce workflow, đơn online, omnichannel service rules | Feed policy/FAQ cho ecommerce, CSKH online, và order inquiry | Channel source | Không thay thế policy nội bộ đã duyệt |
 | `Excel` | Policy tables tạm thời, exception sheet, promo notes | Chỉ được dùng như nguồn hỗ trợ hoặc temporary evidence | Supporting only | Không được coi là source of truth mặc định |
-| `Lark` | Workflow notes, form, approval context | Dùng làm nguồn workflow evidence và owner handoff | Supporting only | Phải link ngược về policy/document chính |
+| `Internal workflow memo / department note` | Workflow notes, form, approval context nếu BQ cung cấp | Dùng làm nguồn workflow evidence và owner handoff | Supporting only | BQ không sử dụng Lark; phải link ngược về policy/document chính |
 | `Internal Docs` | SOP, FAQ, policy được soạn nội bộ | Nguồn chính cho tri thức đã duyệt trong Knowledge Center | Canonical runtime source sau khi publish | Chỉ bản `Published` mới được AI dùng |
 
 ## 0C. Knowledge Object Boundary

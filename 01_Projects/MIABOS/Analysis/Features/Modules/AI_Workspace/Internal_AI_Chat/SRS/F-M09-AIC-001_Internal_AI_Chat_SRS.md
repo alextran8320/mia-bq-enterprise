@@ -45,7 +45,7 @@
 
 ## 0C. Research Alignment Note
 
-Feature này bám concept `Trusted Knowledge Companion` trong research M08: answer-first, citation rõ, verified knowledge, role-sensitive response, honest uncertainty, và human escalation. Phạm vi `Data` / `Mixed` trong SRS là **read-only operational data snapshot** cho BQ phase 1 khi user hỏi tồn kho, đơn online, giá/CTKM hoặc source vận hành; đây không phải Gen 4 action execution. Hệ thống không tự tạo ticket, tự update CRM/SAP, hay proactive push notification trong scope `F-M09-AIC-001`.
+Feature này bám concept `Trusted Knowledge Companion` trong research M08: answer-first, citation rõ, verified knowledge, role-sensitive response, honest uncertainty, và human escalation. Phạm vi `Data` / `Mixed` trong SRS là **read-only operational data snapshot** cho BQ phase 1 khi user hỏi tồn kho, đơn online, giá/CTKM hoặc source vận hành; đây không phải Gen 4 action execution. Hệ thống không tự tạo ticket, tự update CRM/SAP, hay proactive push notification trong scope `F-M09-AIC-001`. Business Owner clarify 2026-04-19: MIABOS là Core AI CRM Platform, không phải Data Warehouse; MIABOS chỉ tạo thêm Conversation và Knowledge, còn source data vận hành thuộc BQ/source systems/Data Warehouse.
 
 ## 1. User Story
 
@@ -65,7 +65,7 @@ Là `Ban điều hành / vận hành trung tâm`, `CSKH`, `Ecommerce / omnichann
 
 ## 2. Business Context
 
-BQ pack xác nhận phase 1 nên là `chatbot nội bộ + knowledge layer + integration foundation` vì cùng lúc giải quyết ba pain points: dữ liệu phân mảnh, policy phân tán, và thời gian hỏi đáp lặp lại giữa các phòng ban. Nội bộ BQ thường phải hỏi các câu kiểu `còn hàng không`, `CTKM áp dụng ra sao`, `policy đổi trả thế nào`, `đơn online đang ở đâu`, `xử lý khiếu nại ra sao`, `thao tác ERP/website thế nào`. Nếu chat không tách bạch được đâu là data snapshot và đâu là policy explanation, người dùng sẽ mất niềm tin rất nhanh.
+BQ pack xác nhận phase 1 nên là `AI Internal Chatbot + Knowledge + Conversation + integration-ready read layer`, rollout trước cho nhóm nội bộ/content của BQ. Bài toán chính là dữ liệu/tri thức phân mảnh, nhu cầu hỏi đáp lặp lại giữa các phòng ban, và nhu cầu tạo thói quen dùng AI trước khi mở rộng. Nội bộ BQ thường phải hỏi các câu kiểu `còn hàng không`, `CTKM áp dụng ra sao`, `policy đổi trả thế nào`, `đơn online đang ở đâu`, `xử lý khiếu nại ra sao`, `thao tác ERP/website thế nào`. CTKM không phải pain point của BQ; CTKM là miền dữ liệu cần tra cứu đúng context. Nếu chat không tách bạch được đâu là data snapshot và đâu là policy explanation, người dùng sẽ mất niềm tin rất nhanh.
 
 ## 3. Preconditions
 

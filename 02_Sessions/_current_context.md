@@ -1,14 +1,32 @@
 # Current Active Context
 
-**Last Updated**: 2026-04-18
-**Active Workspace Topic**: Internal Chatbot Concept alignment completed
+**Last Updated**: 2026-04-19
+**Active Workspace Topic**: AI data linkage and labeling setup for BQ
 **Current Project**: `MIABOS`
-**Current Phase**: `PB-03 Product Design`
-**Latest Canonical Session Log**: [[2026-04-18_MIABOS_Internal_Chatbot_Concept_Alignment]]
-**Today's Daily Log**: [[2026-04-18_Daily_Log]]
+**Current Phase**: `PB-02 Analysis & Strategy`
+**Latest Canonical Session Log**: [[2026-04-19_MIABOS_AI_Data_Linkage_Labeling_Setup]]
+**Today's Daily Log**: [[2026-04-19_Daily_Log]]
 
 ## Latest Decisions
 
+- Business Owner identified the need to link Master Data, Knowledge Center documents, and Interaction/Eval Data so AI can retrieve faster and more accurately.
+- Created `01_Projects/MIABOS/Analysis/Data_Setup/AI_Data_Linkage_And_Labeling_Setup.md` as the canonical Draft Analysis artifact for AI data linkage and labeling setup.
+- Data setup recommendation: use canonical IDs, source object mappings, object-knowledge relationship edges, metadata-filtered RAG, graph expansion, and source-priority rules before semantic search.
+- Labeling should be shared across Master Data, Knowledge chunks, and Interaction/Eval records so AI retrieval and evaluation use the same taxonomy.
+- Business Owner requested the BQ brand research and AI training/data-readiness recommendation be materialized as a canonical Research artifact.
+- Created `01_Projects/MIABOS/Research/BQ_AI_Training/RES-BQ-AIT-001_BQ_Brand_And_AI_Training_Data_Research.md` as `Draft — Pending Business Owner Review`.
+- Research recommendation: BQ AI Training should use Hybrid RAG + API/SQL retrieval + business rule layer + eval; fine-tuning should only optimize behavior/format after pilot evidence.
+- Operational data such as inventory, price, CTKM, orders, customers, fulfillment, and loyalty should be retrieved from source systems / BQ Data Warehouse, not memorized in model weights.
+- Business Owner clarified on 2026-04-19: differing CTKM under one price policy is BQ's normal operating model, not a problem statement; CTKM itself is not a BQ pain point.
+- Business Owner clarified BQ should not be described with `HQ`; use `BQ` / central business ownership language instead.
+- Business Owner clarified BQ does not use Lark and Lark must not appear as part of BQ operations.
+- Business Owner clarified BQ is planning its own Data Warehouse to be BQ's source of truth for data received from SAP, KiotViet, and Haravan.
+- MIABOS should be repositioned as a `Core AI CRM Platform`; MIABOS does not create BQ operational source data except Conversation and Knowledge artifacts.
+- BQ rollout should start with BQ internal/content teams before broad deployment to other departments.
+- BQ problem set should be framed as: AI Internal Chatbot for internal Q&A, AI External Chatbot for Social + Ecommerce sales advisory, AI Automation for Accounting/Finance/HR and repetitive office workflows, and Forecasting/prediction as a later data-readiness phase.
+- Documentation update completed on 2026-04-19 across BQ intake pack, MIABOS briefs, integration/source-boundary SRS, relevant module SRS/UXUI docs, project control-plane, and KB Rule 41.
+- Vietnamese diacritics normalization completed on 2026-04-19 for selected active docs: BQ customer README, BQ Raw Notes quote block, and SAP B1 Internal Chatbot Integration POC brief.
+- Scope note: document layer is updated; frontend mock code still contains old Lark/HQ labels in Operations mock data and should be cleaned before demoing that route.
 - Internal Chatbot Concept alignment completed on 2026-04-18: M09 SRS/UXUI were confirmed broadly aligned to `Trusted Knowledge Companion`; research metadata synced to Approved; M09 UXUI Source Trace binding fixed to use answer snapshot from `POST /mia/chat/query`.
 - `Data` / `Mixed` answer in `F-M09-AIC-001` is explicitly scoped as read-only operational data snapshot for BQ phase 1, not Gen 4 action execution.
 - Business Owner yêu cầu Knowledge Center không duplicate Catalog & Commerce taxonomy/data; `Knowledge Category / Domain` phải được diễn giải lại thành taxonomy tri thức nội bộ.
@@ -69,8 +87,16 @@
 
 ## Next Actions
 
+- **Business Owner**: review `RES-BQ-AIT-001_BQ_Brand_And_AI_Training_Data_Research.md` before it is used as proposal / AI training plan input.
+- **Business Owner / PM**: review `AI_Data_Linkage_And_Labeling_Setup.md` and confirm taxonomy / relationship model before technical design.
+- **A05 Tech Lead**: use the Data Setup Analysis as input for Directus collection design and integration architecture.
+- **A03 BA**: use the Data Setup Analysis as input for source-priority rules, role/scope definitions, and eval case setup.
+- **PM / BA / Tech Lead**: after approval, use the BQ AI Training research as input for proposal deck, Knowledge Center import scope, connector/data-readiness scope, and pilot eval set.
+- **PM / Business Owner**: review revised Core AI CRM Platform narrative and confirm it is ready to become proposal/deck source.
+- **PM / Business Owner**: confirm whether to normalize remaining deprecated/archive no-diacritics files such as `2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md` and older Orders story files.
+- **A07 FE Builder**: if Operations screens will be demoed, remove old Lark/HQ mock labels and align with MIABOS Internal Escalation Queue / BQ language.
 - **A07 FE Builder**: keep `/ai/chat` FE Preview within answer-first/trust-layer scope; do not add ticket/CRM/SAP action execution in this slice.
-- **A05/A08**: before backend/integration, materialize Integration Spec with source priority, access check, source routing, answer snapshot, and escalation handoff.
+- **A05/A08**: before backend/integration, materialize Integration Spec with BQ/Data Warehouse source priority, access check, source routing, answer snapshot, and escalation handoff.
 - **PM / Business Owner**: review aligned Knowledge Center PRD/SRS/UXUI docs against `RES-M08-KNW_UX_Patterns_And_IA.md` before FE revision.
 - **PM / Business Owner**: approve hoặc comment research artifact `RES-M08-KNW_Knowledge_Center_Layout_And_Rich_Document_Research.md`.
 - **PM / Business Owner**: review `/inbox` UI refinement round 2 (brand + avatar + search) và chốt feedback cuối.

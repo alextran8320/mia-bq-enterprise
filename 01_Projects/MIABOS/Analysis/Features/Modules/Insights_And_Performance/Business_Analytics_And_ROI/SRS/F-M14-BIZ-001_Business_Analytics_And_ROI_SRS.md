@@ -47,7 +47,7 @@ Là Ban điều hành, Regional Manager, hoặc Marketing/Sales Lead, tôi muố
 
 | Step | User Role | Action | Task Type | Notes |
 |------|-----------|--------|-----------|-------|
-| 1 | Ban điều hành / HQ | Mở Executive Dashboard, xem KPI tổng quan | Reporting | Entry point — tổng quan toàn hệ thống |
+| 1 | Ban điều hành BQ | Mở Executive Dashboard, xem KPI tổng quan | Reporting | Entry point — tổng quan toàn hệ thống |
 | 2 | Regional Manager | Drill-down theo chi nhánh hoặc khu vực để so sánh hiệu quả | Reporting | Cần M13 context cho drill-down đầy đủ (P2) |
 | 3 | Marketing / Sales Lead | Xem promo effectiveness và funnel conversion theo campaign | Analysis | So sánh CTKM nào hiệu quả nhất |
 | 4 | Marketing / CRM | Xem segment performance và remarketing outcome | Analysis | Liên kết CRM segment với conversion outcome |
@@ -57,7 +57,7 @@ Là Ban điều hành, Regional Manager, hoặc Marketing/Sales Lead, tôi muố
 
 ## 2. Business Context
 
-BQ hiện tổng hợp báo cáo thủ công: dữ liệu bán hàng từ SAP B1, sell-through từ KiotViet, ecommerce performance từ Haravan, CTKM từ Excel — không có view thống nhất nào. Ban điều hành không biết CTKM nào hiệu quả thực sự, chi nhánh nào underperform, và AI đang tạo ra ROI gì sau khi đầu tư. Marketing không có cơ sở dữ liệu để đánh giá remarketing trigger. Không có M14, MIABOS chỉ là chatbot — không phải operating intelligence layer. M14 là module biến pilot AI thành evidence-based investment cho BQ leadership.
+BQ đang có dữ liệu bán hàng từ SAP B1, sell-through từ KiotViet, ecommerce performance từ Haravan, và dự định xây Data Warehouse làm source-of-truth riêng. M14 không định vị CTKM là pain point; M14 chỉ cung cấp năng lực đo lường hiệu quả campaign/CTKM, funnel, AI usage và ROI khi dữ liệu đủ sẵn sàng. Không có M14, MIABOS khó chứng minh tác động kinh doanh của Core AI CRM Platform. M14 là module biến pilot AI thành evidence-based investment cho BQ leadership.
 
 ## 3. Preconditions
 
@@ -65,7 +65,7 @@ BQ hiện tổng hợp báo cáo thủ công: dữ liệu bán hàng từ SAP B1
 - `M05` đã có order data theo channel, branch, và fulfillment status.
 - `M06/M10` đã có funnel events, lead capture record, và segment definitions.
 - `M12` đã có AI quality metric snapshots với answer success rate, escalation rate.
-- User đã được M07 cấp quyền xem analytics theo scope (HQ xem tổng, Regional xem khu vực).
+- User đã được M07 cấp quyền xem analytics theo scope (Ban điều hành BQ xem tổng, Regional xem khu vực).
 
 ## 4. Postconditions
 

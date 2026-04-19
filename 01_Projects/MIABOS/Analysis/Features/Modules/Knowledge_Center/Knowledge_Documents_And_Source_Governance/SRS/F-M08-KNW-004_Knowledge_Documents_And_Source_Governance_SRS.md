@@ -35,7 +35,7 @@
 | `KiotViet` | Store POS, store-level inventory, retail operations | Neo SOP cửa hàng và exception theo vận hành bán lẻ | Operational source | Không duplicate dữ liệu POS; chỉ lưu metadata nguồn và source link |
 | `Haravan` | Ecommerce order flow, online inventory context, customer service context | Neo policy/FAQ cho online order và omnichannel service | Channel source | Quan trọng cho `Ecommerce / omnichannel` và `CSKH` |
 | `Excel` | Policy tables tạm thời, manual promotion logic, exception sheets | Gắn temporary trust level và freshness chặt hơn | Temporary source | Không mặc định là source of truth |
-| `Lark` | Workflow approvals, notes, form records | Bổ trợ governance, approval evidence, owner trace | Workflow support | Không là runtime source độc lập |
+| `Internal workflow memo / department note` | Workflow approvals, notes, form records nếu BQ cung cấp | Bổ trợ governance, approval evidence, owner trace | Workflow support | BQ không sử dụng Lark; không là runtime source độc lập |
 | `Internal Docs` | SOP/Policy/FAQ đã chuẩn hóa | Đầu ra canonical sau khi publish | Canonical published source | Phải link ngược về upstream source backing |
 
 ## 1. User Story
@@ -55,11 +55,11 @@ Là `PM Governance`, `IT / hệ thống / ERP / data`, `Tài chính / pricing co
 
 ## 2. Business Context
 
-BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `Haravan`, `Excel`, và `Lark`. Research pack đã chỉ ra đây là bài toán source trust nền, nếu không giải thì chatbot, CRM, automation, và forecasting đều mất niềm tin. Feature này là lớp governance để biết tài liệu tri thức dựa vào nguồn nào, source nào chỉ là supporting evidence, source nào stale, và source nào bị cấm dùng cho external-facing AI. Dữ liệu Catalog & Commerce đã có ở hệ nguồn; Knowledge Center không lưu lại dữ liệu đó như object nghiệp vụ mới.
+BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `Haravan`, `Excel`, và Data Warehouse dự kiến của BQ. Research pack đã chỉ ra đây là bài toán source trust nền, nếu không giải thì chatbot, CRM, automation, và forecasting đều mất niềm tin. Feature này là lớp governance để biết tài liệu tri thức dựa vào nguồn nào, source nào chỉ là supporting evidence, source nào stale, và source nào bị cấm dùng cho external-facing AI. Dữ liệu Catalog & Commerce đã có ở hệ nguồn/Data Warehouse của BQ; Knowledge Center không lưu lại dữ liệu đó như object nghiệp vụ mới.
 
 ## 3. Preconditions
 
-- Có integration foundation tối thiểu cho `SAP B1`, `KiotViet`, `Haravan`, và `Lark/Excel` sources.
+- Có integration foundation tối thiểu cho `SAP B1`, `KiotViet`, `Haravan`, Data Warehouse của BQ, và `Excel` sources khi được BQ cấp.
 - Có knowledge core từ `F-M08-KNW-001`.
 - Có access/sensitivity rules từ `F-M07-SEC-001`.
 
@@ -169,7 +169,7 @@ BQ hiện có tri thức và dữ liệu nằm rải ở `SAP B1`, `KiotViet`, `
   - `KiotViet` = store POS / store inventory / retail ops
   - `Haravan` = ecommerce / online order context
   - `Excel` = temporary exception/promo sheet
-  - `Lark` = workflow note/supporting evidence
+  - `Internal workflow memo / department note` = workflow note/supporting evidence nếu BQ cung cấp
 
 ## 15. Validation Rules
 

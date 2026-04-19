@@ -58,7 +58,7 @@ Là `PM Governance`, `Admin / Ops Governance`, `IT / ERP / data`, hoặc owner v
 
 BQ vận hành theo mô hình retail đa chi nhánh, đa cửa hàng, đa kênh, và có sự khác biệt rõ giữa cửa hàng chính hãng, đại lý, ecommerce, và các đội hỗ trợ trung tâm. Theo stakeholder map và BQ pack, các nhóm như `Ban điều hành / vận hành trung tâm`, `Vận hành bán lẻ`, `CSKH`, `Logistics / kho`, `Marketing / Trade`, `Ecommerce / omnichannel`, `Tài chính / pricing control`, và `IT / ERP / data` đều có lý do hợp lệ để dùng AI, nhưng không thể nhìn cùng một lớp dữ liệu.
 
-Pain point thật của BQ là dữ liệu đang phân mảnh giữa `SAP B1`, `KiotViet`, `Haravan`, `Excel`, và lớp workflow như `Lark`. Nếu MIABOS không có lớp phân quyền độc lập, AI rất dễ:
+Pain point thật của BQ là dữ liệu đang phân mảnh giữa `SAP B1`, `KiotViet`, `Haravan`, `Excel`, và Data Warehouse dự kiến của BQ chưa hoàn tất. Nếu MIABOS không có lớp phân quyền độc lập, AI rất dễ:
 
 - làm lộ giá nhập, margin-adjacent data, hoặc cơ chế CTKM nội bộ cho vai trò không phù hợp
 - cho phép cửa hàng/đại lý nhìn dữ liệu ngoài phạm vi chi nhánh, vùng, hoặc kênh
@@ -139,7 +139,7 @@ Giải thích:
 - `CSKH Team Lead`: xem ticket/order/service context thuộc phạm vi khách hàng và kênh phụ trách; không xem full pricing internals.
 - `Pricing Control / Finance`: xem logic giá, discount authority, và policy liên quan; không mặc định xem full customer transcript nếu không có nhu cầu.
 - `Ecommerce / Omnichannel Lead`: xem online order, channel operations, và chính sách kênh online trong scope được giao.
-- `Dealer / Franchise role`: chỉ xem dữ liệu áp dụng cho nhóm cửa hàng/đại lý được gán; không được nhìn nội bộ HQ.
+- `Dealer / Franchise role`: chỉ xem dữ liệu áp dụng cho nhóm cửa hàng/đại lý được gán; không được nhìn dữ liệu nội bộ BQ ngoài phạm vi.
 - `M08`, `M09`, `M10`, `M11`: bắt buộc là consumer của evaluate API; không được bypass bằng rule local.
 
 ## 11. Business Rules

@@ -1,158 +1,165 @@
-# Tich Hop SAP B1 cho AI Chatbot Noi Bo - Ban POC
+# Tích Hợp SAP B1 cho AI Chatbot Nội Bộ - Bản POC
 
 **Status**: Draft
 **Owner**: A03 BA Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-14
+**Last Status Change**: 2026-04-19
 **Source of Truth**: This document
 **Blocking Reason**: -
 
 ---
 
-## 1. Muc Dich
+## 1. Mục Đích
 
-Tai lieu nay la ban chuan hoa o cap `project` cho tinh nang `tich hop SAP B1 phuc vu AI Chatbot Noi Bo` trong workspace `MIABOS`.
+Tài liệu này là bản chuẩn hóa ở cấp `project` cho tính năng `tích hợp SAP B1 phục vụ AI Chatbot Nội Bộ` trong workspace `MIABOS`.
 
-Muc tieu cua tai lieu:
+Mục tiêu của tài liệu:
 
-- dat dung tai lieu vao dung lop project thay vi de o lop raw intake
-- chot mo hinh POC co the dem di trao doi voi khach hang ngay
-- bo cac gia dinh khong phu hop thuc te van hanh
-- xac dinh ro phong ban nao hoi gi, truy cap den nhom du lieu nao, va vi vay MIA can lay nhung thong tin nao
-- xac dinh ranh gioi giu MIA gon, khong bien thanh ban sao cua SAP B1
+- đặt đúng tài liệu vào đúng lớp project thay vì để ở lớp raw intake
+- chốt mô hình POC có thể đem đi trao đổi với khách hàng ngay
+- bỏ các giả định không phù hợp thực tế vận hành
+- xác định rõ phòng ban nào hỏi gì, truy cập đến nhóm dữ liệu nào, và vì vậy MIA cần lấy những thông tin nào
+- xác định ranh giới giữ MIABOS đúng vai trò `Core AI CRM Platform`, không biến thành bản sao của SAP B1, KiotViet, Haravan, hay Data Warehouse của BQ
 
-Tai lieu nay uu tien tinh `thuc chien` va `POC-ready`, khong co gang bao phu tat ca truong hop ngay tu dau.
+Tài liệu này ưu tiên tính `thực chiến` và `POC-ready`, không cố gắng bao phủ tất cả trường hợp ngay từ đầu.
 
-## 2. Tu Phan Bien Ban Cu
+## 2. Tự Phản Biện Bản Cũ
 
-Ban truoc co nhieu diem dung, nhung chua thuc su tot neu dem di chot scope POC:
+Bản trước có nhiều điểm đúng, nhưng chưa thực sự tốt nếu đem đi chốt scope POC:
 
-### 2.1 Dat sai lop tai lieu
+### 2.1 Đặt sai lớp tài liệu
 
-Tai lieu dang nam o `04_Raw_Information`, phu hop cho intake/discovery tho, nhung khong phai noi ly tuong de doi trien khai su dung lam tai lieu feature.
+Tài liệu đang nằm ở `04_Raw_Information`, phù hợp cho intake/discovery thô, nhưng không phải nơi lý tưởng để đội triển khai sử dụng làm tài liệu feature.
 
-### 2.2 Mo hinh phan quyen qua ly tuong
+### 2.2 Mô hình phân quyền quá lý tưởng
 
-Ban truoc co xu huong nghi den viec lay them `User / Authorization Reference` tu SAP de dua vao MIA.
+Bản trước có xu hướng nghĩ đến việc lấy thêm `User / Authorization Reference` từ SAP để đưa vào MIA.
 
-Dieu nay khong phu hop voi van hanh thuc te vi:
+Điều này không phù hợp với vận hành thực tế vì:
 
-- moi he thong da co logic phan quyen rieng
-- MIA khong nen co gang dong bo va tai hien toan bo quyen cua SAP
-- MIA chi can quan ly `user`, `role`, `data scope`, va `feature scope` trong chinh he thong MIA
+- mỗi hệ thống đã có logic phân quyền riêng
+- MIA không nên cố gắng đồng bộ và tái hiện toàn bộ quyền của SAP
+- MIA chỉ cần quản lý `user`, `role`, `data scope`, và `feature scope` trong chính hệ thống MIA
 
-### 2.3 Chua du ro theo phong ban
+### 2.3 Chưa đủ rõ theo phòng ban
 
-Ban truoc moi dung o muc domain tong quan, chua tra loi ro:
+Bản trước mới dừng ở mức domain tổng quan, chưa trả lời rõ:
 
-- phong ban nao su dung
-- ho se hoi nhung cau gi
-- can xem nhung nhom du lieu nao
-- can dong bo nhung field nao moi du cho POC
+- phòng ban nào sử dụng
+- họ sẽ hỏi những câu gì
+- cần xem những nhóm dữ liệu nào
+- cần đồng bộ những field nào mới đủ cho POC
 
-### 2.4 Chua du POC-ready
+### 2.4 Chưa đủ POC-ready
 
-Ban truoc dung cho framing tot, nhung van con mo rong qua nhieu huong. POC can mot scope gon hon, uu tien cho nhom nguoi dung va cau hoi co tan suat cao.
+Bản trước đúng cho framing tốt, nhưng vẫn còn mở rộng quá nhiều hướng. POC cần một scope gọn hơn, ưu tiên cho nhóm người dùng và câu hỏi có tần suất cao.
 
-## 3. Nguyen Tac Chot Lai Cho POC
+## 3. Nguyên Tắc Chốt Lại Cho POC
 
-### 3.1 SAP B1 la nguon dung cho du lieu nghiep vu cot loi
+### 3.1 SAP B1 là nguồn đúng cho dữ liệu nghiệp vụ cốt lõi
 
-Trong scope hien tai, SAP B1 duoc xem la nguon dung cho:
+Trong scope hiện tại, SAP B1 được xem là nguồn đúng cho:
 
 - item / product master
 - warehouse master
 - inventory balance
 - transfer / inbound logistics context
-- base pricing va mot phan pricing control
+- base pricing và một phần pricing control
 
-### 3.2 MIA khong tich hop phan quyen tu SAP
+### 3.2 MIA không tích hợp phân quyền từ SAP
 
-Day la quyet dinh thiet ke quan trong:
+Đây là quyết định thiết kế quan trọng:
 
-- `Khong` lay role/quyen SAP ve de dung lam quyen chinh cho chatbot
-- `Khong` co gang dong bo authorization matrix cua SAP sang MIA
-- `Khong` coi SAP la nguon cap quyen cho MIA
+- `Không` lấy role/quyền SAP về để dùng làm quyền chính cho chatbot
+- `Không` cố gắng đồng bộ authorization matrix của SAP sang MIA
+- `Không` coi SAP là nguồn cấp quyền cho MIA
 
-MIA se tu thiet lap:
+MIA sẽ tự thiết lập:
 
-- user cua MIA
-- role cua MIA
-- phong ban cua MIA
-- data scope cua MIA
-- feature scope cua MIA
+- user của MIA
+- role của MIA
+- phòng ban của MIA
+- data scope của MIA
+- feature scope của MIA
 
-Neu can, MIA chi dung thong tin user hoac phong ban tu he thong khac lam `reference`, khong dung lam `nguon quyen`.
+Nếu cần, MIA chỉ dùng thông tin user hoặc phòng ban từ hệ thống khác làm `reference`, không dùng làm `nguồn quyền`.
 
-### 3.3 POC phai tra loi duoc cau hoi that
+### 3.3 POC phải trả lời được câu hỏi thật
 
-Khong lay du lieu vi `co the se dung sau nay`.
+Không lấy dữ liệu vì `có thể sẽ dùng sau này`.
 
-Chi lay du lieu neu phuc vu mot trong cac nhu cau sau:
+Chỉ lấy dữ liệu nếu phục vụ một trong các nhu cầu sau:
 
-- nguoi dung hoi nhieu trong van hanh hang ngay
-- giam thoi gian hoi dap noi bo
-- giam phu thuoc vao 1 vai nhan su kinh nghiem
-- giup ra quyet dinh nhanh hon trong ban hang, kho, trade, pricing
+- người dùng hỏi nhiều trong vận hành hằng ngày
+- giảm thời gian hỏi đáp nội bộ
+- giảm phụ thuộc vào một vài nhân sự kinh nghiệm
+- giúp ra quyết định nhanh hơn trong bán hàng, kho, trade, pricing
 
-### 3.4 MIA chi luu read model can thiet
+### 3.4 MIA chỉ lưu read model cần thiết
 
-MIA chi nen luu:
+Business Owner clarify ngày 2026-04-19: BQ đang dự định xây `Data Warehouse` riêng làm source-of-truth để hứng dữ liệu từ SAP B1, KiotViet, Haravan. MIABOS không sở hữu source data vận hành của BQ.
 
-- read model de hoi dap nhanh
-- metadata de truy vet
-- knowledge / SOP phuc vu giai thich
-- audit log va escalation context
+MIA chỉ nên lưu:
 
-MIA khong nen luu:
+- read model để hỏi đáp nhanh
+- metadata để truy vết
+- knowledge / SOP phục vụ giải thích
+- audit log và escalation context
+- conversation data do MIABOS tạo ra
+- knowledge data do MIABOS quản trị/publish
 
-- full transaction history cua SAP
+MIA không nên lưu:
+
+- full transaction history của SAP
 - full accounting data
-- toan bo authorization data cua SAP
-- moi field ky thuat trong SAP
+- toàn bộ authorization data của SAP
+- mọi field kỹ thuật trong SAP
+- full Data Warehouse dataset của BQ
+- dữ liệu vận hành gốc mà BQ đã chốt nằm ở SAP B1, KiotViet, Haravan, hoặc Data Warehouse
 
-## 4. Muc Tieu POC Nen Chot Voi Khach Hang
+## 4. Mục Tiêu POC Nên Chốt Với Khách Hàng
 
-POC nen giai quyet 4 nhom bai toan chinh:
+POC nên giải quyết 4 nhóm câu hỏi vận hành chính, không định vị CTKM là pain point:
 
-1. `Tra cuu san pham`
-2. `Tra cuu ton kho`
-3. `Tra cuu gia va CTKM dang hieu luc`
-4. `Tra cuu logistics context co ban`
+1. `Tra cứu sản phẩm`
+2. `Tra cứu tồn kho`
+3. `Tra cứu giá và CTKM đang hiệu lực theo context`
+4. `Tra cứu logistics context cơ bản`
 
-Dong thoi chatbot noi bo can:
+Đồng thời chatbot nội bộ cần:
 
-- tra loi bang ngon ngu tu nhien
-- chi hien thi dung pham vi du lieu ma user duoc phep xem trong MIA
-- neu khong chac, cho phep tao escalation / ticket
-- hien thi nguon va do moi du lieu o muc vua du
+- trả lời bằng ngôn ngữ tự nhiên
+- chỉ hiển thị đúng phạm vi dữ liệu mà user được phép xem trong MIA
+- nếu không chắc, cho phép tạo escalation / ticket
+- hiển thị nguồn và độ mới dữ liệu ở mức vừa đủ
+- tôn trọng boundary: source-of-truth là hệ thống BQ / Data Warehouse khi sẵn sàng; MIABOS là Core AI CRM Platform tạo Conversation + Knowledge
 
-## 5. Phong Ban Nao Se Dung, Hoi Gi, Va Can Du Lieu Nao
+## 5. Phòng Ban Nào Sẽ Dùng, Hỏi Gì, Và Cần Dữ Liệu Nào
 
-### 5.1 Sales / Cua hang / ASM / RSM
+### 5.1 Sales / Cửa hàng / ASM / RSM
 
-**Cau hoi thuong gap**
+**Câu hỏi thường gặp**
 
-- Ma hang nay la gi?
-- Con hang khong?
-- Con bao nhieu o cua hang / kho nao?
-- San pham nay dang ap gia nao?
-- San pham nay dang co CTKM gi?
-- Neu cua hang toi het hang thi co kho nao con hang de de nghi dieu chuyen khong?
+- Mã hàng này là gì?
+- Còn hàng không?
+- Còn bao nhiêu ở cửa hàng / kho nào?
+- Sản phẩm này đang áp giá nào?
+- Sản phẩm này đang có CTKM gì?
+- Nếu cửa hàng tôi hết hàng thì có kho nào còn hàng để đề nghị điều chuyển không?
 
-**Can truy cap den**
+**Cần truy cập đến**
 
-- thong tin san pham
-- ton kho theo scope duoc cap
-- kho / cua hang mapping
-- gia dang hieu luc
-- CTKM dang hieu luc
-- thong tin hang dang chuyen / sap ve neu lien quan
+- thông tin sản phẩm
+- tồn kho theo scope được cấp
+- kho / cửa hàng mapping
+- giá đang hiệu lực
+- CTKM đang hiệu lực
+- thông tin hàng đang chuyển / sắp về nếu liên quan
 
-**MIA can lay**
+**MIA cần lấy**
 
 - item_code, item_name, barcode, category, color, size
 - warehouse_code, store_code, store_name
@@ -163,22 +170,22 @@ Dong thoi chatbot noi bo can:
 
 ### 5.2 Logistics / Kho
 
-**Cau hoi thuong gap**
+**Câu hỏi thường gặp**
 
-- Ma hang nao dang thieu o khu vuc nao?
-- Hang dang nam o kho nao?
-- Co hang dang chuyen khong?
-- Hang sap nhap ve khi nao?
-- Dieu chuyen nao dang tre?
+- Mã hàng nào đang thiếu ở khu vực nào?
+- Hàng đang nằm ở kho nào?
+- Có hàng đang chuyển không?
+- Hàng sắp nhập về khi nào?
+- Điều chuyển nào đang trễ?
 
-**Can truy cap den**
+**Cần truy cập đến**
 
-- ton kho theo kho
+- tồn kho theo kho
 - transfer / inbound status
 - warehouse master
-- supplier / partner reference o muc can thiet
+- supplier / partner reference ở mức cần thiết
 
-**MIA can lay**
+**MIA cần lấy**
 
 - warehouse_code, warehouse_name
 - item_code, item_name
@@ -188,23 +195,23 @@ Dong thoi chatbot noi bo can:
 
 ### 5.3 Marketing / Trade Marketing
 
-**Cau hoi thuong gap**
+**Câu hỏi thường gặp**
 
-- San pham nao dang nam trong CTKM nao?
-- CTKM nao dang ap cho kenh nao?
-- CTKM nao ap cho cua hang chinh hang, cua hang dai ly?
-- Gia / CTKM hien tai cua ma hang nay la gi?
-- Co ma hang nao dang khong co CTKM nhung can day sell-through khong?
+- Sản phẩm nào đang nằm trong CTKM nào?
+- CTKM nào đang áp cho kênh nào?
+- CTKM nào áp cho cửa hàng chính hãng, cửa hàng đại lý?
+- Giá / CTKM hiện tại của mã hàng này là gì?
+- Có mã hàng nào đang không có CTKM nhưng cần đẩy sell-through không?
 
-**Can truy cap den**
+**Cần truy cập đến**
 
 - pricing baseline
 - promotion data
-- scope theo kenh
-- scope theo loai cua hang
+- scope theo kênh
+- scope theo loai cửa hàng
 - category / product grouping
 
-**MIA can lay**
+**MIA cần lấy**
 
 - item_code, category, brand, collection
 - regular_price
@@ -215,21 +222,21 @@ Dong thoi chatbot noi bo can:
 
 ### 5.4 Finance / Pricing Control
 
-**Cau hoi thuong gap**
+**Câu hỏi thường gặp**
 
-- Gia co so cua ma hang nay la bao nhieu?
-- Gia dang ap dung cho kenh nay co dung khong?
-- CTKM nay co hop le theo khung hien hanh khong?
-- Ma hang nao dang co gia / CTKM bat thuong?
+- Giá cơ sở của mã hàng này là bao nhiêu?
+- Giá đang áp dụng cho kênh này có đúng không?
+- CTKM này có hợp lệ theo khung hiện hành không?
+- Mã hàng nào đang có giá / CTKM bất thường?
 
-**Can truy cap den**
+**Cần truy cập đến**
 
 - base pricing
 - effective pricing
 - promotion status
-- scope theo kenh / loai cua hang
+- scope theo kênh / loai cửa hàng
 
-**MIA can lay**
+**MIA cần lấy**
 
 - item_code
 - base_price
@@ -242,16 +249,16 @@ Dong thoi chatbot noi bo can:
 
 ### 5.5 CSKH / Call center
 
-**Ket luan cho POC**
+**Kết luận cho POC**
 
-`Chua nen dua vao scope POC dau tien` neu BQ chi can chatbot noi bo phuc vu van hanh ban hang.
+`Chưa nên đưa vào scope POC đầu tiên` nếu BQ chỉ cần chatbot nội bộ phục vụ vận hành bán hàng.
 
-Ly do:
+Lý do:
 
-- de phuc vu CSKH tot can them don hang, giao hang, doi tra, bao hanh
-- nhom nay se can du lieu order / service context, khong chi la SAP inventory
+- để phục vụ CSKH tốt cần thêm đơn hàng, giao hàng, đổi trả, bảo hành
+- nhóm này sẽ cần dữ liệu order / service context, không chỉ là SAP inventory
 
-Neu BQ muon dua CSKH vao POC, can bo sung them luong:
+Nếu BQ muốn đưa CSKH vào POC, cần bổ sung thêm luồng:
 
 - order status
 - exchange / return policy
@@ -260,52 +267,54 @@ Neu BQ muon dua CSKH vao POC, can bo sung them luong:
 
 ### 5.6 IT / ERP Key User
 
-**Ket luan cho POC**
+**Kết luận cho POC**
 
-Khong can lay nhieu transaction data hon. Nhom nay chu yeu can:
+Không cần lấy nhiều transaction data hơn. Nhóm này chủ yếu cần:
 
 - SOP
-- huong dan su dung SAP
+- hướng dẫn sử dụng SAP
 - source-of-truth rule
-- glossary loi / nghiep vu
+- glossary lỗi / nghiệp vụ
 
-Vi vay, thay vi mo rong sync SAP, nen bo sung:
+Vì vậy, thay vì mở rộng sync SAP, nên bổ sung:
 
 - knowledge document index
 - SOP chunks
 - error glossary
 
-## 6. Chot Lai Scope POC Nen Lam Ngay
+## 6. Chốt Lại Scope POC Nên Làm Ngay
 
-Sau khi tu phan bien, scope POC de xuat nen gom 4 nhom user:
+Sau feedback Business Owner 2026-04-19, scope POC nên rollout trước cho nhóm nội bộ/content của BQ để chuẩn hóa knowledge và hỏi đáp trước khi mở rộng. Về user domain, POC có thể demo 4 nhóm hỏi đáp:
 
-1. `Sales / cua hang / ASM`
-2. `Logistics / kho`
-3. `Marketing / Trade`
-4. `Finance / Pricing control`
+1. `Nội bộ / content / knowledge owner`
+2. `Sales / cửa hàng / ASM`
+3. `Logistics / kho`
+4. `Marketing / Trade` và `Finance / Pricing control` trong phạm vi tra cứu dữ liệu được cấp
 
-Khong nen dua ngay vao POC dau:
+Không nên đưa ngay vào POC đầu:
 
-- CSKH / call center
 - HR
 - accounting detail
 - purchasing detail sau
 - full management dashboard
+- full automation cho Finance/Accounting/HR
+- forecasting
 
-## 7. Mo Hinh Tong Quan Module SAP B1 Tich Hop Voi MIA BOS
+## 7. Mô Hình Tổng Quan Module SAP B1 / BQ Data Warehouse Tích Hợp Với MIABOS
 
 ```mermaid
 graph LR
-    subgraph SAP["SAP B1"]
+    subgraph BQ["BQ Source Systems / Data Warehouse"]
         SAP1[Item Master]
         SAP2[Warehouse Master]
         SAP3[Inventory Balance]
         SAP4[Transfer / Inbound]
         SAP5[Price List]
-        SAP6[Promotion Baseline<br/>neu SAP co quan ly]
+        SAP6[Promotion Baseline<br/>neu SAP co quản lý]
+        DWH[BQ Data Warehouse<br/>target source-of-truth]
     end
 
-    subgraph MIA["MIA BOS"]
+    subgraph MIA["MIABOS Core AI CRM Platform"]
         M1[Product Read Model]
         M2[Store Scope Read Model]
         M3[Inventory Read Model]
@@ -318,6 +327,13 @@ graph LR
         M10[Escalation / Ticket]
     end
 
+    SAP1 --> DWH
+    SAP2 --> DWH
+    SAP3 --> DWH
+    SAP4 --> DWH
+    SAP5 --> DWH
+    SAP6 --> DWH
+    DWH --> M1
     SAP1 --> M1
     SAP2 --> M2
     SAP3 --> M3
@@ -336,27 +352,28 @@ graph LR
     M9 --> M10
 ```
 
-### 7.1 Cach doc mo hinh
+### 7.1 Cách đọc mô hình
 
-- `SAP -> MIA` la chieu du lieu chinh.
-- `MIA User Role Scope` la role / scope do MIA quan ly, khong phai role dong bo tu SAP.
-- `Knowledge Layer` la lop bo sung de chatbot giai thich thay vi chi doc so lieu tho.
-- `Escalation / Ticket` la luong hanh dong sau hoi dap.
+- `SAP / KiotViet / Haravan -> BQ Data Warehouse -> MIABOS` là chiều target khi Data Warehouse sẵn sàng; trong POC có thể dùng connector/read model được BQ cho phép.
+- `MIA User Role Scope` là role / scope do MIA quản lý, không phải role đồng bộ từ SAP.
+- `Knowledge Layer` là lớp bổ sung để chatbot giải thích thay vì chỉ đọc số liệu thô.
+- `Escalation / Ticket` là luồng hành động sau hỏi đáp.
+- `Conversation` và `Knowledge` là hai nhóm data chính MIABOS tạo thêm; data vận hành gốc vẫn thuộc BQ.
 
-## 8. Bang Module Tich Hop POC
+## 8. Bảng Module Tích Hợp POC
 
-| Module SAP B1 | Module MIA | Chieu ket noi | Tan suat | Nhom dung chinh | POC Priority |
+| Module SAP B1 | Module MIA | Chiều kết nối | Tần suất | Nhóm dùng chính | POC Priority |
 |---------------|------------|---------------|----------|-----------------|-------------|
-| Item Master | Product Read Model | `SAP -> MIA` | 15-30 phut | Sales, Marketing, Finance | Bat buoc |
-| Warehouse Master | Store Scope Read Model | `SAP -> MIA` | 1 gio / on-change | Sales, Logistics | Bat buoc |
-| Inventory Balance | Inventory Read Model | `SAP -> MIA` | 1-5 phut | Sales, Logistics | Bat buoc |
-| Transfer / Inbound | Logistics Read Model | `SAP -> MIA` | 5-15 phut | Logistics, Sales | Nen co |
-| Price List | Pricing Read Model | `SAP -> MIA` | 5-15 phut | Sales, Marketing, Finance | Bat buoc |
-| Promotion Baseline | Promotion Read Model | `SAP -> MIA` | 5-15 phut | Sales, Marketing, Finance | Nen co |
+| Item Master | Product Read Model | `SAP -> MIA` | 15-30 phút | Sales, Marketing, Finance | Bat buoc |
+| Warehouse Master | Store Scope Read Model | `SAP -> MIA` | 1 giờ / on-change | Sales, Logistics | Bat buoc |
+| Inventory Balance | Inventory Read Model | `SAP -> MIA` | 1-5 phút | Sales, Logistics | Bat buoc |
+| Transfer / Inbound | Logistics Read Model | `SAP -> MIA` | 5-15 phút | Logistics, Sales | Nên có |
+| Price List | Pricing Read Model | `SAP -> MIA` | 5-15 phút | Sales, Marketing, Finance | Bat buoc |
+| Promotion Baseline | Promotion Read Model | `SAP -> MIA` | 5-15 phút | Sales, Marketing, Finance | Nên có |
 | SOP / Policy docs | Knowledge Layer | `Document source -> MIA` | Curated publish | IT key user, Sales, Logistics | Bat buoc |
-| Escalation action | Ticket / Workflow | `MIA -> Workflow` | Theo su kien | Tat ca nhom user | Nen co |
+| Escalation action | MIABOS Internal Queue / Destination TBD | `MIA -> MIABOS queue` | Theo sự kiện | Tất cả nhóm user | Nên có |
 
-## 9. MIA Nen Lay Nhung Truong Thong Tin Nao
+## 9. MIA Nên Lấy Những Trường Thông Tin Nào
 
 ### 9.1 Product
 
@@ -436,77 +453,77 @@ graph LR
 - warehouse_scope
 - feature_scope
 
-## 10. MIA Khong Nen Lay Hoac Khong Nen Luu Day Du
+## 10. MIA Không Nên Lấy Hoặc Không Nên Lưu Đầy Đủ
 
-De tranh bien MIA thanh ban sao cua SAP, POC khong nen lay / khong nen luu day du:
+Để tránh biến MIA thành bản sao của SAP, POC không nên lấy / không nên lưu đầy đủ:
 
-- toan bo transaction history
-- toan bo accounting detail
+- toàn bộ transaction history
+- toàn bộ accounting detail
 - full A/R, A/P
 - journal entries
 - payment history
 - full SAP authorization matrix
-- moi field ky thuat trong item / inventory tables
+- mọi field kỹ thuật trong item / inventory tables
 - low-value system logs
 
-## 11. Tan Suat Dong Bo POC
+## 11. Tần Suất Đồng Bộ POC
 
-| Nhom du lieu | Tan suat de xuat | Ly do |
+| Nhóm dữ liệu | Tần suất đề xuất | Lý do |
 |--------------|------------------|-------|
-| Product master | 15-30 phut | Bien dong khong qua cao |
-| Warehouse master | 1 gio / on-change | Chu yeu dung cho mapping va scope |
-| Inventory | 1-5 phut | Day la nhom du lieu nhay va co gia tri van hanh cao |
-| Transfer / Inbound | 5-15 phut | Can cho logistics va sales support |
-| Pricing | 5-15 phut | Can doi tuoi trong gio ban hang |
-| Promotion | 5-15 phut | Can theo ngay hieu luc va pham vi ap dung |
-| Knowledge docs | Curated publish | Quan tri bang approval workflow |
-| MIA role / scope | On-change | MIA tu quan tri |
+| Product master | 15-30 phút | Biến động không quá cao |
+| Warehouse master | 1 giờ / on-change | Chủ yếu dùng cho mapping và scope |
+| Inventory | 1-5 phút | Đây là nhóm dữ liệu nhạy và có giá trị vận hành cao |
+| Transfer / Inbound | 5-15 phút | Cần cho logistics và sales support |
+| Pricing | 5-15 phút | Cần độ tươi trong gio bán hàng |
+| Promotion | 5-15 phút | Cần theo ngày hiệu lực và phạm vi áp dụng |
+| Knowledge docs | Curated publish | Quản trị bằng approval workflow |
+| MIA role / scope | On-change | MIA tự quản trị |
 
-## 12. Cau Hoi Mau Chatbot Phai Tra Loi Duoc Trong POC
+## 12. Câu Hỏi Mẫu Chatbot Phải Trả Lời Được Trong POC
 
 ### 12.1 Sales
 
-- Ma `X` la san pham gi?
-- Ma `X` con bao nhieu o cua hang / kho trong pham vi toi duoc xem?
-- Ma `X` dang ap gia nao?
-- Ma `X` dang co CTKM nao?
+- Mã `X` là sản phẩm gì?
+- Mã `X` còn bao nhiêu ở cửa hàng / kho trong phạm vi tôi được xem?
+- Mã `X` đang áp giá nào?
+- Mã `X` đang có CTKM nào?
 
 ### 12.2 Logistics
 
-- Ma `X` hien con o kho nao?
-- Ma `X` co hang dang chuyen khong?
-- Chuyen kho nao dang tre?
+- Mã `X` hiện còn ở kho nào?
+- Mã `X` có hàng đang chuyển không?
+- Chuyển kho nào đang trễ?
 
 ### 12.3 Marketing / Trade
 
-- CTKM `Y` dang ap dung cho kenh nao?
-- Nhom san pham nao dang thuoc CTKM `Y`?
-- Ma `X` dang thuoc CTKM nao?
+- CTKM `Y` đang áp dụng cho kênh nào?
+- Nhóm sản phẩm nào đang thuộc CTKM `Y`?
+- Mã `X` đang thuộc CTKM nào?
 
 ### 12.4 Finance / Pricing
 
-- Gia co so cua ma `X` la bao nhieu?
-- Gia dang ap theo kenh `Y` co dung khong?
-- CTKM nay con hieu luc khong?
+- Giá cơ sở của mã `X` là bao nhiêu?
+- Giá đang áp theo kênh `Y` có đúng không?
+- CTKM này còn hiệu lực không?
 
-## 13. Discovery Questions Can Chot Truoc Khi Build
+## 13. Discovery Questions Cần Chốt Trước Khi Build
 
-- Gia va CTKM cuoi cung theo tung kenh dang do he thong nao so huu?
-- Dinh nghia `available_qty` cua BQ la gi?
-- Trade / Marketing co can xem ton kho chi tiet hay chi can nhin tong quan?
-- Finance / Pricing co can xem gia nhay cam hay chi can gia da duoc cong bo noi bo?
-- Escalation se day sang dau: `Lark`, `MIA task`, hay mot he thong khac?
-- Nguon tai lieu SOP / policy nao la nguon da duyet cuoi cung?
+- Giá và CTKM cuối cùng theo từng kênh đang do hệ thống nào sở hữu?
+- Định nghĩa `available_qty` của BQ là gì?
+- Trade / Marketing có cần xem tồn kho chi tiết hay chỉ cần nhìn tổng quan?
+- Finance / Pricing có cần xem giá nhạy cảm hay chỉ cần giá đã được công bố nội bộ?
+- Escalation sẽ giữ trong `MIABOS internal queue` hay đẩy sang hệ thống nào của BQ sau khi BQ xác nhận?
+- Nguồn tài liệu SOP / policy nào là nguồn đã duyệt cuối cùng?
 
-## 14. Ket Luan POC
+## 14. Kết Luận POC
 
-Ban POC hoan chinh nen duoc chot theo nguyen tac sau:
+Bản POC hoàn chỉnh nên được chốt theo nguyên tắc sau:
 
-- bat dau bang `Sales + Logistics + Marketing/Trade + Finance/Pricing`
-- lay du lieu nghiep vu chinh tu `SAP B1`
-- khong tich hop phan quyen SAP vao MIA
-- MIA tu quan ly user, role, va data scope cua MIA
-- MIA chi luu read model va metadata can thiet
-- chatbot phai tra loi duoc cac cau hoi van hanh that, khong chi la demo tong quan
+- bắt đầu bằng nhóm `nội bộ/content` của BQ, sau đó mở rộng sang `Sales + Logistics + Marketing/Trade + Finance/Pricing`
+- lấy dữ liệu nghiệp vụ chính từ hệ thống BQ đang sở hữu hoac `BQ Data Warehouse` khi sẵn sàng
+- không tích hợp phân quyền SAP vào MIA
+- MIA tự quản lý user, role, và data scope của MIA
+- MIA chỉ lưu read model, metadata cần thiết, Conversation, Knowledge, audit/escalation context
+- chatbot phải trả lời được các câu hỏi vận hành thật, không chỉ là demo tổng quan
 
-Neu chot theo cach nay, day la mot scope co the POC duoc ngay voi khach hang ma van giu he thong gon, ro boundary, va co kha nang mo rong sau.
+Nếu chốt theo cách này, đây là một scope có thể POC được ngay với khách hàng mà vẫn giữ hệ thống gọn, rõ boundary, và có khả năng mở rộng sau.

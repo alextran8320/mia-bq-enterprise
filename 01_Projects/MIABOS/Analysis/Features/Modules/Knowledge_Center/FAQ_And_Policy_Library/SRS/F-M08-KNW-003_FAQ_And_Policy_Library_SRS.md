@@ -36,7 +36,7 @@
 | `KiotViet` | Store procedures | Feed SOP theo bối cảnh cửa hàng | Operational evidence | Quan trọng cho `Store Lead` và retail ops |
 | `Haravan` | Ecommerce/online order guidance | Feed FAQ/policy cho online service flows | Channel evidence | Gắn `omnichannel` tags |
 | `Excel` | Temporary policy notes | Chỉ làm source badge/supporting note khi đã được publish | Temporary evidence | Không hiện như source of truth |
-| `Lark` | Workflow memo/approval context | Hỗ trợ tracking feedback và owner handoff | Workflow support | Không phải document body chính |
+| `Internal workflow memo / department note` | Workflow memo/approval context nếu BQ cung cấp | Hỗ trợ tracking feedback và owner handoff | Workflow support | BQ không sử dụng Lark; không phải document body chính |
 
 ## 1. User Story
 

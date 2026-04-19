@@ -48,7 +48,7 @@
 ### Failure Indicators
 
 - Ban điều hành vẫn phải mở Excel để lấy số liệu sau khi có dashboard
-- Marketing không biết CTKM nào hiệu quả hơn từ dashboard
+- Marketing không xem được hiệu quả CTKM/campaign từ dashboard khi dữ liệu chưa được cấp đủ
 - PM không có số cụ thể để chứng minh AI ROI với BQ leadership
 - Dashboard hiển thị số không đáng tin khi insufficient data (thay vì thông báo rõ)
 
@@ -58,7 +58,7 @@
 
 ### Purpose
 
-Cung cấp dashboard analytics business tập trung cho các persona lãnh đạo và functional leads của BQ — thay thế báo cáo thủ công tổng hợp từ nhiều hệ thống bằng 1 view thống nhất với KPI trend, promo effectiveness, funnel conversion, và AI ROI.
+Cung cấp dashboard analytics business tập trung cho các persona lãnh đạo và functional leads của BQ — tiêu thụ dữ liệu từ source systems/Data Warehouse khi sẵn sàng để hiển thị KPI trend, promo effectiveness, funnel conversion, và AI ROI. CTKM được xem là miền phân tích, không phải pain point của BQ.
 
 ### User Persona
 

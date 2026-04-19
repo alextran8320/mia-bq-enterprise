@@ -6,7 +6,7 @@
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-17
+**Last Status Change**: 2026-04-19
 **Source of Truth**: This document
 **Blocking Reason**: Chưa chốt final external exposure boundary
 **Project**: MIABOS
@@ -23,7 +23,7 @@
 ## 0. Executive Summary
 
 - What is being proposed: Xây lớp `Source Governance` như section `Source Health` trong `/knowledge`, để Knowledge Center biết nguồn nào đáng tin, còn mới, được phép cho kênh/persona nào, và tài liệu/assets nào đang phụ thuộc vào nguồn đó.
-- Why now: BQ có tri thức và dữ liệu rải ở SAP B1, Haravan, KiotViet, Excel, và tài liệu nội bộ; không có source governance thì AI sẽ mất trust rất nhanh.
+- Why now: BQ có tri thức và dữ liệu rải ở SAP B1, Haravan, KiotViet, Excel, tài liệu nội bộ, và đang dự định xây Data Warehouse riêng làm source-of-truth. MIABOS cần source governance để AI dùng đúng nguồn BQ cho phép mà không biến MIABOS thành kho dữ liệu nghiệp vụ mới.
 - Expected business and user outcome: AI chỉ dùng đúng nguồn được phép, stale/restricted source được phát hiện sớm, và PM/Ops kiểm soát được trust layer.
 - Recommended decision: Approve source governance như P0 foundation cùng `Knowledge Core`, nhưng giữ `Draft` đến khi source types và freshness policy được chốt.
 
@@ -31,11 +31,11 @@
 
 ### 1.1 Background
 
-BQ có nhiều nguồn khác nhau cho tri thức và dữ liệu. Requirement pack đã chỉ ra bài toán source-of-truth là nền để chatbot, CRM, automation, và forecasting không bị drift.
+BQ có nhiều nguồn khác nhau cho tri thức và dữ liệu. Business Owner đã clarify ngày 2026-04-19 rằng source-of-truth dữ liệu nghiệp vụ sẽ thuộc hệ thống BQ đang sở hữu và Data Warehouse BQ dự kiến. MIABOS chỉ tạo thêm `Conversation` và `Knowledge`; Knowledge Source Governance chỉ quản trị metadata, trust, freshness, và allowed-use của nguồn để chatbot, CRM, automation, và forecasting không bị drift.
 
 ### 1.2 Problem Statement
 
-Nếu không có source registry và rule trust/freshness, cùng một knowledge topic có thể bị trả từ nguồn đã cũ hoặc chưa được phép, đặc biệt ở pricing policy, CTKM, và hướng dẫn vận hành. Dữ liệu sản phẩm/tồn/giá/đơn đã nằm ở Catalog & Commerce và hệ nguồn; Knowledge Center chỉ lưu source metadata/linking cho tài liệu tri thức.
+Nếu không có source registry và rule trust/freshness, cùng một knowledge topic có thể bị trả từ nguồn đã cũ hoặc chưa được phép, đặc biệt ở pricing policy, CTKM, và hướng dẫn vận hành. CTKM không phải pain point của BQ; đây là miền dữ liệu/use case cần AI tra cứu đúng context. Dữ liệu sản phẩm/tồn/giá/đơn đã nằm ở Catalog & Commerce và hệ nguồn BQ; Knowledge Center chỉ lưu source metadata/linking cho tài liệu tri thức.
 
 ### 1.3 Why This Matters
 
@@ -110,7 +110,8 @@ Nếu để source governance sau khi AI đã vận hành, đội dự án sẽ 
 
 ### 6.3 Non-Goals
 
-- Không thay thế `I05 Canonical Mapping and Source of Truth`
+- Không thay thế `I05 Canonical Mapping and Source Boundary`
+- Không thay thế Data Warehouse/source-of-truth của BQ
 - Không trở thành MDM platform đầy đủ cho mọi domain
 
 ## 7. Release Slice and Sequencing
@@ -127,7 +128,7 @@ Nếu để source governance sau khi AI đã vận hành, đội dự án sẽ 
 |------------|--------------|---------|----------|----------------|
 | `F-M08-KNW-004` | Knowledge Documents and Source Governance | Source registry + freshness + restricted-source governance | P0 | Draft |
 | `F-M08-KNW-001` | Knowledge and Policy | Consumer của source governance | P0 | Draft |
-| `F-I05-INT-001` | Canonical Mapping and Source of Truth | Mapping/priority logic giữa các hệ | P0 | Draft |
+| `F-I05-INT-001` | Canonical Mapping and Source Boundary | Mapping/priority logic giữa các hệ theo source owner BQ/Data Warehouse | P0 | Draft |
 | `F-M07-SEC-001` | Access Control and Sensitivity | Allowed persona/channel filter | P0 | Draft |
 | `F-M12-OBS-001` | Audit and Observability | stale/restricted monitoring nếu scope analytics mở | P1 | Draft |
 
@@ -171,7 +172,7 @@ Source governance là bề mặt cho PM/Ops/Governance trong `/knowledge`, khôn
 
 ### 9.4 Technical Constraints for Downstream Teams
 
-- Cần interlock với `I05` để không nhân đôi source-of-truth logic
+- Cần interlock với `I05` để không nhân đôi source-boundary/source-priority logic
 - Stale/restricted events có thể feed `M12` nếu scope observability mở
 - Runtime source filtering phải áp được theo channel và persona
 
@@ -207,6 +208,7 @@ Source governance là bề mặt cho PM/Ops/Governance trong `/knowledge`, khôn
 | 2026-04-15 | Source governance được tách riêng khỏi knowledge core | Codex CLI / A01 PM Agent | Trust layer cần artifact riêng để gate kiến trúc và operational rules |
 | 2026-04-17 | Source governance là section `Source Health` trong `/knowledge` và phải hiển thị affected documents/assets | Codex CLI / A01 PM Agent | Giữ Knowledge Center thống nhất và hỗ trợ tài liệu import rich content |
 | 2026-04-17 | Freshness phase 1 dùng threshold chung `1 giờ`; không tạo workflow xử lý mismatch dữ liệu trong M08 | Codex CLI / A01 PM Agent | Align với quyết định BO và giữ source governance ở mức warning/restricted health |
+| 2026-04-19 | Source governance không được định vị MIABOS là source-of-truth dữ liệu nghiệp vụ; BQ Data Warehouse và hệ thống BQ giữ ownership nguồn | Business Owner / Codex CLI | Reposition MIABOS thành Core AI CRM Platform, chỉ tạo Conversation + Knowledge |
 
 ## 14. Linked Artifacts
 

@@ -97,7 +97,7 @@ Là người dùng nội bộ của BQ thuộc các nhóm `Sales`, `Logistics`, 
 BQ đang vận hành trong bối cảnh bán lẻ nhiều cửa hàng, nhiều kênh và nhiều hệ thống. Hiện tại:
 
 - `SAP B1` là nguồn dữ liệu đúng cho tồn kho và một phần dữ liệu ERP lõi.
-- Giá và CTKM có khả năng đang phân tán giữa `SAP B1`, `KiotViet`, `Haravan`, hoặc file điều hành thủ công.
+- Giá và CTKM có thể nằm ở nhiều hệ thống theo cách BQ đang vận hành (`SAP B1`, `KiotViet`, `Haravan`, hoặc file điều hành được BQ cấp). CTKM khác nhau theo kênh/loại cửa hàng không phải pain point.
 - Doanh nghiệp không chỉ cần một chatbot tra cứu mà cần một AI có thể tham gia trực tiếp vào chuỗi bán hàng và chăm sóc khách hàng.
 - Các thông tin FAQ, chính sách đổi trả, chính sách doanh nghiệp, quy tắc ứng xử AI, kiến thức chung về BQ là các dữ liệu riêng mà MIA BOS cần tự sở hữu vì không tồn tại chuẩn trên các hệ thống vận hành khác.
 
@@ -299,7 +299,7 @@ flowchart LR
 Diễn giải mô hình tổng quan:
 
 - `SAP B1 ERP Core`: là lõi ERP, giữ các dữ liệu nghiệp vụ backend chuẩn hóa.
-- `MIA BOS CRM Core`: là lõi CRM và AI operating layer, nhận dữ liệu cần thiết từ ERP và đồng bộ ngược các thực thể CRM / bán hàng cần đưa về SAP.
+- `MIABOS Core AI CRM Platform`: là lõi AI CRM nhận dữ liệu cần thiết từ hệ thống BQ hoặc Data Warehouse khi sẵn sàng; MIABOS chỉ tạo Conversation + Knowledge và không thay source-of-truth dữ liệu vận hành của BQ.
 
 ### 14.1A Mô hình đồng bộ module giữa SAP B1 và MIA BOS
 
@@ -456,7 +456,7 @@ Diễn giải ngắn:
 | Đơn hàng tạo từ chatbot / MIA | MIA BOS tạo draft order / sales lead / reservation | `mia_order_ref` | SAP B1 là nơi nhận để tạo `sap_order_no` chính thức | Tạo và theo dõi đầu kênh | Nên có cơ chế 2-step: MIA tạo order intent, SAP xác nhận order ERP |
 | Đơn hàng tạo từ KiotViet / Haravan | KiotViet / Haravan | `channel_order_no` | SAP B1, sau đó đồng bộ ngược về MIA BOS | Nhận, hợp nhất, lưu summary | MIA không cần làm master order cho các đơn phát sinh ngoài MIA |
 | Đơn hàng ERP hậu kiểm / đối soát | SAP B1 | `sap_order_no` | MIA BOS | Nhận và lưu summary / trạng thái | SAP là nguồn chuẩn cho trạng thái backend cần đối soát |
-| CTKM / bảng giá | Cần chốt theo kênh | Theo hệ thống owner từng kênh | MIA BOS và các kênh liên quan | Nhận, giải thích, áp rule | Đây là domain cần ma trận source-of-truth riêng |
+| CTKM / bảng giá | Cần chốt theo kênh | Theo hệ thống owner từng kênh hoặc Data Warehouse BQ khi sẵn sàng | MIABOS và các kênh liên quan | Nhận, giải thích, áp rule | Đây là domain cần ma trận source-boundary theo cách BQ vận hành |
 
 Nguyên tắc kiến trúc khuyến nghị:
 
@@ -872,7 +872,7 @@ Thông tin cần nhìn thấy:
 - Giai đoạn 1: Bật cho nhóm nội bộ pilot gồm Sales, Logistics, Marketing / Trade, Finance / Pricing.
 - Giai đoạn 2: Bật chatbot tư vấn bán hàng với khả năng khai thác nhu cầu và gợi ý sản phẩm.
 - Giai đoạn 3: Bật CRM enrichment, remarketing, và chăm sóc tự động.
-- Giai đoạn 4: Mở rộng thêm domain sau khi chốt source-of-truth cho giá và CTKM theo kênh.
+- Giai đoạn 4: Mở rộng thêm domain sau khi BQ/Data Warehouse chốt source-of-truth cho giá và CTKM theo kênh.
 
 ## 22. Open Questions
 
@@ -886,7 +886,7 @@ Thông tin cần nhìn thấy:
 6. Những trường dữ liệu khách hàng nào BQ đồng ý để MIA BOS lưu cho CRM và remarketing?
 7. Có được lưu `size giày`, `sở thích`, `mục đích mua`, `ngày sinh`, `khu vực`, và `lịch sử tương tác` không?
 8. Nguồn đơn hàng summary sẽ lấy từ đâu: SAP B1, Haravan, KiotViet, hay MIA BOS tự tạo từ luồng chatbot?
-9. Escalation sau chatbot sẽ đẩy sang đâu: Lark, email, ticket system, hay workflow nội bộ của MIA?
+9. Escalation sau chatbot sẽ giữ trong MIABOS internal queue hay đẩy sang ticket/workflow system nào khác do BQ xác nhận sau?
 10. Với chatbot bán hàng, ngoài `còn hàng / hết hàng`, có được phép trả lời giá, CTKM, cửa hàng gần nhất, và CTA mua hàng ở mức nào?
 11. Có danh mục tài liệu FAQ / policy / chính sách đổi trả nào đã duyệt để import vào MIA chưa?
 12. Ai là owner nghiệp vụ chịu trách nhiệm xác nhận khi chatbot trả lời sai hoặc dữ liệu xung đột?

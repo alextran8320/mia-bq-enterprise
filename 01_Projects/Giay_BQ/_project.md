@@ -1,8 +1,8 @@
-# Project: Giay BQ Portal — MIABOS Implementation
+# Project: Giay BQ — MIABOS Core AI CRM Platform Implementation
 
 **Status**: In Progress
 **Created**: 2026-04-13
-**Current Phase**: PB-03 (Product Design — Design System Approved, UX/UI Spec pending)
+**Current Phase**: PB-03 (Product Design — Core AI CRM positioning updated, UX/UI Spec pending)
 
 ---
 
@@ -25,25 +25,25 @@
 ## Intake
 
 ### Goal
-Xây dựng MIABOS Internal Portal cho Giày BQ — một B2B portal tích hợp AI chatbot nội bộ, quản trị catalog/commerce, CRM, và knowledge center dựa trên nền tảng MIA Smart.
+Xây dựng MIABOS cho Giày BQ như một Core AI CRM Platform: AI Internal Chatbot cho nhu cầu hỏi đáp riêng của BQ, AI External Chatbot cho Social + Ecommerce sales advisory, Knowledge/Conversation layer, AI Automation cho các khối vận hành, và nền tảng Forecasting khi Data Warehouse BQ đủ sẵn sàng.
 
 ### Business Value
-Giúp nhân viên Giày BQ tra cứu sản phẩm, tồn kho, giá, CTKM, đơn hàng và tương tác với AI chatbot nội bộ để tư vấn bán hàng, xử lý yêu cầu khách hàng nhanh hơn, không cần chuyển đổi giữa các hệ thống SAP B1 / Haravan / KiotViet.
+Giúp BQ dùng AI để tra cứu tri thức/dữ liệu đúng boundary, tư vấn bán hàng trên kênh social/ecommerce, giảm câu hỏi lặp lại giữa phòng ban, và chuẩn bị nền dữ liệu cho automation/forecasting. Source-of-truth dữ liệu nghiệp vụ vẫn thuộc SAP B1 / Haravan / KiotViet / Data Warehouse BQ; MIABOS chỉ tạo thêm Conversation và Knowledge.
 
 ### Scope
 | Field | Value |
 |-------|-------|
-| Phase 1 Priority | MIA Smart (AI Chatbot) — Internal AI Chat, Knowledge Center, Retail Ops Core |
+| Phase 1 Priority | AI Internal Chatbot + Knowledge + Conversation cho nhóm nội bộ/content BQ trước khi rollout rộng |
 | Target Users | Nhân viên nội bộ Giày BQ (Sales, CSKH, Store Lead, Ops, Admin) |
 | Platforms | Web (Desktop-first, responsive) |
-| Integrations | SAP B1, Haravan, KiotViet (via Integration Orchestrator I01–I06) |
+| Integrations | SAP B1, Haravan, KiotViet, planned BQ Data Warehouse (via Integration Orchestrator I01–I06/read model được BQ cho phép) |
 
 ### Constraints
 | Type | Detail |
 |------|--------|
 | Tech | Greenfield — React 18+, shadcn/ui, Tailwind CSS, Directus CMS |
 | Design | Aura Minimalist Design System (canonical: [`01_Projects/MIABOS/Design/Design_System.md`](../MIABOS/Design/Design_System.md)) |
-| Scope | Phase 1 = MIA Smart only; MIA Spring & MIA Scale là future phases |
+| Scope | Phase 1 = Internal/content-team adoption trước; Phase 2 = External Chatbot Social + Ecommerce; Phase 3 = AI Automation; Phase 4 = Forecasting khi Data Warehouse sẵn sàng |
 
 ---
 
@@ -56,7 +56,7 @@ Giúp nhân viên Giày BQ tra cứu sản phẩm, tồn kho, giá, CTKM, đơn 
 | BQ Stakeholder Map | Danh sách stakeholders và vai trò | [04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Stakeholder_Map.md](../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Stakeholder_Map.md) |
 | BQ SAP Research | Nghiên cứu SAP B1 cho BQ | [04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_SAP_Research.md](../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_SAP_Research.md) |
 | BQ Integration Architecture | Kiến trúc tích hợp và data boundary | [04_Raw_Information/Customers/Giay_BQ/2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md](../../04_Raw_Information/Customers/Giay_BQ/2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md) |
-| Portal CRM Module & Sitemap | Khuyến nghị module set và sitemap | [01_Projects/MIABOS/Analysis/Features/Briefs/Portal_CRM_Module_And_Sitemap_Recommendation.md](../MIABOS/Analysis/Features/Briefs/Portal_CRM_Module_And_Sitemap_Recommendation.md) |
+| Core AI CRM Module & Sitemap | Khuyến nghị module set và sitemap theo positioning Core AI CRM Platform | [01_Projects/MIABOS/Analysis/Features/Briefs/Portal_CRM_Module_And_Sitemap_Recommendation.md](../MIABOS/Analysis/Features/Briefs/Portal_CRM_Module_And_Sitemap_Recommendation.md) |
 
 ---
 
@@ -67,8 +67,9 @@ Giúp nhân viên Giày BQ tra cứu sản phẩm, tồn kho, giá, CTKM, đơn 
 | 2026-04-13 | [MIABOS Giay BQ Requirement Source Linkage](../../02_Sessions/2026-04-13_MIABOS_Giay_BQ_Requirement_Source_Linkage.md) | PB-01 | Liên kết BQ requirement pack vào control plane |
 | 2026-04-14 | [BQ Integration Architecture](../../02_Sessions/2026-04-14_MIABOS_BQ_Integration_Architecture_and_Data_Boundary.md) | PB-02 | Thiết lập kiến trúc tích hợp SAP B1 / Haravan / KiotViet |
 | 2026-04-15 | [MIABOS Analysis Feature Modularization](../../02_Sessions/2026-04-15_MIABOS_Analysis_Feature_Modularization.md) | PB-02 | Materialize 17 SRS modules theo Integration + Business layers |
-| 2026-04-15 | [MIABOS Portal CRM Module And Sitemap](../../02_Sessions/2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation.md) | PB-02 | Chốt module set và sitemap Portal CRM |
+| 2026-04-15 | [MIABOS Portal CRM Module And Sitemap](../../02_Sessions/2026-04-15_MIABOS_Portal_CRM_Module_And_Sitemap_Recommendation.md) | PB-02 | Chốt module set và sitemap giai đoạn cũ; note 2026-04-19 supersede positioning thành Core AI CRM Platform |
 | 2026-04-15 | [Giay BQ Design System Setup](../../02_Sessions/2026-04-15_Giay_BQ_Design_System_Setup.md) | PB-03 | Materialize Design System Aura Minimalist canonical cho Giay_BQ project |
+| 2026-04-19 | [MIABOS BQ Solution Repositioning](../../02_Sessions/2026-04-19_MIABOS_BQ_Solution_Repositioning.md) | PB-03 | Reposition MIABOS thành Core AI CRM Platform; CTKM không phải pain point; BQ không dùng Lark; Data Warehouse BQ giữ source-of-truth; rollout nội bộ/content trước |
 
 ---
 

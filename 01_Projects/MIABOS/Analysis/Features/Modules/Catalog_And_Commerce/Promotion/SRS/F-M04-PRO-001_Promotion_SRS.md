@@ -2,11 +2,11 @@
 
 **Status**: SRS Ready
 **Owner**: A03 BA Agent
-**Last Updated By**: Claude (Antigravity / claude-sonnet-4-6)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
 **Approved By**: Business Owner (answered 2026-04-17)
-**Last Status Change**: 2026-04-17
+**Last Status Change**: 2026-04-19
 **Source of Truth**: This document
 **Blocking Reason**: -
 **Module**: M04
@@ -53,7 +53,7 @@ Là Sales, Marketing, CSKH, hoặc AI bán hàng, tôi muốn biết CTKM / vouc
 
 ## 2. Business Context
 
-BQ pack ghi nhận: xác định CTKM phù hợp tại BQ hiện đang làm **thủ công** — đây là pain point trực tiếp. CTKM của BQ không đơn giản: có chính sách 1 giá nhưng CTKM riêng cho cửa hàng chính hãng (VD: 20%), CTKM theo campaign ecommerce trên Haravan, voucher tại POS KiotViet, và loyalty redemption. Nếu AI không resolve đúng scope và channel, người dùng sẽ nhận CTKM sai — trả cho khách nhầm hoặc mất doanh thu.
+BQ có CTKM theo nhiều context: cửa hàng chính hãng, đại lý, ecommerce, POS, voucher, loyalty redemption. Business Owner đã clarify ngày 2026-04-19 rằng CTKM không phải pain point của BQ và chính sách 1 giá + CTKM khác nhau là cách BQ đang vận hành. Module này tồn tại để AI tra cứu/tư vấn CTKM đúng scope, channel, thời điểm và public/internal boundary; nếu AI không resolve đúng scope và channel, người dùng sẽ nhận CTKM sai — trả cho khách nhầm hoặc mất doanh thu.
 
 ## 3. Preconditions
 
@@ -113,8 +113,8 @@ BQ pack ghi nhận: xác định CTKM phù hợp tại BQ hiện đang làm **th
 - CTKM chỉ được trả ra khi: còn hiệu lực, scope match với context người hỏi, và pass public-safe whitelist nếu cần.
 - **Public-safe exposure rule** (chốt bởi Business Owner 2026-04-17): **Tất cả CTKM đang active** được phép hiển thị trên chatbot đối ngoại (khách hỏi qua website/Zalo). Không áp dụng default-whitelist — default là show tất cả active, trừ các CTKM bị Marketing đánh dấu `internal_only`.
 - **Internal-only authority** (chốt bởi Business Owner 2026-04-17): **Marketing** là người quyết định CTKM nào là internal-only (ví dụ: CTKM đại lý chiến lược, CHS). Mọi CTKM không có flag `internal_only` do Marketing set thì mặc định là public-safe.
-- **Promotion source master** (chốt bởi Business Owner 2026-04-17): `KiotViet` là master cho CTKM store/POS. `Haravan` sync theo KiotViet cho channel online — không được xem Haravan là independent source of truth cho CTKM store.
-- Khi có conflict giữa nguồn (sau khi biết KiotViet là master), hệ thống flag `PRO-002` và gợi ý confirm với `Marketing` — không tự chọn Haravan.
+- **Promotion source priority**: Source ưu tiên cho CTKM phải theo rule BQ/Data Warehouse xác nhận. Note cũ ngày 2026-04-17 về KiotViet/Haravan chỉ được xem là giả định cần kiểm chứng lại, không phải kết luận cuối cùng.
+- Khi có conflict giữa nguồn, hệ thống flag `PRO-002` và gợi ý confirm với `Marketing` / Data Owner BQ — không tự chọn Haravan hoặc KiotViet nếu chưa có priority rule được BQ xác nhận.
 - CTKM hết hiệu lực phải được filter out khỏi `promotion_read_model` theo schedule, không để stale promo ảnh hưởng đến answer.
 - Điều kiện áp dụng (tối thiểu mua bao nhiêu, loại khách nào, channel nào) phải được hiển thị đầy đủ — không trả "có CTKM" mà không nói điều kiện.
 

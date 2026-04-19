@@ -1,42 +1,44 @@
-# Ho So Khach Hang Giay BQ
+# Hồ Sơ Khách Hàng Giày BQ
 
 **Status**: Draft
 **Owner**: A01 PM Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: -
 **Approval Required**: Business Owner
 **Approved By**: -
-**Last Status Change**: 2026-04-14
+**Last Status Change**: 2026-04-19
 **Source of Truth**: This folder index
 **Blocking Reason**: -
 
 ---
 
-## Muc Dich
+## Mục Đích
 
-Thu muc nay luu cac ghi chu intake, tai lieu research da cau truc, stakeholder framing, landscape he thong, va cac input ho tro proposal cho case `Giay BQ`.
+Thư mục này lưu các ghi chú intake, tài liệu research đã cấu trúc, stakeholder framing, landscape hệ thống, và các input hỗ trợ proposal cho case `Giay BQ`.
 
-Day la `customer pack` dang duoc dung trong giai doan intake va pre-project discovery de:
+Đây là `customer pack` đang được dùng trong giai đoạn intake và pre-project discovery để:
 
-- giu lai cac requirement signal dang lam viec cung Business Owner
-- gom research thanh bo tai lieu co the tai su dung
-- ho tro architecture framing, workshop planning, va solution scoping
+- giữ lại các requirement signal đang làm việc cùng Business Owner
+- gom research thành bộ tài liệu có thể tái sử dụng
+- hỗ trợ architecture framing, workshop planning, và solution scoping
 
-## Thanh Phan Ho So
+## Thành Phần Hồ Sơ
 
-| Tai lieu | Vai tro |
+| Tài liệu | Vai trò |
 |----------|---------|
-| [2026-04-13_BQ_Raw_Notes.md](2026-04-13_BQ_Raw_Notes.md) | Ghi chu intake tho tu Business Owner va cac tin hieu ban dau |
-| [2026-04-13_BQ_Customer_Research_Pack.md](2026-04-13_BQ_Customer_Research_Pack.md) | Bo research tong hop ve business model, pain points, roadmap AI, va nhan dinh chien luoc |
-| [2026-04-13_BQ_SAP_Research.md](2026-04-13_BQ_SAP_Research.md) | Tai lieu research rieng cho SAP Business One, gom module nghiep vu, object groups, va ham y tich hop |
-| [2026-04-13_BQ_Systems_And_Integration_Landscape.md](2026-04-13_BQ_Systems_And_Integration_Landscape.md) | Buc tranh he thong hien tai cua SAP B1, KiotViet, Haravan, Excel, va Lark |
-| [2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md](2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md) | Bo cau hoi discovery cho chatbot noi bo |
-| [2026-04-13_BQ_Stakeholder_Map.md](2026-04-13_BQ_Stakeholder_Map.md) | Mapping stakeholder va phong ban tham gia theo roadmap AI |
-| [2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md](2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md) | Cau truc proposal va phan cong team noi bo |
-| [2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md](2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md) | Ban discovery goc. Tai lieu feature chinh da duoc chuan hoa va chuyen sang [SAP_B1_Internal_Chatbot_Integration_POC.md](../../../01_Projects/MIABOS/Analysis/Features/Briefs/SAP_B1_Internal_Chatbot_Integration_POC.md) |
+| [2026-04-13_BQ_Raw_Notes.md](2026-04-13_BQ_Raw_Notes.md) | Ghi chú intake thô từ Business Owner và các tín hiệu ban đầu |
+| [2026-04-13_BQ_Customer_Research_Pack.md](2026-04-13_BQ_Customer_Research_Pack.md) | Bộ research tổng hợp về business model, business needs, roadmap AI, và nhận định chiến lược |
+| [2026-04-13_BQ_SAP_Research.md](2026-04-13_BQ_SAP_Research.md) | Tài liệu research riêng cho SAP Business One, gồm module nghiệp vụ, object groups, và hàm ý tích hợp |
+| [2026-04-13_BQ_Systems_And_Integration_Landscape.md](2026-04-13_BQ_Systems_And_Integration_Landscape.md) | Bức tranh hệ thống hiện tại của SAP B1, KiotViet, Haravan, Excel, và Data Warehouse dự kiến của BQ |
+| [2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md](2026-04-13_BQ_Internal_Chatbot_Discovery_Questions.md) | Bộ câu hỏi discovery cho chatbot nội bộ |
+| [2026-04-13_BQ_Stakeholder_Map.md](2026-04-13_BQ_Stakeholder_Map.md) | Mapping stakeholder và phòng ban tham gia theo roadmap AI |
+| [2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md](2026-04-13_BQ_Proposal_Structure_And_Team_Assignment.md) | Cấu trúc proposal và phân công team nội bộ |
+| [2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md](2026-04-14_BQ_Integration_Architecture_And_Data_Boundary.md) | Bản discovery gốc. Tài liệu feature chính đã được chuẩn hóa và chuyển sang [SAP_B1_Internal_Chatbot_Integration_POC.md](../../../01_Projects/MIABOS/Analysis/Features/Briefs/SAP_B1_Internal_Chatbot_Integration_POC.md) |
 
-## Ghi Chu Su Dung
+## Ghi Chú Sử Dụng
 
-- Customer pack nay van la workspace intake/discovery, chua phai project workspace chinh thuc trong `01_Projects/`.
-- Huong framing hien tai cho BQ nen bat dau tu `chatbot noi bo + integration foundation + knowledge layer`.
-- Cac cau tra loi discovery da duoc xac nhan nen duoc cap nhat nguoc lai vao pack nay de tranh drift khi sang proposal va design.
+- Customer pack này vẫn là workspace intake/discovery, chưa phải project workspace chính thức trong `01_Projects/`.
+- Hướng framing hiện tại cho BQ nên bắt đầu từ `Core AI CRM Platform`, trong đó phase đầu tiên ưu tiên `AI Internal Chatbot + Knowledge + Conversation + integration-ready read layer`.
+- BQ không sử dụng Lark trong operation hiện tại. Nếu các tài liệu cũ có nhắc `Data Lark`, cần đọc lại thành định hướng `Data Warehouse` của riêng BQ.
+- MIABOS không tạo source data vận hành của BQ ngoài `Conversation` và `Knowledge`; source-of-truth dữ liệu vẫn nằm ở hệ thống BQ đang sở hữu và Data Warehouse dự kiến.
+- Các câu trả lời discovery đã được xác nhận nên được cập nhật ngược lại vào pack này để tránh drift khi sang proposal và design.

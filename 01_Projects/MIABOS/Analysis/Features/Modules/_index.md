@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Folder này chứa các module nghiệp vụ nội tại của MIABOS, được nhóm lại theo `product surfaces` của Portal CRM thay vì để flat theo danh sách module rời.
+Folder này chứa các module nghiệp vụ nội tại của MIABOS, được nhóm lại theo `product surfaces` của Core AI CRM Platform thay vì để flat theo danh sách module rời.
 
 ## Product Surface Groups
 
@@ -43,4 +43,4 @@ Folder này chứa các module nghiệp vụ nội tại của MIABOS, được 
 
 - Mỗi module có SRS riêng trong folder `SRS/`.
 - Mọi module business phải trace ngược được về ít nhất một `Integration Source Spec`.
-- Product surface là lớp packaging cho Portal CRM, không làm thay đổi `Feature ID` hay boundary nghiệp vụ cốt lõi của module.
+- Product surface là lớp packaging cho Core AI CRM Platform, không làm thay đổi `Feature ID` hay boundary nghiệp vụ cốt lõi của module.

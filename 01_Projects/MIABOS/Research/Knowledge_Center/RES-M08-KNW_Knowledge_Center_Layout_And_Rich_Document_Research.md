@@ -126,7 +126,7 @@ Phân biệt:
 Với BQ, tài liệu tri thức không chỉ được gõ tay trong MIABOS. Nhiều khả năng đến từ:
 
 - PDF / DOCX / XLSX từ phòng ban
-- Lark notes / workflow memo
+- internal workflow memo / department note (BQ does not use Lark per Business Owner clarification on 2026-04-19)
 - file export từ hệ thống
 - ảnh hướng dẫn thao tác
 - policy table hoặc bảng điều kiện

@@ -1,5 +1,13 @@
 # Session Index
 
+### 2026-04-19
+
+- [[2026-04-19_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-19_MIABOS_BQ_Solution_Repositioning|MIABOS BQ Solution Repositioning]] - Update BQ/MIABOS artifacts per Business Owner feedback on CTKM framing, BQ Data Warehouse, no Lark, MIABOS Core AI CRM Platform positioning, and rollout sequence.
+- [[2026-04-19_BQ_Vietnamese_Diacritics_Normalization|BQ Vietnamese Diacritics Normalization]] - Convert selected BQ/MIABOS Vietnamese docs from unaccented Vietnamese to accented Vietnamese while preserving content.
+- [[2026-04-19_MIABOS_BQ_AI_Training_Research_Materialization|MIABOS BQ AI Training Research Materialization]] - Materialize BQ brand research and AI training data/readiness recommendation into `01_Projects/MIABOS/Research/BQ_AI_Training/`.
+- [[2026-04-19_MIABOS_AI_Data_Linkage_Labeling_Setup|MIABOS AI Data Linkage Labeling Setup]] - Create Analysis document for linking Master Data, Knowledge Center content, and Interaction/Eval data through canonical IDs, relationships, metadata labels, and retrieval rules.
+
 ### 2026-04-18
 
 - [[2026-04-18_Daily_Log|Daily Log]] - All AI interactions for this day.

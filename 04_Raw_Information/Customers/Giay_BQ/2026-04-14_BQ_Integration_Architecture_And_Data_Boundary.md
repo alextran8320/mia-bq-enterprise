@@ -12,6 +12,8 @@
 **Created by**: A05 Tech Lead Agent
 **Date**: 2026-04-14
 
+> **Superseded clarification 2026-04-19**: Business Owner confirmed BQ does not use Lark. Any old references to Lark in this deprecated discovery copy are replaced conceptually by `MIABOS Internal Escalation Queue / destination TBD`. BQ is planning its own Data Warehouse as source-of-truth; MIABOS is positioned as Core AI CRM Platform and only creates Conversation + Knowledge data.
+
 ---
 
 ## Trang Thai Tai Lieu
@@ -226,7 +228,7 @@ graph TD
     U1[Internal User<br/>Sales / Logistics / Marketing / Finance / IT]
     U2[External User<br/>Customer / Sales-Assisted Shopper]
 
-    CH1[Internal Chat Channel<br/>Web / Lark / Internal Portal]
+    CH1[Internal Chat Channel<br/>Web / Internal Portal]
     CH2[External Sales Chatbot<br/>Website / Omni-chat]
 
     MIA1[MIA BOS Conversation Layer]
@@ -242,7 +244,7 @@ graph TD
     KV[KiotViet<br/>Store / POS Layer]
     HAR[Haravan<br/>Online Commerce Layer]
     XL[Excel / Curated Policy Files]
-    WF[Lark / Ticket / Approval Workflow]
+    WF[MIABOS Internal Queue / Destination TBD]
 
     U1 --> CH1 --> MIA1
     U2 --> CH2 --> MIA1
@@ -326,7 +328,7 @@ Because pricing and promotion logic may live across several systems, MIA must no
 | Pricing | `TBD theo kenh` | `SAP B1`, `KiotViet`, `Haravan` | MIA can co pricing resolution policy, khong nen hardcode 1 nguon |
 | Promotions | `TBD theo kenh` | `SAP B1`, `KiotViet`, `Haravan`, Excel da duyet | MIA can co promotion resolution logic va effective-date rule |
 | SOP / policy documents | tai lieu da duyet | Excel, PDF, manuals | MIA nen luu metadata, version, owner, chunk, va grounding info |
-| Ticket / escalation workflow | `Lark` hoac workflow tool duoc chot | MIA internal action model | MIA dieu phoi luong handoff, khong thay the workflow governance |
+| Ticket / escalation workflow | `MIABOS Internal Queue` hoac workflow tool duoc BQ chot sau | MIA internal action model | MIA dieu phoi luong handoff, khong thay the workflow governance |
 
 ## 10. MIA Nen Luu Gi
 
@@ -617,7 +619,7 @@ The following questions are not blockers for this architecture framing, but they
 
 ### 14.3 Escalation and action
 
-- Which workflow platform should receive tasks or tickets: `Lark`, `MIA`, email queue, or another tool?
+- Which workflow platform should receive tasks or tickets after phase 1: `MIABOS internal queue`, email queue, or another BQ-approved tool?
 - Which departments own unresolved questions by domain?
 - What SLA or routing priority should apply?
 
@@ -653,4 +655,4 @@ Tu goc nhin mo hinh hoa som, co the chot rat gon nhu sau:
 - `MIA chi nen luu read model, metadata, permission, knowledge, va audit can thiet`.
 - chi khi co business case ro rang moi xem xet mo rong sang write-back hoac replicate sau hon.
 
-Day la boundary giup MIA van gon, de quan tri, de mo rong, va phu hop dung vai tro AI operating layer.
+Day la boundary giup MIABOS van gon, de quan tri, de mo rong, va phu hop dung vai tro Core AI CRM Platform.

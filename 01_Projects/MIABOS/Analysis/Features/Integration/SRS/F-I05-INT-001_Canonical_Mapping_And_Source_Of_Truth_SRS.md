@@ -1,18 +1,18 @@
-# Feature SRS: F-I05-INT-001 Canonical Mapping and Source of Truth
+# Feature SRS: F-I05-INT-001 Canonical Mapping and Source Boundary
 
 **Status**: Draft
 **Owner**: A03 BA Agent
-**Last Updated By**: Codex CLI (GPT-5 Codex)
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Last Reviewed By**: A01 PM Agent
 **Approval Required**: PM
 **Approved By**: -
-**Last Status Change**: 2026-04-15
+**Last Status Change**: 2026-04-19
 **Source of Truth**: This document
 **Blocking Reason**: Chưa chốt đầy đủ mã mapping đa hệ và priority rule cho giá / CTKM / order identity
 **Module**: Integration
 **Phase**: PB-02 / PB-03
 **Priority**: High
-**Document Role**: SRS high-level cho lớp canonical mapping, unified IDs, và source-of-truth rules
+**Document Role**: SRS high-level cho lớp canonical mapping, unified IDs, và source-boundary rules để tiêu thụ dữ liệu từ source systems / Data Warehouse BQ
 
 ---
 
@@ -44,7 +44,7 @@
 
 ## 1. User Story
 
-Là Data Steward hoặc Business Analyst, tôi muốn MIABOS có lớp mapping và source-of-truth riêng để hợp nhất dữ liệu từ SAP, Haravan, và KiotViet trước khi business modules sử dụng.
+Là Data Steward hoặc Business Analyst, tôi muốn MIABOS có lớp mapping và source-boundary để tiêu thụ dữ liệu từ SAP, Haravan, KiotViet hoặc Data Warehouse của BQ trước khi business modules sử dụng, nhưng không biến MIABOS thành source-of-truth dữ liệu vận hành.
 
 ## 1A. User Task Flow
 
@@ -57,12 +57,12 @@ Là Data Steward hoặc Business Analyst, tôi muốn MIABOS có lớp mapping v
 
 ## 2. Business Context
 
-Không có lớp canonical mapping thì MIABOS sẽ trả lời lệch giữa ERP, online commerce, và POS retail. Đây là lớp nền bắt buộc để downstream modules dùng dữ liệu thống nhất.
+Không có lớp canonical mapping thì MIABOS sẽ trả lời lệch giữa ERP, online commerce, và POS retail. Đây là lớp nền bắt buộc để downstream modules dùng dữ liệu thống nhất theo source-of-truth do BQ/Data Warehouse xác định.
 
 ## 3. Preconditions
 
 - Đã có source specs của SAP / Haravan / KiotViet.
-- Đã xác định các domain cần unify ID và source-of-truth.
+- Đã xác định các domain cần unify ID và source-of-truth owner phía BQ/Data Warehouse.
 
 ## 4. Postconditions
 

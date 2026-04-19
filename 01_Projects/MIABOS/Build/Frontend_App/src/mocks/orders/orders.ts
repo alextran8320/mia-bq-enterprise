@@ -22,6 +22,37 @@ export interface OrderTimelineItem {
   timestamp: string;
 }
 
+export interface OrderPromo {
+  id: string;
+  code: string;
+  name: string;
+  validFrom: string;
+  validTo: string;
+  status: "Đang áp dụng" | "Hết hạn" | "Tạm dừng";
+  discountDisplay: string;
+  condition: string;
+  appliedAmount: number;
+  channel: string;
+}
+
+export interface OrderWarehouseSlipItem {
+  sku: string;
+  productName: string;
+  variant: string;
+  qty: number;
+}
+
+export interface OrderWarehouseSlip {
+  id: string;
+  slipCode: string;
+  warehouse: string;
+  createdAt: string;
+  handler: string;
+  status: "Đã xuất" | "Chờ xuất" | "Từ chối";
+  note?: string;
+  items: OrderWarehouseSlipItem[];
+}
+
 export interface OrderRecord {
   id: string;
   orderCode: string;
@@ -54,6 +85,8 @@ export interface OrderRecord {
   summaryItems: OrderSummaryItem[];
   lineItems: OrderLineItem[];
   timelineItems: OrderTimelineItem[];
+  promos: OrderPromo[];
+  warehouseSlips: OrderWarehouseSlip[];
 }
 
 export type OrderSearchResult =
@@ -126,6 +159,35 @@ export const ORDERS: OrderRecord[] = [
       { title: "Đóng gói", detail: "Kho online đã hoàn tất đóng gói và in vận đơn.", timestamp: "16/04 - 07:45" },
       { title: "Bàn giao vận chuyển", detail: "GHN đã nhận hàng, dự kiến giao trong ngày mai.", timestamp: "16/04 - 09:18" },
     ],
+    promos: [
+      {
+        id: "promo-urban-ease",
+        code: "URBAN200",
+        name: "Summer Launch Urban Ease",
+        validFrom: "15/04/2026",
+        validTo: "30/04/2026",
+        status: "Đang áp dụng",
+        discountDisplay: "Giảm 200.000 đ",
+        condition: "Áp dụng cho đơn từ 999.000 đ, kênh online BQ",
+        appliedAmount: 200000,
+        channel: "Website / App BQ",
+      },
+    ],
+    warehouseSlips: [
+      {
+        id: "whs-online-2048-001",
+        slipCode: "PXK-2026-00841",
+        warehouse: "Kho online Tân Bình",
+        createdAt: "16/04/2026 - 07:30",
+        handler: "Nguyễn Văn Kho",
+        status: "Đã xuất",
+        note: "Đóng gói hàng theo yêu cầu tặng kèm hộp gift.",
+        items: [
+          { sku: "BQ-SND-01", productName: "Sandal da quai ngang", variant: "Đen / 39", qty: 1 },
+          { sku: "BQ-ACC-11", productName: "Ví mini nữ", variant: "Kem", qty: 1 },
+        ],
+      },
+    ],
   },
   {
     id: "order-pos-8841",
@@ -164,6 +226,35 @@ export const ORDERS: OrderRecord[] = [
     timelineItems: [
       { title: "Phát sinh giao dịch", detail: "Hóa đơn được tạo tại quầy thu ngân cửa hàng Q1.", timestamp: "16/04 - 09:41" },
       { title: "Đồng bộ nội bộ", detail: "Dữ liệu tóm tắt đã đồng bộ sang workspace vận hành.", timestamp: "16/04 - 10:02" },
+    ],
+    promos: [
+      {
+        id: "promo-store-q1",
+        code: "STORE100",
+        name: "Ưu đãi khai trương bộ sưu tập Urban Ease",
+        validFrom: "10/04/2026",
+        validTo: "30/04/2026",
+        status: "Đang áp dụng",
+        discountDisplay: "Giảm 100.000 đ",
+        condition: "Áp dụng tại cửa hàng chính hãng, đơn từ 800.000 đ",
+        appliedAmount: 100000,
+        channel: "Cửa hàng chính hãng Q1",
+      },
+    ],
+    warehouseSlips: [
+      {
+        id: "whs-pos-8841-001",
+        slipCode: "PXK-2026-00799",
+        warehouse: "Cửa hàng Flagship Q1",
+        createdAt: "16/04/2026 - 09:45",
+        handler: "Trần Thị Sales",
+        status: "Đã xuất",
+        note: "Xuất tại quầy — khách mang về trực tiếp.",
+        items: [
+          { sku: "BQ-SNE-42", productName: "Sneaker canvas thể thao", variant: "Xanh navy / 42", qty: 1 },
+          { sku: "BQ-MOC-22", productName: "Moccasin công sở", variant: "Nâu / 41", qty: 1 },
+        ],
+      },
     ],
   },
   {
@@ -206,6 +297,22 @@ export const ORDERS: OrderRecord[] = [
       { title: "Tạo lệnh kho", detail: "ERP đã sinh chứng từ xuất kho cho đơn đại lý.", timestamp: "15/04 - 13:10" },
       { title: "Chờ phản hồi điều phối", detail: "Kho chưa gửi ETA mới sau khi gom hàng.", timestamp: "15/04 - 16:20" },
     ],
+    promos: [],
+    warehouseSlips: [
+      {
+        id: "whs-erp-1172-001",
+        slipCode: "PXK-2026-00754",
+        warehouse: "Kho Tân Bình",
+        createdAt: "15/04/2026 - 13:30",
+        handler: "Lê Văn Kho",
+        status: "Chờ xuất",
+        note: "Đơn B2B — cần gom đủ 2 loại trước khi xuất. Dự kiến xuất 17/04.",
+        items: [
+          { sku: "BQ-SNE-90", productName: "Sneaker đế nhẹ", variant: "Trắng / 40", qty: 2 },
+          { sku: "BQ-SND-10", productName: "Sandal nam quai da", variant: "Đen / 41", qty: 2 },
+        ],
+      },
+    ],
   },
   {
     id: "order-return-7780",
@@ -246,6 +353,8 @@ export const ORDERS: OrderRecord[] = [
       { title: "Yêu cầu đổi trả", detail: "CSKH đã xác nhận khách đổi size qua hotline.", timestamp: "15/04 - 09:02" },
       { title: "Nhận hàng trả", detail: "Kho online đã nhận hàng và chờ kiểm tra tình trạng sản phẩm.", timestamp: "16/04 - 11:26" },
     ],
+    promos: [],
+    warehouseSlips: [],
   },
   {
     id: "order-review-9914",
@@ -289,6 +398,47 @@ export const ORDERS: OrderRecord[] = [
     timelineItems: [
       { title: "Haravan cập nhật", detail: "Đơn vị vận chuyển báo đã nhận đơn trên kênh online.", timestamp: "16/04 - 09:58" },
       { title: "SAP B1 cập nhật", detail: "ERP chưa xác nhận xuất kho thành công nên trạng thái đang lệch.", timestamp: "16/04 - 10:47" },
+    ],
+    promos: [
+      {
+        id: "promo-summer-sns",
+        code: "SUMMER15",
+        name: "Giảm 15% Sneaker hè 2026",
+        validFrom: "01/04/2026",
+        validTo: "30/04/2026",
+        status: "Đang áp dụng",
+        discountDisplay: "Giảm 15% (tối đa 300.000 đ)",
+        condition: "Áp dụng cho SP Sneaker, kênh online, tài khoản đã xác minh",
+        appliedAmount: 178500,
+        channel: "Website / App BQ",
+      },
+      {
+        id: "promo-member-gold",
+        code: "GOLD50K",
+        name: "Ưu đãi thành viên Hạng Vàng",
+        validFrom: "01/01/2026",
+        validTo: "31/12/2026",
+        status: "Đang áp dụng",
+        discountDisplay: "Giảm thêm 50.000 đ",
+        condition: "Áp dụng cho khách Hạng Vàng trở lên, không giới hạn đơn tối thiểu",
+        appliedAmount: 50000,
+        channel: "Tất cả kênh",
+      },
+    ],
+    warehouseSlips: [
+      {
+        id: "whs-review-9914-001",
+        slipCode: "PXK-2026-00862",
+        warehouse: "Kho online Tân Bình",
+        createdAt: "16/04/2026 - 08:50",
+        handler: "Nguyễn Văn Kho",
+        status: "Chờ xuất",
+        note: "Đang chờ xác nhận từ SAP B1 trước khi xuất kho chính thức.",
+        items: [
+          { sku: "BQ-SNE-77", productName: "Sneaker nữ cổ thấp", variant: "Trắng / 38", qty: 1 },
+          { sku: "BQ-BAG-09", productName: "Túi đeo chéo mini", variant: "Nâu", qty: 1 },
+        ],
+      },
     ],
   },
 ];

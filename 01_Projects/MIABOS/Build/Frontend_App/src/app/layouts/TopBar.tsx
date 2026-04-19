@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Bell, ChevronDown, Search, Settings, Store } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Bell, ChevronDown, ChevronRight, KeyRound, Link2, ListTodo, Plug, ScrollText, Search, Settings, Shield, Store, User, Users } from "lucide-react";
 import { Avatar } from "@/shared/ui";
 
 const STORES = [
@@ -33,25 +33,50 @@ const NOTIFICATIONS = [
 const BREADCRUMB_MAP: Record<string, string> = {
   "/crm": "Quản lý khách hàng",
   "/crm/customers": "Khách hàng",
-  "/crm/leads": "Đầu mối",
   "/orders": "Đơn hàng",
+  "/orders/returns": "Đơn đổi trả",
   "/catalog": "Danh mục",
   "/catalog/products": "Sản phẩm",
   "/catalog/pricing": "Giá bán",
   "/catalog/promotions": "Khuyến mãi",
-  "/operations": "Vận hành",
+  "/operations": "Cài đặt",
   "/operations/escalations": "Hàng đợi xử lý",
-  "/operations/users-roles": "Người dùng & Vai trò",
-  "/operations/scope-rules": "Quy tắc phạm vi",
-  "/operations/integration-ops": "Tích hợp hệ thống",
-  "/operations/source-mapping": "Nguồn & Mapping",
+  "/operations/users-roles": "Người dùng",
+  "/operations/integration-ops": "Danh sách tích hợp",
   "/inbox": "Hội thoại",
   "/ai/chat": "Chat nội bộ",
   "/sales-advisor": "Tư vấn bán hàng",
   "/analytics": "Phân tích",
   "/analytics/executive": "Dashboard",
   "/knowledge": "Kiến thức",
+  "/knowledge/rules": "Quy tắc",
+  "/settings": "Cài đặt",
+  "/settings/profile": "Hồ sơ của tôi",
+  "/settings/roles": "Quản lý vai trò",
+  "/settings/permission-profiles": "Hồ sơ phân quyền",
+  "/settings/channels": "Kết nối đa kênh",
+  "/settings/integration-logs": "Log tích hợp",
 };
+
+type MenuItem =
+  | { type: "item"; label: string; icon: React.ElementType; to: string | null }
+  | { type: "divider" }
+  | { type: "group"; label: string };
+
+const SETTINGS_MENU: MenuItem[] = [
+  { type: "item", label: "Hồ sơ của tôi", icon: User, to: "/settings/profile" },
+  { type: "divider" },
+  { type: "group", label: "Quản lý người dùng" },
+  { type: "item", label: "Người dùng", icon: Users, to: "/operations/users-roles" },
+  { type: "item", label: "Vai trò", icon: Shield, to: "/settings/roles" },
+  { type: "item", label: "Hồ sơ phân quyền mẫu", icon: KeyRound, to: "/settings/permission-profiles" },
+  { type: "divider" },
+  { type: "group", label: "Tích hợp hệ thống" },
+  { type: "item", label: "Danh sách tích hợp", icon: Plug, to: "/operations/integration-ops" },
+  { type: "item", label: "Log tích hợp", icon: ScrollText, to: "/settings/integration-logs" },
+  { type: "item", label: "Hàng đợi xử lý", icon: ListTodo, to: "/operations/escalations" },
+  { type: "item", label: "Kết nối đa kênh", icon: Link2, to: "/settings/channels" },
+];
 
 function getBreadcrumbs(pathname: string): { label: string; path: string }[] {
   const segments = pathname.split("/").filter(Boolean);
@@ -71,14 +96,17 @@ function getBreadcrumbs(pathname: string): { label: string; path: string }[] {
 
 export function TopBar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [selectedStore, setSelectedStore] = useState<(typeof STORES)[number]>(
     STORES[0]!,
   );
   const [storeOpen, setStoreOpen] = useState(false);
   const [notiOpen, setNotiOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [notifications, setNotifications] = useState(NOTIFICATIONS);
   const storeRef = useRef<HTMLDivElement>(null);
   const notiRef = useRef<HTMLDivElement>(null);
+  const settingsRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = notifications.filter((n) => n.unread).length;
   const breadcrumbs = getBreadcrumbs(location.pathname);
@@ -479,34 +507,99 @@ export function TopBar() {
         )}
       </div>
 
-      {/* Settings */}
-      <button
-        type="button"
-        aria-label="Cài đặt"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: 40,
-          height: 40,
-          border: "none",
-          borderRadius: 10,
-          background: "transparent",
-          color: "#637381",
-          cursor: "pointer",
-          transition: "all 0.2s",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = "rgba(145,158,171,0.08)";
-          e.currentTarget.style.color = "#212B36";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = "transparent";
-          e.currentTarget.style.color = "#637381";
-        }}
-      >
-        <Settings size={20} />
-      </button>
+      {/* Settings dropdown */}
+      <div ref={settingsRef} style={{ position: "relative", flexShrink: 0 }}>
+        <button
+          type="button"
+          aria-label="Cài đặt"
+          aria-expanded={settingsOpen}
+          onClick={() => { setSettingsOpen((v) => !v); setStoreOpen(false); setNotiOpen(false); }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 40,
+            height: 40,
+            border: "none",
+            borderRadius: 10,
+            background: settingsOpen ? "rgba(47,100,246,0.08)" : "transparent",
+            color: settingsOpen ? "#2F64F6" : "#637381",
+            cursor: "pointer",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            if (!settingsOpen) e.currentTarget.style.background = "rgba(145,158,171,0.08)";
+          }}
+          onMouseLeave={(e) => {
+            if (!settingsOpen) e.currentTarget.style.background = "transparent";
+          }}
+        >
+          <Settings size={20} />
+        </button>
+
+        {settingsOpen && (
+          <div
+            style={{
+              position: "absolute",
+              top: "calc(100% + 8px)",
+              right: 0,
+              minWidth: 260,
+              background: "#FFFFFF",
+              borderRadius: 12,
+              boxShadow: "0 12px 28px -4px rgba(145,158,171,0.2), 0 0 2px rgba(145,158,171,0.1)",
+              zIndex: 100,
+              padding: 4,
+            }}
+          >
+            {SETTINGS_MENU.map((item, i) => {
+              if (item.type === "divider") {
+                return <div key={`div-${i}`} style={{ height: 1, background: "rgba(145,158,171,0.12)", margin: "4px 0" }} />;
+              }
+              if (item.type === "group") {
+                return (
+                  <div key={item.label} style={{ padding: "8px 12px 4px", fontSize: 11, fontWeight: 600, color: "#919EAB", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                    {item.label}
+                  </div>
+                );
+              }
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => {
+                    if (item.to) navigate(item.to);
+                    setSettingsOpen(false);
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    width: "100%",
+                    padding: "9px 12px 9px 20px",
+                    border: "none",
+                    borderRadius: 8,
+                    background: "transparent",
+                    color: "#212B36",
+                    cursor: "pointer",
+                    fontSize: 13,
+                    fontWeight: 400,
+                    textAlign: "left",
+                    fontFamily: "var(--font-primary)",
+                    transition: "background 0.15s",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(145,158,171,0.08)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                >
+                  <Icon size={15} style={{ flexShrink: 0, opacity: 0.55 }} />
+                  {item.label}
+                  {item.to && <ChevronRight size={13} style={{ marginLeft: "auto", opacity: 0.35 }} />}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {/* Avatar */}
       <div

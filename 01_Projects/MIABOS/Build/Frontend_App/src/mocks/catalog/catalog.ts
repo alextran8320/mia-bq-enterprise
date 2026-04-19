@@ -89,6 +89,20 @@ export interface PromotionOffer {
 
 export type SyncStatus = "success" | "failed" | "syncing";
 
+export interface ProductRelatedOrder {
+  id: string;
+  orderCode: string;
+  customer: string;
+  phone: string;
+  color: string;
+  size: string;
+  qty: number;
+  value: number;
+  status: string;
+  channel: string;
+  createdAt: string;
+}
+
 export interface CatalogRecord {
   id: string;
   canonicalId: string;
@@ -120,6 +134,16 @@ export interface CatalogRecord {
   vat: number;
   /** Trạng thái đồng bộ */
   syncStatus: SyncStatus;
+  /** Số đơn vị đã bán */
+  unitsSold: number;
+  /** Doanh thu */
+  revenue: number;
+  /** Màu bán chạy nhất */
+  topSellingColor: string;
+  /** Size bán chạy nhất */
+  topSellingSize: string;
+  /** Đơn hàng liên quan */
+  relatedOrders: ProductRelatedOrder[];
   summaryItems: CatalogSummaryItem[];
   attributes: CatalogAttribute[];
   variants: CatalogVariant[];
@@ -336,6 +360,17 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
         note: "Store script có thể dùng để chốt khách tại quầy.",
       },
     ],
+    unitsSold: 312,
+    revenue: 339_840_000,
+    topSellingColor: "Kem",
+    topSellingSize: "38",
+    relatedOrders: [
+      { id: "ro-vel-1", orderCode: "HD-8821", customer: "Nguyễn Thị Mai", phone: "0912 345 678", color: "Kem", size: "38", qty: 1, value: 1_090_000, status: "Đã giao", channel: "Online", createdAt: "14/04/2026" },
+      { id: "ro-vel-2", orderCode: "HD-8750", customer: "Trần Lan Anh", phone: "0987 654 321", color: "Hồng", size: "37", qty: 1, value: 1_090_000, status: "Đang giao", channel: "Cửa hàng", createdAt: "13/04/2026" },
+      { id: "ro-vel-3", orderCode: "HD-8710", customer: "Lê Phương Thảo", phone: "0901 222 333", color: "Kem", size: "39", qty: 2, value: 2_180_000, status: "Đã giao", channel: "Online", createdAt: "12/04/2026" },
+      { id: "ro-vel-4", orderCode: "HD-8680", customer: "Phan Thị Hà", phone: "0938 111 222", color: "Hồng", size: "38", qty: 1, value: 1_090_000, status: "Đã hủy", channel: "Online", createdAt: "10/04/2026" },
+      { id: "ro-vel-5", orderCode: "HD-8630", customer: "Võ Minh Châu", phone: "0971 888 999", color: "Kem", size: "38", qty: 1, value: 1_090_000, status: "Đã giao", channel: "Cửa hàng", createdAt: "08/04/2026" },
+    ],
     searchAliases: [
       "sneaker",
       "urban ease",
@@ -476,6 +511,15 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
         warningState: "stale",
         note: "Cần kiểm tra lại hiệu lực với Trade Marketing do campaign cuối tuần vừa gia hạn.",
       },
+    ],
+    unitsSold: 185,
+    revenue: 166_500_000,
+    topSellingColor: "Be",
+    topSellingSize: "37",
+    relatedOrders: [
+      { id: "ro-luna-1", orderCode: "HD-8800", customer: "Hoàng Yến Nhi", phone: "0908 555 111", color: "Be", size: "37", qty: 1, value: 900_000, status: "Đã giao", channel: "Cửa hàng", createdAt: "15/04/2026" },
+      { id: "ro-luna-2", orderCode: "HD-8771", customer: "Đỗ Thị Loan", phone: "0912 777 888", color: "Trắng", size: "36", qty: 1, value: 900_000, status: "Đang giao", channel: "Online", createdAt: "13/04/2026" },
+      { id: "ro-luna-3", orderCode: "HD-8742", customer: "Ngô Bích Ngọc", phone: "0939 444 555", color: "Be", size: "38", qty: 2, value: 1_800_000, status: "Đã giao", channel: "Online", createdAt: "11/04/2026" },
     ],
     searchAliases: [
       "sandal",
@@ -664,6 +708,15 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
         note: "Không public-safe, chỉ dùng cho owner pricing và phát triển đại lý.",
       },
     ],
+    unitsSold: 94,
+    revenue: 223_360_000,
+    topSellingColor: "Đen",
+    topSellingSize: "40",
+    relatedOrders: [
+      { id: "ro-her-1", orderCode: "HD-8790", customer: "Trần Văn Bình", phone: "0902 333 444", color: "Đen", size: "40", qty: 1, value: 2_380_000, status: "Đã giao", channel: "Cửa hàng", createdAt: "15/04/2026" },
+      { id: "ro-her-2", orderCode: "HD-8755", customer: "Lê Tuấn Anh", phone: "0913 666 777", color: "Nâu", size: "41", qty: 1, value: 2_380_000, status: "Đang giao", channel: "Đại lý", createdAt: "12/04/2026" },
+      { id: "ro-her-3", orderCode: "HD-8710", customer: "Nguyễn Minh Hùng", phone: "0946 888 999", color: "Đen", size: "42", qty: 2, value: 4_760_000, status: "Đã giao", channel: "Online", createdAt: "09/04/2026" },
+    ],
     searchAliases: [
       "loafer",
       "heritage",
@@ -818,6 +871,15 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
         note: "Chỉ hiển thị cho nhóm pricing control và phát triển kênh.",
       },
     ],
+    unitsSold: 67,
+    revenue: 107_200_000,
+    topSellingColor: "Đen",
+    topSellingSize: "37",
+    relatedOrders: [
+      { id: "ro-ele-1", orderCode: "HD-8818", customer: "Phạm Thu Hương", phone: "0918 222 333", color: "Đen", size: "37", qty: 1, value: 1_600_000, status: "Đã giao", channel: "Cửa hàng", createdAt: "16/04/2026" },
+      { id: "ro-ele-2", orderCode: "HD-8792", customer: "Bùi Khánh Linh", phone: "0928 444 666", color: "Nude", size: "38", qty: 1, value: 1_600_000, status: "Đang giao", channel: "Online", createdAt: "14/04/2026" },
+      { id: "ro-ele-3", orderCode: "HD-8758", customer: "Lê Ngọc Anh", phone: "0941 777 888", color: "Đỏ", size: "36", qty: 1, value: 1_600_000, status: "Đã giao", channel: "Đại lý", createdAt: "11/04/2026" },
+    ],
     searchAliases: [
       "heels",
       "cao gót",
@@ -951,6 +1013,16 @@ export const CATALOG_RECORDS: CatalogRecord[] = [
         warningState: "none",
         note: "Campaign dùng để upsell trên online.",
       },
+    ],
+    unitsSold: 143,
+    revenue: 257_400_000,
+    topSellingColor: "Đen",
+    topSellingSize: "—",
+    relatedOrders: [
+      { id: "ro-bag-1", orderCode: "HD-8815", customer: "Vũ Thị Lan", phone: "0905 111 222", color: "Đen", size: "—", qty: 1, value: 1_800_000, status: "Đã giao", channel: "Online", createdAt: "15/04/2026" },
+      { id: "ro-bag-2", orderCode: "HD-8780", customer: "Hồ Bảo Châu", phone: "0929 333 444", color: "Kem", size: "—", qty: 2, value: 3_600_000, status: "Đã giao", channel: "Cửa hàng", createdAt: "13/04/2026" },
+      { id: "ro-bag-3", orderCode: "HD-8745", customer: "Đinh Hải Yến", phone: "0942 555 666", color: "Đỏ đô", size: "—", qty: 1, value: 1_800_000, status: "Đang giao", channel: "Online", createdAt: "10/04/2026" },
+      { id: "ro-bag-4", orderCode: "HD-8700", customer: "Lý Thị Phương", phone: "0963 777 888", color: "Đen", size: "—", qty: 1, value: 1_800_000, status: "Đã giao", channel: "Cửa hàng", createdAt: "06/04/2026" },
     ],
     searchAliases: [
       "bag",

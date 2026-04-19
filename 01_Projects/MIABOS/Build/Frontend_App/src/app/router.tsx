@@ -27,6 +27,11 @@ import { UnifiedInboxPage } from "@/modules/ai-workspace/pages/UnifiedInboxPage"
 import { BusinessAnalyticsPage } from "@/modules/insights-performance/pages/BusinessAnalyticsPage";
 import { KnowledgeHomePage } from "@/modules/knowledge-center/pages/KnowledgeHomePage";
 import { KnowledgeDocumentDetailPage } from "@/modules/knowledge-center/pages/KnowledgeDocumentDetailPage";
+import { ProfilePage } from "@/modules/settings/pages/ProfilePage";
+import { RolesPage } from "@/modules/settings/pages/RolesPage";
+import { PermissionProfilesPage } from "@/modules/settings/pages/PermissionProfilesPage";
+import { ChannelsPage } from "@/modules/settings/pages/ChannelsPage";
+import { IntegrationLogsPage } from "@/modules/settings/pages/IntegrationLogsPage";
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +53,7 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <OrderSummaryPage /> },
+      { path: "returns", element: <OrderSummaryPage /> },
       { path: ":id", element: <OrderDetailPage /> },
     ],
   },
@@ -120,6 +126,18 @@ export const router = createBrowserRouter([
     ],
   },
   {
+    path: "/settings",
+    element: <AppShell />,
+    children: [
+      { index: true, element: <Navigate to="/settings/profile" replace /> },
+      { path: "profile", element: <ProfilePage /> },
+      { path: "roles", element: <RolesPage /> },
+      { path: "permission-profiles", element: <PermissionProfilesPage /> },
+      { path: "channels", element: <ChannelsPage /> },
+      { path: "integration-logs", element: <IntegrationLogsPage /> },
+    ],
+  },
+  {
     path: "/knowledge",
     element: <AppShell />,
     children: [
@@ -144,6 +162,7 @@ export const router = createBrowserRouter([
         path: "freshness",
         element: <Navigate to="/knowledge?section=freshness" replace />,
       },
+      { path: "rules", element: <KnowledgeHomePage /> },
       { path: ":id", element: <KnowledgeDocumentDetailPage /> },
     ],
   },

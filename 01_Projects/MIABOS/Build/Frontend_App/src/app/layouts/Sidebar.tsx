@@ -1,21 +1,18 @@
 import { NavLink } from "react-router-dom";
 import {
   CircleDollarSign,
-  CircleAlert,
   Users,
-  UserPlus,
-  LayoutDashboard,
   MessageSquareText,
   PackageSearch,
   BarChart3,
   PanelLeftClose,
   PanelLeftOpen,
   Package,
-  ShieldAlert,
   TicketPercent,
-  ArrowRightLeft,
   BookOpen,
   MessageSquare,
+  RotateCcw,
+  ScrollText,
 } from "lucide-react";
 
 const GROUPS = [
@@ -29,12 +26,14 @@ const GROUPS = [
     label: "Quản lý khách hàng",
     items: [
       { to: "/crm/customers", icon: Users, label: "Khách hàng" },
-      { to: "/crm/leads", icon: UserPlus, label: "Đầu mối" },
     ],
   },
   {
     label: "Đơn hàng",
-    items: [{ to: "/orders", icon: PackageSearch, label: "Đơn hàng" }],
+    items: [
+      { to: "/orders", icon: PackageSearch, label: "Đơn bán" },
+      { to: "/orders/returns", icon: RotateCcw, label: "Đơn đổi trả" },
+    ],
   },
   {
     label: "Danh mục & Thương mại",
@@ -42,36 +41,6 @@ const GROUPS = [
       { to: "/catalog/products", icon: Package, label: "Sản phẩm" },
       { to: "/catalog/pricing", icon: CircleDollarSign, label: "Giá bán" },
       { to: "/catalog/promotions", icon: TicketPercent, label: "Khuyến mãi" },
-    ],
-  },
-  {
-    label: "Vận hành & Quản trị",
-    items: [
-      {
-        to: "/operations/escalations",
-        icon: CircleAlert,
-        label: "Hàng đợi xử lý",
-      },
-      {
-        to: "/operations/users-roles",
-        icon: Users,
-        label: "Người dùng & Vai trò",
-      },
-      {
-        to: "/operations/scope-rules",
-        icon: ShieldAlert,
-        label: "Quy tắc phạm vi",
-      },
-      {
-        to: "/operations/integration-ops",
-        icon: LayoutDashboard,
-        label: "Tích hợp hệ thống",
-      },
-      {
-        to: "/operations/source-mapping",
-        icon: ArrowRightLeft,
-        label: "Nguồn & Mapping",
-      },
     ],
   },
   {
@@ -84,7 +53,10 @@ const GROUPS = [
   },
   {
     label: "Trung tâm kiến thức",
-    items: [{ to: "/knowledge", icon: BookOpen, label: "Kiến thức" }],
+    items: [
+      { to: "/knowledge", icon: BookOpen, label: "Kiến thức" },
+      { to: "/knowledge/rules", icon: ScrollText, label: "Quy tắc" },
+    ],
   },
 ];
 

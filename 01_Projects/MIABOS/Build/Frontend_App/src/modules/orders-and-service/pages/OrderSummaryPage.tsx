@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   AlertTriangle,
   ChevronDown,
@@ -8,8 +8,11 @@ import {
   DollarSign,
   Package,
   Search,
+  Plus,
+  Filter,
+  X,
 } from "lucide-react";
-import { Badge, Card, DataTable, Input } from "@/shared/ui";
+import { Badge, Button, Card, DataTable, Input } from "@/shared/ui";
 import type { Column } from "@/shared/ui";
 import {
   getOrderOverviewMetrics,
@@ -71,6 +74,46 @@ const STATUS_STYLES: Record<string, { color: string; bg: string }> = {
 };
 
 const initialResult = searchOrders("");
+
+// ── Advanced filter for orders ──
+interface OrderAdvFilters { source: string; branch: string; channel: string; owner: string; minValue: string; fulfillment: string; }
+const emptyOrderFilters: OrderAdvFilters = { source: "", branch: "", channel: "", owner: "", minValue: "", fulfillment: "" };
+
+function OrderAdvFilterPanel({ filters, onChange, onClose }: { filters: OrderAdvFilters; onChange: (f: OrderAdvFilters) => void; onClose: () => void }) {
+  const [local, setLocal] = useState(filters);
+  const set = (key: keyof OrderAdvFilters, val: string) => setLocal((p) => ({ ...p, [key]: val }));
+
+  const fields: { key: keyof OrderAdvFilters; label: string; placeholder: string }[] = [
+    { key: "source", label: "Nguồn", placeholder: "Haravan, KiotViet, SAP..." },
+    { key: "branch", label: "Chi nhánh", placeholder: "BQ Tân Bình, BQ Quận 1..." },
+    { key: "channel", label: "Kênh bán", placeholder: "Online, POS..." },
+    { key: "owner", label: "Phụ trách", placeholder: "Tên nhân viên..." },
+    { key: "minValue", label: "Giá trị >=", placeholder: "500000" },
+    { key: "fulfillment", label: "Giao vận", placeholder: "Chờ giao, Đang giao..." },
+  ];
+
+  return (
+    <Card style={{ border: "1px solid var(--color-primary)", borderRadius: "var(--radius-sm)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-4)" }}>
+        <h3 style={{ margin: 0, fontSize: 14 }}>Bộ lọc nâng cao</h3>
+        <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--color-text-tertiary)" }}><X size={16} /></button>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "var(--space-3)" }}>
+        {fields.map((f) => (
+          <div key={f.key}>
+            <label style={{ fontSize: 11, fontWeight: 500, color: "var(--color-text-tertiary)", display: "block", marginBottom: 3 }}>{f.label}</label>
+            <input value={local[f.key]} placeholder={f.placeholder} onChange={(e) => set(f.key, e.target.value)}
+              style={{ width: "100%", padding: "7px 10px", borderRadius: "var(--radius-xs)", border: "1px solid var(--color-border)", fontSize: 12, background: "var(--color-bg-page)", boxSizing: "border-box" }} />
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "flex-end", gap: "var(--space-2)", marginTop: "var(--space-4)" }}>
+        <Button variant="secondary" style={{ fontSize: 12 }} onClick={() => { onChange(emptyOrderFilters); setLocal(emptyOrderFilters); }}>Xoá bộ lọc</Button>
+        <Button variant="primary" style={{ fontSize: 12 }} onClick={() => onChange(local)}>Áp dụng</Button>
+      </div>
+    </Card>
+  );
+}
 
 function Eyebrow({ children }: { children: string }) {
   return (
@@ -398,20 +441,39 @@ const STATUS_FILTER_MAP: Record<StatusFilter, string | null> = {
 
 export function OrderSummaryPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isReturnView = location.pathname.includes("/returns");
+
   const [search, setSearch] = useState("");
   const [result, setResult] = useState<OrderSearchResult>(initialResult);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
+  const [showAdvFilter, setShowAdvFilter] = useState(false);
+  const [advFilters, setAdvFilters] = useState<OrderAdvFilters>(emptyOrderFilters);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const allRecords = result.kind === "found" ? result.records : [];
 
   const records = allRecords.filter((o) => {
+    // Return view: only show returned orders
+    if (isReturnView && o.orderType !== "returned") return false;
+    // Sales view: hide returned orders
+    if (!isReturnView && o.orderType === "returned") return false;
+
     if (statusFilter !== "all") {
       const expected = STATUS_FILTER_MAP[statusFilter];
       if (expected && o.statusLabel !== expected) return false;
     }
     if (typeFilter !== "all" && o.orderType !== typeFilter) return false;
+
+    // Advanced filters
+    const af = advFilters;
+    if (af.source && !o.source.toLowerCase().includes(af.source.toLowerCase())) return false;
+    if (af.branch && !o.branchName.toLowerCase().includes(af.branch.toLowerCase())) return false;
+    if (af.channel && !o.salesChannel.toLowerCase().includes(af.channel.toLowerCase())) return false;
+    if (af.owner && !o.ownerTeam.toLowerCase().includes(af.owner.toLowerCase())) return false;
+    if (af.minValue && o.orderValue < Number(af.minValue)) return false;
+    if (af.fulfillment && !o.fulfillmentStatus.toLowerCase().includes(af.fulfillment.toLowerCase())) return false;
     return true;
   });
 
@@ -434,11 +496,19 @@ export function OrderSummaryPage() {
         gap: "var(--space-6)",
       }}
     >
-      <div style={{ marginBottom: "var(--space-2)" }}>
-        <Eyebrow>Đơn hàng và dịch vụ</Eyebrow>
-        <h1 style={{ marginTop: "var(--space-2)", marginBottom: 0 }}>
-          Tra cứu đơn hàng
-        </h1>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div>
+          <Eyebrow>{isReturnView ? "Đơn đổi trả" : "Đơn hàng bán"}</Eyebrow>
+          <h1 style={{ marginTop: "var(--space-2)", marginBottom: 0 }}>
+            {isReturnView ? "Đơn đổi trả" : "Tra cứu đơn hàng"}
+          </h1>
+        </div>
+        <Button
+          variant="primary"
+          style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}
+        >
+          <Plus size={14} /> {isReturnView ? "Tạo đơn đổi trả" : "Tạo đơn hàng"}
+        </Button>
       </div>
 
       <OverviewMetrics result={result} />
@@ -460,18 +530,30 @@ export function OrderSummaryPage() {
           style={{ width: 320 }}
         />
 
+        <Button
+          variant={showAdvFilter ? "primary" : "secondary"}
+          style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}
+          onClick={() => setShowAdvFilter(!showAdvFilter)}
+        >
+          <Filter size={14} /> Bộ lọc nâng cao
+        </Button>
+
         <FilterSelect
           value={statusFilter}
           options={STATUS_FILTERS}
           onChange={setStatusFilter}
         />
 
-        <FilterSelect
-          value={typeFilter}
-          options={TYPE_FILTERS}
-          onChange={setTypeFilter}
-        />
+        {!isReturnView && (
+          <FilterSelect
+            value={typeFilter}
+            options={TYPE_FILTERS}
+            onChange={setTypeFilter}
+          />
+        )}
       </div>
+
+      {showAdvFilter && <OrderAdvFilterPanel filters={advFilters} onChange={setAdvFilters} onClose={() => setShowAdvFilter(false)} />}
 
       <Card style={{ padding: 0, overflow: "hidden" }}>
         <DataTable

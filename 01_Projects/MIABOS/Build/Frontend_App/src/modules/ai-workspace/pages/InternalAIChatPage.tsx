@@ -40,14 +40,13 @@ interface HistoryItem {
 
 const PROMPT_CHIPS = INTERNAL_CHAT_SCENARIOS.slice(0, 5).map((s) => s.prompt);
 const SUPPORT_ACTIONS = [
-  { label: "Tra cứu tồn kho và sản phẩm", prompt: "Mẫu BQ Runner còn hàng ở đâu?" },
-  {
-    label: "Kiểm tra trạng thái đơn hàng",
-    prompt: "Đơn online #HD-2048 đang ở đâu và chính sách giao hàng áp dụng thế nào?",
-  },
-  { label: "Chính sách đổi trả và giao hàng", prompt: "Chính sách đổi trả hiện tại thế nào?" },
-  { label: "SOP vận hành cửa hàng", prompt: "Quy trình mở cửa hàng buổi sáng là gì?" },
-  { label: "Khuyến mãi đang áp dụng", prompt: "CTKM tháng 4 cho dòng giày thể thao là gì và còn hàng không?" },
+  { label: "Tra cứu tồn kho theo mã SKU", prompt: "Mã BQ-2301 size 40 màu đen còn bao nhiêu tại kho Hà Nội?" },
+  { label: "Kiểm tra trạng thái đơn hàng", prompt: "Đơn hàng #98765 đang ở trạng thái nào?" },
+  { label: "Giá bán lẻ sản phẩm", prompt: "Giá bán lẻ hiện tại của mã BQ-1102 là bao nhiêu?" },
+  { label: "Chính sách đổi trả và bảo hành", prompt: "Chính sách bảo hành giày da cao cấp là bao nhiêu tháng?" },
+  { label: "SOP kiểm kho cuối ngày", prompt: "Quy trình kiểm kho cuối ngày là gì?" },
+  { label: "CTKM và khuyến mãi đang chạy", prompt: "CTKM tháng 4 cho dòng giày thể thao là gì và còn hàng không?" },
+  { label: "Chiết khấu đại lý Q2/2026", prompt: "Đại lý cấp 1 được chiết khấu bao nhiêu trong Q2/2026?" },
 ];
 
 function getAnswerBadge(scenario: AnswerScenario) {

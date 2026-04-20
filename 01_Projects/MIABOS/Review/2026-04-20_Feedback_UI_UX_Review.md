@@ -136,7 +136,7 @@ Chỉ hiển thị đúng các kênh BQ đang dùng:
 
 | # | Hạng mục | Mục | Ưu tiên | Assignee | Trạng thái |
 |---|---------|-----|---------|----------|-----------|
-| 1 | Chỉnh mock data AI Chat sang tiếng Việt + đúng nghiệp vụ BQ | 1.1 | Cao | A07 FE | ⬜ Open |
+| 1 | Chỉnh mock data AI Chat sang tiếng Việt + đúng nghiệp vụ BQ | 1.1 | Cao | A07 FE | ✅ Done — 2026-04-19 |
 | 2 | Chỉnh danh sách kênh đa kênh đúng với BQ | 2.1 | Trung bình | A07 FE | ⬜ Open |
 | 3 | Cập nhật cột bảng danh sách CTKM | 3.1 | Cao | A06 + A07 | ⬜ Open |
 | 4 | Cập nhật cột bảng danh sách Chính sách giá | 4.1 | Cao | A06 + A07 | ⬜ Open |

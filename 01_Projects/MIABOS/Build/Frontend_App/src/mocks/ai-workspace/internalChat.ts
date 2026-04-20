@@ -331,6 +331,369 @@ const scenarioUnsupported: AnswerScenario = {
 };
 
 // ---------------------------------------------------------------------------
+// Scenario 9 — Data (tồn kho theo mã SKU + chi nhánh cụ thể)
+// ---------------------------------------------------------------------------
+const scenarioInventoryBySKU: AnswerScenario = {
+  id: "data-inventory-sku",
+  prompt: "Mã BQ-2301 size 40 màu đen còn bao nhiêu tại kho Hà Nội?",
+  answerType: "Data",
+  summary:
+    "Mã BQ-2301 size 40 màu đen tại kho Hà Nội (Cầu Giấy) hiện còn 10 đôi tồn thực, trong đó 2 đôi đã được giữ cho đơn đang xử lý — tồn khả dụng thực tế là 8 đôi. Dữ liệu được cập nhật lúc 09:15 hôm nay.",
+  freshnessState: "fresh",
+  freshnessLabel: "Cập nhật 09:15 hôm nay",
+  dataPoints: [
+    { label: "Kho Hà Nội — Cầu Giấy", value: "10 đôi (tồn thực)" },
+    { label: "Đã giữ cho đơn đang xử lý", value: "2 đôi" },
+    { label: "Khả dụng thực tế", value: "8 đôi" },
+    { label: "Kho Hà Nội — Hoàng Mai", value: "4 đôi" },
+    { label: "Cập nhật cuối", value: "09:15 hôm nay" },
+  ],
+  sourceTrace: [
+    {
+      id: "src-101",
+      title: "Inventory — KiotViet Kho Hà Nội (Cầu Giấy)",
+      source: "KiotViet",
+      freshness: "Snapshot 2026-04-19 09:15",
+      trust: "High",
+      excerpt:
+        "Mã BQ-2301 / Size 40 / Màu đen: tồn thực 10 đôi. Đã reserved 2 đôi cho đơn #HD-3201 và #HD-3208 đang chờ xuất kho.",
+    },
+    {
+      id: "src-102",
+      title: "Inventory — KiotViet Kho Hà Nội (Hoàng Mai)",
+      source: "KiotViet",
+      freshness: "Snapshot 2026-04-19 09:10",
+      trust: "High",
+      excerpt:
+        "Mã BQ-2301 / Size 40 / Màu đen: tồn 4 đôi, không có đơn reserved. Kho phụ, phục vụ khu vực miền Nam Hà Nội.",
+    },
+    {
+      id: "src-103",
+      title: "Item Master — SAP B1",
+      source: "SAP B1",
+      freshness: "Snapshot 2026-04-19 08:50",
+      trust: "High",
+      excerpt:
+        "BQ-2301: Giày da nam, đế cao su, màu đen. Mức tồn kho tối thiểu toàn hệ thống: 20 đôi/size. Hiện đang dưới ngưỡng — cần cân nhắc đặt thêm.",
+    },
+  ],
+  nextActions: ["Xem nguồn", "Kiểm tra SKU khác", "Hỏi tiếp"],
+};
+
+// ---------------------------------------------------------------------------
+// Scenario 10 — Mixed (giá bán + chính sách giá bán lẻ)
+// ---------------------------------------------------------------------------
+const scenarioPricingRetail: AnswerScenario = {
+  id: "mixed-pricing-retail",
+  prompt: "Giá bán lẻ hiện tại của mã BQ-1102 là bao nhiêu?",
+  answerType: "Mixed",
+  summary:
+    "Giá bán lẻ niêm yết của BQ-1102 (Dép thể thao nữ) hiện là 450.000đ. Sản phẩm không thuộc diện khuyến mãi tháng này. Mức giá này áp dụng đồng nhất cho cả kênh cửa hàng và online theo chính sách 1 giá của BQ.",
+  freshnessState: "fresh",
+  freshnessLabel: "Cập nhật từ SAP B1 sáng nay",
+  dataPoints: [
+    { label: "Mã sản phẩm", value: "BQ-1102" },
+    { label: "Tên sản phẩm", value: "Dép thể thao nữ BQ-1102" },
+    { label: "Giá niêm yết", value: "450.000đ" },
+    { label: "Đang có CTKM", value: "Không" },
+    { label: "Áp dụng tại", value: "Tất cả kênh (POS + Online)" },
+  ],
+  citations: [
+    {
+      title: "Chính sách 1 giá — Giày BQ",
+      excerpt:
+        "BQ áp dụng chính sách đồng giá toàn kênh. Giá niêm yết trên sản phẩm là giá bán chính thức. Nhân viên không được tự ý điều chỉnh giá ngoài CTKM chính thức.",
+    },
+    {
+      title: "FAQ: Chính sách giá và chiết khấu khách lẻ",
+      excerpt:
+        "Khách lẻ không được chiết khấu thêm ngoài CTKM. Đề nghị giảm giá ngoài chương trình chính thức cần từ chối lịch sự và hướng khách đăng ký thành viên.",
+    },
+  ],
+  sourceTrace: [
+    {
+      id: "src-201",
+      title: "Item Master — BQ-1102 (SAP B1)",
+      source: "SAP B1",
+      freshness: "Snapshot 2026-04-19 08:00",
+      trust: "High",
+      excerpt:
+        "BQ-1102 / Dép thể thao nữ: Giá bán lẻ: 450.000đ. Giá vốn: bảo mật — chỉ Finance được xem. Không có đợt điều chỉnh giá trong 30 ngày gần đây.",
+    },
+    {
+      id: "src-202",
+      title: "Promotion Registry — Tháng 4/2026",
+      source: "KiotViet",
+      freshness: "Snapshot 2026-04-19 08:30",
+      trust: "High",
+      excerpt:
+        "BQ-1102 không nằm trong danh mục CTKM tháng 4. CTKM tháng 4 chỉ áp dụng cho dòng giày da nam và giày thể thao theo CTKM-2026-001.",
+    },
+    {
+      id: "src-203",
+      title: "Chính sách giá bán lẻ — Knowledge Center",
+      source: "M08 Knowledge Center",
+      freshness: "Reviewed 2026-04-15 09:00",
+      trust: "High",
+      excerpt:
+        "Chính sách 1 giá toàn kênh: giá cửa hàng = giá online. Phê duyệt bởi Giám đốc Kinh doanh. Hiệu lực từ 01/01/2026.",
+    },
+  ],
+  nextActions: ["Xem nguồn", "Kiểm tra SKU khác", "Hỏi tiếp"],
+};
+
+// ---------------------------------------------------------------------------
+// Scenario 11 — Data (trạng thái đơn hàng cụ thể)
+// ---------------------------------------------------------------------------
+const scenarioOrderStatus: AnswerScenario = {
+  id: "data-order-status",
+  prompt: "Đơn hàng #98765 đang ở trạng thái nào?",
+  answerType: "Data",
+  summary:
+    "Đơn hàng #HD-98765 hiện đang ở trạng thái Đang giao hàng. Đơn được giao qua Giao Hàng Nhanh, mã vận đơn GHN-20260419-0045. Dự kiến giao đến khách tại Hà Nội trong ngày hôm nay hoặc sáng sớm ngày mai.",
+  freshnessState: "fresh",
+  freshnessLabel: "Cập nhật 5 phút trước",
+  dataPoints: [
+    { label: "Mã đơn", value: "#HD-98765" },
+    { label: "Trạng thái", value: "Đang giao hàng" },
+    { label: "Đơn vị vận chuyển", value: "Giao Hàng Nhanh (GHN)" },
+    { label: "Mã vận đơn", value: "GHN-20260419-0045" },
+    { label: "Dự kiến giao", value: "Hôm nay — 19/04/2026" },
+    { label: "Địa chỉ giao", value: "Cầu Giấy, Hà Nội" },
+  ],
+  sourceTrace: [
+    {
+      id: "src-301",
+      title: "Order Status — HD-98765 (Haravan)",
+      source: "Haravan",
+      freshness: "Snapshot 2026-04-19 09:20",
+      trust: "High",
+      excerpt:
+        "Đơn #HD-98765: Đã bàn giao GHN lúc 08:42 hôm nay. Tình trạng GHN: Đang trên đường giao. Cập nhật vị trí cuối: Bưu cục Cầu Giấy.",
+    },
+    {
+      id: "src-302",
+      title: "GHN Tracking Sync",
+      source: "Haravan",
+      freshness: "Snapshot 2026-04-19 09:15",
+      trust: "Medium",
+      excerpt:
+        "GHN cập nhật: hàng đang tại bưu cục Cầu Giấy, shipper đã nhận, dự kiến giao trước 18:00 hôm nay.",
+    },
+  ],
+  nextActions: ["Xem nguồn", "Hỏi tiếp", "Tạo yêu cầu hỗ trợ"],
+};
+
+// ---------------------------------------------------------------------------
+// Scenario 12 — Policy (chính sách bảo hành sản phẩm da cao cấp)
+// ---------------------------------------------------------------------------
+const scenarioPolicyWarranty: AnswerScenario = {
+  id: "policy-warranty-leather",
+  prompt: "Chính sách bảo hành giày da cao cấp là bao nhiêu tháng?",
+  answerType: "Policy",
+  summary:
+    "Giày da cao cấp của BQ được bảo hành 12 tháng cho lỗi đế do sản xuất và 6 tháng cho lỗi da do sản xuất. Khách hàng cần xuất trình hóa đơn mua hàng khi yêu cầu bảo hành. Lưu ý: chính sách v2 đã có hiệu lực từ 01/03/2026, thay thế phiên bản cũ bảo hành 6 tháng.",
+  freshnessState: "fresh",
+  freshnessLabel: "Chính sách v2 — hiệu lực từ 01/03/2026",
+  citations: [
+    {
+      title: "Chính sách bảo hành giày da cao cấp (v2) — knw-006",
+      excerpt:
+        "Lỗi đế do sản xuất: bảo hành 12 tháng kể từ ngày mua. Lỗi da do sản xuất: bảo hành 6 tháng. Điều kiện: xuất trình hóa đơn, sản phẩm còn nguyên tem nhãn, lỗi được xác định là lỗi sản xuất.",
+    },
+    {
+      title: "Trường hợp không được bảo hành",
+      excerpt:
+        "Lỗi do sử dụng không đúng cách, sản phẩm đã qua sửa chữa bên ngoài, hết thời hạn bảo hành, hoặc không có hóa đơn mua hàng.",
+    },
+    {
+      title: "Quy trình bảo hành",
+      excerpt:
+        "Mang sản phẩm đến cửa hàng BQ gần nhất. Nhân viên kiểm tra và xác nhận lỗi. Chuyển về trung tâm bảo hành trong 3 ngày. Trả hàng sau bảo hành trong 7–10 ngày làm việc.",
+    },
+  ],
+  sourceTrace: [
+    {
+      id: "src-401",
+      title: "Chính sách bảo hành giày da cao cấp (v2) — knw-006",
+      source: "M08 Knowledge Center",
+      freshness: "Published 2026-03-01 08:00",
+      trust: "High",
+      excerpt:
+        "Phiên bản mới nhất — thay thế knw-005 (v1 bảo hành 6 tháng đế). Phê duyệt bởi Giám đốc CSKH ngày 28/02/2026.",
+    },
+    {
+      id: "src-402",
+      title: "Chính sách bảo hành giày da cao cấp (v1) — knw-005 [Superseded]",
+      source: "M08 Knowledge Center",
+      freshness: "Superseded 2026-03-01",
+      trust: "Low",
+      excerpt:
+        "Phiên bản cũ: bảo hành 6 tháng cho lỗi đế, 3 tháng cho lỗi da. ĐÃ BỊ THAY THẾ — không sử dụng phiên bản này.",
+    },
+  ],
+  nextActions: ["Xem nguồn", "Hỏi tiếp", "Tạo yêu cầu hỗ trợ"],
+};
+
+// ---------------------------------------------------------------------------
+// Scenario 13 — Mixed (đại lý + chiết khấu Q2/2026)
+// ---------------------------------------------------------------------------
+const scenarioAgentDiscount: AnswerScenario = {
+  id: "mixed-agent-discount",
+  prompt: "Đại lý cấp 1 được chiết khấu bao nhiêu trong Q2/2026?",
+  answerType: "Mixed",
+  summary:
+    "Đại lý cấp 1 được hưởng chiết khấu 15% trên giá niêm yết trong Q2/2026, với điều kiện đơn hàng tối thiểu 50 triệu/tháng và thanh toán trong vòng 30 ngày. Chính sách không áp dụng cùng các CTKM khác. Đại lý cấp 2 được chiết khấu 10%.",
+  freshnessState: "fresh",
+  freshnessLabel: "Cập nhật 08:00 hôm nay",
+  dataPoints: [
+    { label: "Đại lý cấp 1", value: "Chiết khấu 15%" },
+    { label: "Đại lý cấp 2", value: "Chiết khấu 10%" },
+    { label: "Đơn tối thiểu", value: "50 triệu/tháng" },
+    { label: "Hạn thanh toán", value: "30 ngày từ ngày xuất HĐ" },
+    { label: "Hiệu lực", value: "Q2/2026 (01/04 – 30/06/2026)" },
+  ],
+  citations: [
+    {
+      title: "Chính sách chiết khấu đại lý Q2/2026 — knw-001",
+      excerpt:
+        "Đại lý cấp 1: 15% trên giá niêm yết. Đại lý cấp 2: 10%. Điều kiện: đơn hàng tối thiểu 50 triệu/tháng. Không áp dụng cùng các chương trình khuyến mãi khác. Thanh toán trong vòng 30 ngày.",
+    },
+    {
+      title: "Trường hợp loại trừ",
+      excerpt:
+        "Không áp dụng cho sản phẩm đang trong đợt sale-off, sản phẩm limited edition, và đơn hàng dưới mức tối thiểu.",
+    },
+  ],
+  sourceTrace: [
+    {
+      id: "src-501",
+      title: "Chính sách chiết khấu đại lý Q2/2026 — knw-001",
+      source: "M08 Knowledge Center",
+      freshness: "Published 2026-04-01 08:00",
+      trust: "High",
+      excerpt:
+        "Phê duyệt bởi Trưởng phòng Kinh doanh đại lý. Áp dụng toàn quốc cho đại lý có hợp đồng còn hiệu lực tính đến 01/04/2026.",
+    },
+    {
+      id: "src-502",
+      title: "Danh sách đại lý đang hoạt động — SAP B1",
+      source: "SAP B1",
+      freshness: "Snapshot 2026-04-19 08:00",
+      trust: "High",
+      excerpt:
+        "SAP B1 là nguồn chân lý cho phân loại đại lý cấp 1/cấp 2. Phân loại được xác nhận bởi phòng Kinh doanh và cập nhật theo quý.",
+    },
+  ],
+  nextActions: ["Xem nguồn", "Hỏi tiếp", "Tạo yêu cầu hỗ trợ"],
+};
+
+// ---------------------------------------------------------------------------
+// Scenario 14 — Policy (SOP kiểm kho cuối ngày)
+// ---------------------------------------------------------------------------
+const scenarioSOPStockCount: AnswerScenario = {
+  id: "policy-sop-stock-count",
+  prompt: "Quy trình kiểm kho cuối ngày là gì?",
+  answerType: "Policy",
+  summary:
+    "Quy trình kiểm kho cuối ngày gồm 5 bước bắt buộc: chạy báo cáo tồn kho từ KiotViet, đếm hàng vật lý tại kho và quầy, đối chiếu số liệu, điều chỉnh sai lệch nhỏ có ghi chú, và lưu phiếu kiểm kho gửi báo cáo cho quản lý vùng trước 22:00.",
+  freshnessState: "fresh",
+  freshnessLabel: "Cập nhật 2 tuần trước",
+  citations: [
+    {
+      title: "SOP kiểm kho cuối ngày — knw-011",
+      excerpt:
+        "Thực hiện bắt buộc trước khi đóng ca tối. Cần ít nhất 2 nhân viên ký xác nhận phiếu kiểm kho. Chênh lệch trên 2 đôi/SKU phải báo Quản lý cửa hàng.",
+    },
+    {
+      title: "Ngưỡng điều chỉnh tồn kho cho phép",
+      excerpt:
+        "Sai lệch ≤ 1 đôi/SKU do lỗi nhập liệu: nhân viên được phép điều chỉnh trong KiotViet kèm ghi chú lý do cụ thể. Sai lệch > 1 đôi cần phê duyệt từ Quản lý cửa hàng.",
+    },
+    {
+      title: "Hạn nộp báo cáo",
+      excerpt:
+        "Scan phiếu kiểm kho vật lý và upload lên hệ thống. Gửi email tóm tắt cho Quản lý vùng trước 22:00 mỗi ngày. Ngày cuối tháng: gửi kèm báo cáo đối soát tháng.",
+    },
+  ],
+  sourceTrace: [
+    {
+      id: "src-601",
+      title: "SOP kiểm kho cuối ngày — knw-011",
+      source: "M08 Knowledge Center",
+      freshness: "Reviewed 2026-04-10 17:00",
+      trust: "High",
+      excerpt:
+        "Phê duyệt bởi Ops Lead. Áp dụng cho tất cả cửa hàng trực thuộc BQ. Đại lý thực hiện theo quy định riêng trong hợp đồng.",
+    },
+    {
+      id: "src-602",
+      title: "Hướng dẫn chạy báo cáo tồn kho — KiotViet",
+      source: "M08 Knowledge Center",
+      freshness: "Reviewed 2026-04-05 10:00",
+      trust: "High",
+      excerpt:
+        "Vào Báo cáo → Tồn kho → Chọn ngày hôm nay → Xuất danh sách SKU và số lượng. Đảm bảo chạy báo cáo sau lần giao dịch cuối cùng trong ngày.",
+    },
+  ],
+  nextActions: ["Xem nguồn", "Tải checklist PDF", "Hỏi tiếp"],
+};
+
+// ---------------------------------------------------------------------------
+// Scenario 15 — Data (tổng tồn kho toàn hệ thống theo dòng sản phẩm)
+// ---------------------------------------------------------------------------
+const scenarioInventorySummary: AnswerScenario = {
+  id: "data-inventory-summary",
+  prompt: "Tổng tồn kho dòng giày da nam trên toàn hệ thống hiện là bao nhiêu?",
+  answerType: "Data",
+  summary:
+    "Tổng tồn kho dòng giày da nam trên toàn hệ thống (43 tỉnh thành) hiện là 3.840 đôi, trong đó 420 đôi đang được reserved cho đơn đang xử lý. Kho trung tâm TP.HCM chiếm 38%, kho miền Bắc 31%, kho miền Trung 18%, và kho online 13%.",
+  freshnessState: "stale",
+  freshnessLabel: "Tổng hợp từ đêm qua — có thể lệch nhẹ",
+  warning:
+    "Số liệu tổng hợp từ báo cáo đêm qua (23:00 ngày 18/04). Giao dịch đầu ngày hôm nay chưa được phản ánh đầy đủ. Dữ liệu thời gian thực theo từng kho: tra cứu trực tiếp trên KiotViet.",
+  dataPoints: [
+    { label: "Tổng tồn toàn hệ thống", value: "3.840 đôi" },
+    { label: "Reserved (đang xử lý)", value: "420 đôi" },
+    { label: "Khả dụng thực tế", value: "3.420 đôi" },
+    { label: "Kho TP.HCM (trung tâm)", value: "1.459 đôi" },
+    { label: "Kho Hà Nội", value: "1.190 đôi" },
+    { label: "Kho Đà Nẵng", value: "691 đôi" },
+    { label: "Kho online (Haravan)", value: "500 đôi" },
+  ],
+  sourceTrace: [
+    {
+      id: "src-701",
+      title: "Daily Inventory Report — Giày da nam (KiotViet)",
+      source: "KiotViet",
+      freshness: "Report 2026-04-18 23:00",
+      trust: "Medium",
+      excerpt:
+        "Tổng hợp tồn kho dòng Giày da nam toàn hệ thống tính đến cuối ngày 18/04. Báo cáo tự động chạy lúc 23:00 hằng đêm.",
+    },
+    {
+      id: "src-702",
+      title: "Warehouse Summary — SAP B1",
+      source: "SAP B1",
+      freshness: "Snapshot 2026-04-19 00:30",
+      trust: "High",
+      excerpt:
+        "SAP B1 báo cáo tồn kho kho trung tâm sau điều chỉnh đêm: 1.459 đôi tại TP.HCM. Số liệu SAP là nguồn tham chiếu cho báo cáo tài chính.",
+    },
+    {
+      id: "src-703",
+      title: "Haravan Online Inventory",
+      source: "Haravan",
+      freshness: "Snapshot 2026-04-19 09:00",
+      trust: "High",
+      excerpt:
+        "Kho online (giaybq.com.vn): 500 đôi giày da nam hiện đang available. Không có reserved tại thời điểm snapshot.",
+    },
+  ],
+  nextActions: ["Xem nguồn", "Kiểm tra SKU cụ thể", "Hỏi tiếp"],
+};
+
+// ---------------------------------------------------------------------------
 // Exports
 // ---------------------------------------------------------------------------
 export const INTERNAL_CHAT_SCENARIOS: AnswerScenario[] = [
@@ -342,18 +705,63 @@ export const INTERNAL_CHAT_SCENARIOS: AnswerScenario[] = [
   scenarioDataConflict,
   scenarioMixedPromoInventory,
   scenarioUnsupported,
+  scenarioInventoryBySKU,
+  scenarioPricingRetail,
+  scenarioOrderStatus,
+  scenarioPolicyWarranty,
+  scenarioAgentDiscount,
+  scenarioSOPStockCount,
+  scenarioInventorySummary,
 ];
 
 export function inferScenarioFromPrompt(prompt: string): AnswerScenario {
   const p = prompt.toLowerCase();
 
-  // Policy
+  // Specific SKU inventory lookup (BQ-XXXX pattern or explicit SKU mention)
+  if (p.match(/bq-\d{4}/) || (p.includes("size") && p.includes("kho"))) {
+    return scenarioInventoryBySKU;
+  }
+
+  // Order status lookup
+  if (p.match(/#\d{4,}/) || (p.includes("đơn") && p.includes("trạng thái"))) {
+    return scenarioOrderStatus;
+  }
+
+  // Retail price lookup
+  if ((p.includes("giá bán") || p.includes("giá bán lẻ") || p.includes("giá niêm yết")) && !p.includes("nội bộ") && !p.includes("toàn bộ")) {
+    return scenarioPricingRetail;
+  }
+
+  // Agent discount
+  if (p.includes("đại lý") && (p.includes("chiết khấu") || p.includes("q2") || p.includes("quý"))) {
+    return scenarioAgentDiscount;
+  }
+
+  // Warranty policy
+  if (p.includes("bảo hành") || p.includes("warranty")) {
+    return scenarioPolicyWarranty;
+  }
+
+  // SOP stock count / end of day
+  if (p.includes("kiểm kho") || p.includes("cuối ngày") || p.includes("đối soát")) {
+    return scenarioSOPStockCount;
+  }
+
+  // Inventory summary by product line
+  if (p.includes("toàn hệ thống") || p.includes("tổng tồn") || (p.includes("tồn kho") && p.includes("dòng"))) {
+    return scenarioInventorySummary;
+  }
+
+  // Policy — return/exchange
   if (p.includes("đổi trả") || p.includes("hoàn tiền") || p.includes("đổi hàng")) {
     return scenarioPolicyReturn;
   }
+
+  // SOP — store operation
   if (p.includes("sop") || p.includes("mở cửa") || p.includes("quy trình") || p.includes("checklist")) {
     return scenarioPolicySOP;
   }
+
   if (p.includes("policy") || p.includes("chính sách") || p.includes("quy định")) {
     return scenarioPolicyReturn;
   }
@@ -379,16 +787,23 @@ export function inferScenarioFromPrompt(prompt: string): AnswerScenario {
     return scenarioMixedPromoInventory;
   }
 
-  // Mixed — order + policy
-  if (p.includes("đơn") || p.includes("giao hàng") || p.includes("vận chuyển") || p.includes("order")) {
+  // Mixed — order + shipping
+  if (p.includes("giao hàng") || p.includes("vận chuyển") || p.includes("order")) {
+    return scenarioMixedOrderPolicy;
+  }
+
+  if (p.includes("đơn") && (p.includes("online") || p.includes("hd-") || p.includes("ở đâu"))) {
     return scenarioMixedOrderPolicy;
   }
 
   // Blocked
-  if (p.includes("chiết khấu") || p.includes("giá nội bộ") || p.includes("discount matrix")) {
+  if (p.includes("chiết khấu") && !p.includes("đại lý")) {
     return scenarioBlockedPricing;
   }
-  if (p.includes("giá") && (p.includes("nội bộ") || p.includes("toàn bộ") || p.includes("rule"))) {
+  if (p.includes("giá nội bộ") || p.includes("discount matrix") || p.includes("ma trận giá")) {
+    return scenarioBlockedPricing;
+  }
+  if (p.includes("giá") && (p.includes("nội bộ") || p.includes("toàn bộ rule"))) {
     return scenarioBlockedPricing;
   }
 
@@ -402,6 +817,6 @@ export function inferScenarioFromPrompt(prompt: string): AnswerScenario {
     return scenarioUnsupported;
   }
 
-  // Default fallback — policy return
+  // Default fallback
   return scenarioPolicyReturn;
 }

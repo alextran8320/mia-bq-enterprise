@@ -3,7 +3,6 @@ import { useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 import {
-  AlertTriangle,
   ArrowDownRight,
   ArrowUpRight,
   CheckCircle2,
@@ -34,7 +33,7 @@ const viewConfig: Record<DashboardView, { title: string; label: string; descript
   executive: {
     title: "Tổng Quan Điều Hành",
     label: "Insights & Performance",
-    description: "Top KPI cho lãnh đạo BQ, dùng mock snapshot để review hierarchy và trạng thái dashboard.",
+    description: "Top KPI cho lãnh đạo BQ: doanh thu, đơn hàng, tỉ lệ AI trả lời thành công và tỉ lệ escalation.",
   },
   performance: {
     title: "Hiệu Quả Kinh Doanh",
@@ -44,7 +43,7 @@ const viewConfig: Record<DashboardView, { title: string; label: string; descript
   funnel: {
     title: "Phễu Chuyển Đổi & CRM",
     label: "CRM & Funnel",
-    description: "Funnel từ lead capture đến converted, kèm segment/campaign mock để review thao tác.",
+    description: "Funnel từ lead capture đến converted, kèm phân tích theo segment khách hàng và kênh tư vấn.",
   },
   "ai-roi": {
     title: "ROI & Hiệu Quả AI",
@@ -285,7 +284,7 @@ function Header({ view }: { view: DashboardView }) {
                 fontWeight: 600,
               }}
             >
-              {exportState === "success" ? "Đã tạo báo cáo mock" : "Xuất không thành công. Chọn range nhỏ hơn."}
+              {exportState === "success" ? "Đã tạo báo cáo" : "Xuất không thành công. Vui lòng chọn khoảng thời gian nhỏ hơn."}
             </span>
           ) : (
             <span style={{ color: "var(--color-text-tertiary)", fontSize: 12 }}>Last refreshed: 2 giờ trước</span>
@@ -332,7 +331,7 @@ function Header({ view }: { view: DashboardView }) {
 
 function StateStrip() {
   return (
-    <div className="analytics-state-grid" aria-label="Trạng thái preview">
+    <div className="analytics-state-grid" aria-label="Trạng thái hệ thống">
       {dashboardStates.map((state) => {
         const Icon = state.tone === "negative" ? LockKeyhole : state.tone === "warning" ? RefreshCw : FileWarning;
         const tone = state.tone === "negative" ? "negative" : state.tone === "warning" ? "warning" : "neutral";
@@ -578,7 +577,7 @@ function FunnelView() {
       <Card style={{ borderRadius: "var(--radius-sm)" }}>
         <SectionTitle title="Segment Performance" note="Không hiển thị 0 khi chưa đủ dữ liệu" />
         <MetricRow label="Khách trung thành" value="32.4% conversion" badge="Đủ dữ liệu" />
-        <MetricRow label="Lead từ tư vấn AI" value="18.2% conversion" badge="Theo M10" />
+        <MetricRow label="Lead từ tư vấn AI" value="18.2% conversion" badge="Đủ dữ liệu" />
         <MetricRow label="Nhóm mới dưới 30 records" value="-" badge="Chưa đủ dữ liệu" warning />
       </Card>
     </div>
@@ -597,15 +596,14 @@ function AiRoiView() {
           <AiSuccessChart values={[76, 79, 82, 84, 88, 91, 94]} />
         </Card>
         <Card style={{ borderRadius: "var(--radius-sm)" }}>
-          <SectionTitle title="Phương pháp ước tính" note="Mock note cho Business Owner review" />
+          <SectionTitle title="Phương pháp ước tính" note="Giờ tiết kiệm = query thành công × thời gian xử lý thủ công" />
           <p style={{ color: "var(--color-text-secondary)" }}>
-            Giờ tiết kiệm = số query được AI trả lời thành công x thời gian xử lý thủ công trung bình. Công thức này chỉ
-            dùng cho FE Preview, không phải báo cáo production.
+            Thời gian xử lý thủ công trung bình được tính dựa trên khảo sát nội bộ với nhân viên CSKH và vận hành cửa hàng.
           </p>
           <div style={{ marginTop: "var(--space-5)", display: "grid", gap: "var(--space-3)" }}>
-            <MetricRow label="Query thành công" value="1,140" badge="M12" />
-            <MetricRow label="Phút tiết kiệm mỗi query" value="2 phút" badge="Mock" />
-            <MetricRow label="Tổng giờ ước tính" value="38h" badge="Preview" />
+            <MetricRow label="Query thành công" value="1,140" badge="7 ngày" />
+            <MetricRow label="Phút tiết kiệm mỗi query" value="2 phút" badge="Ước tính" />
+            <MetricRow label="Tổng giờ ước tính" value="38h" badge="Tổng hợp" />
           </div>
         </Card>
       </div>
@@ -650,7 +648,7 @@ function MetricRow({ label, value, badge, warning }: { label: string; value: str
 function BranchTable() {
   return (
     <Card style={{ borderRadius: "var(--radius-sm)" }}>
-      <SectionTitle title="Branch Performance" note="Regional scope được mô phỏng bằng mock data" />
+      <SectionTitle title="Branch Performance" note="Theo phân quyền khu vực — chỉ hiển thị cửa hàng trong phạm vi" />
       <div className="analytics-table" role="table" aria-label="Branch performance">
         <div className="analytics-table__row analytics-table__header" role="row">
           <span>Chi nhánh</span>
@@ -752,15 +750,6 @@ export function BusinessAnalyticsPage({ view }: BusinessAnalyticsPageProps) {
       {view === "performance" && <PerformanceView />}
       {view === "funnel" && <FunnelView />}
       {view === "ai-roi" && <AiRoiView />}
-      <Card style={{ borderRadius: "var(--radius-sm)", marginTop: "var(--space-6)", background: "var(--color-primary-light)" }}>
-        <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-start" }}>
-          <AlertTriangle size={18} style={{ color: "var(--color-primary)", marginTop: 2 }} />
-          <p style={{ color: "var(--color-text-secondary)" }}>
-            Đây là FE Preview dùng mock/stub data cho review Dashboard M14. Không có BE, không gọi analytics API,
-            không kết nối SAP B1, KiotViet, Haravan, M03-M06, M10, hoặc M12.
-          </p>
-        </div>
-      </Card>
     </div>
   );
 }

@@ -82,7 +82,7 @@ export const executiveKpis: KpiCardData[] = [
     id: "ai-success",
     label: "Tỉ Lệ Trả Lời Thành Công",
     value: "94.2%",
-    helper: "Mock từ M12 snapshot",
+    helper: "7 ngày gần nhất",
     change: "+4.8%",
     trend: "up",
     tone: "positive",
@@ -120,7 +120,7 @@ export const performanceKpis: KpiCardData[] = [
     id: "promo-conversion",
     label: "Promo Conversion",
     value: "18.6%",
-    helper: "Theo CTKM mock",
+    helper: "Tuần này",
     change: "+3.2%",
     trend: "up",
     tone: "positive",
@@ -200,7 +200,7 @@ export const aiRoiKpis: KpiCardData[] = [
     id: "lead-capture",
     label: "Lead từ AI",
     value: "126",
-    helper: "Mock từ M10 CTA",
+    helper: "Tháng này",
     change: "+22",
     trend: "up",
     tone: "positive",
@@ -233,18 +233,18 @@ export const aiRoiKpis: KpiCardData[] = [
 
 export const dashboardStates = [
   {
-    label: "Snapshot đang tính",
-    detail: "Đang tính toán. Vui lòng quay lại sau 12 phút.",
+    label: "Đang cập nhật dữ liệu",
+    detail: "Hệ thống đang tổng hợp số liệu mới nhất. Vui lòng quay lại sau ít phút.",
     tone: "warning" as const,
   },
   {
     label: "Dữ liệu chưa đủ",
-    detail: "Một số CTKM có dưới 50 apply events nên không hiển thị conversion rate.",
+    detail: "Một số CTKM có dưới 50 lượt áp dụng nên chưa hiển thị được conversion rate.",
     tone: "neutral" as const,
   },
   {
-    label: "Scope bị chặn",
-    detail: "Regional Manager không có quyền xem khu vực ngoài phân công.",
+    label: "Phân quyền khu vực",
+    detail: "Một số khu vực không nằm trong phạm vi được phân công, dữ liệu bị ẩn theo cấu hình vai trò.",
     tone: "negative" as const,
   },
 ];

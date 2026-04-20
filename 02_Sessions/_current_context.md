@@ -1,13 +1,31 @@
 # Current Active Context
 
-**Last Updated**: 2026-04-19
-**Active Workspace Topic**: AI data linkage and labeling setup for BQ
-**Current Project**: `MIABOS`
-**Current Phase**: `PB-02 Analysis & Strategy`
-**Latest Canonical Session Log**: [[2026-04-19_MIABOS_AI_Data_Linkage_Labeling_Setup]]
-**Today's Daily Log**: [[2026-04-19_Daily_Log]]
+**Last Updated**: 2026-04-20
+**Active Workspace Topic**: BQ Meeting 2 Recap — Pivot to Lark-integrated Internal Chatbot
+**Current Project**: `Giày BQ` (customer intake + solution re-scoping)
+**Current Phase**: `PB-01 Discovery & Intake → PB-02 Analysis (re-scope required)`
+**Latest Canonical Session Log**: [[2026-04-20_BQ_MOM_Meeting2_Recap]]
+**Today's Daily Log**: [[2026-04-20_Daily_Log]]
 
-## Latest Decisions
+## ⚠ Critical Correction (2026-04-20)
+
+> **BQ ĐANG DÙNG LARK — 3 NĂM**. Assumption từ 2026-04-19 rằng "BQ không dùng Lark" là SAI. Anh Tuấn Anh xác nhận trực tiếp trong buổi gặp thứ 2. Toàn bộ tài liệu tham chiếu Lark = "không dùng" phải được cập nhật.
+
+## Latest Decisions (2026-04-20 — Buổi Gặp Thứ 2 Với BQ)
+
+- **PIVOT**: BQ đang dùng **Lark 3 năm** — platform vận hành lõi. Build Chatbot Nội Bộ phải tích hợp trên Lark.
+- **PIVOT**: CRM 360 không phải ưu tiên — đây là dự án riêng của phòng CNTT BQ. Phase 3–4 vẫn khả thi nhưng cần re-scope.
+- **PIVOT**: End user tương tác Bot phải qua **Lark hoặc SAP** — không thêm platform mới.
+- Focus duy nhất Phase 1: **AI Chatbot Nội Bộ tích hợp Lark** — 3 trụ cột: luồng vận hành Lark + bộ dữ liệu phân quyền + AI xử lý hình ảnh/content.
+- Use case cốt lõi: **truy xuất dữ liệu hàng tồn kho** phải được giải triệt để.
+- Hạ tầng: **Cloud-first → migrate Server BQ** sau khi ổn định.
+- Human factor problem phải được thiết kế solution rõ ràng (sai sót con người vận hành, phân quyền, audit).
+- **MS SQL** được anh Tuấn Anh đề cập như yêu cầu kỹ thuật — cần confirm đây là SQL Server BQ hay yêu cầu mới.
+- **2 gói báo giá** cần chuẩn bị: Chatbot Nội Bộ + Chatbot Bán Hàng.
+- Decision signal: anh Tuấn Anh approve → ~60% BGĐ BQ đồng ý.
+- Q3–Q4 2026: BQ chuẩn bị chạy AI rất mạnh + song song (nội bộ + bán hàng).
+
+## Latest Decisions (2026-04-19)
 
 - Business Owner identified the need to link Master Data, Knowledge Center documents, and Interaction/Eval Data so AI can retrieve faster and more accurately.
 - Created `01_Projects/MIABOS/Analysis/Data_Setup/AI_Data_Linkage_And_Labeling_Setup.md` as the canonical Draft Analysis artifact for AI data linkage and labeling setup.

@@ -1,5 +1,10 @@
 # Session Index
 
+### 2026-04-20
+
+- [[2026-04-20_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-20_BQ_MOM_Meeting2_Recap|BQ MOM Meeting 2 Recap]] - MOM đầy đủ từ buổi gặp thứ 2 với anh Tuấn Anh (BQ): pivot Lark platform, CRM 360 deprioritized, Internal Chatbot on Lark là focus duy nhất, human factor problem, MS SQL requirement, 2 gói báo giá.
+
 ### 2026-04-19
 
 - [[2026-04-19_Daily_Log|Daily Log]] - All AI interactions for this day.

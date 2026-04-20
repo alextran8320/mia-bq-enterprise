@@ -19,7 +19,7 @@ import {
 import { Badge, Button, Card } from "@/shared/ui";
 import {
   AnswerScenario,
-  INTERNAL_CHAT_SCENARIOS,
+  BQ_PROMPT_CHIPS,
   inferScenarioFromPrompt,
 } from "@/mocks/ai-workspace/internalChat";
 
@@ -38,16 +38,13 @@ interface HistoryItem {
   scenario: AnswerScenario;
 }
 
-const PROMPT_CHIPS = INTERNAL_CHAT_SCENARIOS.slice(0, 5).map((s) => s.prompt);
+const PROMPT_CHIPS = BQ_PROMPT_CHIPS;
 const SUPPORT_ACTIONS = [
-  { label: "Tra cứu tồn kho và sản phẩm", prompt: "Mẫu BQ Runner còn hàng ở đâu?" },
-  {
-    label: "Kiểm tra trạng thái đơn hàng",
-    prompt: "Đơn online #HD-2048 đang ở đâu và chính sách giao hàng áp dụng thế nào?",
-  },
+  { label: "Tra cứu tồn kho theo SKU", prompt: "Mã BQ-2301 size 40 màu đen còn bao nhiêu tại kho Hà Nội?" },
+  { label: "Kiểm tra trạng thái đơn hàng", prompt: "Đơn hàng #98765 đang ở trạng thái nào?" },
   { label: "Chính sách đổi trả và giao hàng", prompt: "Chính sách đổi trả hiện tại thế nào?" },
-  { label: "SOP vận hành cửa hàng", prompt: "Quy trình mở cửa hàng buổi sáng là gì?" },
-  { label: "Khuyến mãi đang áp dụng", prompt: "CTKM tháng 4 cho dòng giày thể thao là gì và còn hàng không?" },
+  { label: "CTKM đang áp dụng tại cửa hàng", prompt: "CTKM tháng này áp dụng cho cửa hàng chính hãng gồm những gì?" },
+  { label: "Tra cứu giá bán lẻ", prompt: "Giá bán lẻ hiện tại của mã BQ-1102 là bao nhiêu?" },
 ];
 
 function getAnswerBadge(scenario: AnswerScenario) {

@@ -1,377 +1,222 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ChevronDown, ChevronUp, Search } from "lucide-react";
-import { Badge, Card, DataTable, Input } from "@/shared/ui";
-import type { Column } from "@/shared/ui";
-import {
-  searchCatalog,
-  getPrimaryPricing,
-  type CatalogRecord,
-  type CatalogSearchResult,
-  type CatalogWarningState,
-} from "@/mocks/catalog/catalog";
+import { useState } from "react";
+import { Plus } from "lucide-react";
+import { Badge, Button, Card } from "@/shared/ui";
+import { DataTable } from "@/shared/ui/DataTable";
+import type { Column } from "@/shared/ui/DataTable";
 
-const WARNING_STYLES: Record<
-  Exclude<CatalogWarningState, "none">,
-  { label: string; color: string; bg: string }
-> = {
-  stale: {
-    label: "Cần cập nhật",
-    color: "var(--color-warning)",
-    bg: "#FFF7ED",
+// ─── Types & mock data ────────────────────────────────────────────────────────
+
+type PricingStatus = "Đang áp dụng" | "Chờ hiệu lực" | "Hết hiệu lực";
+
+interface PricingRecord {
+  id: string;
+  code: string;
+  name: string;
+  startDate: string;
+  endDate: string | null;
+  targets: string[];
+  regions: string[];
+  status: PricingStatus;
+}
+
+const PRICING_RECORDS: PricingRecord[] = [
+  {
+    id: "bg-001",
+    code: "BG-2026-001",
+    name: "Bảng giá bán lẻ tiêu chuẩn 2026",
+    startDate: "01/01/2026",
+    endDate: null,
+    targets: ["Khách lẻ"],
+    regions: ["Toàn quốc"],
+    status: "Đang áp dụng",
   },
-  conflict: {
-    label: "Xung đột",
-    color: "var(--color-error)",
-    bg: "#FFE4E6",
+  {
+    id: "bg-002",
+    code: "BG-2026-002",
+    name: "Bảng giá đại lý cấp 1 — Q1/2026",
+    startDate: "01/01/2026",
+    endDate: "31/03/2026",
+    targets: ["Đại lý cấp 1"],
+    regions: ["Toàn quốc"],
+    status: "Hết hiệu lực",
   },
-  restricted: { label: "Giới hạn", color: "#7C3AED", bg: "#F3E8FF" },
-  needs_review: { label: "Cần review", color: "var(--color-warning)", bg: "#FEF3C7" },
+  {
+    id: "bg-003",
+    code: "BG-2026-003",
+    name: "Bảng giá đại lý cấp 1 — Q2/2026",
+    startDate: "01/04/2026",
+    endDate: "30/06/2026",
+    targets: ["Đại lý cấp 1"],
+    regions: ["Toàn quốc"],
+    status: "Đang áp dụng",
+  },
+  {
+    id: "bg-004",
+    code: "BG-2026-004",
+    name: "Bảng giá nhân viên nội bộ 2026",
+    startDate: "01/01/2026",
+    endDate: "31/12/2026",
+    targets: ["Nhân viên"],
+    regions: ["Toàn quốc"],
+    status: "Đang áp dụng",
+  },
+  {
+    id: "bg-005",
+    code: "BG-2026-005",
+    name: "Bảng giá khuyến mãi Miền Bắc T5",
+    startDate: "01/05/2026",
+    endDate: "31/05/2026",
+    targets: ["Khách lẻ"],
+    regions: ["Miền Bắc"],
+    status: "Chờ hiệu lực",
+  },
+];
+
+// ─── Style maps ───────────────────────────────────────────────────────────────
+
+const STATUS_STYLES: Record<PricingStatus, { color: string; bg: string }> = {
+  "Đang áp dụng": { color: "var(--color-success)", bg: "#DCFCE7" },
+  "Chờ hiệu lực": { color: "#B45309", bg: "#FEF3C7" },
+  "Hết hiệu lực": { color: "var(--color-text-tertiary)", bg: "var(--color-bg-surface)" },
 };
 
-const DEFAULT_FILTERS = {
-  query: "",
-  channel: "all" as const,
-  storeType: "all" as const,
-  branch: "all" as const,
+const TARGET_STYLES: Record<string, { color: string; bg: string }> = {
+  "Khách lẻ": { color: "var(--color-primary)", bg: "var(--color-primary-light)" },
+  "Đại lý cấp 1": { color: "#7C3AED", bg: "#F3E8FF" },
+  "Đại lý cấp 2": { color: "#0F766E", bg: "#CCFBF1" },
+  "Nhân viên": { color: "#B45309", bg: "#FEF3C7" },
+  "VIP": { color: "#C2410C", bg: "#FFEDD5" },
 };
 
-const initialResult = searchCatalog(DEFAULT_FILTERS);
+// ─── Columns ──────────────────────────────────────────────────────────────────
+
+const columns: Column<PricingRecord>[] = [
+  {
+    key: "code",
+    header: "Mã bảng giá",
+    render: (r) => (
+      <span style={{ fontFamily: "var(--font-mono)", fontSize: "13px", fontWeight: 600 }}>
+        {r.code}
+      </span>
+    ),
+    width: "13%",
+  },
+  {
+    key: "name",
+    header: "Tên bảng giá",
+    render: (r) => (
+      <span style={{ fontSize: "13px", fontWeight: 500 }}>{r.name}</span>
+    ),
+    width: "28%",
+  },
+  {
+    key: "startDate",
+    header: "Ngày bắt đầu",
+    render: (r) => (
+      <span style={{ fontSize: "13px", fontFamily: "var(--font-mono)" }}>{r.startDate}</span>
+    ),
+    width: "11%",
+  },
+  {
+    key: "endDate",
+    header: "Ngày kết thúc",
+    render: (r) => (
+      <span style={{ fontSize: "13px", fontFamily: "var(--font-mono)", color: r.endDate ? undefined : "var(--color-text-tertiary)" }}>
+        {r.endDate ?? "—"}
+      </span>
+    ),
+    width: "11%",
+  },
+  {
+    key: "targets",
+    header: "Đối tượng áp dụng",
+    render: (r) => (
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+        {r.targets.map((t) => {
+          const s = TARGET_STYLES[t] ?? { color: "var(--color-text-secondary)", bg: "var(--color-bg-surface)" };
+          return <Badge key={t} label={t} color={s.color} bg={s.bg} />;
+        })}
+      </div>
+    ),
+    width: "16%",
+  },
+  {
+    key: "regions",
+    header: "Khu vực",
+    render: (r) => (
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+        {r.regions.map((reg) => (
+          <Badge key={reg} label={reg} color="var(--color-text-secondary)" bg="var(--color-bg-surface)" />
+        ))}
+      </div>
+    ),
+    width: "12%",
+  },
+  {
+    key: "status",
+    header: "Trạng thái",
+    render: (r) => {
+      const s = STATUS_STYLES[r.status];
+      return <Badge label={r.status} color={s.color} bg={s.bg} />;
+    },
+    width: "13%",
+  },
+];
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 function Eyebrow({ children }: { children: string }) {
   return (
-    <span
-      style={{
-        fontSize: "11px",
-        fontWeight: 500,
-        color: "var(--color-text-tertiary)",
-        textTransform: "uppercase",
-        letterSpacing: "0.05em",
-      }}
-    >
+    <span style={{ fontSize: "11px", fontWeight: 500, color: "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
       {children}
     </span>
   );
 }
 
-function FilterSelect<T extends string>({
-  value,
-  options,
-  onChange,
-}: {
-  value: T;
-  options: { value: T; label: string }[];
-  onChange: (v: T) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  const selectedLabel = options.find((o) => o.value === value)?.label ?? "";
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [open]);
-
-  return (
-    <div ref={ref} style={{ position: "relative" }}>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          padding: "10px 14px",
-          borderRadius: "var(--radius-sm)",
-          border: open ? "1.5px solid var(--color-text-primary)" : "1.5px solid transparent",
-          background: "var(--color-bg-card)",
-          color: "var(--color-text-primary)",
-          fontSize: "14px",
-          fontFamily: "var(--font-primary)",
-          fontWeight: 400,
-          cursor: "pointer",
-          boxShadow: "var(--shadow-ambient)",
-          minWidth: 140,
-          whiteSpace: "nowrap",
-        }}
-      >
-        <span style={{ flex: 1, textAlign: "left" }}>{selectedLabel}</span>
-        {open ? (
-          <ChevronUp size={16} color="var(--color-text-tertiary)" />
-        ) : (
-          <ChevronDown size={16} color="var(--color-text-tertiary)" />
-        )}
-      </button>
-
-      {open && (
-        <div
-          style={{
-            position: "absolute",
-            top: "calc(100% + 4px)",
-            left: 0,
-            zIndex: 10,
-            background: "#fff",
-            borderRadius: "var(--radius-sm)",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.06)",
-            minWidth: "100%",
-            padding: "4px 0",
-            overflow: "hidden",
-          }}
-        >
-          {options.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => {
-                onChange(opt.value);
-                setOpen(false);
-              }}
-              style={{
-                display: "block",
-                width: "100%",
-                padding: "10px 16px",
-                border: "none",
-                background: opt.value === value ? "var(--color-bg-page)" : "transparent",
-                color: "var(--color-text-primary)",
-                fontSize: "14px",
-                fontFamily: "var(--font-primary)",
-                fontWeight: opt.value === value ? 600 : 400,
-                textAlign: "left",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                if (opt.value !== value)
-                  e.currentTarget.style.background = "var(--color-bg-page)";
-              }}
-              onMouseLeave={(e) => {
-                if (opt.value !== value)
-                  e.currentTarget.style.background = "transparent";
-              }}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-type ChannelFilter = "all" | "ecommerce" | "store" | "dealer";
-type WarningFilter = "all" | "none" | "stale" | "conflict";
-
-const CHANNEL_FILTERS: { value: ChannelFilter; label: string }[] = [
-  { value: "all", label: "Tất cả" },
-  { value: "ecommerce", label: "Ecommerce" },
-  { value: "store", label: "Cửa hàng" },
-  { value: "dealer", label: "Đại lý" },
-];
-
-const WARNING_FILTERS: { value: WarningFilter; label: string }[] = [
-  { value: "all", label: "Tất cả" },
-  { value: "none", label: "Bình thường" },
-  { value: "stale", label: "Cần cập nhật" },
-  { value: "conflict", label: "Xung đột" },
-];
-
-const columns: Column<CatalogRecord>[] = [
-  {
-    key: "sku",
-    header: "SKU",
-    render: (r) => (
-      <div>
-        <div
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontWeight: 600,
-            fontSize: "13px",
-          }}
-        >
-          {r.sku}
-        </div>
-        <div
-          style={{
-            fontSize: "12px",
-            color: "var(--color-text-secondary)",
-            marginTop: 2,
-          }}
-        >
-          {r.name}
-        </div>
-      </div>
-    ),
-    width: "18%",
-  },
-  {
-    key: "pricingContexts",
-    header: "Ngữ cảnh",
-    render: (r) => {
-      const pricing = getPrimaryPricing(r, DEFAULT_FILTERS);
-      if (!pricing) return <span style={{ fontSize: "13px", color: "var(--color-text-tertiary)" }}>--</span>;
-      return <span style={{ fontSize: "13px" }}>{pricing.contextLabel}</span>;
-    },
-  },
-  {
-    key: "season",
-    header: "Giá cơ sở",
-    render: (r) => {
-      const pricing = getPrimaryPricing(r, DEFAULT_FILTERS);
-      if (!pricing) return <span style={{ fontSize: "13px", color: "var(--color-text-tertiary)" }}>--</span>;
-      return (
-        <span style={{ fontSize: "13px", fontFamily: "var(--font-mono)" }}>
-          {pricing.basePrice}
-        </span>
-      );
-    },
-  },
-  {
-    key: "material",
-    header: "Giá cuối",
-    render: (r) => {
-      const pricing = getPrimaryPricing(r, DEFAULT_FILTERS);
-      if (!pricing) return <span style={{ fontSize: "13px", color: "var(--color-text-tertiary)" }}>--</span>;
-      return (
-        <span style={{ fontSize: "13px", fontWeight: 700, fontFamily: "var(--font-mono)" }}>
-          {pricing.finalPrice}
-        </span>
-      );
-    },
-  },
-  {
-    key: "collection",
-    header: "Khuyến mãi",
-    render: (r) => {
-      const pricing = getPrimaryPricing(r, DEFAULT_FILTERS);
-      if (!pricing?.promotionLabel) return null;
-      return (
-        <Badge
-          label={pricing.promotionLabel}
-          color="#C2410C"
-          bg="#FFEDD5"
-        />
-      );
-    },
-  },
-  {
-    key: "source",
-    header: "Nguồn",
-    render: (r) => (
-      <Badge
-        label={r.source}
-        color="var(--color-text-secondary)"
-        bg="var(--color-bg-surface)"
-      />
-    ),
-  },
-  {
-    key: "warningState",
-    header: "Cảnh báo",
-    render: (r) => {
-      const pricing = getPrimaryPricing(r, DEFAULT_FILTERS);
-      const ws = pricing?.warningState ?? r.warningState;
-      if (ws === "none") return null;
-      const style = WARNING_STYLES[ws];
-      return <Badge label={style.label} color={style.color} bg={style.bg} />;
-    },
-  },
-];
-
 export function PricingCenterPage() {
-  const navigate = useNavigate();
-  const [search, setSearch] = useState("");
-  const [result, setResult] = useState<CatalogSearchResult>(initialResult);
-  const [channelFilter, setChannelFilter] = useState<ChannelFilter>("all");
-  const [warningFilter, setWarningFilter] = useState<WarningFilter>("all");
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [records] = useState<PricingRecord[]>(PRICING_RECORDS);
 
-  const allRecords = result.kind === "found" ? result.records : [];
-
-  const records = allRecords.filter((r) => {
-    if (channelFilter !== "all") {
-      const hasChannel = r.pricingContexts.some((ctx) => ctx.channel === channelFilter);
-      if (!hasChannel) return false;
-    }
-    if (warningFilter !== "all") {
-      const pricing = getPrimaryPricing(r, DEFAULT_FILTERS);
-      const ws = pricing?.warningState ?? r.warningState;
-      if (ws !== warningFilter) return false;
-    }
-    return true;
-  });
-
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      setResult(
-        searchCatalog({
-          query: search,
-          channel: "all",
-          storeType: "all",
-          branch: "all",
-        }),
-      );
-    }, 500);
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
-  }, [search]);
+  const stats = {
+    total: records.length,
+    active: records.filter((r) => r.status === "Đang áp dụng").length,
+    pending: records.filter((r) => r.status === "Chờ hiệu lực").length,
+    expired: records.filter((r) => r.status === "Hết hiệu lực").length,
+  };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--space-6)",
-      }}
-    >
-      <div style={{ marginBottom: "var(--space-2)" }}>
-        <Eyebrow>Catalog</Eyebrow>
-        <h1 style={{ marginTop: "var(--space-2)", marginBottom: 0 }}>
-          Bảng giá
-        </h1>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-6)" }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+        <div>
+          <Eyebrow>Catalog</Eyebrow>
+          <h1 style={{ marginTop: "var(--space-2)", marginBottom: 0 }}>Chính sách giá</h1>
+        </div>
+        <Button variant="primary" style={{ gap: "var(--space-2)" }}>
+          <Plus size={16} /> Tạo bảng giá mới
+        </Button>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "var(--space-4)",
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        <Input
-          icon={<Search size={16} />}
-          placeholder="Tìm SKU, tên sản phẩm, barcode..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ width: 320 }}
-        />
-
-        <FilterSelect
-          value={channelFilter}
-          options={CHANNEL_FILTERS}
-          onChange={setChannelFilter}
-        />
-
-        <FilterSelect
-          value={warningFilter}
-          options={WARNING_FILTERS}
-          onChange={setWarningFilter}
-        />
+      {/* KPI cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--space-4)" }}>
+        {[
+          { label: "Tổng bảng giá", value: stats.total, color: "var(--color-text-primary)" },
+          { label: "Đang áp dụng", value: stats.active, color: "var(--color-success)" },
+          { label: "Chờ hiệu lực", value: stats.pending, color: "#B45309" },
+          { label: "Hết hiệu lực", value: stats.expired, color: "var(--color-text-tertiary)" },
+        ].map((kpi) => (
+          <Card key={kpi.label} style={{ padding: "var(--space-4)" }}>
+            <div style={{ fontSize: "12px", color: "var(--color-text-tertiary)", marginBottom: "var(--space-2)" }}>{kpi.label}</div>
+            <div style={{ fontSize: "24px", fontWeight: 700, color: kpi.color }}>{kpi.value}</div>
+          </Card>
+        ))}
       </div>
 
+      {/* Table */}
       <Card style={{ padding: 0, overflow: "hidden" }}>
         <DataTable
           columns={columns}
           data={records}
           rowKey={(r) => r.id}
-          onRowClick={(r) => navigate(`/catalog/pricing/${r.id}`)}
         />
       </Card>
     </div>

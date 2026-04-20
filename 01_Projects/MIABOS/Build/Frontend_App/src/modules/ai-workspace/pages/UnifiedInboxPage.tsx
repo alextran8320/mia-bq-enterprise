@@ -365,41 +365,41 @@ const outlineBtnStyle: CSSProperties = {
   cursor: "pointer",
 };
 
-/* ── Mock AI response detail data ── */
+/* ── Mock AI response detail data — ngữ cảnh Giày BQ ── */
 const MOCK_AI_DETAIL = {
   explanation:
-    "As per the rules for a first interaction with an immediate price inquiry and unclear service, a greeting is provided, followed by the lowest crown price as an anchor. A clarifying question is then asked to determine if they need crowns or a solution for missing teeth.",
+    "Theo quy tắc chào hỏi lượt đầu tiên, bot đã chào khách và hỏi nhu cầu cụ thể. Khách hỏi về giày thể thao → bot phân loại nhu cầu, đưa ra 2 dòng sản phẩm phù hợp (BQ Runner, BQ Sport) kèm mức giá tham khảo, đồng thời hỏi thêm về mục đích sử dụng để tư vấn chính xác hơn.",
   context: {
     messageGoal:
-      "Provide a price anchor and ask a clarifying question to classify the customer's need.",
+      "Phân loại nhu cầu khách hàng và gợi ý sản phẩm phù hợp kèm giá tham khảo.",
     conversationGoal:
-      "Understand the customer's need and provide relevant pricing information.",
-    summary: "The customer is asking for pricing information.",
-    language: "Tiếng Anh",
+      "Hiểu rõ nhu cầu sử dụng (chạy bộ / dạo phố / tập gym) để tư vấn đúng dòng sản phẩm BQ.",
+    summary: "Khách hàng đang tìm giày thể thao, cần tư vấn dòng sản phẩm phù hợp.",
+    language: "Tiếng Việt",
     customerStatus: "new",
     readiness: "Cân nhắc",
     journey: "Trước mua",
     bookingUpdate: "Không",
     customerUpdate: "Không",
-    gender: "Khác",
+    gender: "Nữ",
   },
   sources: {
     knowledge: [
-      "GREETING & CLASSIFICATION SCRIPTS",
-      "CONSULTATION SCRIPTS BY MAIN NEED",
+      "KỊCH BẢN CHÀO HỎI & PHÂN LOẠI NHU CẦU",
+      "KỊCH BẢN TƯ VẤN THEO DÒNG SẢN PHẨM",
     ],
-    services: ["Metal Crown"],
+    services: ["Giày thể thao BQ Runner", "Giày thể thao BQ Sport"],
     rules: [
       {
         title:
-          "HOW TO DETERMINE IF THIS IS THE FIRST TURN (MANDATORY GREETING RULE)",
+          "QUY TẮC CHÀO HỎI LƯỢT ĐẦU (BẮT BUỘC)",
         snippet:
-          "Count the number of messages in conversationHistory. IF ZERO (0) AGENT MESSAGES: This is the very first response. You MUST start with a greeting.",
+          "Kiểm tra số lượng tin nhắn trong conversationHistory. NẾU CHƯA CÓ tin nhắn nào từ Agent: Đây là lượt trả lời đầu tiên. BẮT BUỘC bắt đầu bằng lời chào.",
       },
       {
-        title: "CONSULTATION SCRIPTS BY MAIN NEED",
+        title: "KỊCH BẢN TƯ VẤN THEO DÒNG SẢN PHẨM",
         snippet:
-          "Crowns: Chipped, broken, discolored, gapped, mild alignment concerns. For Zirconia, you MUST list all quantity tiers.",
+          "Giày thể thao: Hỏi mục đích sử dụng (chạy bộ / gym / dạo phố). Gợi ý BQ Runner (chạy bộ, 549K–799K) hoặc BQ Sport (gym/dạo phố, 450K–650K). Luôn hỏi size và màu ưa thích.",
       },
     ],
   },

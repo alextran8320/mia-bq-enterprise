@@ -1,4 +1,11 @@
-import { FormEvent, startTransition, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FormEvent,
+  startTransition,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -19,13 +26,18 @@ import {
 import { Badge, Button, Card } from "@/shared/ui";
 import {
   AnswerScenario,
-  INTERNAL_CHAT_SCENARIOS,
+  BQ_PROMPT_CHIPS,
   inferScenarioFromPrompt,
 } from "@/mocks/ai-workspace/internalChat";
 
 type ChatEntry =
   | { id: string; role: "user"; text: string; createdAt: number }
-  | { id: string; role: "assistant"; scenario: AnswerScenario; createdAt: number }
+  | {
+      id: string;
+      role: "assistant";
+      scenario: AnswerScenario;
+      createdAt: number;
+    }
   | { id: string; role: "error"; createdAt: number };
 
 interface HistoryItem {
@@ -38,29 +50,75 @@ interface HistoryItem {
   scenario: AnswerScenario;
 }
 
-const PROMPT_CHIPS = INTERNAL_CHAT_SCENARIOS.slice(0, 5).map((s) => s.prompt);
+const PROMPT_CHIPS = BQ_PROMPT_CHIPS;
 const SUPPORT_ACTIONS = [
-  { label: "Tra cứu tồn kho theo mã SKU", prompt: "Mã BQ-2301 size 40 màu đen còn bao nhiêu tại kho Hà Nội?" },
-  { label: "Kiểm tra trạng thái đơn hàng", prompt: "Đơn hàng #98765 đang ở trạng thái nào?" },
-  { label: "Giá bán lẻ sản phẩm", prompt: "Giá bán lẻ hiện tại của mã BQ-1102 là bao nhiêu?" },
-  { label: "Chính sách đổi trả và bảo hành", prompt: "Chính sách bảo hành giày da cao cấp là bao nhiêu tháng?" },
-  { label: "SOP kiểm kho cuối ngày", prompt: "Quy trình kiểm kho cuối ngày là gì?" },
-  { label: "CTKM và khuyến mãi đang chạy", prompt: "CTKM tháng 4 cho dòng giày thể thao là gì và còn hàng không?" },
-  { label: "Chiết khấu đại lý Q2/2026", prompt: "Đại lý cấp 1 được chiết khấu bao nhiêu trong Q2/2026?" },
+  {
+    label: "Tra cứu tồn kho theo mã SKU",
+    prompt: "Mã BQ-2301 size 40 màu đen còn bao nhiêu tại kho Hà Nội?",
+  },
+  {
+    label: "Kiểm tra trạng thái đơn hàng",
+    prompt: "Đơn hàng #98765 đang ở trạng thái nào?",
+  },
+  {
+    label: "Giá bán lẻ sản phẩm",
+    prompt: "Giá bán lẻ hiện tại của mã BQ-1102 là bao nhiêu?",
+  },
+  {
+    label: "Chính sách đổi trả và bảo hành",
+    prompt: "Chính sách bảo hành giày da cao cấp là bao nhiêu tháng?",
+  },
+  {
+    label: "SOP kiểm kho cuối ngày",
+    prompt: "Quy trình kiểm kho cuối ngày là gì?",
+  },
+  {
+    label: "CTKM và khuyến mãi đang chạy",
+    prompt: "CTKM tháng 4 cho dòng giày thể thao là gì và còn hàng không?",
+  },
+  {
+    label: "Chiết khấu đại lý Q2/2026",
+    prompt: "Đại lý cấp 1 được chiết khấu bao nhiêu trong Q2/2026?",
+  },
 ];
 
 function getAnswerBadge(scenario: AnswerScenario) {
   switch (scenario.answerType) {
     case "Policy":
-      return { label: "Chính sách", color: "#013652", bg: "#ECF2FE", icon: FileText };
+      return {
+        label: "Chính sách",
+        color: "#013652",
+        bg: "#ECF2FE",
+        icon: FileText,
+      };
     case "Data":
-      return { label: "Dữ liệu", color: "#2F64F6", bg: "#ECF2FE", icon: Database };
+      return {
+        label: "Dữ liệu",
+        color: "#2F64F6",
+        bg: "#ECF2FE",
+        icon: Database,
+      };
     case "Mixed":
-      return { label: "Kết hợp", color: "#B45309", bg: "#FFFBEB", icon: Sparkles };
+      return {
+        label: "Kết hợp",
+        color: "#B45309",
+        bg: "#FFFBEB",
+        icon: Sparkles,
+      };
     case "Unsupported":
-      return { label: "Ngoài phạm vi", color: "#E11D48", bg: "#FFF1F2", icon: ShieldAlert };
+      return {
+        label: "Ngoài phạm vi",
+        color: "#E11D48",
+        bg: "#FFF1F2",
+        icon: ShieldAlert,
+      };
     default:
-      return { label: "Không đủ quyền", color: "#E11D48", bg: "#FFF1F2", icon: Lock };
+      return {
+        label: "Không đủ quyền",
+        color: "#E11D48",
+        bg: "#FFF1F2",
+        icon: Lock,
+      };
   }
 }
 
@@ -143,9 +201,14 @@ function ErrorBubble({ onRetry }: { onRetry: () => void }) {
         fontSize: 14,
       }}
     >
-      <AlertTriangle size={18} style={{ color: "#E11D48", flexShrink: 0, marginTop: 2 }} />
+      <AlertTriangle
+        size={18}
+        style={{ color: "#E11D48", flexShrink: 0, marginTop: 2 }}
+      />
       <div>
-        <div style={{ marginBottom: 8 }}>Đã có lỗi xảy ra. Câu hỏi của bạn chưa được xử lý.</div>
+        <div style={{ marginBottom: 8 }}>
+          Đã có lỗi xảy ra. Câu hỏi của bạn chưa được xử lý.
+        </div>
         <Button variant="tertiary" onClick={onRetry} style={{ fontSize: 13 }}>
           <RefreshCw size={14} />
           Thử lại
@@ -169,7 +232,8 @@ function AnswerCard({
   const badge = getAnswerBadge(scenario);
   const freshness = getFreshnessTone(scenario.freshnessState);
   const BadgeIcon = badge.icon;
-  const isBlocked = scenario.answerType === "Blocked" || scenario.answerType === "Unsupported";
+  const isBlocked =
+    scenario.answerType === "Blocked" || scenario.answerType === "Unsupported";
 
   return (
     <Card
@@ -184,7 +248,14 @@ function AnswerCard({
         boxShadow: "0 12px 24px rgba(1,54,82,0.04)",
       }}
     >
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "var(--space-3)",
+          alignItems: "center",
+        }}
+      >
         <Badge label={badge.label} color={badge.color} bg={badge.bg} />
         {scenario.answerType !== "Unsupported" && (
           <div
@@ -220,7 +291,10 @@ function AnswerCard({
             fontSize: 13,
           }}
         >
-          <AlertTriangle size={15} style={{ color: "#F59E0B", marginTop: 2, flexShrink: 0 }} />
+          <AlertTriangle
+            size={15}
+            style={{ color: "#F59E0B", marginTop: 2, flexShrink: 0 }}
+          />
           <span>{scenario.warning}</span>
         </div>
       ) : null}
@@ -248,7 +322,13 @@ function AnswerCard({
           }}
         >
           {isBlocked ? (
-            <span style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--space-2)",
+              }}
+            >
               <Lock size={18} style={{ color: "#E11D48", flexShrink: 0 }} />
               {scenario.summary}
             </span>
@@ -291,7 +371,14 @@ function AnswerCard({
       </div>
 
       {scenario.answerType === "Mixed" ? (
-        <div className="internal-answer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "var(--space-4)" }}>
+        <div
+          className="internal-answer-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            gap: "var(--space-4)",
+          }}
+        >
           <div
             style={{
               padding: "var(--space-5)",
@@ -349,10 +436,18 @@ function AnswerCard({
             <div style={{ display: "grid", gap: "var(--space-3)" }}>
               {scenario.citations?.map((item) => (
                 <div key={item.title} style={{ fontSize: 13 }}>
-                  <div style={{ fontWeight: 600, marginBottom: 4, color: "#013652" }}>
+                  <div
+                    style={{
+                      fontWeight: 600,
+                      marginBottom: 4,
+                      color: "#013652",
+                    }}
+                  >
                     {item.title}
                   </div>
-                  <div style={{ color: "#3A6381", lineHeight: 1.5 }}>{item.excerpt}</div>
+                  <div style={{ color: "#3A6381", lineHeight: 1.5 }}>
+                    {item.excerpt}
+                  </div>
                 </div>
               ))}
             </div>
@@ -378,8 +473,12 @@ function AnswerCard({
                 background: "#F6F9FF",
               }}
             >
-              <div style={{ color: "#3A6381", fontSize: 12, marginBottom: 6 }}>{item.label}</div>
-              <strong style={{ color: "#013652", fontSize: 14 }}>{item.value}</strong>
+              <div style={{ color: "#3A6381", fontSize: 12, marginBottom: 6 }}>
+                {item.label}
+              </div>
+              <strong style={{ color: "#013652", fontSize: 14 }}>
+                {item.value}
+              </strong>
             </div>
           ))}
         </div>
@@ -397,8 +496,14 @@ function AnswerCard({
                 fontSize: 13,
               }}
             >
-              <div style={{ fontWeight: 600, marginBottom: 6, color: "#013652" }}>{item.title}</div>
-              <div style={{ color: "#3A6381", lineHeight: 1.5 }}>{item.excerpt}</div>
+              <div
+                style={{ fontWeight: 600, marginBottom: 6, color: "#013652" }}
+              >
+                {item.title}
+              </div>
+              <div style={{ color: "#3A6381", lineHeight: 1.5 }}>
+                {item.excerpt}
+              </div>
             </div>
           ))}
         </div>
@@ -426,14 +531,24 @@ function AnswerCard({
         {scenario.nextActions
           .filter((action) => action !== "Xem nguồn")
           .map((action) => (
-            <Button key={action} variant="tertiary" onClick={() => onAction(action, scenario)}>
+            <Button
+              key={action}
+              variant="tertiary"
+              onClick={() => onAction(action, scenario)}
+            >
               <ArrowRight size={15} />
               {action}
             </Button>
           ))}
 
         {!isBlocked && (
-          <div style={{ display: "flex", gap: "var(--space-2)", marginLeft: "auto" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "var(--space-2)",
+              marginLeft: "auto",
+            }}
+          >
             <Button
               variant="tertiary"
               aria-label="Câu trả lời hữu ích"
@@ -457,7 +572,11 @@ function AnswerCard({
   );
 }
 
-function EmptyState({ onUsePrompt }: { onUsePrompt: (prompt: string) => void }) {
+function EmptyState({
+  onUsePrompt,
+}: {
+  onUsePrompt: (prompt: string) => void;
+}) {
   return (
     <Card
       style={{
@@ -469,7 +588,9 @@ function EmptyState({ onUsePrompt }: { onUsePrompt: (prompt: string) => void }) 
         borderRadius: "16px",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
+      <div
+        style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}
+      >
         <div
           style={{
             width: 48,
@@ -486,9 +607,12 @@ function EmptyState({ onUsePrompt }: { onUsePrompt: (prompt: string) => void }) 
           <MessageSquareText size={22} />
         </div>
         <div>
-          <h3 style={{ color: "#013652", marginBottom: 4 }}>Xin chào! Tôi có thể giúp gì cho bạn?</h3>
+          <h3 style={{ color: "#013652", marginBottom: 4 }}>
+            Xin chào! Tôi có thể giúp gì cho bạn?
+          </h3>
           <div style={{ color: "#3A6381", fontSize: 13 }}>
-            Hỏi về tồn kho, đơn hàng, chính sách, SOP — hoặc chọn một gợi ý bên dưới.
+            Hỏi về tồn kho, đơn hàng, chính sách, SOP — hoặc chọn một gợi ý bên
+            dưới.
           </div>
         </div>
       </div>
@@ -510,17 +634,24 @@ function EmptyState({ onUsePrompt }: { onUsePrompt: (prompt: string) => void }) 
               fontFamily: "var(--font-primary)",
               fontSize: 13,
               lineHeight: 1.4,
-              transition: "background 0.15s, border-color 0.15s, transform 0.1s",
+              transition:
+                "background 0.15s, border-color 0.15s, transform 0.1s",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = "#ECF4FF";
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(47,100,246,0.3)";
-              (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
+              (e.currentTarget as HTMLButtonElement).style.background =
+                "#ECF4FF";
+              (e.currentTarget as HTMLButtonElement).style.borderColor =
+                "rgba(47,100,246,0.3)";
+              (e.currentTarget as HTMLButtonElement).style.transform =
+                "translateY(-1px)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = "#F6F9FF";
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(47,100,246,0.12)";
-              (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
+              (e.currentTarget as HTMLButtonElement).style.background =
+                "#F6F9FF";
+              (e.currentTarget as HTMLButtonElement).style.borderColor =
+                "rgba(47,100,246,0.12)";
+              (e.currentTarget as HTMLButtonElement).style.transform =
+                "translateY(0)";
             }}
           >
             {prompt}
@@ -603,7 +734,10 @@ export function InternalAIChatPage() {
     setLastPrompt(trimmed);
 
     startTransition(() => {
-      setEntries((prev) => [...prev, { id: `user-${createdAt}`, role: "user", text: trimmed, createdAt }]);
+      setEntries((prev) => [
+        ...prev,
+        { id: `user-${createdAt}`, role: "user", text: trimmed, createdAt },
+      ]);
     });
 
     setDraft("");
@@ -614,7 +748,12 @@ export function InternalAIChatPage() {
       startTransition(() => {
         setEntries((prev) => [
           ...prev,
-          { id: `assistant-${assistantCreatedAt}`, role: "assistant", scenario, createdAt: assistantCreatedAt },
+          {
+            id: `assistant-${assistantCreatedAt}`,
+            role: "assistant",
+            scenario,
+            createdAt: assistantCreatedAt,
+          },
         ]);
       });
       setIsLoading(false);
@@ -662,10 +801,14 @@ export function InternalAIChatPage() {
 
   function handleFeedback(kind: "up" | "down", scenario: AnswerScenario) {
     if (kind === "up") {
-      setActionNotice(`Đã ghi nhận đánh giá "Hữu ích" cho câu trả lời: ${scenario.prompt}`);
+      setActionNotice(
+        `Đã ghi nhận đánh giá "Hữu ích" cho câu trả lời: ${scenario.prompt}`,
+      );
       return;
     }
-    setActionNotice(`Đã ghi nhận đánh giá "Chưa đúng" cho câu trả lời: ${scenario.prompt}`);
+    setActionNotice(
+      `Đã ghi nhận đánh giá "Chưa đúng" cho câu trả lời: ${scenario.prompt}`,
+    );
   }
 
   function handleRetry() {
@@ -692,7 +835,9 @@ export function InternalAIChatPage() {
       className="internal-chat-page"
       style={{
         display: "grid",
-        gridTemplateColumns: activeTrace ? "minmax(0, 1fr) 360px" : "minmax(0, 1fr) 300px",
+        gridTemplateColumns: activeTrace
+          ? "minmax(0, 1fr) 360px"
+          : "minmax(0, 1fr) 300px",
         gap: "var(--space-6)",
         minHeight: "100%",
         transition: "grid-template-columns 250ms ease-out",
@@ -700,7 +845,11 @@ export function InternalAIChatPage() {
     >
       <div
         className="internal-chat-column"
-        style={{ display: "flex", flexDirection: "column", minHeight: "calc(100vh - 120px)" }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "calc(100vh - 120px)",
+        }}
       >
         <div style={{ marginBottom: "var(--space-2)" }}>
           <span
@@ -715,9 +864,19 @@ export function InternalAIChatPage() {
             AI Workspace
           </span>
         </div>
-        <h1 style={{ marginBottom: "var(--space-3)", color: "#013652" }}>Trợ lý AI Nội Bộ</h1>
-        <p style={{ marginBottom: "var(--space-6)", color: "#3A6381", maxWidth: 680, fontSize: 14 }}>
-          Tra cứu tồn kho, đơn hàng, chính sách, và SOP nội bộ để xử lý công việc hằng ngày nhanh hơn.
+        <h1 style={{ marginBottom: "var(--space-3)", color: "#013652" }}>
+          Trợ lý AI Nội Bộ
+        </h1>
+        <p
+          style={{
+            marginBottom: "var(--space-6)",
+            color: "#3A6381",
+            maxWidth: 680,
+            fontSize: 14,
+          }}
+        >
+          Tra cứu tồn kho, đơn hàng, chính sách, và SOP nội bộ để xử lý công
+          việc hằng ngày nhanh hơn.
         </p>
 
         <div
@@ -744,7 +903,9 @@ export function InternalAIChatPage() {
               data-entry-id={entry.id}
             >
               {entry.role === "user" ? <UserBubble text={entry.text} /> : null}
-              {entry.role === "error" ? <ErrorBubble onRetry={handleRetry} /> : null}
+              {entry.role === "error" ? (
+                <ErrorBubble onRetry={handleRetry} />
+              ) : null}
               {entry.role === "assistant" ? (
                 <AnswerCard
                   scenario={entry.scenario}
@@ -777,7 +938,15 @@ export function InternalAIChatPage() {
               animation: "fadeSlideIn 0.2s ease-out",
             }}
           >
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#2F64F6", flexShrink: 0 }} />
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#2F64F6",
+                flexShrink: 0,
+              }}
+            />
             {actionNotice}
           </div>
         ) : null}
@@ -796,7 +965,8 @@ export function InternalAIChatPage() {
             background: "rgba(255,255,255,0.92)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
-            boxShadow: "0 4px 24px rgba(1,54,82,0.1), 0 0 0 1px rgba(47,100,246,0.08)",
+            boxShadow:
+              "0 4px 24px rgba(1,54,82,0.1), 0 0 0 1px rgba(47,100,246,0.08)",
           }}
         >
           <input
@@ -835,7 +1005,11 @@ export function InternalAIChatPage() {
 
       <div
         className="internal-chat-side-panel"
-        style={{ display: "flex", flexDirection: "column", gap: "var(--space-6)" }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--space-6)",
+        }}
       >
         <Card
           style={{
@@ -847,7 +1021,13 @@ export function InternalAIChatPage() {
             boxShadow: "0 12px 24px rgba(1,54,82,0.04)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <div>
               <div
                 style={{
@@ -886,7 +1066,13 @@ export function InternalAIChatPage() {
           </div>
 
           {activeTrace ? (
-            <div style={{ display: "grid", gap: "var(--space-4)", overflow: "auto" }}>
+            <div
+              style={{
+                display: "grid",
+                gap: "var(--space-4)",
+                overflow: "auto",
+              }}
+            >
               {activeTrace.sourceTrace.map((item) => (
                 <div
                   key={item.id}
@@ -906,10 +1092,18 @@ export function InternalAIChatPage() {
                       gap: "var(--space-3)",
                     }}
                   >
-                    <strong style={{ color: "#013652", fontSize: 13 }}>{item.title}</strong>
+                    <strong style={{ color: "#013652", fontSize: 13 }}>
+                      {item.title}
+                    </strong>
                     <Badge
                       label={item.trust}
-                      color={item.trust === "High" ? "#16A34A" : item.trust === "Medium" ? "#B45309" : "#E11D48"}
+                      color={
+                        item.trust === "High"
+                          ? "#16A34A"
+                          : item.trust === "Medium"
+                            ? "#B45309"
+                            : "#E11D48"
+                      }
                       bg={
                         item.trust === "High"
                           ? "color-mix(in srgb, #22C55E 12%, white)"
@@ -919,15 +1113,26 @@ export function InternalAIChatPage() {
                       }
                     />
                   </div>
-                  <div style={{ color: "#3A6381", fontSize: 13, lineHeight: 1.5 }}>{item.excerpt}</div>
-                  <div style={{ fontSize: 12, color: "#3A6381", fontWeight: 500 }}>{item.source}</div>
-                  <div style={{ fontSize: 11, color: "#8EB6D9" }}>{item.freshness}</div>
+                  <div
+                    style={{ color: "#3A6381", fontSize: 13, lineHeight: 1.5 }}
+                  >
+                    {item.excerpt}
+                  </div>
+                  <div
+                    style={{ fontSize: 12, color: "#3A6381", fontWeight: 500 }}
+                  >
+                    {item.source}
+                  </div>
+                  <div style={{ fontSize: 11, color: "#8EB6D9" }}>
+                    {item.freshness}
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
             <div style={{ color: "#3A6381", fontSize: 13 }}>
-              Nhấn <strong>Xem nguồn</strong> trên một câu trả lời để xem citation, freshness, và trust signal.
+              Nhấn <strong>Xem nguồn</strong> trên một câu trả lời để xem
+              citation, freshness, và trust signal.
             </div>
           )}
 
@@ -957,7 +1162,9 @@ export function InternalAIChatPage() {
               >
                 Câu hỏi gần nhất
               </div>
-              <strong style={{ color: "#013652", fontSize: 13 }}>{lastScenario.prompt}</strong>
+              <strong style={{ color: "#013652", fontSize: 13 }}>
+                {lastScenario.prompt}
+              </strong>
             </button>
           ) : null}
         </Card>
@@ -1005,20 +1212,44 @@ export function InternalAIChatPage() {
                     transition: "background 0.15s, border-color 0.15s",
                   }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.background = "#ECF4FF";
-                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(47,100,246,0.15)";
+                    (e.currentTarget as HTMLButtonElement).style.background =
+                      "#ECF4FF";
+                    (e.currentTarget as HTMLButtonElement).style.borderColor =
+                      "rgba(47,100,246,0.15)";
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.background = "#F6F9FF";
-                    (e.currentTarget as HTMLButtonElement).style.borderColor = "transparent";
+                    (e.currentTarget as HTMLButtonElement).style.background =
+                      "#F6F9FF";
+                    (e.currentTarget as HTMLButtonElement).style.borderColor =
+                      "transparent";
                   }}
                 >
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: "var(--space-3)" }}>
-                    <Badge label={itemBadge.label} color={itemBadge.color} bg={itemBadge.bg} />
-                    <span style={{ color: "#8EB6D9", fontSize: 11 }}>{formatTime(item.createdAt)}</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: "var(--space-3)",
+                    }}
+                  >
+                    <Badge
+                      label={itemBadge.label}
+                      color={itemBadge.color}
+                      bg={itemBadge.bg}
+                    />
+                    <span style={{ color: "#8EB6D9", fontSize: 11 }}>
+                      {formatTime(item.createdAt)}
+                    </span>
                   </div>
-                  <div style={{ color: "#013652", fontSize: 13, fontWeight: 500 }}>{item.prompt}</div>
-                  <div style={{ color: "#3A6381", fontSize: 12, lineHeight: 1.4 }}>{item.summary}</div>
+                  <div
+                    style={{ color: "#013652", fontSize: 13, fontWeight: 500 }}
+                  >
+                    {item.prompt}
+                  </div>
+                  <div
+                    style={{ color: "#3A6381", fontSize: 12, lineHeight: 1.4 }}
+                  >
+                    {item.summary}
+                  </div>
                 </button>
               );
             })

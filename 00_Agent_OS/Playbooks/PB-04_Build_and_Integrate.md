@@ -1,6 +1,6 @@
 # PB-04: Build & Integrate
 
-**Purpose**: Implement approved features using the preview-first flow — FE Preview first, then BE/integration after review and technical closure.
+**Purpose**: Implement approved features using the preview-first flow — FE Preview first from `Feature Spec + Screen Specs`, then BE/integration after review and technical closure.
 
 ---
 
@@ -14,11 +14,11 @@
 
 | Step | Agent | Skill | What Happens |
 |------|-------|-------|-------------|
-| 1 | **A01 PM** | [`gate-check`](../Skills/miabos-ops/skills/gate-check/SKILL.md) | Verify PRD, SRS, UXUI ready; Subtask Board opens FE Preview |
+| 1 | **A01 PM** | [`gate-check`](../Skills/miabos-ops/skills/gate-check/SKILL.md) | Verify Research, PRD, Feature Spec, Sitemap, Flow Matrix, Screen Specs ready; Subtask Board opens FE Preview |
 | 2 | **A07 FE** | — | Build FE Preview with mock/stub data per UXUI spec |
 | 3 | **A06 UI/UX** | [`visual-audit`](../Skills/miabos-uxui/skills/visual-audit/SKILL.md) | Mid-build checkpoint: PASS or BLOCK |
 | 4 | **A07 FE** | — | Complete remaining screens, A06 full visual audit (≥ 8/10) |
-| 5 | **A01 PM** | — | Boss/PM reviews FE Preview, feedback absorbed into SRS + UXUI |
+| 5 | **A01 PM** | — | Boss/PM reviews FE Preview, feedback absorbed into Feature Spec + Screen Specs |
 | 6 | **A05 Tech** | [`design-api`](../Skills/miabos-product/skills/design-api/SKILL.md) | Materialize Integration Spec after FE Preview review |
 | 7 | **A08 BE** | [`directus-config`](../Skills/miabos-build/skills/directus-config/SKILL.md) | Configure Directus collections, build APIs per Integration Spec |
 | 8 | **A07 FE** | — | Connect FE to real backend APIs |
@@ -30,7 +30,9 @@
 ## Gate: PB-04 → PB-05
 
 **Frontend (A07):**
-- [ ] UXUI Feature Spec was `Approved` at build start
+- [ ] Feature Spec was `Feature Ready for UX` at build start
+- [ ] Sitemap + Flow Matrix were `Approved` at build start
+- [ ] UXUI Screen Specs were `Approved` at build start
 - [ ] Mid-build A06 checkpoint PASSED
 - [ ] Full A06 visual audit PASSED
 - [ ] Verified demo/runtime evidence saved; screenshots optional unless explicitly requested

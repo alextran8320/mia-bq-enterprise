@@ -20,7 +20,7 @@
 
 - Feature ID: `F-M08-KNW-003`
 - Related User Story: `US-M08-KNW-003`
-- Related PRD: [PRD-M08-KNW-003_FAQ_And_Policy_Library.md](../../../../../../Planning/PRD/Knowledge_Center/PRD-M08-KNW-003_FAQ_And_Policy_Library.md)
+- Related PRD: [PRD-M08-KNW-001_Knowledge_And_Policy.md](../../../../../../Planning/PRD/Knowledge_Center/PRD-M08-KNW-001_Knowledge_And_Policy.md)
 - Related Screens: `/knowledge` workspace library section, search results section, document detail panel, FAQ topic section, no-result state, restricted state
 - Related APIs: `POST /mia/knowledge/query`, `GET /mia/knowledge/tree`, `GET /mia/knowledge/documents/:id`, `GET /mia/knowledge/faqs`
 - Related Tables: `faq_knowledge_base`, `knowledge_document`, `knowledge_topic_tag`, `knowledge_sop_step`, `knowledge_document_asset`

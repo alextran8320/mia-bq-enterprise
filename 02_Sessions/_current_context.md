@@ -1,11 +1,38 @@
 # Current Active Context
 
-**Last Updated**: 2026-04-20
-**Active Workspace Topic**: BQ Meeting 2 Recap — Pivot to Lark-integrated Internal Chatbot
-**Current Project**: `Giày BQ` (customer intake + solution re-scoping)
-**Current Phase**: `PB-01 Discovery & Intake → PB-02 Analysis (re-scope required)`
-**Latest Canonical Session Log**: [[2026-04-20_BQ_MOM_Meeting2_Recap]]
-**Today's Daily Log**: [[2026-04-20_Daily_Log]]
+**Last Updated**: 2026-04-21
+**Active Workspace Topic**: MIABOS process migration — `Raw Input -> Research -> PRD -> Features -> UX/UI by Screen`
+**Current Project**: `MIABOS`
+**Current Phase**: `PB-01 / PB-02 / PB-03 Process Migration`
+**Latest Canonical Session Log**: [[2026-04-21_MIABOS_Process_Migration_Research_PRD_Features_UXUI]]
+**Today's Daily Log**: [[2026-04-21_Daily_Log]]
+
+## Latest Decisions (2026-04-21)
+
+- Business Owner approved migration of canonical MIABOS process to `Raw Input -> Research -> PRD -> Features -> UX/UI by Screen`.
+- Existing `01_Projects/MIABOS/Research/` remains the canonical research layer; no parallel research layer will be created elsewhere.
+- New canonical analysis artifact becomes `Feature Spec Lite`; `Feature SRS` stays only as legacy artifact during phased migration.
+- New canonical design artifact becomes `UXUI Screen Spec`, coordinated by `Sitemap + Flow Matrix`.
+
+## Current State
+
+- Core OS/process layer has been migrated to `Raw Input -> Research -> PRD -> Features -> UX/UI by Screen`.
+- Business Owner requested PRD cleanup to follow the existing front-end as source of truth and to remove demo artifacts created during migration.
+- Demo pilot `M01 Product Query` artifacts have been removed from canonical PRD / Feature / Research / Screen-Pack layers.
+- PRD layer has been backfilled from front-end source of truth for:
+- PRD layer has been backfilled from front-end source of truth for:
+  - `M08 Knowledge Center Workspace`
+  - `M09 Internal AI Chat`
+  - `M10 Sales Advisor AI`
+  - `M14 Business Analytics And ROI`
+- `M08` no longer uses 4 separate PRDs in the canonical PRD layer; it is now one workspace PRD aligned to `/knowledge`.
+- Business Owner clarified that front-end is only evidence to understand current logic/scope; canonical PRDs must remain business-driven. The four rewritten PRDs were updated accordingly.
+
+## Next Actions
+
+- Review remaining PRD gaps for front-end-backed modules still missing clean canonical PRD coverage, especially `Catalog & Commerce`, `CRM`, `Orders`, and `Operations`.
+- Decide whether to keep backfilled PRDs at `In Review` or promote after Business Owner validation.
+- Keep legacy SRS/UXUI in place until each module is explicitly migrated to the new chain.
 
 ## ⚠ Critical Correction (2026-04-20)
 

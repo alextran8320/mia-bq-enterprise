@@ -3,7 +3,7 @@ name: map-collections
 description: "Map feature requirements to existing Directus collections from database_schema.json (161 collections). Identifies which collections, fields, and relationships a feature needs. Use when analyzing data impact of a new feature."
 agent: A05 / A03
 phase: PB-02 / PB-03
-input: "Feature description or Feature SRS + database_schema.json"
+input: "Feature description or Feature Spec + database_schema.json"
 output: "Collection mapping table showing feature → collection → field traceability"
 template: null
 ---
@@ -18,7 +18,7 @@ Analyze which existing Directus collections a feature touches, which fields are 
 
 ### Step 1: Read Inputs
 
-1. Read the feature description, Feature SRS, or User Story
+1. Read the feature description, Feature Spec, or User Story
 2. Read `database_schema.json` (root of workspace)
 3. Reference the MIABOS Database Domain Map in AGENTS.md for quick domain lookup
 

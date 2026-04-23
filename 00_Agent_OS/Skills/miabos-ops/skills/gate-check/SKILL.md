@@ -35,7 +35,7 @@ Read the corresponding Playbook file for the gate checklist:
 
 For each gate requirement:
 1. Check if the artifact exists (read the file)
-2. Check if the status is correct (Draft / SRS Ready / Approved / etc.)
+2. Check if the status is correct (Draft / Feature Ready for UX / Approved / etc.)
 3. Check if content is complete (not just a skeleton)
 
 ### Step 4: Produce Gate Report

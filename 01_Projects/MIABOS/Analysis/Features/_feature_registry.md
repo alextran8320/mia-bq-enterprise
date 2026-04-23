@@ -1,32 +1,60 @@
-﻿# Feature Registry
+# Feature Registry
 
-| Feature ID      | Layer                     | Portal Surface              | Feature Name                                                    | Status        | Status Owner   | Gate Result                 | Blocking Reason                                                                                                                                                                                   | Last Reviewed   | Next Promotion Target   |
-| --------------- | ------------------------- | --------------------------- | --------------------------------------------------------------- | ------------- | -------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ----------------------- |
-| `F-SAP-INT-001` | Integration / Source Spec | `Integration Foundation`    | Tích hợp SAP B1 cho Chatbot Nội bộ và Chatbot Tư vấn Bán hàng   | Draft         | A03 BA Agent   | Pending                     | Chưa chốt ownership dữ liệu khách hàng / đơn hàng, BQ/Data Warehouse source-priority cho pricing / promotion theo từng kênh, và mô hình cấp mã liên hệ giữa MIABOS với SAP B1                    | 2026-04-19      | `SRS Ready`             |
-| `F-HAR-INT-001` | Integration / Source Spec | `Integration Foundation`    | Tích hợp Haravan cho Chatbot Nội bộ và Chatbot Tư vấn Bán hàng  | Draft         | A03 BA Agent   | Pending                     | Chưa chốt phạm vi dữ liệu nào từ Haravan được phép dùng cho chatbot tư vấn bán hàng ngoài trạng thái còn hàng, giá bán, và CTKM online                                                            | 2026-04-15      | `SRS Ready`             |
-| `F-KV-INT-001`  | Integration / Source Spec | `Integration Foundation`    | Tích hợp KiotViet cho Chatbot Nội bộ và Chatbot Tư vấn Bán hàng | Draft         | A03 BA Agent   | Pending                     | Chưa chốt phạm vi chính xác giữa dữ liệu dùng cho chatbot nội bộ và dữ liệu được phép lộ cho chatbot tư vấn bán hàng                                                                              | 2026-04-15      | `SRS Ready`             |
-| `F-I01-INT-001` | Integration / Submodule   | `Integration Foundation`    | Integration Orchestrator                                        | Draft         | A03 BA Agent   | Pending                     | Cần chốt job model, webhook strategy, và boundary với observability module                                                                                                                        | 2026-04-15      | `SRS Ready`             |
-| `F-I02-INT-001` | Integration / Submodule   | `Integration Foundation`    | SAP B1 Connector                                                | Draft         | A03 BA Agent   | Pending                     | Cần materialize connector contract từ source spec SAP và chốt middleware / service-layer strategy                                                                                                 | 2026-04-15      | `SRS Ready`             |
-| `F-I03-INT-001` | Integration / Submodule   | `Integration Foundation`    | Haravan Connector                                               | Draft         | A03 BA Agent   | Pending                     | Cần materialize connector contract từ source spec Haravan và chốt polling vs webhook mix                                                                                                          | 2026-04-15      | `SRS Ready`             |
-| `F-I04-INT-001` | Integration / Submodule   | `Integration Foundation`    | KiotViet Connector                                              | Draft         | A03 BA Agent   | Pending                     | Cần materialize connector contract từ source spec KiotViet và chốt pagination / quota strategy                                                                                                    | 2026-04-15      | `SRS Ready`             |
-| `F-I05-INT-001` | Integration / Submodule   | `Integration Foundation`    | Canonical Mapping and Source Boundary                           | Draft         | A03 BA Agent   | Pending                     | Chưa chốt đầy đủ mã mapping đa hệ và priority rule do BQ/Data Warehouse chỉ định cho giá / CTKM / order identity                                                                                  | 2026-04-19      | `SRS Ready`             |
-| `F-M01-PRD-001` | Business Module           | `Catalog And Commerce`      | Product                                                         | Draft         | A03 BA Agent   | Pending                     | Cần rút chi tiết field, query pattern, và sales-safe projection từ source specs                                                                                                                   | 2026-04-15      | `SRS Ready`             |
-| `F-M02-INV-001` | Business Module           | `Catalog And Commerce`      | Inventory Availability                                          | Draft         | A03 BA Agent   | Pending                     | Cần chốt realtime vs cache-soft policy theo từng kênh và từng use case                                                                                                                            | 2026-04-15      | `SRS Ready`             |
-| `F-M03-PRC-001` | Business Module           | `Catalog And Commerce`      | Pricing                                                         | Draft         | A03 BA Agent   | Pending                     | Chưa chốt source-priority rule cho giá theo kênh và loại cửa hàng                                                                                                                                 | 2026-04-15      | `SRS Ready`             |
-| `F-M04-PRO-001` | Business Module           | `Catalog And Commerce`      | Promotion                                                       | Draft         | A03 BA Agent   | Pending                     | Chưa chốt source-priority rule cho CTKM và phạm vi public-safe exposure                                                                                                                           | 2026-04-15      | `SRS Ready`             |
-| `F-M05-ORD-001` | Business Module           | `Orders And Service`        | Order and Fulfillment                                           | Draft         | A03 BA Agent   | Pending                     | Cần chốt source-priority cho sales order / return order theo từng tình huống, mapping giữa sales-order state và return-order state, và policy write-back sang ERP/channel khi mở rộng sau phase 1 | 2026-04-16      | `SRS Ready`             |
-| `F-M06-CRM-001` | Business Module           | `CRM Workspace`             | Customer and CRM                                                | Draft         | A03 BA Agent   | Pending                     | Cần chốt consent legal source, write-back scope từ MIA sang SAP/channel, duplicate merge governance, social-profile relationship rule, và phase ưu tiên cho call history / action center          | 2026-04-16      | `SRS Ready`             |
-| `F-M07-SEC-001` | Business Module           | `Operations And Governance` | Access Control and Sensitivity                                  | Draft         | A03 BA Agent   | Pending                     | Cần chốt scope matrix theo branch/store/channel/role và public-safe response policy                                                                                                               | 2026-04-15      | `SRS Ready`             |
-| `F-M08-KNW-001` | Business Module           | `Knowledge Center`          | Knowledge and Policy                                            | Draft         | A03 BA Agent   | Pending                     | Cần chốt taxonomy knowledge theo domain, owner phê duyệt cho từng nhóm policy, và contract citation/freshness hiển thị trong AI answer                                                            | 2026-04-15      | `SRS Ready`             |
-| `F-M08-KNW-002` | Business Module           | `Knowledge Center`          | Knowledge Publishing Queue                                      | Draft         | A03 BA Agent   | Pending                     | Cần chốt approval matrix theo domain, SLA review, và quyền rollback sau publish                                                                                                                   | 2026-04-15      | `SRS Ready`             |
-| `F-M08-KNW-003` | Business Module           | `Knowledge Center`          | FAQ and Policy Library                                          | Draft         | A03 BA Agent   | Pending                     | Cần chốt taxonomy library, phạm vi search/filter theo vai trò, và rule expose policy cho sales-facing scenarios                                                                                   | 2026-04-15      | `SRS Ready`             |
-| `F-M08-KNW-004` | Business Module           | `Knowledge Center`          | Knowledge Documents and Source Governance                       | Draft         | A03 BA Agent   | Pending                     | Cần chốt danh mục source types, freshness policy theo nguồn, và rule source nào được dùng cho AI nội bộ vs AI external                                                                            | 2026-04-15      | `SRS Ready`             |
-| `F-M09-AIC-001` | Business Module           | `AI Workspace`              | Internal AI Chat                                                | SRS Ready     | A01 PM Agent   | PASS for FE Preview         | -                                                                                                                                                                                                 | 2026-04-17      | `Business Owner Review` |
-| `F-M09-AIC-002` | Business Module           | `AI Workspace`              | AI Answer History and Trust Review                              | Draft         | A03 BA Agent   | Pending                     | Cần chốt retention policy cho answer history, trust-review workflow, và quyền xem transcript/audit detail theo vai trò                                                                            | 2026-04-15      | `SRS Ready`             |
-| `F-M09-AIC-003` | Business Module           | `AI Workspace`              | Escalation Trigger and Human Handoff                            | Draft         | A03 BA Agent   | Pending                     | Cần chốt trigger matrix cho escalation, destination routing giữa AI Workspace với `M11`, và payload handoff tối thiểu cho người xử lý                                                             | 2026-04-15      | `SRS Ready`             |
-| `F-M10-SLS-001` | Business Module           | `AI Workspace`              | Sales Advisor AI                                                | SRS Ready     | A01 PM Agent   | PASS for FE Preview         | -                                                                                                                                                                                                 | 2026-04-16      | `FE Preview`            |
-| `F-M10-SLS-002` | Business Module           | `AI Workspace`              | Suggested Actions and Next Best Action                          | Draft         | A03 BA Agent   | Pending                     | Cần chốt rule gợi ý hành động theo persona, boundary giữa recommendation và automation, và cách đo hiệu quả suggestion                                                                            | 2026-04-15      | `SRS Ready`             |
-| `F-M10-SLS-003` | Business Module           | `AI Workspace`              | Lead Capture and CTA Handoff                                    | Draft         | A03 BA Agent   | Pending                     | Cần chốt CTA set phase 1, lead payload tối thiểu, và routing model sang CRM / sales team / channel owner                                                                                          | 2026-04-15      | `SRS Ready`             |
-| `F-M11-ESC-001` | Business Module           | `Operations And Governance` | Escalation and Workflow                                         | Draft         | A03 BA Agent   | Pending                     | Cần chốt destination system, assignment rule, và payload handoff contract                                                                                                                         | 2026-04-15      | `SRS Ready`             |
-| `F-M12-OBS-001` | Business Module           | `Insights And Performance`  | Audit and Observability                                         | Draft         | A03 BA Agent   | Pending                     | Cần chốt metric pack, audit retention, và alerting boundary giữa ops và business review                                                                                                           | 2026-04-15      | `SRS Ready`             |
-| `F-M14-BIZ-001` | Business Module           | `Insights And Performance`  | Business Analytics And ROI                                      | SRS Ready     | A01 PM Agent   | FE Preview Ready for Review | -                                                                                                                                                                                                 | 2026-04-16      | `Business Owner Review` |
+**Status**: Active
+**Owner**: A01 PM Agent
+**Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
+**Last Reviewed By**: A01 PM Agent
+**Approval Required**: PM
+**Approved By**: A01 PM Agent
+**Last Status Change**: 2026-04-21
+**Source of Truth**: Canonical control plane for feature readiness under the process `Raw Input -> Research -> PRD -> Features -> UX/UI by Screen`
+**Blocking Reason**: -
+
+---
+
+## Registry Rules
+
+- `Canonical Artifact` now means `Feature Spec Lite` for migrated slices.
+- Existing `SRS` files remain valid only as `Legacy SRS` during phased migration.
+- `Canonical Status` uses `Draft / In Review / Feature Ready for UX / Build Ready / Blocked / Deprecated`.
+- `Linked Screens` may point to `UXUI Screen Specs` or `Pending Migration`.
+
+## Active / Migrated Slices
+
+| Feature ID | Portal Surface | Feature Name | Canonical Artifact | Canonical Status | Research | PRD | Linked Screens | Blocking Reason |
+|------------|----------------|--------------|--------------------|------------------|----------|-----|----------------|-----------------|
+| `F-M09-AIC-001` | AI Workspace | Internal AI Chat | Legacy SRS | `Pending Migration` | Research exists | PRD exists | Legacy UXUI Feature Spec | Chưa migrate sang Feature Spec Lite + Screen Pack |
+| `F-M10-SLS-001` | AI Workspace | Sales Advisor AI | Legacy SRS | `Pending Migration` | Research partial | PRD exists | Legacy UXUI Feature Spec | Chưa migrate sang Feature Spec Lite + Screen Pack |
+| `F-M14-BIZ-001` | Insights And Performance | Business Analytics And ROI | Legacy SRS | `Pending Migration` | Research missing / needs waiver | PRD exists | Legacy UXUI Feature Spec | Chưa migrate sang Feature Spec Lite + Screen Pack |
+| `F-M08-KNW-001` | Knowledge Center | Knowledge and Policy | Legacy SRS | `Pending Migration` | Research exists | PRD exists | Legacy UXUI Feature Spec | Chưa migrate sang Feature Spec Lite + Screen Pack |
+| `F-M08-KNW-002` | Knowledge Center | Knowledge Publishing Queue | Legacy SRS | `Pending Migration` | Research exists | PRD exists | Legacy UXUI Feature Spec | Chưa migrate sang Feature Spec Lite + Screen Pack |
+| `F-M08-KNW-003` | Knowledge Center | FAQ and Policy Library | Legacy SRS | `Pending Migration` | Research exists | PRD exists | Legacy UXUI Feature Spec | Chưa migrate sang Feature Spec Lite + Screen Pack |
+| `F-M08-KNW-004` | Knowledge Center | Knowledge Documents and Source Governance | Legacy SRS | `Pending Migration` | Research exists | PRD exists | Legacy UXUI Feature Spec | Chưa migrate sang Feature Spec Lite + Screen Pack |
+
+## Remaining Legacy Slices
+
+| Feature ID | Surface | Legacy Artifact | Current State | Migration Target |
+|------------|---------|-----------------|---------------|------------------|
+| `F-SAP-INT-001` | Integration Foundation | Source Spec / SRS | Legacy Draft | Wave 2 |
+| `F-HAR-INT-001` | Integration Foundation | Source Spec / SRS | Legacy Draft | Wave 2 |
+| `F-KV-INT-001` | Integration Foundation | Source Spec / SRS | Legacy Draft | Wave 2 |
+| `F-I01-INT-001` | Integration Foundation | SRS | Legacy Draft | Wave 2 |
+| `F-I02-INT-001` | Integration Foundation | SRS | Legacy Draft | Wave 2 |
+| `F-I03-INT-001` | Integration Foundation | SRS | Legacy Draft | Wave 2 |
+| `F-I04-INT-001` | Integration Foundation | SRS | Legacy Draft | Wave 2 |
+| `F-I05-INT-001` | Integration Foundation | SRS | Legacy Draft | Wave 2 |
+| `F-M01-PRD-001` | Catalog And Commerce | SRS | Legacy `SRS Ready` | PRD demo + Feature Spec demo đã xóa; chờ rewrite từ front-end source of truth |
+| `F-M02-INV-001` | Catalog And Commerce | SRS | Legacy `SRS Ready` | Wave 1 |
+| `F-M03-PRC-001` | Catalog And Commerce | SRS | Legacy `SRS Ready` | Wave 1 |
+| `F-M04-PRO-001` | Catalog And Commerce | SRS | Legacy `SRS Ready` | Wave 1 |
+| `F-M05-ORD-001` | Orders And Service | SRS | Legacy Draft | Wave 2 |
+| `F-M06-CRM-001` | CRM Workspace | SRS | Legacy Draft | Wave 2 |
+| `F-M07-SEC-001` | Operations And Governance | SRS | Legacy Draft | Wave 2 |
+| `F-M09-AIC-002` | AI Workspace | SRS | Legacy `SRS Ready` | Wave 1 |
+| `F-M09-AIC-003` | AI Workspace | SRS | Legacy `SRS Ready` | Wave 1 |
+| `F-M09-AIC-004` | AI Workspace | SRS | Legacy Draft | Wave 2 |
+| `F-M09-AIC-005` | AI Workspace | SRS | Legacy Draft | Wave 2 |
+| `F-M10-SLS-002` | AI Workspace | SRS | Legacy `SRS Ready` | Wave 1 |
+| `F-M10-SLS-003` | AI Workspace | SRS | Legacy `SRS Ready` | Wave 1 |
+| `F-M11-ESC-001` | Operations And Governance | SRS | Legacy Draft | Wave 2 |
+| `F-M12-OBS-001` | Insights And Performance | SRS | Legacy `SRS Ready` | Wave 1 |

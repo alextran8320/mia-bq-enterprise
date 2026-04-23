@@ -20,7 +20,7 @@
 
 - Feature ID: `F-M08-KNW-004`
 - Related User Story: `US-M08-KNW-004`
-- Related PRD: [PRD-M08-KNW-004_Knowledge_Documents_And_Source_Governance.md](../../../../../../Planning/PRD/Knowledge_Center/PRD-M08-KNW-004_Knowledge_Documents_And_Source_Governance.md)
+- Related PRD: [PRD-M08-KNW-001_Knowledge_And_Policy.md](../../../../../../Planning/PRD/Knowledge_Center/PRD-M08-KNW-001_Knowledge_And_Policy.md)
 - Related Screens: `/knowledge` source health section, source registry section, document-source detail panel, freshness section, source rule detail
 - Related APIs: `GET /mia/knowledge/sources`, `POST /mia/knowledge/sources`, `POST /mia/knowledge/source-rules`, `GET /mia/knowledge/freshness`
 - Related Tables: `knowledge_source_registry`, `knowledge_document_source_link`, `knowledge_freshness_rule`, `knowledge_source_audit_log`, `knowledge_document_asset`

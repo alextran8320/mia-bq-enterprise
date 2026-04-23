@@ -25,6 +25,7 @@ These checks apply before any phase transition or session close involving artifa
 ## Gate 2: PB-01 → PB-02
 
 - [ ] Raw input processed and structured
+- [ ] Research artifact(s) approved or PM explicitly recorded a waiver with reason
 - [ ] Requirements Mapping exists with domain/collection references
 - [ ] Scope confirmed by Business Owner
 - [ ] Impacted products identified (Smart/Spring/Scale/Platform)
@@ -41,10 +42,10 @@ These checks apply before any phase transition or session close involving artifa
 - [ ] User stories have AC IDs
 - [ ] Success metrics defined
 - [ ] **PRD User Task Flow section exists for each in-scope feature**
-- [ ] Feature SRS exists for every in-scope story slice entering design
-- [ ] Feature SRS and BA/PO analysis artifacts live under `01_Projects/[project]/Analysis/` and are not misfiled in `02_Sessions/` or raw-input folders
-- [ ] Feature Registry and Traceability Matrix are updated for every in-scope Feature SRS
-- [ ] Feature SRS is `SRS Ready` for every in-scope story slice before canonical UI/UX starts
+- [ ] Feature Spec exists for every in-scope story slice entering design
+- [ ] Feature Spec and BA/PO analysis artifacts live under `01_Projects/[project]/Analysis/` and are not misfiled in `02_Sessions/` or raw-input folders
+- [ ] Feature Registry and Traceability Matrix are updated for every in-scope Feature Spec
+- [ ] Feature Spec is `Feature Ready for UX` for every in-scope story slice before canonical UI/UX starts
 - [ ] Each in-scope `User Story` carries planning context directly: problem, trigger, happy path, dependencies, and AC IDs
 - [ ] Any requirement ambiguity affecting scope, behavior, data, permissions, copy, validation, or integration has been explicitly confirmed by PM / Business Owner or is logged as a blocker
 - [ ] Boss approved feature slice
@@ -59,12 +60,14 @@ These checks apply before any phase transition or session close involving artifa
 
 - [ ] Design System exists/updated
 - [ ] Mockups exist for all in-scope screens
-- [ ] UXUI Feature Specs exist per feature
-- [ ] Linked Feature SRS is cited in every UXUI Feature Spec
-- [ ] Linked Feature SRS remains at least `SRS Ready` while UXUI work is open
-- [ ] **UXUI Feature Spec has §0 User & Task (mandatory behavioral section)**
-- [ ] **UXUI Feature Spec has §2.1 Task Flow (5–7 steps documented)**
-- [ ] **UXUI Feature Spec has §5.1 Error & Recovery (common errors + dead-end prevention)**
+- [ ] Sitemap exists for the in-scope module/capability
+- [ ] Flow Matrix exists and maps `Feature -> Screen -> Route/State`
+- [ ] UXUI Screen Specs exist for all in-scope screens
+- [ ] Linked Feature Spec is cited in every UXUI Screen Spec
+- [ ] Linked Feature Spec remains at least `Feature Ready for UX` while UXUI work is open
+- [ ] **UXUI Screen Spec has Screen Purpose + Entry Points + Primary Task**
+- [ ] **UXUI Screen Spec has Inputs / Actions / States**
+- [ ] **UXUI Screen Spec has Error / Recovery / Blocked states**
 - [ ] Vietnamese copy complete
 - [ ] Boss signed off on mockups
 
@@ -72,8 +75,10 @@ These checks apply before any phase transition or session close involving artifa
 
 - [ ] PRD exists and is `Approved`
 - [ ] User Story exists in Sprint Backlog and is approved for execution
-- [ ] Feature SRS is at least `SRS Ready`
-- [ ] UXUI Feature Spec is `Approved`
+- [ ] Feature Spec is at least `Feature Ready for UX`
+- [ ] Sitemap is `Approved`
+- [ ] Flow Matrix is `Approved`
+- [ ] All required UXUI Screen Specs are `Approved`
 - [ ] Subtask Board exists and explicitly marks `FE Preview` as allowed
 - [ ] Subtask Board contains confirmed decisions, write scope, execution steps, evidence requirements, and explicit do-not-assume rules for the assigned agent
 - [ ] No unresolved requirement ambiguity remains at FE Preview start; anything unclear is blocked pending PM / Business Owner confirmation
@@ -84,18 +89,19 @@ These checks apply before any phase transition or session close involving artifa
 
 - [ ] FE Preview exists and is reviewable by the Business Owner or PM
 - [ ] FE Preview feedback has been captured
-- [ ] Any behavior-changing feedback is folded back into `User Story`, `Feature SRS`, and `UXUI`
-- [ ] Feature SRS is promoted to `Build Ready`
+- [ ] Any behavior-changing feedback is folded back into `User Story`, `Feature Spec`, and linked `Screen Specs`
+- [ ] Feature Spec is promoted to `Build Ready`
 - [ ] `Integration Spec` exists and is `Approved`, OR the explicit split pack `Architecture + API Contract + Data Mapping` is `Approved`
 - [ ] PM has explicitly opened backend/integration work for the story
 - [ ] No unresolved requirement ambiguity remains for backend/integration work; anything unclear has been confirmed by PM / Business Owner or blocked
-- [ ] Cross-check passed: `SRS ↔ UXUI ↔ Integration Spec (or split pack) ↔ BE scope`
+- [ ] Cross-check passed: `Feature Spec ↔ Screen Specs ↔ Integration Spec (or split pack) ↔ BE scope`
 
 ## Gate 6: BE / Integration Build → PB-05
 
 - [ ] FE Preview approved or accepted as the UI baseline for integration
-- [ ] Feature SRS was `Build Ready` at integration build start
-- [ ] UXUI Feature Spec was `Approved` at integration build start
+- [ ] Feature Spec was `Build Ready` at integration build start
+- [ ] Sitemap / Flow Matrix were `Approved` at integration build start
+- [ ] Required UXUI Screen Specs were `Approved` at integration build start
 - [ ] Technical handoff artifact (`Integration Spec` or split pack) was `Approved` at build start
 - [ ] **Every screen has 1 primary goal identified**
 - [ ] **Form fields classified: Required / Optional / Advanced**

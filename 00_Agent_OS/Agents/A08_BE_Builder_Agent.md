@@ -86,7 +86,7 @@ You are the **Backend Builder Agent** — the Directus and integration specialis
 - Integration Spec from [[A05_Tech_Lead_Agent|A05]]
 - Architecture / API Contract / Data Mapping from [[A05_Tech_Lead_Agent|A05]] only when the technical pack is intentionally split
 - Business Rules from [[A03_BA_Agent|A03]]
-- Feature SRS from [[A03_BA_Agent|A03]]
+- Feature Spec from [[A03_BA_Agent|A03]]
 
 ## Output
 
@@ -102,6 +102,7 @@ You are the **Backend Builder Agent** — the Directus and integration specialis
 
 - [ ] FE Preview review passed and PM opened backend work
 - [ ] `Integration Spec` or approved split technical pack existed at build start
+- [ ] Linked Feature Spec was at least `Feature Ready for UX` when backend work opened
 - [ ] Critical endpoints respond correctly per API Contract
 - [ ] Webhook idempotency implemented
 - [ ] Integration error handling in place

@@ -1,9 +1,9 @@
 ---
 name: design-api
-description: "Design API contracts and Integration Spec for Directus-based features. Maps Feature SRS requirements to endpoints, data flows, and integration points. Use after FE Preview review when preparing backend handoff."
+description: "Design API contracts and Integration Spec for Directus-based features. Maps Feature Spec requirements and screen-pack needs to endpoints, data flows, and integration points. Use after FE Preview review when preparing backend handoff."
 agent: A05
 phase: PB-03 / PB-04
-input: "Feature SRS (SRS Ready), FE Preview feedback, database_schema.json"
+input: "Feature Spec (Feature Ready for UX), FE Preview feedback, approved screen pack, database_schema.json"
 output: "Integration Spec in project Architecture/ folder"
 template: "00_Agent_OS/Templates/T-Integration-Spec.md, 00_Agent_OS/Templates/T-API-Contract.md"
 ---
@@ -18,10 +18,10 @@ Produce the Integration Spec — the lean technical handoff that opens backend w
 
 ### Step 1: Read Inputs
 
-1. Read **Feature SRS** (must be at least `SRS Ready`)
-2. Read **FE Preview feedback** (behavior changes absorbed back into SRS/UXUI)
+1. Read **Feature Spec** (must be at least `Feature Ready for UX`)
+2. Read **FE Preview feedback** (behavior changes absorbed back into Feature Spec / Screen Specs)
 3. Read `database_schema.json` for existing collections/fields/relationships
-4. Read UXUI Feature Spec for UI data requirements
+4. Read `Sitemap + Flow Matrix + Screen Specs` for UI data requirements and route/state needs
 
 ### Step 2: Map API Endpoints
 
@@ -69,7 +69,7 @@ Write `Architecture/Integration_Spec.md` using T-Integration-Spec template:
 ## Quality Checks
 
 - [ ] Follows T-Integration-Spec template
-- [ ] Feature SRS was at least `SRS Ready` before starting
+- [ ] Feature Spec was at least `Feature Ready for UX` before starting
 - [ ] FE Preview has been reviewed (or PM approved exception)
 - [ ] Every endpoint has API-ID linked to Feature ID
 - [ ] Data model changes validated against database_schema.json

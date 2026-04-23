@@ -18,7 +18,9 @@
 - `Feature ID`:
 - `Backlog ID`:
 - `Module`:
-- `Related Feature SRS`:
+- `Related Feature Spec`:
+- `Related Sitemap`:
+- `Related Flow Matrix`:
 - `Story Summary`: _One-sentence: what the user can do when this story is done_
 - `Requirement Clarification Status`: `Clear / Blocked - PM or Business Owner confirmation required`
 - `Confirmed Decisions (PM / Business Owner)`: _Bullet list of requirement clarifications that are already approved_
@@ -27,7 +29,7 @@
   - _e.g., Multi-tenancy: company_id isolation required on every query_
   - _e.g., Stack: Directus REST API + React + Minimals UI (MUI v6)_
   - _e.g., [Any open question that is currently blocking a workstream]_
-- `Release Rule`: _UXUI stays blocked until `Feature SRS = SRS Ready`; FE Preview stays blocked until UXUI is approved and PM explicitly opens preview; BE/integration stays blocked until FE Preview is reviewed, `Feature SRS = Build Ready`, and `Integration Spec` is approved_
+- `Release Rule`: _UX/UI stays blocked until `Feature Spec = Feature Ready for UX`; FE Preview stays blocked until linked Screen Specs + Sitemap + Flow Matrix are approved and PM explicitly opens preview; BE/integration stays blocked until FE Preview is reviewed, `Feature Spec = Build Ready`, and `Integration Spec` is approved_
 
 ---
 
@@ -77,10 +79,10 @@ PM may not promote a board to execution-ready unless every active block is imple
 | Subtask ID | Workstream | Title | Primary Agent | Consulted Agents | Depends On | Output Artifact | Status | Blocking Reason |
 |------------|------------|-------|---------------|------------------|------------|-----------------|--------|-----------------|
 | ST-[ID]-01 | PM | Confirm sprint scope and gate readiness | A01 | A02, A03 | — | Sprint Backlog row updated | Todo | - |
-| ST-[ID]-02 | BA | Materialize Feature SRS and close behavior rules | A03 | A02 | ST-[ID]-01 | Feature SRS `SRS Ready` | Todo | - |
-| ST-[ID]-03 | UX | Design layout, states, and interactions from SRS | A06 | A03 | ST-[ID]-02 | UXUI spec / mockup | Todo | - |
+| ST-[ID]-02 | BA | Materialize Feature Spec and close behavior rules | A03 | A02 | ST-[ID]-01 | Feature Spec `Feature Ready for UX` | Todo | - |
+| ST-[ID]-03 | UX | Design sitemap, screens, states, and interactions from Feature Spec | A06 | A03 | ST-[ID]-02 | Sitemap + Flow Matrix + Screen Specs | Todo | - |
 | ST-[ID]-04 | FE | Build FE Preview with mock/stub data | A07 | A06 | ST-[ID]-03 | Frontend preview | Todo | - |
-| ST-[ID]-05 | PM / Review | Review FE Preview and absorb feedback into docs | A01 | A03, A06, A07 | ST-[ID]-04 | Review decision + updated SRS/UXUI | Todo | - |
+| ST-[ID]-05 | PM / Review | Review FE Preview and absorb feedback into docs | A01 | A03, A06, A07 | ST-[ID]-04 | Review decision + updated Feature Spec / Screen Specs | Todo | - |
 | ST-[ID]-06 | Tech Lead | Materialize Integration Spec for BE and real integration | A05 | A03, A06 | ST-[ID]-05 | Integration Spec | Todo | - |
 | ST-[ID]-07 | BE | Implement backend endpoint and data logic | A08 | A05, A03 | ST-[ID]-06 | Backend implementation | Todo | - |
 | ST-[ID]-08 | FE | Integrate FE Preview with real backend | A07 | A05, A08 | ST-[ID]-07 | Integrated frontend | Todo | - |
@@ -123,7 +125,7 @@ Confirm that this PBI is correctly sequenced in the active sprint and the story 
 
 ---
 
-### ST-[ID]-02 · BA · Materialize Feature SRS and Close Behavior Rules
+### ST-[ID]-02 · BA · Materialize Feature Spec and Close Behavior Rules
 
 **Role**: A03 BA Agent — Business rule closure and AC precision
 **Status**: `Todo`
@@ -137,25 +139,25 @@ Confirm that this PBI is correctly sequenced in the active sprint and the story 
 | `Analysis/Modules/[Module]/_overview.md` | Business rules, open questions, collection constraints |
 
 #### Task
-Convert the approved story slice into the canonical `Feature SRS`. Review every AC in the story. For each ambiguous criterion, make a decision and update the AC or the SRS so downstream agents do not have to infer behavior. Close or explicitly block the required business rules, role/permission rules, state transitions, error flows, event dependencies, and data assumptions. Document any non-obvious decision in the story `Notes` section and in the SRS.
+Convert the approved story slice into the canonical `Feature Spec Lite`. Review every AC in the story. For each ambiguous criterion, make a decision and update the AC or the feature spec so downstream agents do not have to infer behavior. Close or explicitly block the required business rules, role/permission rules, state transitions, error flows, event dependencies, and data assumptions. Document any non-obvious decision in the story `Notes` section and in the feature spec.
 
 #### Produce
 | What | Where | Format |
 |------|-------|--------|
-| Feature SRS file | `Analysis/Features/SRS/[F-ID]_[Name].md` or project-equivalent canonical SRS path | Fill `T-Feature-SRS` and promote to `SRS Ready` if legal |
+| Feature Spec file | `Analysis/Features/.../[F-ID]_[Name]_Feature_Spec.md` or project-equivalent canonical feature path | Fill `T-Feature-Spec-Lite` and promote to `Feature Ready for UX` if legal |
 | ACs updated (if any were ambiguous) | `Planning/Stories/[Module]/[US-file].md` | Edit AC table rows directly |
 | Decision log (if decisions were made) | `Planning/Stories/[Module]/[US-file].md` — Notes section | Bullet list: "Decision: [what], Rationale: [why]" |
 | This subtask status | `STB-[ID].md` summary table | Set ST-[ID]-02 → `Done` |
 
 #### Done When
 - [ ] Every AC has a concrete, testable "Then" clause — no vague language like "works correctly"
-- [ ] Feature SRS exists and is at least `SRS Ready`
+- [ ] Feature Spec exists and is at least `Feature Ready for UX`
 - [ ] All open questions relevant to this story in `_overview.md` are either answered or explicitly deferred with a note
 - [ ] UX (A06) is unblocked to begin ST-[ID]-03
 
 ---
 
-### ST-[ID]-03 · UX · Design Layout, States, and Interactions from SRS
+### ST-[ID]-03 · UX · Design Sitemap, Screens, States, and Interactions from Feature Spec
 
 **Role**: A06 UX/UI Agent — Screen layout, component selection, interaction design
 **Status**: `Todo`
@@ -164,22 +166,23 @@ Convert the approved story slice into the canonical `Feature SRS`. Review every 
 #### Read First
 | File | What to look for |
 |------|-----------------|
-| `Analysis/Features/SRS/[F-ID]_[Name].md` | Canonical task flow, alternate flows, error flows, role logic, permissions, state machine |
+| `Analysis/Features/.../[F-ID]_[Name]_Feature_Spec.md` | Canonical task flow, alternate flows, error flows, role logic, permissions, and touchpoints |
 | `Planning/Stories/[Module]/[US-file].md` | Final ACs, Scope (In/Out), Notes, Linked Artifacts |
 | `Analysis/Modules/[Module]/_overview.md` | Business rules relevant to display |
 
 #### Task
-Design the UI for this feature from the `Feature SRS`. For each AC and each relevant SRS flow/state, identify the corresponding UI element or screen state. Select appropriate components for each element. Specify layout, information hierarchy, empty/loading/error states, responsive notes, and any interaction micro-behaviors needed for FE Preview. If a UX behavior is not backed by the SRS, record it as an open question instead of silently inventing it.
+Design the UI for this feature from the `Feature Spec`. Materialize `Sitemap + Flow Matrix`, then map each AC and each relevant feature flow/state to one or more screen specs. Specify layout, information hierarchy, empty/loading/error/blocked states, responsive notes, and interaction behavior needed for FE Preview. If a UX behavior is not backed by the Feature Spec, record it as an open question instead of silently inventing it.
 
 #### Produce
 | What | Where | Format |
 |------|-------|--------|
-| UX spec file | `Design/UXUI_Features/UXUI-[F-ID]_[Name].md` | Sections: Layout, Component Map, Interaction States, Responsive Notes, Empty/Loading/Error States, Design Decisions |
+| Sitemap + Flow Matrix | `Design/Sitemap/...` + `Design/Flow_Matrix/...` | Feature-to-screen routing authority |
+| Screen spec files | `Design/UXUI_Screens/.../SCR-...md` | One file per screen / drawer / modal |
 | This subtask status | `STB-[ID].md` summary table | Set ST-[ID]-03 → `Done` |
 
 #### Done When
 - [ ] Every AC has a corresponding UI element or state identified
-- [ ] Every critical SRS main/alternate/error flow has a corresponding UI path or state
+- [ ] Every critical feature main/alternate/error flow has a corresponding UI path or state
 - [ ] Empty, loading, and error states are designed
 - [ ] FE Preview agent (A07) can begin ST-[ID]-04 using this document alone
 
@@ -194,13 +197,14 @@ Design the UI for this feature from the `Feature SRS`. For each AC and each rele
 #### Read First
 | File | What to look for |
 |------|-----------------|
-| `Design/UXUI_Features/UXUI-[F-ID]_[Name].md` | Layout, component map, interaction states |
-| `Analysis/Features/SRS/[F-ID]_[Name].md` | Behavior rules that FE Preview must respect |
+| `Design/UXUI_Screens/...` | Screen specs, layout, component map, interaction states |
+| `Design/Sitemap/...` + `Design/Flow_Matrix/...` | Feature-to-screen routing authority |
+| `Analysis/Features/.../[F-ID]_[Name]_Feature_Spec.md` | Behavior rules that FE Preview must respect |
 | `Planning/Stories/[Module]/[US-file].md` | All ACs and scope boundaries |
 | `STB-[ID].md` | Release rule and preview notes |
 
 #### Task
-Build the FE Preview from `UXUI + SRS` using mock data or stub adapters only. The goal is a reviewable frontend that proves task flow, state transitions, and visual hierarchy before BE starts. Do not invent real endpoints. If mock assumptions are needed, document them in FE preview notes or inline comments so they can later be folded into `Integration Spec`.
+Build the FE Preview from `Screen Specs + Sitemap/Flow Matrix + Feature Spec` using mock data or stub adapters only. The goal is a reviewable frontend that proves task flow, state transitions, and visual hierarchy before BE starts. Do not invent real endpoints. If mock assumptions are needed, document them in FE preview notes or inline comments so they can later be folded into `Integration Spec`.
 
 #### Produce
 | What | Where | Format |
@@ -211,7 +215,7 @@ Build the FE Preview from `UXUI + SRS` using mock data or stub adapters only. Th
 
 #### Done When
 - [ ] Frontend is reviewable by PM / Business Owner
-- [ ] Preview respects current `SRS Lite` behavior and approved UXUI
+- [ ] Preview respects current Feature Spec behavior and approved screen specs
 - [ ] Mock/stub data assumptions are explicit
 - [ ] PM can run ST-[ID]-05 without needing backend work first
 

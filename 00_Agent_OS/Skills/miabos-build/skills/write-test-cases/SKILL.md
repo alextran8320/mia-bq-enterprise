@@ -3,7 +3,7 @@ name: write-test-cases
 description: "Write comprehensive test cases mapped to Feature IDs and AC IDs with 100% AC coverage. Covers 5-layer testing: API, Data, E2E, Integration, AI. Use when entering PB-05 Test & Review phase."
 agent: A09
 phase: PB-05
-input: "Feature SRS, UXUI Feature Spec, Integration Spec, AC IDs"
+input: "Feature Spec, Flow Matrix + UXUI Screen Specs, Integration Spec, AC IDs"
 output: "Test cases in project Test/ folder"
 template: "00_Agent_OS/Templates/T-Test-Cases.md"
 ---
@@ -18,8 +18,8 @@ Create a complete test suite that covers every acceptance criterion. No AC-ID sh
 
 ### Step 1: Read Inputs
 
-1. Read **Feature SRS** — extract all AC-IDs and business rules (BR-IDs)
-2. Read **UXUI Feature Spec** — extract §2.1 Task Flow, §5.1 Error & Recovery
+1. Read **Feature Spec** — extract all AC-IDs and business rules (BR-IDs)
+2. Read **Flow Matrix + UXUI Screen Specs** — extract task flow, states, and error / recovery handling
 3. Read **Integration Spec** — extract API-IDs and data model
 4. Read existing test cases to avoid duplication
 
@@ -44,11 +44,11 @@ Every AC-ID must have at least 1 test case. Flag gaps.
 
 **Layer 2 — Data Tests:**
 - Collections, relationships, and constraints verified
-- Business rules from SRS enforced at data level
+- Business rules from Feature Spec enforced at data level
 - Data integrity after CRUD operations
 
 **Layer 3 — E2E Tests:**
-- User Task Flow from UXUI §2.1 achievable end-to-end
+- User Task Flow from Flow Matrix + Screen Specs achievable end-to-end
 - Task completion in documented step count
 - All 3 interaction patterns tested: Quick Action, Exception Handling, Bulk Operation
 
@@ -85,7 +85,7 @@ Follow T-Test-Cases template:
 For every feature, add at least 1 test:
 > "User completes [primary task] from [starting screen] in max [Y] steps"
 
-This validates the UXUI §2.1 Task Flow is achievable.
+This validates the documented cross-screen task flow is achievable.
 
 ## Quality Checks
 

@@ -1,7 +1,7 @@
 # Catalog And Commerce — Module Index
 
 **Status**: Active
-**Last Updated**: 2026-04-19
+**Last Updated**: 2026-04-21
 **Last Updated By**: Codex CLI (GPT-5.4 Codex environment)
 **Phase**: PB-02 / PB-03
 **Source of Truth**: [Feature_Registry.md](Feature_Registry.md)
@@ -17,14 +17,14 @@ tra cứu sản phẩm, tồn kho, giá, và khuyến mãi từ các hệ thốn
 
 ---
 
-## Module SRS Index
+## Module Feature Index
 
-| Module | Feature ID | Feature Name | SRS Status | Blocking Reason | SRS Link |
-|---|---|---|---|---|---|
-| M01 | F-M01-PRD-001 | Product Catalog & Query | **Draft** | Cần chốt sales-safe field projection per channel | [F-M01-PRD-001](Product/SRS/F-M01-PRD-001_Product_SRS.md) |
-| M02 | F-M02-INV-001 | Inventory Availability | **Draft** | Cần chốt freshness threshold per source/channel | [F-M02-INV-001](Inventory_Availability/SRS/F-M02-INV-001_Inventory_Availability_SRS.md) |
-| M03 | F-M03-PRC-001 | Pricing Resolution | **Draft** | Chưa chốt source-priority rule per channel | [F-M03-PRC-001](Pricing/SRS/F-M03-PRC-001_Pricing_SRS.md) |
-| M04 | F-M04-PRO-001 | Promotion & Voucher | **Draft** | Chưa chốt CTKM source-priority và public-safe scope | [F-M04-PRO-001](Promotion/SRS/F-M04-PRO-001_Promotion_SRS.md) |
+| Module | Feature ID | Feature Name | Canonical Feature Status | Blocking Reason | Canonical Link | Legacy SRS |
+|---|---|---|---|---|---|---|
+| M01 | F-M01-PRD-001 | Product Catalog & Query | **Pending Migration** | Pilot Feature Spec demo đã bị xóa; chờ rewrite từ front-end source of truth | - | [Legacy SRS](Product/SRS/F-M01-PRD-001_Product_SRS.md) |
+| M02 | F-M02-INV-001 | Inventory Availability | **Pending Migration** | Chưa migrate sang Feature Spec Lite | - | [Legacy SRS](Inventory_Availability/SRS/F-M02-INV-001_Inventory_Availability_SRS.md) |
+| M03 | F-M03-PRC-001 | Pricing Resolution | **Pending Migration** | Chưa migrate sang Feature Spec Lite | - | [Legacy SRS](Pricing/SRS/F-M03-PRC-001_Pricing_SRS.md) |
+| M04 | F-M04-PRO-001 | Promotion & Voucher | **Pending Migration** | Chưa migrate sang Feature Spec Lite | - | [Legacy SRS](Promotion/SRS/F-M04-PRO-001_Promotion_SRS.md) |
 
 ---
 
@@ -56,10 +56,10 @@ M04 (Promotion) → requires M01, M03, M07, M08
 
 ## Next Actions
 
-- [ ] Business Owner chốt 4 open questions trong `Feature_Registry.md` để mở promote SRS → `SRS Ready`
-- [ ] Sau khi SRS Ready: PM mở Gate 3 → A06 bắt đầu design UXUI cho M01–M04
-- [ ] UXUI Feature Specs cho M01–M04 sẽ được tạo sau khi SRS promoted
+- [ ] Rewrite PRD canonical cho M01/M02/M03/M04 dựa trên front-end source of truth
+- [ ] Migrate M02/M03/M04 sang `Feature Spec Lite`
+- [ ] Tách screen packs cho M02/M03/M04 sau khi feature migration hoàn tất
 
 ---
 
-_Last Updated: 2026-04-19_
+_Last Updated: 2026-04-21_

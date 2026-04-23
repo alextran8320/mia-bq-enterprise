@@ -20,7 +20,7 @@ Translate the Integration Spec's data model section into a concrete Directus con
 
 1. Read **Integration Spec** (must be `Approved`)
 2. Read `database_schema.json` for existing schema
-3. Read Feature SRS for business rules that affect field validation
+3. Read Feature Spec for business rules, permissions, and validation that affect Directus configuration
 
 ### Step 2: Define Collections
 

@@ -36,11 +36,19 @@ Each skill contains:
 | `create-project` | [SKILL.md](miabos-intake/skills/create-project/SKILL.md) | A01 | Initialize new project from template with proper linking |
 | `intake-feedback` | [SKILL.md](miabos-intake/skills/intake-feedback/SKILL.md) | A03 | Process customer feedback → categorized backlog items |
 
+### miabos-research (PB-01 & PB-02: Discovery Research & Recommendation)
+
+| Skill | File | Agent | Description |
+|-------|------|-------|-------------|
+| `research-brief` | [SKILL.md](miabos-research/skills/research-brief/SKILL.md) | A02 | Frame one research problem into scope, questions, and required evidence |
+| `benchmark-market` | [SKILL.md](miabos-research/skills/benchmark-market/SKILL.md) | A04 | Compare external market/product patterns in a benchmark matrix |
+| `recommend-patterns` | [SKILL.md](miabos-research/skills/recommend-patterns/SKILL.md) | A06 | Convert research + benchmark into canonical UX/product recommendation |
+
 ### miabos-product (PB-02 & PB-03: Analysis, Strategy & Design)
 
 | Skill | File | Agent | Description |
 |-------|------|-------|-------------|
-| `write-feature-spec` | [README.md](miabos-product/README.md) | A02 | Legacy skill name; now write `User Story` planning context + `Feature SRS` following the current MIABOS process |
+| `write-feature-spec` | [SKILL.md](miabos-product/skills/write-feature-spec/SKILL.md) | A03 | Write `Feature Spec Lite` from approved story + PRD + research context |
 | `write-user-stories` | [SKILL.md](miabos-product/skills/write-user-stories/SKILL.md) | A03 | Break feature into user stories with acceptance criteria |
 | `design-api` | [SKILL.md](miabos-product/skills/design-api/SKILL.md) | A05 | Design API contracts for Directus-based features |
 | `map-collections` | [SKILL.md](miabos-product/skills/map-collections/SKILL.md) | A05 | Map feature requirements → Directus collections from database_schema.json |
@@ -57,7 +65,9 @@ Each skill contains:
 
 | Skill | File | Agent | Description |
 |-------|------|-------|-------------|
-| `write-uxui-spec` | [SKILL.md](miabos-uxui/skills/write-uxui-spec/SKILL.md) | A06 | Write UXUI Feature Spec with 5 mandatory behavioral sections |
+| `write-uxui-spec` | [SKILL.md](miabos-uxui/skills/write-uxui-spec/SKILL.md) | A06 | Write canonical screen-based UXUI pack for a feature slice |
+| `write-screen-spec` | [SKILL.md](miabos-uxui/skills/write-screen-spec/SKILL.md) | A06 | Write one UXUI Screen Spec linked to feature + sitemap + flow matrix |
+| `design-sitemap` | [SKILL.md](miabos-uxui/skills/design-sitemap/SKILL.md) | A06 | Design sitemap + flow matrix for screen-based UX handoff |
 | `beauty-score` | [SKILL.md](miabos-uxui/skills/beauty-score/SKILL.md) | A06 | Evaluate visual quality across 6 dimensions (gate PB-05, target ≥ 8/10) |
 | `visual-audit` | [SKILL.md](miabos-uxui/skills/visual-audit/SKILL.md) | A06 | Mid-build FE checkpoint: compare implementation vs approved spec |
 | `design-direction` | [SKILL.md](miabos-uxui/skills/design-direction/SKILL.md) | A06 | Propose 2-3 design directions for Boss selection |

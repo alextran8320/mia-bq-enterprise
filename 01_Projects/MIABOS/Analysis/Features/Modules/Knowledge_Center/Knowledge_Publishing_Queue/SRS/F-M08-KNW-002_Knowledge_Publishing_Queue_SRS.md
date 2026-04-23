@@ -20,7 +20,7 @@
 
 - Feature ID: `F-M08-KNW-002`
 - Related User Story: `US-M08-KNW-002`
-- Related PRD: [PRD-M08-KNW-002_Knowledge_Publishing_Queue.md](../../../../../../Planning/PRD/Knowledge_Center/PRD-M08-KNW-002_Knowledge_Publishing_Queue.md)
+- Related PRD: [PRD-M08-KNW-001_Knowledge_And_Policy.md](../../../../../../Planning/PRD/Knowledge_Center/PRD-M08-KNW-001_Knowledge_And_Policy.md)
 - Related Screens: `/knowledge` publishing queue section, review detail panel, version diff compare, rich content preview, approval history, rollback confirmation
 - Related APIs: `GET /mia/knowledge/publishing-queue`, `POST /mia/knowledge/publish-request`, `POST /mia/knowledge/approve`, `POST /mia/knowledge/reject`, `POST /mia/knowledge/rollback`
 - Related Tables: `knowledge_publish_request`, `knowledge_publish_approval`, `knowledge_document_version`, `knowledge_publish_incident`

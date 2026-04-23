@@ -23,13 +23,15 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 
 4. **No Skipping Gates**: Every phase transition requires its quality gate to pass. No exceptions.
 5. **Templates Are Law**: All artifacts must follow templates from `00_Agent_OS/Templates/`.
-6. **Feature SRS Before Canonical UI/UX**: No feature-level UI/UX spec, mockup, or UX subtask may begin as a canonical delivery artifact until the linked `Feature SRS` is at least `SRS Ready`. `PRD` may support discussion and scope alignment only; any pre-SRS concept artifact must be explicitly marked `Non-Binding Concept` and may not be used for gating, subtask release, or build handoff.
+6. **Feature Spec Before Canonical UI/UX**: No canonical `UXUI Screen Spec`, mockup, sitemap, or UX subtask may begin as a gate-bearing delivery artifact until the linked `Feature Spec Lite` is at least `Feature Ready for UX`. `PRD` may support discussion and scope alignment only; any pre-feature-spec concept artifact must be explicitly marked `Non-Binding Concept` and may not be used for gating, subtask release, or build handoff.
 7. **PRD Is Mandatory for Business Alignment**: Every delivery slice must trace back to an approved `PRD` with business goal, scope, success metrics, and User Task Flow. No team member may replace the PRD with a story-only or design-only interpretation of the business problem.
 8. **Backlog Runs on User Stories**: `Product Backlog` and `Sprint Backlog` use approved `User Stories` as the delivery unit. Features remain traceability and registry objects, but sprint commitment, sequencing, and execution readiness are controlled at the story level.
-9. **Feature Brief Is Removed from the Canonical Flow**: Standalone `Feature Brief` artifacts are no longer part of the approved MIABOS process. `User Story` is the only planning artifact between `PRD` and `Feature SRS`, and it must carry the problem, trigger, happy path, dependencies, and AC context required for BA handoff.
-10. **Preview-First Delivery Rule**: Frontend work may start in `FE Preview` mode after `PRD + User Story + Feature SRS + UXUI + Subtask Board` are ready. `FE Preview` may use mock data or stub adapters and must not be blocked by missing backend contracts.
-11. **No Backend Before Reviewed FE Preview + Integration Spec**: Backend build, real API integration, or Directus configuration may not start until the Business Owner or PM has reviewed the FE Preview, any behavior-changing feedback has been folded back into `SRS/UXUI`, and an approved `Integration Spec` (or explicitly approved split technical pack) exists.
-12. **Cross-Check Before Integrated Build**: The final technical handoff for real integration must verify `SRS ↔ UXUI ↔ Integration Spec ↔ QA scope` consistency before BE start or FE-to-BE integration.
+9. **Feature Spec Replaces New Canonical SRS Authoring**: Standalone `Feature Brief` artifacts remain removed, and new canonical BA handoff artifacts must use `Feature Spec Lite` rather than `Feature SRS`. The planning chain is `Research -> PRD -> User Story -> Feature Spec Lite -> UX/UI by Screen`.
+10. **Preview-First Delivery Rule**: Frontend work may start in `FE Preview` mode after `Research + PRD + User Story + Feature Spec + Screen Specs + Subtask Board` are ready. `FE Preview` may use mock data or stub adapters and must not be blocked by missing backend contracts.
+11. **No Backend Before Reviewed FE Preview + Integration Spec**: Backend build, real API integration, or Directus configuration may not start until the Business Owner or PM has reviewed the FE Preview, any behavior-changing feedback has been folded back into `Feature Spec / Screen Specs`, and an approved `Integration Spec` (or explicitly approved split technical pack) exists.
+12. **Cross-Check Before Integrated Build**: The final technical handoff for real integration must verify `Feature Spec ↔ Screen Specs ↔ Integration Spec ↔ QA scope` consistency before BE start or FE-to-BE integration.
+12A. **Research Is Mandatory Before Canonical Rewrite**: Any new module, major capability rewrite, or major UX rewrite must cite approved `Research` artifacts or an explicit PM waiver before canonical `PRD`, `Feature Spec`, or `UXUI Screen Spec` promotion.
+12B. **Sitemap + Flow Matrix Are Mandatory for Screen-Based UXUI**: If canonical UX/UI is broken down by screen, PM must require a `Sitemap` plus `Flow Matrix` that map `Feature -> Screen -> Route/State` before FE Preview may start.
 13. **No Silent Requirement Invention**: If any requirement is unclear and affects scope, behavior, data, state transitions, permissions, user-facing copy, validation, or integration behavior, the agent may propose options but MUST ask PM / Business Owner for confirmation before updating canonical specs, releasing subtasks, implementing code, or promoting status.
 14. **Subtask Board Is the Steel Shield**: No execution subtask is legal unless the linked `Subtask Board` is detailed enough to act as an implementation plan for the assigned agent. If the board lacks confirmed decisions, in-scope/out-of-scope boundaries, write scope, execution steps, evidence requirements, or do-not-assume rules, PM must block execution.
 15. **100% AC Coverage**: QA must have test cases covering every Acceptance Criteria code in the PRD.
@@ -46,7 +48,7 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 18. **Projects Are Isolated**: Each project gets its own folder under `01_Projects/`. No cross-contamination.
 19. **Log Only Artifact-Changing Work**: A session log is required only when an AI creates, updates, deletes, restructures, or promotes canonical workspace artifacts. Pure question-answering, explanation-only, brainstorming-only, or advisory exchanges without artifact changes must NOT create a session log.
 20. **Knowledge Compounds**: After each project cycle, extract rules and add to Knowledge Bank. Only [[A01_PM_Agent|PM Agent]] writes to Knowledge Bank.
-21. **Mandatory Design Fidelity**: Every project with a UI component MUST satisfy a `High-Fidelity Design` gate. The [[A03_Builder_Agent|Builder Agent]] is forbidden from writing code until the [[A06_UI_UX_Agent|A06 UI/UX Agent]] and Business Owner sign off on visual mockups. Mockups must meet "Premium" standards defined in [[Visual_Standards]].
+21. **Mandatory Design Fidelity**: Every project with a UI component MUST satisfy a `High-Fidelity Design` gate. The builder agents are forbidden from writing code until [[A06_UI_UX_Agent|A06 UI/UX Agent]] and Business Owner sign off on the relevant visual authority: screen mockups and/or approved `UXUI Screen Specs`. Mockups must meet "Premium" standards defined in [[Visual_Standards]].
 21A. **Vietnamese-First Workspace Standard**: Nội dung tài liệu chuẩn, status descriptions, metadata values, backlog artifacts, sprint artifacts, session-log content, và operating instructions MUST được viết bằng tiếng Việt theo mặc định trừ khi Business Owner yêu cầu rõ một ngôn ngữ khác.
 21B. **English-Safe Naming Convention is Mandatory**: Folder và file mới MUST giữ English-safe names theo `PascalCase`, `snake_case`, hoặc canonical template naming patterns đã được OS định nghĩa. Stable technical identifiers, tên file, và tên folder nên tiếp tục English-safe để bảo toàn interoperability giữa các tool và AI models.
 21C. **Business Language Flexibility**: Product UI copy, campaign copy, chatbot responses, customer-facing text, và proposal/delivery artifacts có thể dùng tiếng Việt hoặc các business-required languages khác. Khi không có yêu cầu ngôn ngữ cụ thể, mặc định dùng tiếng Việt cho nội dung artifact và giữ naming conventions ở mức English-safe.
@@ -55,7 +57,7 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 
 21E. **Analysis Artifact Traceability Is Mandatory**: Mỗi file trong `[project]/Analysis/` PHẢI có header metadata gồm `Status`, `Author` (agent name), `Date`, và link về source (raw input hoặc PRD). File thiếu traceability metadata không hợp lệ cho gate transitions và sẽ bị PM Agent block.
 
-21F. **`02_Sessions/` Is Log-Only**: `02_Sessions/` chỉ được chứa `Daily Log`, `Session Log`, `_session_index.md`, `_current_context.md`, và các control-plane log artifacts khác. Tuyệt đối không được lưu canonical `PRD`, `Feature SRS`, `UXUI`, `Architecture`, `API Contract`, `NFR`, `QA`, hay bất kỳ delivery artifact nào trong `02_Sessions/`.
+21F. **`02_Sessions/` Is Log-Only**: `02_Sessions/` chỉ được chứa `Daily Log`, `Session Log`, `_session_index.md`, `_current_context.md`, và các control-plane log artifacts khác. Tuyệt đối không được lưu canonical `PRD`, `Feature Spec`, `UXUI`, `Architecture`, `API Contract`, `NFR`, `QA`, hay bất kỳ delivery artifact nào trong `02_Sessions/`.
 
 21G. **Imported Artifact Canonicalization Is Mandatory**: Sau mọi thao tác `merge`, `pull`, `cherry-pick`, `copy`, hoặc import tài liệu từ branch/tool khác, PM Agent PHẢI audit các file mới xuất hiện. Nếu phát hiện canonical artifact đang nằm sai folder, PM phải relocate về canonical path, sửa links/control-plane liên quan, và hoàn tất log repair trước khi session được phép đóng.
 
@@ -70,11 +72,12 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 25. **Mid-Build Visual Checkpoint**: After the FIRST screen is implemented, [[A06_UI_UX_Agent|A06]] must review and approve before [[A03_Builder_Agent|Builder]] proceeds to remaining screens. This prevents entire builds going in the wrong visual direction.
 
 26. **Design-First Frontend**: No frontend code may be written until:
-    - A visual mockup exists in `Design/Mockups/` for that screen
+    - A visual mockup and/or approved `UXUI Screen Spec` exists for that screen
+    - `Sitemap + Flow Matrix` exist for the feature slice if UXUI is screen-based
     - [[Visual_Standards]] has been read
     - Design System tokens are configured in the CSS/Tailwind theme
     - Component library (shadcn/ui, Radix, etc.) is installed
-    Builder must reference the specific mockup file when implementing each screen.
+    Builder must reference the specific screen spec or mockup file when implementing each screen.
 
 27. **Beauty Score Gate**: During QA ([[PB-04_Test_and_Review|PB-04]]), [[A06_UI_UX_Agent|A06]] evaluates a Beauty Score (visual hierarchy, whitespace, color harmony, typography, consistency, polish). Average must be ≥ 8/10. This is separate from Fidelity Score (mockup match).
 

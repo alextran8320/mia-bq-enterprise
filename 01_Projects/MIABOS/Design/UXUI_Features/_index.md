@@ -7,12 +7,20 @@
 **Approval Required**: PM Agent
 **Approved By**: A01 PM Agent
 **Last Status Change**: 2026-04-17
-**Source of Truth**: Index for feature-level UXUI specs
+**Source of Truth**: Legacy index for feature-level UXUI specs kept during migration to screen-based UXUI
 **Blocking Reason**: -
 
 ---
 
-## Specs
+> **Migration Note (2026-04-21)**: `Design/UXUI_Features/` is now a legacy layer.
+> New canonical UX/UI handoff should go to:
+> - `Design/Sitemap/`
+> - `Design/Flow_Matrix/`
+> - `Design/UXUI_Screens/`
+>
+> Existing files here remain valid as legacy references until each module is migrated.
+
+## Legacy Specs
 
 ### AI Workspace — M09 Internal AI Chat
 

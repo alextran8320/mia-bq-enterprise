@@ -1,5 +1,10 @@
 # Session Index
 
+### 2026-04-21
+
+- [[2026-04-21_Daily_Log|Daily Log]] - All AI interactions for this day.
+- [[2026-04-21_MIABOS_Process_Migration_Research_PRD_Features_UXUI|MIABOS Process Migration Research PRD Features UXUI]] - Migrate canonical MIABOS process to `Raw Input -> Research -> PRD -> Features -> UX/UI by Screen`, including OS/process/template changes and pilot project migration.
+
 ### 2026-04-20
 
 - [[2026-04-20_Daily_Log|Daily Log]] - All AI interactions for this day.

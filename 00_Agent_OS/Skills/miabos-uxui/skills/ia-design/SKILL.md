@@ -3,7 +3,7 @@ name: ia-design
 description: "Design Information Architecture for MIABOS features using job-based taxonomy (not module codes). Defines navigation structure, route hierarchy, and screen naming in Vietnamese operational language. Use when designing new modules or restructuring navigation."
 agent: A06
 phase: PB-03
-input: "PRD User Task Flow, Feature SRS, existing IA (if any)"
+input: "PRD User Task Flow, Feature Spec, existing IA (if any)"
 output: "IA Design document with nav structure, route map, and label system"
 template: null
 ---

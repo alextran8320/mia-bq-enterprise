@@ -3,7 +3,7 @@ name: design-direction
 description: "Propose 2-3 design directions for a feature with visual examples, pros/cons, and recommendation for Boss selection. Used in PB-03 before detailed UXUI spec work begins."
 agent: A06
 phase: PB-03
-input: "PRD, Feature SRS (SRS Ready), user context from §0"
+input: "PRD, Feature Spec (Feature Ready for UX), user context from §0"
 output: "Design Direction Proposal for Boss review"
 template: null
 ---
@@ -19,7 +19,7 @@ Before investing in detailed UXUI specs, present 2-3 distinct design approaches 
 ### Step 1: Read Context
 
 1. Read **PRD** — business goals, target users
-2. Read **Feature SRS** — functional requirements, business rules
+2. Read **Feature Spec** — functional requirements, business rules
 3. Read **Design System** — existing patterns to build upon
 4. Read A06 **Design Principles for MIABOS**:
    - Professional & Trustworthy (B2B SaaS)

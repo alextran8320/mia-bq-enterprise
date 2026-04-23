@@ -1,7 +1,7 @@
 # MIABOS - Project Workspace
 
 **Status**: Active Workspace
-**Last Updated**: 2026-04-19
+**Last Updated**: 2026-04-21
 
 ## Project Identity
 
@@ -33,6 +33,7 @@ The following documentation layers were intentionally removed on 2026-04-13:
 
 ## Current Direction
 
+- Canonical process for new work and major rewrites is now `Raw Input -> Research -> PRD -> Features -> UX/UI by Screen`.
 - Prioritize project descriptions that reference **Giay BQ** explicitly.
 - Treat the active domain as **Retail**.
 - Describe MIABOS in this workspace as a **Core AI CRM Platform** for BQ, not as a generic AI operating layer and not as BQ's Data Warehouse.
@@ -50,6 +51,7 @@ The following documentation layers were intentionally removed on 2026-04-13:
 
 | Date       | Session Log                                                                                                                                                     | Summary                                                                                                                                                                                                                                                             |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-21 | [2026-04-21_MIABOS_Process_Migration_Research_PRD_Features_UXUI](../../02_Sessions/2026-04-21_MIABOS_Process_Migration_Research_PRD_Features_UXUI.md) | Migrated the canonical MIABOS process to `Raw Input -> Research -> PRD -> Features -> UX/UI by Screen`, then removed the demo `M01` pilot artifacts and rewrote canonical PRDs for `M08`, `M09`, `M10`, and `M14` from the existing front-end source of truth. |
 | 2026-04-19 | [2026-04-19_MIABOS_AI_Data_Linkage_Labeling_Setup](../../02_Sessions/2026-04-19_MIABOS_AI_Data_Linkage_Labeling_Setup.md) | Created Analysis/Data_Setup artifact defining how Master Data, Knowledge Center content, and Interaction/Eval Data should be linked and labeled through canonical IDs, source mappings, relationship edges, metadata-filtered RAG, graph expansion, and source-priority rules. |
 | 2026-04-19 | [2026-04-19_MIABOS_BQ_AI_Training_Research_Materialization](../../02_Sessions/2026-04-19_MIABOS_BQ_AI_Training_Research_Materialization.md) | Materialized BQ brand research and AI training/data-readiness recommendation into `Research/BQ_AI_Training/RES-BQ-AIT-001`, covering dataset catalog, file types, size/batch guidance, and RAG/API/fine-tune/forecasting mechanism split. |
 | 2026-04-19 | [2026-04-19_MIABOS_BQ_Solution_Repositioning](../../02_Sessions/2026-04-19_MIABOS_BQ_Solution_Repositioning.md) | Updated BQ/MIABOS artifacts per Business Owner feedback: CTKM is not a pain point, no Lark/HQ framing, BQ Data Warehouse owns source-of-truth, and MIABOS is positioned as Core AI CRM Platform with Conversation + Knowledge as its created data. |

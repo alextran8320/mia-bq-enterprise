@@ -1,85 +1,76 @@
 ---
 name: write-feature-spec
-description: "Write Feature SRS following MIABOS T-Feature-SRS template from approved User Stories. Closes business rules, state logic, errors, permissions, and data assumptions before design handoff. Use when BA needs to materialize Feature SRS for in-scope stories."
+description: "Write Feature Spec Lite following MIABOS T-Feature-Spec-Lite template from approved Research + PRD + User Story. Closes business rules, flows, permissions, and data touchpoints before UX/UI by screen."
 agent: A03
 phase: PB-02 / PB-03
-input: "Approved User Story with planning context (problem, trigger, happy path, dependencies, AC)"
-output: "Feature SRS document in project Design/Features/ folder"
-template: "00_Agent_OS/Templates/T-Feature-SRS.md"
+input: "Approved Research or PM waiver, approved PRD, approved User Story with planning context"
+output: "Feature Spec Lite document in project Analysis/Features/"
+template: "00_Agent_OS/Templates/T-Feature-Spec-Lite.md"
 ---
 
-# Write Feature SRS
+# Write Feature Spec Lite
 
 ## Purpose
 
-Materialize the Feature SRS — the BA contract that closes enough ambiguity for downstream design (A06) and FE Preview (A07) consumption. The SRS sits between User Story (what the user needs) and UXUI Spec (how it looks).
+Materialize the canonical `Feature Spec Lite` — the BA contract that closes enough ambiguity for sitemap design, screen specs, FE Preview, and later technical integration. This artifact replaces new canonical `Feature SRS` authoring in the current MIABOS process.
 
 ## Instructions
 
 ### Step 1: Read Inputs
 
-1. Đọc **User Story** đã approve — extract: user problem, trigger, happy path, dependencies, AC IDs
-2. Đọc **PRD** liên quan để lấy business context và User Task Flow
-3. **[BẮT BUỘC — MIABOS/BQ context]** Đọc BQ pack theo thứ tự sau trước khi mở template:
-   - [`04_Raw_Information/Customers/Giay_BQ/README.md`](../../../../../04_Raw_Information/Customers/Giay_BQ/README.md) — index pack
-   - [`BQ_Stakeholder_Map.md`](../../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Stakeholder_Map.md) → dùng để anchor §10 Role về phòng ban BQ thật
-   - [`BQ_Systems_And_Integration_Landscape.md`](../../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Systems_And_Integration_Landscape.md) → dùng để anchor §0B Integration Source Map, §12, §14 về hệ thống thật (SAP B1, KiotViet, Haravan, Lark, Excel)
-   - [`BQ_Customer_Research_Pack.md`](../../../../../04_Raw_Information/Customers/Giay_BQ/2026-04-13_BQ_Customer_Research_Pack.md) §3 → dùng để anchor §2 Business Context về pain point thật
-4. Đọc `database_schema.json` domain map cho các collections liên quan
-5. Đọc các analysis artifact hiện có trong `01_Projects/[project]/Analysis/`
+1. Read approved `User Story` — extract problem, trigger, happy path, dependencies, and AC IDs
+2. Read linked `PRD` — extract business context, scope, release intent, and task flow
+3. Read linked `Research` artifacts or PM waiver:
+   - `Research Brief`
+   - `Benchmark Matrix`
+   - `Recommendation`
+4. In MIABOS/BQ context, read the BQ pack:
+   - `04_Raw_Information/Customers/Giay_BQ/README.md`
+   - `2026-04-13_BQ_Stakeholder_Map.md`
+   - `2026-04-13_BQ_Systems_And_Integration_Landscape.md`
+   - `2026-04-13_BQ_Customer_Research_Pack.md` relevant section
+5. Read existing analysis artifacts under `01_Projects/[project]/Analysis/`
 
-> **Không được bỏ qua Step 3.** SRS viết mà không anchor vào BQ pack sẽ bị PM reject là generic draft, không eligible cho UXUI handoff.
+### Step 2: Write the Feature Spec Lite
 
-### Step 2: Write the Feature SRS
+Follow `T-Feature-Spec-Lite` and complete at minimum:
 
-Follow `T-Feature-SRS` template. Các section cốt lõi cần điền đủ:
+1. Metadata + linked research
+2. Feature goal and business context
+3. Actors / roles
+4. Trigger and entry point
+5. Main flow
+6. Alternate / error flows
+7. Business / permission / validation rules
+8. Data / integration touchpoints
+9. Acceptance criteria
+10. Linked screen specs
+11. Sitemap node(s) and flow matrix reference
 
-1. **§0 Metadata** — Feature ID, linked User Story, linked PRD, related screens, APIs, tables, events, error IDs
-2. **§0B Integration Source Map** — data đến từ hệ thống nào, chiều Read/Write, notes — **PHẢI điền trước khi viết các section khác**
-3. **§1 User Story + §1A User Task Flow** — 4–6 steps với tên actor, action, task type, và notes
-4. **§2 Business Context** — anchor vào ít nhất 1 pain point thật từ BQ pack, không được viết generic
-5. **§5 Main Flow** — từng bước step-by-step với actor, action, và điều kiện rẽ nhánh
-6. **§10 Role / Permission Rules** — map về phòng ban BQ thật từ Stakeholder Map, không chỉ dùng "User nội bộ"
-7. **§11 Business Rules** — ít nhất 3 rules testable, mỗi rule có điều kiện cụ thể (tránh dùng "nên" hoặc "phải nhanh")
-8. **§12 API Contract** — nhắc rõ integration source (SAP B1 / KiotViet / Haravan / MIABOS internal)
-9. **§14 Data / DB Impact** — list ít nhất 2 table cụ thể với vai trò từng table
-10. **§17 NFR** — ít nhất 1 số liệu cụ thể (latency target, retention period, hoặc concurrent user estimate)
-11. **§18 Acceptance Criteria** — ít nhất 3 statements testable độc lập, không phải summary
-12. **§22 Open Questions** — ghi rõ blocker thật nếu có, không để trống
-13. **§24–26 Checklists** — điền checkbox với ghi chú blocker cụ thể, không để trống im lặng
+### Step 3: Validate Before Promotion
 
-### Step 3: Validate Content Depth
+Before changing status, confirm:
 
-Trước khi set status, kiểm tra từng mục sau. Nếu bất kỳ mục nào fail → giữ `Draft`, ghi rõ lý do vào Blocking Reason:
-
-- [ ] **§0B** đã điền Integration Source Map với ít nhất 1 hệ thống external hoặc ghi rõ "MIABOS internal only + lý do"
-- [ ] **§2** Business Context nhắc ít nhất 1 pain point thật từ BQ pack (không phải generic description)
-- [ ] **§5** Main Flow có ít nhất 4 steps với tên actor và action cụ thể
-- [ ] **§10** Role map về phòng ban BQ thật (Ban điều hành / IT/ERP / Vận hành bán lẻ / CSKH / Logistics / Tài chính / Marketing...) — không chỉ dùng role generic
-- [ ] **§11** Business Rules có ít nhất 3 rules, mỗi rule testable (có điều kiện "nếu X thì Y", không dùng "nên" hoặc "phải nhanh/ổn định")
-- [ ] **§12** API Contract nhắc integration source cụ thể (SAP B1 / KiotViet / Haravan / MIABOS internal)
-- [ ] **§14** DB Impact list ít nhất 2 table với vai trò từng table
-- [ ] **§17** NFR có ít nhất 1 số liệu đo được (ms, giây, người dùng đồng thời, ngày retention...)
-- [ ] **§18** AC có ít nhất 3 statements testable độc lập (không phải 1 câu tổng hợp)
-- [ ] **§22** Open Questions ghi rõ câu hỏi thật hoặc ghi "None — tất cả blocker đã được giải quyết"
+- [ ] Business context is anchored to real BQ use case or linked research recommendation
+- [ ] Main flow has at least 4 clear steps with actor + action
+- [ ] Business rules contain at least 3 testable rules where relevant
+- [ ] At least one measurable NFR or operational expectation exists when applicable
+- [ ] Acceptance criteria contain at least 3 testable statements where the feature is not intentionally tiny
+- [ ] Linked screens are identified or explicitly `TBD - blocked`
+- [ ] Data / integration touchpoints cite real systems or internal boundaries
 
 ### Step 4: Set Status
 
-- Tất cả Step 3 checks pass và không có blocking open question → set status `SRS Ready`
-- Còn check nào fail hoặc có open question chặn UXUI → set status `Draft`, ghi Blocking Reason cụ thể
-- `SRS Ready` là gate cứng: A06 và A05 không được bắt đầu canonical work cho đến khi status này được set
+- `Draft` -> information incomplete or UX cannot proceed safely
+- `In Review` -> structurally complete, awaiting PM review
+- `Feature Ready for UX` -> safe for A06 to derive sitemap + screen specs
+- `Build Ready` -> only after FE Preview review feedback is absorbed and technical closure is complete
 
 ## Quality Checks
 
-- [ ] Đã đọc BQ pack trước khi viết (Step 1 bắt buộc)
-- [ ] §0B Integration Source Map đã điền
-- [ ] §2 anchor vào pain point thật từ BQ pack
-- [ ] §10 Role map về phòng ban BQ thật
-- [ ] §11 có ≥ 3 business rules testable
-- [ ] §17 có ít nhất 1 số liệu cụ thể
-- [ ] §18 có ≥ 3 AC testable độc lập
-- [ ] Follow đúng `T-Feature-SRS` template
-- [ ] Linked tới User Story và PRD
-- [ ] Data model reference collections thật từ database_schema.json
-- [ ] Status set đúng (`Draft` hoặc `SRS Ready`) với Blocking Reason nếu Draft
-- [ ] Lean đủ để FE Preview nhanh, explicit đủ để không ai phải tự suy đoán behavior
+- [ ] Followed `T-Feature-Spec-Lite`
+- [ ] Research input exists or waiver is recorded
+- [ ] PRD and User Story links are present
+- [ ] Task flow and rules are explicit enough that A06 does not need to invent behavior
+- [ ] Linked screen list exists
+- [ ] Status is correct with blocking reason if not ready

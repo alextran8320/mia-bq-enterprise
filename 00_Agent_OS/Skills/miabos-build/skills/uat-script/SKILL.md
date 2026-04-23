@@ -3,7 +3,7 @@ name: uat-script
 description: "Generate UAT (User Acceptance Testing) scripts for Business Owner or stakeholder testing. Written in Vietnamese, task-oriented, non-technical. Use when preparing for Boss review in PB-05 or PB-06."
 agent: A09
 phase: PB-05 / PB-06
-input: "Feature SRS, UXUI Feature Spec (§2.1 Task Flow), test results"
+input: "Feature Spec, Flow Matrix + UXUI Screen Specs, test results"
 output: "UAT script in project Test/ folder"
 template: null
 ---
@@ -18,8 +18,8 @@ Create a testing script that the Business Owner or stakeholders can follow to ve
 
 ### Step 1: Read Inputs
 
-1. Read **UXUI Feature Spec §2.1 Task Flow** — this is the user's journey
-2. Read **Feature SRS** — understand business rules and AC
+1. Read **Flow Matrix + linked UXUI Screen Specs** — this is the user's journey across screens
+2. Read **Feature Spec** — understand business rules and AC
 3. Read **test results** — know what passed/failed in QA
 
 ### Step 2: Structure UAT Script
@@ -82,4 +82,4 @@ Each UAT script must include scenarios for:
 - [ ] Happy path + error handling covered
 - [ ] Prerequisites clearly stated
 - [ ] Sign-off section included
-- [ ] Linked to Feature SRS AC-IDs
+- [ ] Linked to Feature Spec AC-IDs

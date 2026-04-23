@@ -41,6 +41,7 @@ Folder này chứa các module nghiệp vụ nội tại của MIABOS, được 
 
 ## Domain Rule
 
-- Mỗi module có SRS riêng trong folder `SRS/`.
+- Canonical BA artifact mới là `Feature Spec` nằm dưới folder feature/module tương ứng.
+- Legacy `SRS/` folders vẫn được giữ tạm thời cho các module chưa migrate.
 - Mọi module business phải trace ngược được về ít nhất một `Integration Source Spec`.
 - Product surface là lớp packaging cho Core AI CRM Platform, không làm thay đổi `Feature ID` hay boundary nghiệp vụ cốt lõi của module.

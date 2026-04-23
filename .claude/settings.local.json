@@ -34,7 +34,9 @@
       "Bash(npx tsc:*)",
       "Bash(python3 \"/Users/tranduchoang/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"B2B SaaS CRM customer management modern international premium\" --design-system -p \"MIABOS\" -f markdown)",
       "Bash(python3 \"/Users/tranduchoang/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"CRM dashboard metric cards gradient status badge premium\" --domain style -n 3)",
-      "mcp__tavily-search__tavily_extract"
+      "mcp__tavily-search__tavily_extract",
+      "WebFetch(domain:rollout.com)",
+      "WebFetch(domain:api2cart.com)"
     ]
   }
 }

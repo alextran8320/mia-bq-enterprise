@@ -1,6 +1,6 @@
 ---
 name: write-user-stories
-description: "Break a feature into user stories with acceptance criteria following MIABOS conventions. Each story carries user problem, trigger, happy path, dependencies, and AC context. Use when transitioning from PRD/Feature Brief to backlog items."
+description: "Break a feature into user stories with acceptance criteria following MIABOS conventions. Each story carries user problem, trigger, happy path, dependencies, and AC context. Use when transitioning from PRD/Research direction to backlog items."
 agent: A03
 phase: PB-02
 input: "PRD section, Feature Brief, or raw feature description"
@@ -12,7 +12,7 @@ template: "00_Agent_OS/Templates/T-User-Story-AC.md"
 
 ## Purpose
 
-Break a feature into implementable user stories that carry enough context for BA to write Feature SRS without guessing.
+Break a feature into implementable user stories that carry enough context for BA to write Feature Spec Lite without guessing.
 
 ## Instructions
 

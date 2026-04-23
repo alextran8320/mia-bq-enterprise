@@ -57,7 +57,7 @@ Then, based on context:
 - **Resume existing project**: read `01_Projects/[name]/_project.md` → latest Session Log → open matching Playbook
 - **Process MOM**: use skill `process-mom` or read latest files in `04_Raw_Information/MOM/` → [[A11_Knowledge_Agent|A11]] processes → output to project or KB
 - **Business strategy work**: read `04_Raw_Information/` for market data → [[A04_Business_Strategy_Agent|A04]] leads
-- **Current MIABOS / Giày BQ requirement work**: treat [04_Raw_Information/Customers/Giay_BQ/README.md](04_Raw_Information/Customers/Giay_BQ/README.md) as the active intake index, then read the linked BQ pack files before writing PRD, SRS, UX, architecture, proposal, or strategy artifacts
+- **Current MIABOS / Giày BQ requirement work**: treat [04_Raw_Information/Customers/Giay_BQ/README.md](04_Raw_Information/Customers/Giay_BQ/README.md) as the active intake index, then read the linked BQ pack files before writing Research, PRD, Feature Spec, UX/UI Screen Spec, architecture, proposal, or strategy artifacts
 
 ---
 
@@ -161,8 +161,9 @@ You must repair the logging chain before doing anything else:
 | Group | Phase | Skills | Description |
 |-------|-------|--------|-------------|
 | `miabos-intake` | PB-01 | `process-mom`, `create-project`, `intake-feedback` | Raw inputs → structured artifacts |
-| `miabos-product` | PB-02/03 | `write-feature-spec`, `write-user-stories`, `design-api`, `map-collections` | Requirements → specs & stories |
-| `miabos-uxui` | PB-03/04/05 | `write-uxui-spec`, `beauty-score`, `visual-audit`, `design-direction`, `ia-design` | Behavioral UX design & quality |
+| `miabos-research` | PB-01/02 | `research-brief`, `benchmark-market`, `recommend-patterns` | Market pattern research → benchmark → recommendation |
+| `miabos-product` | PB-02/03 | `write-feature-spec`, `write-user-stories`, `design-api`, `map-collections` | PRD → Feature Spec Lite → technical handoff |
+| `miabos-uxui` | PB-03/04/05 | `write-uxui-spec`, `write-screen-spec`, `design-sitemap`, `beauty-score`, `visual-audit`, `design-direction`, `ia-design` | Sitemap + screen-level UX design & quality |
 | `miabos-build` | PB-04/05 | `directus-config`, `write-test-cases`, `uat-script` | Build specs & test artifacts |
 | `miabos-ops` | All | `session-log`, `gate-check`, `sync-context` | Process compliance & logging |
 
@@ -178,10 +179,15 @@ You must repair the logging chain before doing anything else:
 Slash commands are available in `.claude/commands/`:
 - `/process-mom <MOM file>` — Process MOM transcript
 - `/create-project <name>` — Initialize new project
-- `/write-feature-spec <feature>` — Write feature specification
+- `/write-feature-spec <feature>` — Write Feature Spec Lite
 - `/write-stories <feature>` — Break feature into user stories
 - `/map-collections <feature>` — Map to Directus collections
-- `/write-uxui-spec <feature>` — Write UXUI Feature Spec (5 mandatory sections)
+- `/write-uxui-spec <feature>` — Write UXUI Screen Spec
+- `/write-screen-spec <screen>` — Write one screen-level UXUI spec
+- `/design-sitemap <module>` — Materialize sitemap + flow matrix for one module
+- `/research-brief <topic>` — Open one research brief for a capability/module
+- `/benchmark-market <topic>` — Build benchmark matrix from market references
+- `/recommend-patterns <topic>` — Summarize research into canonical recommendation
 - `/beauty-score <runtime-evidence>` — Run beauty score assessment (6 dimensions; screenshots optional)
 - `/visual-audit <runtime-evidence>` — Mid-build visual checkpoint (screenshots optional)
 - `/design-direction <feature>` — Propose 2-3 design directions
@@ -272,9 +278,10 @@ PB-06: Ship & Learn
 #### PB-02: Analysis & Strategy
 - **Lead**: A02 Product Owner + A04 Business Strategy
 - **Support**: A03 BA, A10 Data Analyst
+- Research artifacts are materialized and approved (or explicitly waived) before canonical PRD / Feature / UX rewrites
 - A04 produces market analysis, competitive intel, business case
 - A10 provides customer data insights, usage metrics, funnel analysis
-- A03 writes detailed requirements, user stories, acceptance criteria
+- A03 writes detailed requirements, user stories, Feature Spec Lite, acceptance criteria
 - A02 prioritizes features, creates/updates roadmap
 - **A12 logs the session**
 
@@ -282,9 +289,9 @@ PB-06: Ship & Learn
 - **Lead**: A02 Product Owner + A06 UI/UX + A05 Tech Lead
 - **Support**: A03 BA
 - A02 writes PRD and feature specs
-- A06 creates design system, UX flows, mockups, UXUI specs
+- A06 creates design system, sitemap, flow matrix, mockups, and UX/UI screen specs
 - A05 designs architecture, API contracts, data mapping, integration specs
-- Cross-check: Feature ↔ UI ↔ API ↔ DB ↔ Integration mapping
+- Cross-check: Feature ↔ Screens ↔ API ↔ DB ↔ Integration mapping
 - **A12 logs the session**
 
 #### PB-04: Build & Integrate
@@ -352,6 +359,7 @@ PB-06: Ship & Learn
 8. Follow the pipeline
 9. Create or update artifacts in English only unless writing customer-facing copy
 10. If the current workspace context is **MIABOS for Giày BQ**, read [04_Raw_Information/Customers/Giay_BQ/README.md](04_Raw_Information/Customers/Giay_BQ/README.md) and use that folder as the requirement source before analysis or planning
+11. Canonical process for new or rewritten modules is `Raw Input -> Research -> PRD -> Features -> UX/UI by Screen`
 
 ### When processing a MOM:
 1. **Use skill `process-mom`** (Claude Code: `/process-mom <file>`)
@@ -367,18 +375,19 @@ PB-06: Ship & Learn
 ### When doing product work:
 1. Read project `_project.md` and feature registry
 2. Activate [[A02_Product_Owner_Agent|A02]] + [[A03_BA_Agent|A03]]
-3. Follow PB-02 → PB-03 pipeline
+3. Follow `Research -> PRD -> Features -> UX/UI by Screen`
 
-### Khi viết Feature SRS (A03 — bắt buộc với mọi AI model):
+### Khi viết Feature Spec Lite (A03 — bắt buộc với mọi AI model):
 1. **Đọc BQ pack TRƯỚC khi mở template** — xem [Active Requirement Source](#active-requirement-source--giày-bq) section phía trên
 2. Đọc theo thứ tự: `BQ_Stakeholder_Map` → `BQ_Systems_And_Integration_Landscape` → `BQ_Customer_Research_Pack §3`
-3. Điền **§0B Integration Source Map** ngay sau §0 Metadata — ghi rõ data đến từ SAP B1 / KiotViet / Haravan / MIABOS internal
-4. Dùng **BQ Stakeholder Map** để fill §10 Role — không được chỉ viết "User nội bộ"
-5. Dùng **BQ Systems & Integration Landscape** để fill §12 API Contract và §14 DB Impact
-6. Anchor **§2 Business Context** vào pain point thật từ BQ pack — không viết generic
-7. Chạy **Quality Check** của skill `write-feature-spec` trước khi set status
-8. **Không set `SRS Ready`** nếu §5 < 4 steps, §11 < 3 rules testable, §17 không có số liệu, §18 < 3 AC độc lập
-9. Xem [Global Rules](03_Knowledge_Bank/Global_Rules.md) Rule 41 + 42 cho gate cứng trước UXUI handoff
+3. Đọc `Research` liên quan trước khi rewrite canonical `PRD`, `Feature Spec`, hoặc `UX/UI Screen Spec`; nếu chưa có research thì materialize `Research Brief -> Benchmark -> Recommendation` hoặc ghi rõ `waived + reason`
+4. Điền `Integration / Data Touchpoints` và ghi rõ data đến từ SAP B1 / KiotViet / Haravan / MIABOS internal / BQ Data Warehouse khi đã được xác nhận
+5. Dùng **BQ Stakeholder Map** để fill role/actor — không được chỉ viết "User nội bộ"
+6. Dùng **BQ Systems & Integration Landscape** để fill API/data touchpoints và source boundary
+7. Anchor business context vào use case thật từ BQ pack — không viết generic
+8. Chạy **Quality Check** của skill `write-feature-spec` trước khi set status
+9. **Không set `Feature Ready for UX`** nếu main flow dưới 4 bước, business rules dưới 3 rule testable, NFR không có số liệu đo được, hoặc AC dưới 3 statements testable độc lập
+10. `UX/UI Screen Spec` không được invent behavior vượt ra ngoài `Feature Spec`; mọi screen phải link ngược về feature + sitemap + flow matrix
 
 ---
 

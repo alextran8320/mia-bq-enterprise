@@ -1,9 +1,9 @@
 ---
 name: visual-audit
-description: "Compare FE implementation evidence against approved UXUI Feature Spec for mid-build checkpoint. Scores fidelity and flags deviations. Required during PB-04 build phase."
+description: "Compare FE implementation evidence against approved screen-pack artifacts for mid-build checkpoint. Scores fidelity and flags deviations. Required during PB-04 build phase."
 agent: A06
 phase: PB-04
-input: "FE runtime evidence or optional screenshot(s), approved UXUI Feature Spec"
+input: "FE runtime evidence or optional screenshot(s), approved Sitemap + Flow Matrix + UXUI Screen Specs"
 output: "Visual Audit Report: PASS or BLOCK with deviation list"
 template: null
 ---
@@ -19,7 +19,7 @@ Compare what A07 built against what A06 designed. This is a mandatory checkpoint
 ### Step 1: Gather Materials
 
 1. **FE evidence**: route URL, verified demo notes, browser/DOM checks, Playwright results, or optional screenshots if already available
-2. **UXUI Feature Spec**: the approved spec (`Design/UXUI_Features/`)
+2. **Screen pack**: the approved `Sitemap + Flow Matrix + UXUI Screen Specs`
 3. **Design System**: token values for exact comparison
 
 ### Step 2: Pixel-Level Comparison
@@ -55,7 +55,7 @@ Compare element by element:
 ## Visual Audit: [Screen Name]
 **Date**: YYYY-MM-DD
 **FE Evidence**: [route/log/check result/screenshot if available]
-**UXUI Spec**: [link]
+**Screen Pack**: [links]
 
 ### Fidelity Score: X/10
 

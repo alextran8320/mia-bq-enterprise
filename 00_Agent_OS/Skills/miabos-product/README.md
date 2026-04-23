@@ -1,10 +1,10 @@
 # miabos-product
 
-Skills for **PB-02 & PB-03: Analysis, Strategy & Product Design** — transforming requirements into specs, stories, and API contracts.
+Skills for **PB-02 & PB-03: Analysis, Strategy & Product Design** — transforming approved research + PRD into Feature Specs, stories, and API contracts.
 
 ## Skills (4)
 
-- **write-feature-spec** — Legacy skill name; now writes `User Story` planning context + `Feature SRS` following the current MIABOS process.
+- **write-feature-spec** — Write `Feature Spec Lite` from approved PRD + User Story + research context.
 - **write-user-stories** — Break a feature into user stories with acceptance criteria (T-User-Story-AC template).
 - **design-api** — Design API contracts for Directus-based features (T-API-Contract template).
 - **map-collections** — Map feature requirements to existing Directus collections using database_schema.json.

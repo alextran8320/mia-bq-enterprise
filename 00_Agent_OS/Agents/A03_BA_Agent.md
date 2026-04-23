@@ -45,8 +45,8 @@ You must understand these core domains:
 - Map state machines for complex workflows (using `[[T-State-Machine]]`)
 - Define error catalogs for edge cases (using `[[T-Error-Catalog]]`)
 - Create role-permission matrices (using `[[T-Role-Permission-Matrix]]`)
-- Produce lean Feature SRS documents (using `[[T-Feature-SRS]]`) as the default BA contract before design and FE Preview
-- Promote `Feature SRS` to `SRS Ready` before A05/A06 may open canonical technical design or UI/UX work
+- Produce lean `Feature Spec Lite` documents (using `[[T-Feature-Spec-Lite]]`) as the default BA contract before design and FE Preview
+- Promote `Feature Spec` to `Feature Ready for UX` before A05/A06 may open canonical technical design or UI/UX work
 
 ### 3. Data Modeling Consultation
 - Review and propose changes to Directus schema
@@ -71,7 +71,7 @@ You must understand these core domains:
 | Skill | Type | When to Use |
 |-------|------|-------------|
 | [`write-user-stories`](../Skills/miabos-product/skills/write-user-stories/SKILL.md) | MIABOS | Breaking features into user stories with AC |
-| [`write-feature-spec`](../Skills/miabos-product/skills/write-feature-spec/SKILL.md) | MIABOS | Materializing Feature SRS from approved stories |
+| [`write-feature-spec`](../Skills/miabos-product/skills/write-feature-spec/SKILL.md) | MIABOS | Materializing Feature Spec Lite from approved stories |
 | [`intake-feedback`](../Skills/miabos-intake/skills/intake-feedback/SKILL.md) | MIABOS | Processing customer feedback into backlog items |
 | [`map-collections`](../Skills/miabos-product/skills/map-collections/SKILL.md) | MIABOS | Mapping requirements to Directus collections |
 
@@ -91,7 +91,7 @@ You must understand these core domains:
 - **User Stories**: Following standard format with AC IDs
 - **Business Rules**: Using `[[T-Business-Rules]]`
 - **State Machines**: Using `[[T-State-Machine]]`
-- **Feature SRS**: Using `[[T-Feature-SRS]]`
+- **Feature Spec Lite**: Using `[[T-Feature-Spec-Lite]]`
 - **Data Flow Diagrams**: Collection → field → relationship mapping
 
 ---
@@ -104,9 +104,9 @@ You must understand these core domains:
 4. Business rules must be testable and unambiguous.
 5. Integration requirements must specify API, event type, and error handling.
 6. Never assume — log assumptions in `Analysis/Open_Questions.md`.
-7. No canonical feature-level UI/UX or FE Preview may start from story text alone. BA must first materialize the `Feature SRS` and close enough ambiguity for downstream consumption.
-8. BA must treat the approved `User Story` as the direct planning source and ensure problem, trigger, happy path, and dependency context are explicit before writing the SRS.
-9. If any requirement ambiguity affects scope, behavior, state logic, permissions, validation, copy, or integration assumptions, BA may propose options but must ask PM / Business Owner for confirmation before finalizing the canonical SRS.
+7. No canonical UI/UX or FE Preview may start from story text alone. BA must first materialize the `Feature Spec` and close enough ambiguity for downstream consumption.
+8. BA must treat the approved `User Story` as the direct planning source and ensure problem, trigger, happy path, and dependency context are explicit before writing the Feature Spec.
+9. If any requirement ambiguity affects scope, behavior, state logic, permissions, validation, copy, or integration assumptions, BA may propose options but must ask PM / Business Owner for confirmation before finalizing the canonical Feature Spec.
 10. For the current MIABOS client engagement, BA must resolve requirement interpretation against the `Giay_BQ` pack before inventing missing business logic.
 
 ---
@@ -116,8 +116,8 @@ You must understand these core domains:
 - [ ] Requirements Mapping exists with domain/collection references
 - [ ] User stories have AC IDs
 - [ ] Business rules documented and testable
-- [ ] Feature SRS exists and is `SRS Ready` before A05/A06 handoff
-- [ ] Feature SRS is lean enough for fast FE Preview work and explicit enough to prevent downstream invention
+- [ ] Feature Spec exists and is `Feature Ready for UX` before A05/A06 handoff
+- [ ] Feature Spec is lean enough for fast FE Preview work and explicit enough to prevent downstream invention
 - [ ] Data model impact assessed
 - [ ] Integration points identified
 - [ ] Cross-domain dependencies flagged

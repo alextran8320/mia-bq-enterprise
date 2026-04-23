@@ -69,7 +69,7 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 
 24. **Visual Integrity Gate**: No UI implementation is considered "Done" without a `Verified Demo` showing the interface is stable. The Agent must prove layout stability via browser/runtime evidence such as viewport checks, DOM/layout assertions, console checks, or visual audit notes, and ensure no overflows or disjointed elements exist at standard viewports. Screenshots are optional supporting evidence.
 
-25. **Mid-Build Visual Checkpoint**: After the FIRST screen is implemented, [[A06_UI_UX_Agent|A06]] must review and approve before [[A03_Builder_Agent|Builder]] proceeds to remaining screens. This prevents entire builds going in the wrong visual direction.
+25. **Mid-Build Visual Checkpoint**: After the FIRST screen is implemented, [[A06_UI_UX_Agent|A06]] must review and approve before [[A05_Tech_Lead_Agent]] proceeds to remaining screens. This prevents entire builds going in the wrong visual direction.
 
 26. **Design-First Frontend**: No frontend code may be written until:
     - A visual mockup and/or approved `UXUI Screen Spec` exists for that screen
@@ -79,7 +79,7 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
     - Component library (shadcn/ui, Radix, etc.) is installed
     Builder must reference the specific screen spec or mockup file when implementing each screen.
 
-27. **Beauty Score Gate**: During QA ([[PB-04_Test_and_Review|PB-04]]), [[A06_UI_UX_Agent|A06]] evaluates a Beauty Score (visual hierarchy, whitespace, color harmony, typography, consistency, polish). Average must be ≥ 8/10. This is separate from Fidelity Score (mockup match).
+27. **Beauty Score Gate**: During QA ([[PB-04_Build_and_Integrate]]), [[A06_UI_UX_Agent|A06]] evaluates a Beauty Score (visual hierarchy, whitespace, color harmony, typography, consistency, polish). Average must be ≥ 8/10. This is separate from Fidelity Score (mockup match).
 
 28. **No Unstyled Defaults**: Every visible HTML element must be explicitly styled. Browser default inputs, buttons, selects, and scrollbars are forbidden in shipped UI. Skeleton shimmer for loading (not spinners for content areas).
 
@@ -110,5 +110,5 @@ Before any `run_command` or `write_to_file` in the `Build/` directory, the Agent
 ---
 
 _Last updated: 2026-04-16 (updated Rules 16 and 24 — screenshots are optional; Verified Demo/runtime evidence is the required gate evidence)_
-_Only [[A01_PM_Agent|PM Agent]] may update this file through the Knowledge Bank update process ([[PB-05_Ship_and_Learn|PB-05]])._  
+_Only [[A01_PM_Agent|PM Agent]] may update this file through the Knowledge Bank update process ([[PB-05_Test_and_Review]])._  
 _Rule 15 updated: "2 directions" → "3 directions" per KB Rule 15._

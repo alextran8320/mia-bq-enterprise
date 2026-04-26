@@ -11,6 +11,7 @@ import usersRouter from "./routes/users.js";
 import rolesRouter from "./routes/roles.js";
 import customersRouter from "./routes/customers.js";
 import leadsRouter from "./routes/leads.js";
+import aiChatRouter from "./routes/aiChat.js";
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use("/api/users", usersRouter);
 app.use("/api/roles", rolesRouter);
 app.use("/api/customers", customersRouter);
 app.use("/api/leads", leadsRouter);
+app.use("/api/ai-workspace", aiChatRouter);
 
 app.use(errorHandler);
 

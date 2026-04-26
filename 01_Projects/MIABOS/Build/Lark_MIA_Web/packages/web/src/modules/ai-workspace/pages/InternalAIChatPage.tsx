@@ -1,6 +1,5 @@
 import {
   FormEvent,
-  startTransition,
   useEffect,
   useMemo,
   useRef,
@@ -10,45 +9,31 @@ import {
   AlertTriangle,
   ArrowRight,
   Bot,
-  Database,
   ExternalLink,
-  FileText,
-  Lock,
+  ListTree,
   MessageSquareText,
+  Plus,
   RefreshCw,
   Send,
-  ShieldAlert,
   Sparkles,
   ThumbsDown,
   ThumbsUp,
+  Trash2,
   X,
 } from "lucide-react";
 import { Badge, Button, Card } from "@/shared/ui";
+import { BQ_PROMPT_CHIPS } from "@/mocks/ai-workspace/internalChat";
 import {
-  AnswerScenario,
-  BQ_PROMPT_CHIPS,
-  inferScenarioFromPrompt,
-} from "@/mocks/ai-workspace/internalChat";
-
-type ChatEntry =
-  | { id: string; role: "user"; text: string; createdAt: number }
-  | {
-      id: string;
-      role: "assistant";
-      scenario: AnswerScenario;
-      createdAt: number;
-    }
-  | { id: string; role: "error"; createdAt: number };
-
-interface HistoryItem {
-  id: string;
-  prompt: string;
-  answerType: AnswerScenario["answerType"];
-  summary: string;
-  assistantEntryId: string;
-  createdAt: number;
-  scenario: AnswerScenario;
-}
+  aiChatApi,
+  type ChatMessage,
+  type ChatSession,
+} from "@/shared/api/aiChatApi";
+import { getApiErrorMessage } from "@/shared/auth/apiClient";
+import { MarkdownAnswer } from "../components/MarkdownAnswer";
+import {
+  extractSources,
+  type ExtractedSources,
+} from "../lib/extractSources";
 
 const PROMPT_CHIPS = BQ_PROMPT_CHIPS;
 const SUPPORT_ACTIONS = [
@@ -82,62 +67,39 @@ const SUPPORT_ACTIONS = [
   },
 ];
 
-function getAnswerBadge(scenario: AnswerScenario) {
-  switch (scenario.answerType) {
-    case "Policy":
-      return {
-        label: "Chính sách",
-        color: "#013652",
-        bg: "#ECF2FE",
-        icon: FileText,
-      };
-    case "Data":
-      return {
-        label: "Dữ liệu",
-        color: "#2F64F6",
-        bg: "#ECF2FE",
-        icon: Database,
-      };
-    case "Mixed":
-      return {
-        label: "Kết hợp",
-        color: "#B45309",
-        bg: "#FFFBEB",
-        icon: Sparkles,
-      };
-    case "Unsupported":
-      return {
-        label: "Ngoài phạm vi",
-        color: "#E11D48",
-        bg: "#FFF1F2",
-        icon: ShieldAlert,
-      };
-    default:
-      return {
-        label: "Không đủ quyền",
-        color: "#E11D48",
-        bg: "#FFF1F2",
-        icon: Lock,
-      };
-  }
-}
+const ASSISTANT_BADGE = {
+  label: "Trợ lý AI",
+  color: "#2F64F6",
+  bg: "#ECF4FF",
+};
 
-function getFreshnessTone(state: AnswerScenario["freshnessState"]) {
-  switch (state) {
-    case "fresh":
-      return { color: "#16A34A", bg: "color-mix(in srgb, #22C55E 14%, white)" };
-    case "stale":
-      return { color: "#B45309", bg: "color-mix(in srgb, #F59E0B 14%, white)" };
-    default:
-      return { color: "#E11D48", bg: "color-mix(in srgb, #E11D48 12%, white)" };
-  }
-}
-
-function formatTime(createdAt: number) {
+function formatTime(iso: string) {
   return new Intl.DateTimeFormat("vi-VN", {
     hour: "2-digit",
     minute: "2-digit",
-  }).format(new Date(createdAt));
+  }).format(new Date(iso));
+}
+
+function formatRelative(iso: string): string {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const min = Math.floor(diffMs / 60_000);
+  if (min < 1) return "Vừa xong";
+  if (min < 60) return `${min} phút trước`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr} giờ trước`;
+  const day = Math.floor(hr / 24);
+  if (day < 7) return `${day} ngày trước`;
+  return formatTime(iso);
+}
+
+function summarizeMarkdown(markdown: string, max = 120): string {
+  const stripped = markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/[#>*_`-]/g, " ")
+    .replace(/\[(.*?)\]\(.*?\)/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+  return stripped.length > max ? `${stripped.slice(0, max - 1)}…` : stripped;
 }
 
 function UserBubble({ text }: { text: string }) {
@@ -153,6 +115,7 @@ function UserBubble({ text }: { text: string }) {
         boxShadow: "var(--shadow-ambient)",
         fontSize: 14,
         lineHeight: 1.6,
+        whiteSpace: "pre-wrap",
       }}
     >
       {text}
@@ -160,36 +123,129 @@ function UserBubble({ text }: { text: string }) {
   );
 }
 
+// The Haravan flow API doesn't truly stream — we wait for the full markdown.
+// To make the wait feel responsive (responses can take 30-60s), we cycle
+// through stage labels and pulse skeleton lines so the user sees progress.
+const LOADING_STAGES = [
+  "Đang phân tích câu hỏi",
+  "Đang truy xuất dữ liệu liên quan",
+  "Đang đối chiếu chính sách & ngữ cảnh",
+  "Đang tổng hợp câu trả lời",
+  "Sắp xong rồi",
+];
+
 function LoadingBubble() {
+  const [stageIdx, setStageIdx] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    const start = Date.now();
+    const timer = window.setInterval(() => {
+      const sec = Math.floor((Date.now() - start) / 1000);
+      setElapsed(sec);
+      // Advance one stage every ~4s, hold on the last stage thereafter.
+      setStageIdx(Math.min(LOADING_STAGES.length - 1, Math.floor(sec / 4)));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
     <div
       role="status"
-      aria-label="Đang phân tích câu hỏi"
+      aria-live="polite"
+      aria-label={`${LOADING_STAGES[stageIdx]} — đã ${elapsed} giây`}
       style={{
-        maxWidth: 320,
-        display: "flex",
-        alignItems: "center",
-        gap: "var(--space-3)",
-        background: "#ECF4FF",
+        maxWidth: 520,
+        background: "#fff",
         color: "#013652",
         borderRadius: "var(--radius-lg)",
-        padding: "14px 18px",
-        boxShadow: "var(--shadow-ambient)",
-        fontSize: 14,
+        padding: "16px 18px",
+        boxShadow: "0 12px 24px rgba(1,54,82,0.04)",
+        border: "1px solid rgba(47,100,246,0.1)",
+        animation: "fadeSlideIn 0.2s ease-out",
       }}
     >
-      <Bot size={18} style={{ color: "#2F64F6", flexShrink: 0 }} />
-      <span>Đang phân tích...</span>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "var(--space-3)",
+          marginBottom: 14,
+        }}
+      >
+        <div
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#ECF4FF",
+            flexShrink: 0,
+          }}
+        >
+          <Bot size={16} style={{ color: "#2F64F6" }} />
+        </div>
+        <span
+          key={stageIdx}
+          style={{
+            fontSize: 14,
+            fontWeight: 500,
+            color: "#013652",
+            animation: "fadeSlideIn 0.25s ease-out",
+          }}
+        >
+          {LOADING_STAGES[stageIdx]}
+        </span>
+        <span
+          aria-hidden="true"
+          style={{
+            display: "inline-flex",
+            alignItems: "flex-end",
+            gap: 3,
+            paddingBottom: 2,
+          }}
+        >
+          <span className="ai-typing-dot" />
+          <span className="ai-typing-dot" />
+          <span className="ai-typing-dot" />
+        </span>
+        {elapsed >= 5 ? (
+          <span
+            style={{
+              marginLeft: "auto",
+              fontSize: 12,
+              color: "#8EB6D9",
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            {elapsed}s
+          </span>
+        ) : null}
+      </div>
+
+      <div style={{ display: "grid", gap: 8 }}>
+        <div className="ai-skeleton-line" style={{ width: "94%" }} />
+        <div className="ai-skeleton-line" style={{ width: "82%" }} />
+        <div className="ai-skeleton-line" style={{ width: "66%" }} />
+      </div>
     </div>
   );
 }
 
-function ErrorBubble({ onRetry }: { onRetry: () => void }) {
+function ErrorBubble({
+  message,
+  onRetry,
+}: {
+  message: string;
+  onRetry: () => void;
+}) {
   return (
     <div
       role="alert"
       style={{
-        maxWidth: 400,
+        maxWidth: 520,
         display: "flex",
         alignItems: "flex-start",
         gap: "var(--space-3)",
@@ -206,9 +262,7 @@ function ErrorBubble({ onRetry }: { onRetry: () => void }) {
         style={{ color: "#E11D48", flexShrink: 0, marginTop: 2 }}
       />
       <div>
-        <div style={{ marginBottom: 8 }}>
-          Đã có lỗi xảy ra. Câu hỏi của bạn chưa được xử lý.
-        </div>
+        <div style={{ marginBottom: 8 }}>{message}</div>
         <Button variant="tertiary" onClick={onRetry} style={{ fontSize: 13 }}>
           <RefreshCw size={14} />
           Thử lại
@@ -219,21 +273,21 @@ function ErrorBubble({ onRetry }: { onRetry: () => void }) {
 }
 
 function AnswerCard({
-  scenario,
-  onOpenTrace,
+  message,
+  onOpenSources,
   onAction,
   onFeedback,
 }: {
-  scenario: AnswerScenario;
-  onOpenTrace: (scenario: AnswerScenario) => void;
-  onAction: (action: string, scenario: AnswerScenario) => void;
-  onFeedback: (kind: "up" | "down", scenario: AnswerScenario) => void;
+  message: ChatMessage;
+  onOpenSources: (id: string) => void;
+  onAction: (action: string) => void;
+  onFeedback: (kind: "up" | "down") => void;
 }) {
-  const badge = getAnswerBadge(scenario);
-  const freshness = getFreshnessTone(scenario.freshnessState);
-  const BadgeIcon = badge.icon;
-  const isBlocked =
-    scenario.answerType === "Blocked" || scenario.answerType === "Unsupported";
+  const sources = useMemo(
+    () => extractSources(message.content),
+    [message.content],
+  );
+  const hasSources = sources.links.length > 0 || sources.outline.length > 0;
 
   return (
     <Card
@@ -243,7 +297,7 @@ function AnswerCard({
         padding: "20px",
         display: "flex",
         flexDirection: "column",
-        gap: "var(--space-5)",
+        gap: "var(--space-4)",
         borderRadius: "16px",
         boxShadow: "0 12px 24px rgba(1,54,82,0.04)",
       }}
@@ -256,258 +310,30 @@ function AnswerCard({
           alignItems: "center",
         }}
       >
-        <Badge label={badge.label} color={badge.color} bg={badge.bg} />
-        {scenario.answerType !== "Unsupported" && (
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "var(--space-2)",
-              padding: "5px 12px",
-              borderRadius: "var(--radius-pill)",
-              background: freshness.bg,
-              color: freshness.color,
-              fontSize: 12,
-              fontWeight: 500,
-            }}
-          >
-            <BadgeIcon size={13} />
-            {scenario.freshnessLabel}
-          </div>
-        )}
-      </div>
-
-      {scenario.warning ? (
-        <div
-          role="alert"
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            gap: "var(--space-3)",
-            padding: "12px 16px",
-            borderRadius: "var(--radius-md)",
-            background: "#FFFBEB",
-            color: "#92400E",
-            fontSize: 13,
-          }}
-        >
-          <AlertTriangle
-            size={15}
-            style={{ color: "#F59E0B", marginTop: 2, flexShrink: 0 }}
-          />
-          <span>{scenario.warning}</span>
-        </div>
-      ) : null}
-
-      <div>
+        <Badge
+          label={ASSISTANT_BADGE.label}
+          color={ASSISTANT_BADGE.color}
+          bg={ASSISTANT_BADGE.bg}
+        />
         <div
           style={{
-            fontSize: 11,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "var(--space-2)",
+            padding: "5px 12px",
+            borderRadius: "var(--radius-pill)",
+            background: "color-mix(in srgb, #22C55E 14%, white)",
+            color: "#16A34A",
+            fontSize: 12,
             fontWeight: 500,
-            color: "#3A6381",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            marginBottom: 6,
           }}
         >
-          Kết luận
+          <Sparkles size={13} />
+          {formatRelative(message.createdAt)}
         </div>
-        <h3
-          style={{
-            fontSize: 16,
-            fontWeight: 600,
-            color: "#013652",
-            marginBottom: isBlocked ? "var(--space-3)" : 0,
-            lineHeight: 1.5,
-          }}
-        >
-          {isBlocked ? (
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--space-2)",
-              }}
-            >
-              <Lock size={18} style={{ color: "#E11D48", flexShrink: 0 }} />
-              {scenario.summary}
-            </span>
-          ) : (
-            scenario.summary
-          )}
-        </h3>
-
-        {scenario.blockedReason ? (
-          <div
-            style={{
-              marginTop: "var(--space-3)",
-              padding: "12px 16px",
-              borderRadius: "var(--radius-md)",
-              background: "#FFF1F2",
-              color: "#3A6381",
-              fontSize: 13,
-              lineHeight: 1.6,
-            }}
-          >
-            {scenario.blockedReason}
-          </div>
-        ) : null}
-
-        {scenario.clarifyingQuestion ? (
-          <div
-            style={{
-              marginTop: "var(--space-3)",
-              padding: "12px 16px",
-              borderRadius: "var(--radius-md)",
-              background: "#ECF4FF",
-              color: "#013652",
-              fontSize: 13,
-              lineHeight: 1.6,
-            }}
-          >
-            {scenario.clarifyingQuestion}
-          </div>
-        ) : null}
       </div>
 
-      {scenario.answerType === "Mixed" ? (
-        <div
-          className="internal-answer-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-            gap: "var(--space-4)",
-          }}
-        >
-          <div
-            style={{
-              padding: "var(--space-5)",
-              borderRadius: "var(--radius-md)",
-              background: "#F6F9FF",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--space-2)",
-                marginBottom: "var(--space-3)",
-              }}
-            >
-              <Database size={15} style={{ color: "#2F64F6" }} />
-              <strong style={{ fontSize: 13 }}>Dữ liệu hiện tại</strong>
-            </div>
-            <div style={{ display: "grid", gap: "var(--space-2)" }}>
-              {scenario.dataPoints?.map((item) => (
-                <div
-                  key={item.label}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: "var(--space-4)",
-                    fontSize: 13,
-                  }}
-                >
-                  <span style={{ color: "#3A6381" }}>{item.label}</span>
-                  <strong style={{ color: "#013652" }}>{item.value}</strong>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div
-            style={{
-              padding: "var(--space-5)",
-              borderRadius: "var(--radius-md)",
-              background: "#F6F9FF",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--space-2)",
-                marginBottom: "var(--space-3)",
-              }}
-            >
-              <FileText size={15} style={{ color: "#013652" }} />
-              <strong style={{ fontSize: 13 }}>Chính sách áp dụng</strong>
-            </div>
-            <div style={{ display: "grid", gap: "var(--space-3)" }}>
-              {scenario.citations?.map((item) => (
-                <div key={item.title} style={{ fontSize: 13 }}>
-                  <div
-                    style={{
-                      fontWeight: 600,
-                      marginBottom: 4,
-                      color: "#013652",
-                    }}
-                  >
-                    {item.title}
-                  </div>
-                  <div style={{ color: "#3A6381", lineHeight: 1.5 }}>
-                    {item.excerpt}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {scenario.answerType === "Data" && scenario.dataPoints ? (
-        <div
-          className="internal-answer-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: "var(--space-4)",
-          }}
-        >
-          {scenario.dataPoints.map((item) => (
-            <div
-              key={item.label}
-              style={{
-                padding: "var(--space-4)",
-                borderRadius: "var(--radius-md)",
-                background: "#F6F9FF",
-              }}
-            >
-              <div style={{ color: "#3A6381", fontSize: 12, marginBottom: 6 }}>
-                {item.label}
-              </div>
-              <strong style={{ color: "#013652", fontSize: 14 }}>
-                {item.value}
-              </strong>
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      {scenario.answerType === "Policy" && scenario.citations ? (
-        <div style={{ display: "grid", gap: "var(--space-3)" }}>
-          {scenario.citations.map((item) => (
-            <div
-              key={item.title}
-              style={{
-                padding: "var(--space-4)",
-                borderRadius: "var(--radius-md)",
-                background: "#F6F9FF",
-                fontSize: 13,
-              }}
-            >
-              <div
-                style={{ fontWeight: 600, marginBottom: 6, color: "#013652" }}
-              >
-                {item.title}
-              </div>
-              <div style={{ color: "#3A6381", lineHeight: 1.5 }}>
-                {item.excerpt}
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : null}
+      <MarkdownAnswer markdown={message.content} />
 
       <div
         style={{
@@ -518,55 +344,51 @@ function AnswerCard({
           paddingTop: "var(--space-2)",
         }}
       >
-        {scenario.sourceTrace.length > 0 && (
+        {hasSources && (
           <Button
             variant="secondary"
-            onClick={() => onOpenTrace(scenario)}
+            onClick={() => onOpenSources(message.id)}
             aria-label="Xem nguồn trả lời"
           >
             <ExternalLink size={15} />
             Xem nguồn
           </Button>
         )}
-        {scenario.nextActions
-          .filter((action) => action !== "Xem nguồn")
-          .map((action) => (
-            <Button
-              key={action}
-              variant="tertiary"
-              onClick={() => onAction(action, scenario)}
-            >
-              <ArrowRight size={15} />
-              {action}
-            </Button>
-          ))}
-
-        {!isBlocked && (
-          <div
-            style={{
-              display: "flex",
-              gap: "var(--space-2)",
-              marginLeft: "auto",
-            }}
+        <Button variant="tertiary" onClick={() => onAction("Hỏi tiếp")}>
+          <ArrowRight size={15} />
+          Hỏi tiếp
+        </Button>
+        <Button
+          variant="tertiary"
+          onClick={() => onAction("Tạo yêu cầu hỗ trợ")}
+        >
+          <ArrowRight size={15} />
+          Tạo yêu cầu hỗ trợ
+        </Button>
+        <div
+          style={{
+            display: "flex",
+            gap: "var(--space-2)",
+            marginLeft: "auto",
+          }}
+        >
+          <Button
+            variant="tertiary"
+            aria-label="Câu trả lời hữu ích"
+            onClick={() => onFeedback("up")}
           >
-            <Button
-              variant="tertiary"
-              aria-label="Câu trả lời hữu ích"
-              onClick={() => onFeedback("up", scenario)}
-            >
-              <ThumbsUp size={15} />
-              Hữu ích
-            </Button>
-            <Button
-              variant="tertiary"
-              aria-label="Câu trả lời chưa đúng"
-              onClick={() => onFeedback("down", scenario)}
-            >
-              <ThumbsDown size={15} />
-              Chưa đúng
-            </Button>
-          </div>
-        )}
+            <ThumbsUp size={15} />
+            Hữu ích
+          </Button>
+          <Button
+            variant="tertiary"
+            aria-label="Câu trả lời chưa đúng"
+            onClick={() => onFeedback("down")}
+          >
+            <ThumbsDown size={15} />
+            Chưa đúng
+          </Button>
+        </div>
       </div>
     </Card>
   );
@@ -662,57 +484,256 @@ function EmptyState({
   );
 }
 
+function SourcesPanel({
+  sources,
+  onClose,
+}: {
+  sources: ExtractedSources;
+  onClose: () => void;
+}) {
+  const empty = sources.links.length === 0 && sources.outline.length === 0;
+
+  return (
+    <Card
+      style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--space-4)",
+        borderRadius: "16px",
+        boxShadow: "0 12px 24px rgba(1,54,82,0.04)",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 500,
+              color: "#3A6381",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              marginBottom: 6,
+            }}
+          >
+            Nguồn trả lời
+          </div>
+          <h3 style={{ color: "#013652" }}>Chi tiết nguồn</h3>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Đóng panel nguồn trả lời"
+          style={{
+            border: "none",
+            background: "transparent",
+            color: "#3A6381",
+            cursor: "pointer",
+            display: "flex",
+            padding: 4,
+            borderRadius: "var(--radius-sm)",
+          }}
+        >
+          <X size={18} />
+        </button>
+      </div>
+
+      {empty ? (
+        <div style={{ color: "#3A6381", fontSize: 13, lineHeight: 1.6 }}>
+          Câu trả lời được tổng hợp từ tri thức của Trợ lý — không có nguồn cụ
+          thể được trích dẫn trong nội dung.
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "grid",
+            gap: "var(--space-4)",
+            overflow: "auto",
+          }}
+        >
+          {sources.links.length > 0 && (
+            <div style={{ display: "grid", gap: "var(--space-3)" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "var(--space-2)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#013652",
+                }}
+              >
+                <ExternalLink size={14} style={{ color: "#2F64F6" }} />
+                Liên kết tham chiếu
+              </div>
+              {sources.links.map((link) => (
+                <a
+                  key={link.url}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: "var(--space-4)",
+                    borderRadius: "var(--radius-md)",
+                    background: "#F6F9FF",
+                    display: "grid",
+                    gap: "var(--space-2)",
+                    textDecoration: "none",
+                    border: "1px solid transparent",
+                    transition: "border-color 0.15s",
+                  }}
+                  onMouseEnter={(e) =>
+                    ((e.currentTarget as HTMLAnchorElement).style.borderColor =
+                      "rgba(47,100,246,0.25)")
+                  }
+                  onMouseLeave={(e) =>
+                    ((e.currentTarget as HTMLAnchorElement).style.borderColor =
+                      "transparent")
+                  }
+                >
+                  <strong style={{ color: "#013652", fontSize: 13 }}>
+                    {link.text}
+                  </strong>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "#2F64F6",
+                      wordBreak: "break-all",
+                    }}
+                  >
+                    {link.host}
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
+
+          {sources.outline.length > 0 && (
+            <div style={{ display: "grid", gap: "var(--space-2)" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "var(--space-2)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#013652",
+                }}
+              >
+                <ListTree size={14} style={{ color: "#2F64F6" }} />
+                Outline câu trả lời
+              </div>
+              <ul
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                  display: "grid",
+                  gap: 4,
+                }}
+              >
+                {sources.outline.map((h, i) => (
+                  <li
+                    key={`${h.text}-${i}`}
+                    style={{
+                      paddingLeft: h.level === 3 ? 16 : 0,
+                      fontSize: 13,
+                      color: h.level === 2 ? "#013652" : "#3A6381",
+                      fontWeight: h.level === 2 ? 600 : 400,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {h.text}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </Card>
+  );
+}
+
 export function InternalAIChatPage() {
   const [draft, setDraft] = useState("");
-  const [entries, setEntries] = useState<ChatEntry[]>([]);
-  const [activeTrace, setActiveTrace] = useState<AnswerScenario | null>(null);
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [lastPrompt, setLastPrompt] = useState("");
+  const [isBootstrapping, setIsBootstrapping] = useState(true);
   const [actionNotice, setActionNotice] = useState("");
+  const [activeSourceMessageId, setActiveSourceMessageId] = useState<
+    string | null
+  >(null);
+  const [lastPrompt, setLastPrompt] = useState("");
 
   const threadEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const entryRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const canSubmit = draft.trim().length > 0 && !isLoading;
+  const canSubmit =
+    draft.trim().length > 0 && !isLoading && currentSessionId !== null;
 
-  const historyItems = useMemo(() => {
-    const result: HistoryItem[] = [];
+  const activeSourceMessage = useMemo(
+    () =>
+      activeSourceMessageId
+        ? messages.find((m) => m.id === activeSourceMessageId) ?? null
+        : null,
+    [activeSourceMessageId, messages],
+  );
 
-    for (let i = 0; i < entries.length; i += 1) {
-      const current = entries[i];
-      if (!current || current.role !== "user") continue;
+  const activeSources = useMemo<ExtractedSources | null>(
+    () =>
+      activeSourceMessage
+        ? extractSources(activeSourceMessage.content)
+        : null,
+    [activeSourceMessage],
+  );
 
-      let assistant: Extract<ChatEntry, { role: "assistant" }> | null = null;
-      for (let j = i + 1; j < entries.length; j += 1) {
-        const candidate = entries[j];
-        if (candidate?.role === "assistant") {
-          assistant = candidate;
-          break;
+  // Bootstrap: list sessions; restore newest or create blank.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const list = await aiChatApi.listSessions();
+        if (cancelled) return;
+        if (list.length === 0) {
+          const created = await aiChatApi.createSession();
+          if (cancelled) return;
+          setSessions([created]);
+          setCurrentSessionId(created.id);
+          setMessages([]);
+        } else {
+          setSessions(list);
+          const latest = list[0]!;
+          setCurrentSessionId(latest.id);
+          const msgs = await aiChatApi.getMessages(latest.id);
+          if (cancelled) return;
+          setMessages(msgs);
         }
+      } catch (err) {
+        setActionNotice(
+          getApiErrorMessage(err, "Không tải được lịch sử trò chuyện."),
+        );
+      } finally {
+        if (!cancelled) setIsBootstrapping(false);
       }
-
-      if (assistant) {
-        result.push({
-          id: `${current.id}-${assistant.id}`,
-          prompt: current.text,
-          answerType: assistant.scenario.answerType,
-          summary: assistant.scenario.summary,
-          assistantEntryId: assistant.id,
-          createdAt: assistant.createdAt,
-          scenario: assistant.scenario,
-        });
-      }
-    }
-
-    return result.reverse();
-  }, [entries]);
-
-  const lastScenario = historyItems[0]?.scenario ?? null;
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     threadEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [entries, isLoading]);
+  }, [messages, isLoading]);
 
   useEffect(() => {
     if (!actionNotice) return;
@@ -725,95 +746,148 @@ export function InternalAIChatPage() {
     setTimeout(() => inputRef.current?.focus(), 30);
   }
 
-  function submitPrompt(prompt: string) {
-    const trimmed = prompt.trim();
-    if (!trimmed || isLoading) return;
-
-    const scenario = inferScenarioFromPrompt(trimmed);
-    const createdAt = Date.now();
-    setLastPrompt(trimmed);
-
-    startTransition(() => {
-      setEntries((prev) => [
-        ...prev,
-        { id: `user-${createdAt}`, role: "user", text: trimmed, createdAt },
-      ]);
+  function reorderSession(updated: ChatSession) {
+    setSessions((prev) => {
+      const without = prev.filter((s) => s.id !== updated.id);
+      return [updated, ...without];
     });
+  }
 
+  async function submitPrompt(prompt: string) {
+    const trimmed = prompt.trim();
+    if (!trimmed || isLoading || !currentSessionId) return;
+
+    setLastPrompt(trimmed);
     setDraft("");
     setIsLoading(true);
 
-    window.setTimeout(() => {
-      const assistantCreatedAt = Date.now();
-      startTransition(() => {
-        setEntries((prev) => [
-          ...prev,
-          {
-            id: `assistant-${assistantCreatedAt}`,
-            role: "assistant",
-            scenario,
-            createdAt: assistantCreatedAt,
-          },
-        ]);
+    // Optimistic user bubble — replaced with the persisted record below.
+    const optimisticId = `optimistic-${Date.now()}`;
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: optimisticId,
+        sessionId: currentSessionId,
+        role: "user",
+        content: trimmed,
+        meta: null,
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+
+    try {
+      const result = await aiChatApi.sendMessage(currentSessionId, trimmed);
+      setMessages((prev) => {
+        const filtered = prev.filter((m) => m.id !== optimisticId);
+        const next = [...filtered, result.user];
+        if (result.assistant) next.push(result.assistant);
+        if (result.error) next.push(result.error);
+        return next;
       });
+      reorderSession(result.session);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev.filter((m) => m.id !== optimisticId),
+        {
+          id: optimisticId,
+          sessionId: currentSessionId,
+          role: "user",
+          content: trimmed,
+          meta: null,
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: `error-${Date.now()}`,
+          sessionId: currentSessionId,
+          role: "error",
+          content: getApiErrorMessage(err, "Không gửi được câu hỏi."),
+          meta: null,
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+    } finally {
       setIsLoading(false);
-    }, 700);
+    }
   }
 
-  function handleAction(action: string, scenario: AnswerScenario) {
-    const lower = action.toLowerCase();
-
-    if (lower.includes("hỏi tiếp")) {
-      focusInputWithDraft(scenario.prompt);
-      setActionNotice("Đã điền câu hỏi tiếp theo vào ô nhập.");
-      return;
+  async function handleSwitchSession(sessionId: string) {
+    if (sessionId === currentSessionId) return;
+    setActiveSourceMessageId(null);
+    setCurrentSessionId(sessionId);
+    setMessages([]);
+    try {
+      const msgs = await aiChatApi.getMessages(sessionId);
+      setMessages(msgs);
+    } catch (err) {
+      setActionNotice(getApiErrorMessage(err, "Không tải được hội thoại."));
     }
+  }
 
-    if (lower.includes("hỏi câu khác")) {
+  async function handleNewSession() {
+    if (isLoading) return;
+    try {
+      const created = await aiChatApi.createSession();
+      setSessions((prev) => [created, ...prev]);
+      setCurrentSessionId(created.id);
+      setMessages([]);
+      setActiveSourceMessageId(null);
       focusInputWithDraft("");
-      setActionNotice("Mời anh nhập câu hỏi mới.");
+    } catch (err) {
+      setActionNotice(
+        getApiErrorMessage(err, "Không tạo được cuộc trò chuyện mới."),
+      );
+    }
+  }
+
+  async function handleDeleteSession(sessionId: string) {
+    if (
+      !window.confirm("Xoá cuộc trò chuyện này? Không thể khôi phục lại.")
+    ) {
       return;
     }
+    try {
+      await aiChatApi.deleteSession(sessionId);
+      setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+      if (sessionId === currentSessionId) {
+        // Auto-switch to another session, or create one if list is now empty.
+        const remaining = sessions.filter((s) => s.id !== sessionId);
+        if (remaining.length > 0) {
+          await handleSwitchSession(remaining[0]!.id);
+        } else {
+          await handleNewSession();
+        }
+      }
+    } catch (err) {
+      setActionNotice(getApiErrorMessage(err, "Không xoá được."));
+    }
+  }
 
+  function handleAction(action: string) {
+    const lower = action.toLowerCase();
+    if (lower.includes("hỏi tiếp")) {
+      focusInputWithDraft("");
+      setActionNotice("Mời anh nhập câu hỏi tiếp theo.");
+      return;
+    }
     if (lower.includes("yêu cầu")) {
       setActionNotice("Đã tạo yêu cầu hỗ trợ nội bộ (preview).");
       return;
     }
-
-    if (lower.includes("phản hồi")) {
-      setActionNotice("Đã ghi nhận phản hồi của anh (preview).");
-      return;
-    }
-
-    if (lower.includes("sku")) {
-      focusInputWithDraft("Kiểm tra SKU cụ thể cho mẫu này còn bao nhiêu?");
-      setActionNotice("Đã điền câu hỏi kiểm tra SKU.");
-      return;
-    }
-
-    if (lower.includes("checklist")) {
-      setActionNotice("Đã tạo yêu cầu gửi checklist SOP (preview).");
-      return;
-    }
-
     setActionNotice(`Đã chọn hành động: ${action}`);
   }
 
-  function handleFeedback(kind: "up" | "down", scenario: AnswerScenario) {
-    if (kind === "up") {
-      setActionNotice(
-        `Đã ghi nhận đánh giá "Hữu ích" cho câu trả lời: ${scenario.prompt}`,
-      );
-      return;
-    }
+  function handleFeedback(kind: "up" | "down") {
     setActionNotice(
-      `Đã ghi nhận đánh giá "Chưa đúng" cho câu trả lời: ${scenario.prompt}`,
+      kind === "up"
+        ? "Đã ghi nhận đánh giá Hữu ích."
+        : "Đã ghi nhận đánh giá Chưa đúng.",
     );
   }
 
   function handleRetry() {
-    setEntries((prev) => prev.filter((entry) => entry.role !== "error"));
-    if (lastPrompt) submitPrompt(lastPrompt);
+    if (!lastPrompt) return;
+    setMessages((prev) => prev.filter((m) => m.role !== "error"));
+    submitPrompt(lastPrompt);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -821,13 +895,10 @@ export function InternalAIChatPage() {
     submitPrompt(draft);
   }
 
-  function handleJumpToHistory(item: HistoryItem) {
-    const target = entryRefs.current[item.assistantEntryId];
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-    setActiveTrace(item.scenario);
-    focusInputWithDraft(item.prompt);
+  function handleOpenSources(messageId: string) {
+    setActiveSourceMessageId(messageId);
+    const node = entryRefs.current[messageId];
+    if (node) node.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   return (
@@ -835,7 +906,7 @@ export function InternalAIChatPage() {
       className="internal-chat-page"
       style={{
         display: "grid",
-        gridTemplateColumns: activeTrace
+        gridTemplateColumns: activeSourceMessageId
           ? "minmax(0, 1fr) 360px"
           : "minmax(0, 1fr) 300px",
         gap: "var(--space-6)",
@@ -890,26 +961,28 @@ export function InternalAIChatPage() {
             paddingBottom: "96px",
           }}
         >
-          {entries.length === 0 && !isLoading ? (
+          {!isBootstrapping && messages.length === 0 && !isLoading ? (
             <EmptyState onUsePrompt={(prompt) => submitPrompt(prompt)} />
           ) : null}
 
-          {entries.map((entry) => (
+          {messages.map((message) => (
             <div
-              key={entry.id}
+              key={message.id}
               ref={(node) => {
-                entryRefs.current[entry.id] = node;
+                entryRefs.current[message.id] = node;
               }}
-              data-entry-id={entry.id}
+              data-message-id={message.id}
             >
-              {entry.role === "user" ? <UserBubble text={entry.text} /> : null}
-              {entry.role === "error" ? (
-                <ErrorBubble onRetry={handleRetry} />
+              {message.role === "user" ? (
+                <UserBubble text={message.content} />
               ) : null}
-              {entry.role === "assistant" ? (
+              {message.role === "error" ? (
+                <ErrorBubble message={message.content} onRetry={handleRetry} />
+              ) : null}
+              {message.role === "assistant" ? (
                 <AnswerCard
-                  scenario={entry.scenario}
-                  onOpenTrace={setActiveTrace}
+                  message={message}
+                  onOpenSources={handleOpenSources}
                   onAction={handleAction}
                   onFeedback={handleFeedback}
                 />
@@ -973,8 +1046,13 @@ export function InternalAIChatPage() {
             ref={inputRef}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder="Nhập câu hỏi của bạn..."
+            placeholder={
+              isBootstrapping
+                ? "Đang tải hội thoại..."
+                : "Nhập câu hỏi của bạn..."
+            }
             aria-label="Nhập câu hỏi"
+            disabled={isBootstrapping}
             style={{
               flex: 1,
               border: "none",
@@ -1009,165 +1087,19 @@ export function InternalAIChatPage() {
           display: "flex",
           flexDirection: "column",
           gap: "var(--space-6)",
+          position: "sticky",
+          top: 16,
+          alignSelf: "flex-start",
+          maxHeight: "calc(100vh - 32px)",
+          overflowY: "auto",
         }}
       >
-        <Card
-          style={{
-            flex: activeTrace ? 1 : undefined,
-            display: "flex",
-            flexDirection: "column",
-            gap: "var(--space-4)",
-            borderRadius: "16px",
-            boxShadow: "0 12px 24px rgba(1,54,82,0.04)",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 500,
-                  color: "#3A6381",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  marginBottom: 6,
-                }}
-              >
-                Nguồn trả lời
-              </div>
-              <h3 style={{ color: "#013652" }}>
-                {activeTrace ? "Chi tiết nguồn" : "Chưa mở nguồn nào"}
-              </h3>
-            </div>
-            {activeTrace ? (
-              <button
-                type="button"
-                onClick={() => setActiveTrace(null)}
-                aria-label="Đóng panel nguồn trả lời"
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  color: "#3A6381",
-                  cursor: "pointer",
-                  display: "flex",
-                  padding: 4,
-                  borderRadius: "var(--radius-sm)",
-                }}
-              >
-                <X size={18} />
-              </button>
-            ) : null}
-          </div>
-
-          {activeTrace ? (
-            <div
-              style={{
-                display: "grid",
-                gap: "var(--space-4)",
-                overflow: "auto",
-              }}
-            >
-              {activeTrace.sourceTrace.map((item) => (
-                <div
-                  key={item.id}
-                  style={{
-                    padding: "var(--space-4)",
-                    borderRadius: "var(--radius-md)",
-                    background: "#F6F9FF",
-                    display: "grid",
-                    gap: "var(--space-2)",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: "var(--space-3)",
-                    }}
-                  >
-                    <strong style={{ color: "#013652", fontSize: 13 }}>
-                      {item.title}
-                    </strong>
-                    <Badge
-                      label={item.trust}
-                      color={
-                        item.trust === "High"
-                          ? "#16A34A"
-                          : item.trust === "Medium"
-                            ? "#B45309"
-                            : "#E11D48"
-                      }
-                      bg={
-                        item.trust === "High"
-                          ? "color-mix(in srgb, #22C55E 12%, white)"
-                          : item.trust === "Medium"
-                            ? "color-mix(in srgb, #F59E0B 12%, white)"
-                            : "color-mix(in srgb, #E11D48 12%, white)"
-                      }
-                    />
-                  </div>
-                  <div
-                    style={{ color: "#3A6381", fontSize: 13, lineHeight: 1.5 }}
-                  >
-                    {item.excerpt}
-                  </div>
-                  <div
-                    style={{ fontSize: 12, color: "#3A6381", fontWeight: 500 }}
-                  >
-                    {item.source}
-                  </div>
-                  <div style={{ fontSize: 11, color: "#8EB6D9" }}>
-                    {item.freshness}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ color: "#3A6381", fontSize: 13 }}>
-              Nhấn <strong>Xem nguồn</strong> trên một câu trả lời để xem
-              citation, freshness, và trust signal.
-            </div>
-          )}
-
-          {lastScenario && !activeTrace ? (
-            <button
-              type="button"
-              onClick={() => focusInputWithDraft(lastScenario.prompt)}
-              style={{
-                marginTop: "auto",
-                padding: "var(--space-4)",
-                borderRadius: "var(--radius-md)",
-                background: "#ECF4FF",
-                border: "none",
-                textAlign: "left",
-                cursor: "pointer",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 500,
-                  color: "#2F64F6",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  marginBottom: 6,
-                }}
-              >
-                Câu hỏi gần nhất
-              </div>
-              <strong style={{ color: "#013652", fontSize: 13 }}>
-                {lastScenario.prompt}
-              </strong>
-            </button>
-          ) : null}
-        </Card>
+        {activeSources && activeSourceMessage ? (
+          <SourcesPanel
+            sources={activeSources}
+            onClose={() => setActiveSourceMessageId(null)}
+          />
+        ) : null}
 
         <Card
           style={{
@@ -1179,84 +1111,162 @@ export function InternalAIChatPage() {
         >
           <div
             style={{
-              fontSize: 11,
-              fontWeight: 500,
-              color: "#3A6381",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "var(--space-3)",
             }}
           >
-            Lịch sử hỏi đáp nội bộ
+            <div
+              style={{
+                fontSize: 11,
+                fontWeight: 500,
+                color: "#3A6381",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Lịch sử hỏi đáp nội bộ
+            </div>
+            <Button
+              variant="tertiary"
+              onClick={handleNewSession}
+              disabled={isLoading}
+              style={{ fontSize: 12, padding: "6px 10px" }}
+              aria-label="Tạo cuộc trò chuyện mới"
+            >
+              <Plus size={14} />
+              Mới
+            </Button>
           </div>
-          {historyItems.length === 0 ? (
+
+          {sessions.length === 0 ? (
             <div style={{ color: "#3A6381", fontSize: 13 }}>
-              Chưa có lịch sử hội thoại trong phiên này.
+              {isBootstrapping
+                ? "Đang tải..."
+                : "Chưa có lịch sử hội thoại."}
             </div>
           ) : (
-            historyItems.slice(0, 8).map((item) => {
-              const itemBadge = getAnswerBadge(item.scenario);
+            sessions.slice(0, 12).map((session) => {
+              const isActive = session.id === currentSessionId;
               return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => handleJumpToHistory(item)}
+                <div
+                  key={session.id}
                   style={{
-                    border: "1px solid transparent",
+                    border: isActive
+                      ? "1px solid rgba(47,100,246,0.3)"
+                      : "1px solid transparent",
                     borderRadius: "var(--radius-md)",
-                    padding: "10px 12px",
-                    background: "#F6F9FF",
-                    textAlign: "left",
-                    cursor: "pointer",
-                    display: "grid",
-                    gap: 6,
+                    background: isActive ? "#ECF4FF" : "#F6F9FF",
+                    display: "flex",
+                    alignItems: "stretch",
+                    gap: 4,
                     transition: "background 0.15s, border-color 0.15s",
                   }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.background =
-                      "#ECF4FF";
-                    (e.currentTarget as HTMLButtonElement).style.borderColor =
-                      "rgba(47,100,246,0.15)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.background =
-                      "#F6F9FF";
-                    (e.currentTarget as HTMLButtonElement).style.borderColor =
-                      "transparent";
-                  }}
                 >
-                  <div
+                  <button
+                    type="button"
+                    onClick={() => handleSwitchSession(session.id)}
                     style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: "var(--space-3)",
+                      flex: 1,
+                      border: "none",
+                      background: "transparent",
+                      padding: "10px 12px",
+                      textAlign: "left",
+                      cursor: "pointer",
+                      display: "grid",
+                      gap: 6,
                     }}
                   >
-                    <Badge
-                      label={itemBadge.label}
-                      color={itemBadge.color}
-                      bg={itemBadge.bg}
-                    />
-                    <span style={{ color: "#8EB6D9", fontSize: 11 }}>
-                      {formatTime(item.createdAt)}
-                    </span>
-                  </div>
-                  <div
-                    style={{ color: "#013652", fontSize: 13, fontWeight: 500 }}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: "var(--space-3)",
+                      }}
+                    >
+                      <Badge
+                        label={ASSISTANT_BADGE.label}
+                        color={ASSISTANT_BADGE.color}
+                        bg={ASSISTANT_BADGE.bg}
+                      />
+                      <span style={{ color: "#8EB6D9", fontSize: 11 }}>
+                        {formatRelative(session.lastActiveAt)}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        color: "#013652",
+                        fontSize: 13,
+                        fontWeight: 500,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {session.title}
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteSession(session.id)}
+                    aria-label="Xoá cuộc trò chuyện"
+                    style={{
+                      border: "none",
+                      background: "transparent",
+                      color: "#8EB6D9",
+                      padding: "0 10px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      borderRadius: "0 var(--radius-md) var(--radius-md) 0",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.color =
+                        "#E11D48";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.color =
+                        "#8EB6D9";
+                    }}
                   >
-                    {item.prompt}
-                  </div>
-                  <div
-                    style={{ color: "#3A6381", fontSize: 12, lineHeight: 1.4 }}
-                  >
-                    {item.summary}
-                  </div>
-                </button>
+                    <Trash2 size={14} />
+                  </button>
+                </div>
               );
             })
           )}
+
+          {messages.length > 0 && currentSessionId ? (
+            <div
+              style={{
+                marginTop: "var(--space-2)",
+                padding: "10px 12px",
+                borderRadius: "var(--radius-md)",
+                background: "#F6F9FF",
+                fontSize: 12,
+                color: "#3A6381",
+                lineHeight: 1.5,
+              }}
+            >
+              <strong style={{ color: "#013652" }}>Phiên hiện tại:</strong>{" "}
+              {messages.length} tin nhắn
+              {messages.find((m) => m.role === "assistant") && (
+                <>
+                  {" — "}
+                  {summarizeMarkdown(
+                    [...messages]
+                      .reverse()
+                      .find((m) => m.role === "assistant")!.content,
+                    80,
+                  )}
+                </>
+              )}
+            </div>
+          ) : null}
         </Card>
 
-        {!activeTrace && (
+        {!activeSourceMessageId && (
           <Card
             style={{
               borderRadius: "16px",

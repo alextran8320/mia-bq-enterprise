@@ -29,6 +29,16 @@ const schema = z.object({
     .transform((v) => v === "true"),
 
   ADMIN_EMAILS: z.string().default(""),
+
+  // Haravan internal chat bot (Langflow). Server-only — never expose key to FE.
+  HARAVAN_CHAT_BOT_API_KEY: z.string().min(1, "HARAVAN_CHAT_BOT_API_KEY is required"),
+  HARAVAN_CHAT_BOT_BASE_URL: z
+    .string()
+    .url()
+    .default("https://flow.aaronnnguyen.me/api/v1"),
+  HARAVAN_CHAT_BOT_FLOW_ID: z
+    .string()
+    .default("22c07722-072f-437c-a782-90e7d813f2ac"),
 });
 
 const parsed = schema.safeParse(process.env);

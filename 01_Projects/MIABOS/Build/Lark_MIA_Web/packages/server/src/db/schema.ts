@@ -9,6 +9,7 @@ import {
   bigint,
   date,
   jsonb,
+  index,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -136,6 +137,57 @@ export const leads = pgTable("leads", {
     .defaultNow(),
 });
 
+// ─── ai_chat_sessions ──────────────────────────────────────────────────
+// `id` is reused as the `session_id` we send to the Haravan flow API so the
+// upstream bot keeps conversation context across messages.
+export const aiChatSessions = pgTable(
+  "ai_chat_sessions",
+  {
+    id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    title: text("title").notNull().default("Cuộc trò chuyện mới"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    lastActiveAt: timestamp("last_active_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    byUserActive: index("ai_chat_sessions_user_active_idx").on(
+      t.userId,
+      t.lastActiveAt,
+    ),
+  }),
+);
+
+// ─── ai_chat_messages ──────────────────────────────────────────────────
+// `role`: user | assistant | error. `content` is plain for user, markdown
+// for assistant, error message for error.
+export const aiChatMessages = pgTable(
+  "ai_chat_messages",
+  {
+    id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+    sessionId: uuid("session_id")
+      .notNull()
+      .references(() => aiChatSessions.id, { onDelete: "cascade" }),
+    role: text("role").notNull(),
+    content: text("content").notNull(),
+    meta: jsonb("meta").$type<Record<string, unknown> | null>(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    bySession: index("ai_chat_messages_session_idx").on(
+      t.sessionId,
+      t.createdAt,
+    ),
+  }),
+);
+
 // ─── exported types ────────────────────────────────────────────────────
 export type Role = typeof roles.$inferSelect;
 export type Permission = typeof permissions.$inferSelect;
@@ -146,3 +198,7 @@ export type Customer = typeof customers.$inferSelect;
 export type NewCustomer = typeof customers.$inferInsert;
 export type Lead = typeof leads.$inferSelect;
 export type NewLead = typeof leads.$inferInsert;
+export type AiChatSession = typeof aiChatSessions.$inferSelect;
+export type NewAiChatSession = typeof aiChatSessions.$inferInsert;
+export type AiChatMessage = typeof aiChatMessages.$inferSelect;
+export type NewAiChatMessage = typeof aiChatMessages.$inferInsert;

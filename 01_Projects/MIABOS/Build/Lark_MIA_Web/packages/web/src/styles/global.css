@@ -211,3 +211,38 @@ hr {
 @keyframes miabos-spin {
   to { transform: rotate(360deg); }
 }
+
+/* Streaming-style loading indicator for the internal AI chat. */
+@keyframes ai-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30%           { transform: translateY(-4px); opacity: 1; }
+}
+
+@keyframes ai-skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.ai-typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2F64F6;
+  display: inline-block;
+  animation: ai-typing-bounce 1.2s infinite ease-in-out;
+}
+.ai-typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.ai-typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+.ai-skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(47,100,246,0.06) 0%,
+    rgba(47,100,246,0.18) 50%,
+    rgba(47,100,246,0.06) 100%
+  );
+  background-size: 200% 100%;
+  animation: ai-skeleton-shimmer 1.6s infinite linear;
+}

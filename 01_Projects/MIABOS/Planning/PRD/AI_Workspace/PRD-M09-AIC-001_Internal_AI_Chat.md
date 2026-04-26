@@ -202,7 +202,7 @@ Nếu không giải bài toán này, MIABOS khó chứng minh giá trị ở vai
   - [UXUI-F-M09-AIC-001_Internal_AI_Chat.md](../../../Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md)
 - Architecture / Integration Specs:
 - Research / Evidence:
-  - Front-end logic reference: `Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`
+  - Front-end logic reference: `Build/Lark_MIA_Web/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`
 
 ## 15. Approval Checklist
 

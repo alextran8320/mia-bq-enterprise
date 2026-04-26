@@ -30,7 +30,7 @@
   - Lead form phase 1 chỉ cần `Tên của bạn` và `Số điện thoại`.
 - `Open Questions That MUST Be Confirmed Before Execution`: None for FE Preview. Backend routing/source-priority questions are deferred to Integration Spec.
 - `Key Constraints`:
-  - Stack: existing `Build/Frontend_App` React + TypeScript + local shared UI.
+  - Stack: existing `Build/Lark_MIA_Web` React + TypeScript + local shared UI.
   - Copy: 100% Vietnamese user-facing copy from UXUI §6.
   - No backend invention: A07 must not call real endpoints for Sales Advisor AI.
   - Evidence: build result, route check, browser/runtime verification notes; screenshot optional unless explicitly requested.
@@ -191,10 +191,10 @@ Build a reviewable `/sales-advisor` FE Preview that demonstrates the Sales Advis
 
 #### Write Scope
 
-- `Build/Frontend_App/src/modules/ai-workspace/pages/SalesAdvisorPage.tsx`
-- `Build/Frontend_App/src/mocks/ai-workspace/salesAdvisor.ts`
-- `Build/Frontend_App/src/app/router.tsx`
-- `Build/Frontend_App/src/app/layouts/Sidebar.tsx` if nav needs a visible entry
+- `Build/Lark_MIA_Web/src/modules/ai-workspace/pages/SalesAdvisorPage.tsx`
+- `Build/Lark_MIA_Web/src/mocks/ai-workspace/salesAdvisor.ts`
+- `Build/Lark_MIA_Web/src/app/router.tsx`
+- `Build/Lark_MIA_Web/src/app/layouts/Sidebar.tsx` if nav needs a visible entry
 - Small shared UI updates only if needed and non-breaking
 
 #### Read First
@@ -204,7 +204,7 @@ Build a reviewable `/sales-advisor` FE Preview that demonstrates the Sales Advis
 | [UXUI](../../Design/UXUI_Features/UXUI-F-M10-SLS-001_Sales_Advisor_AI.md) | Required states, copy, layout, tokens |
 | [SRS](../../Analysis/Features/Modules/AI_Workspace/Sales_Advisor_AI/SRS/F-M10-SLS-001_Sales_Advisor_AI_SRS.md) | Business rules and error states |
 | [User Story](../Stories/AI_Workspace/US-M10-SLS-001_Sales_Advisor_AI.md) | ACs |
-| `Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx` | Existing chat patterns; do not revert unrelated dirty changes |
+| `Build/Lark_MIA_Web/src/modules/ai-workspace/pages/InternalAIChatPage.tsx` | Existing chat patterns; do not revert unrelated dirty changes |
 
 #### Execution Steps
 
@@ -251,7 +251,7 @@ Verify the preview builds and produces runtime evidence before Business Owner re
 
 #### Confirmed Inputs
 
-- Build command: `npm run build` from `Build/Frontend_App`.
+- Build command: `npm run build` from `Build/Lark_MIA_Web`.
 - Visual route: `/sales-advisor`.
 
 #### Blocked Clarifications

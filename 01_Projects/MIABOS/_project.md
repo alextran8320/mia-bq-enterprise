@@ -14,7 +14,7 @@
 ## Retained Assets
 
 - [Design System](Design/Aura_Minimalist_Design_System.md)
-- `Build/Frontend_App/` - retained implementation workspace
+- `Build/Lark_MIA_Web/` - retained implementation workspace
 - `Build/Screenshots/` - retained empty evidence workspace
 
 ## Reset Scope

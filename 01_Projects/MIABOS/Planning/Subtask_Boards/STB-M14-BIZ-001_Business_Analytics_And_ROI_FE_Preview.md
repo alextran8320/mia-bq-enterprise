@@ -78,8 +78,8 @@ Build reviewable analytics dashboard preview routes that demonstrate KPI hierarc
 
 ### Write Scope
 
-- Frontend dashboard routes/components under `01_Projects/MIABOS/Build/Frontend_App/src/`.
-- Optional mock data under `01_Projects/MIABOS/Build/Frontend_App/src/mocks/`.
+- Frontend dashboard routes/components under `01_Projects/MIABOS/Build/Lark_MIA_Web/src/`.
+- Optional mock data under `01_Projects/MIABOS/Build/Lark_MIA_Web/src/mocks/`.
 - This subtask board only for status/evidence updates.
 
 ### Read First

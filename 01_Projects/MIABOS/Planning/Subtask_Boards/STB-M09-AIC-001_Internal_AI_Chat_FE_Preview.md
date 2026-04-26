@@ -20,7 +20,7 @@
 - `Module`: `M09 AI Workspace`
 - `Related Feature SRS`: [`../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md`](../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md)
 - `Related UXUI Spec`: [`../../Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md`](../../Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md)
-- `Related FE Preview`: [`../../Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`](../../Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx)
+- `Related FE Preview`: [`../../Build/Lark_MIA_Web/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`](../../Build/Lark_MIA_Web/src/modules/ai-workspace/pages/InternalAIChatPage.tsx)
 - `Route`: `/ai/chat`
 - `Evidence`: `npm run build` pass, `/ai/chat` HTTP 200, browser/runtime verification notes; screenshot is optional supporting evidence only.
 - `Story Summary`: Nhân viên nội bộ BQ hỏi MIABOS bằng tiếng Việt và nhận answer card có nguồn, freshness, warning, và next action từ mock data.
@@ -81,8 +81,8 @@ Make the Internal AI Chat FE preview buildable and reviewable at `/ai/chat` with
 ### Confirmed Inputs
 
 - Route is `/ai/chat`.
-- Preview implementation file: [`../../Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`](../../Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx)
-- Mock scenario file: [`../../Build/Frontend_App/src/mocks/ai-workspace/internalChat.ts`](../../Build/Frontend_App/src/mocks/ai-workspace/internalChat.ts)
+- Preview implementation file: [`../../Build/Lark_MIA_Web/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`](../../Build/Lark_MIA_Web/src/modules/ai-workspace/pages/InternalAIChatPage.tsx)
+- Mock scenario file: [`../../Build/Lark_MIA_Web/src/mocks/ai-workspace/internalChat.ts`](../../Build/Lark_MIA_Web/src/mocks/ai-workspace/internalChat.ts)
 - UXUI status is `Approved` for FE Preview; this remains mock-only, not production integration approval.
 
 ### Production Clarifications
@@ -106,8 +106,8 @@ Make the Internal AI Chat FE preview buildable and reviewable at `/ai/chat` with
 
 ### Write Scope
 
-- `01_Projects/MIABOS/Build/Frontend_App/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`
-- `01_Projects/MIABOS/Build/Frontend_App/.gitignore`
+- `01_Projects/MIABOS/Build/Lark_MIA_Web/src/modules/ai-workspace/pages/InternalAIChatPage.tsx`
+- `01_Projects/MIABOS/Build/Lark_MIA_Web/.gitignore`
 - This subtask board and required session logs.
 
 ### Read First
@@ -116,7 +116,7 @@ Make the Internal AI Chat FE preview buildable and reviewable at `/ai/chat` with
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
 | [`../../Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md`](../../Design/UXUI_Features/UXUI-F-M09-AIC-001_Internal_AI_Chat.md)                                                                             | Intended layout, task flow, answer-card states |
 | [`../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md`](../../Analysis/Features/Modules/AI_Workspace/Internal_AI_Chat/SRS/F-M09-AIC-001_Internal_AI_Chat_SRS.md) | `SRS Ready` behavior baseline for FE Preview   |
-| [`../../Build/Frontend_App/package.json`](../../Build/Frontend_App/package.json)                                                                                                                                     | Build/dev scripts                              |
+| [`../../Build/Lark_MIA_Web/package.json`](../../Build/Lark_MIA_Web/package.json)                                                                                                                                     | Build/dev scripts                              |
 
 ### Execution Steps Completed
 

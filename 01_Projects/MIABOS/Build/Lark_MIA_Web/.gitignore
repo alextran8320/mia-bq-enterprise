@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+*.local
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# Drizzle generated migrations are committed; meta is not
+packages/server/drizzle/meta/

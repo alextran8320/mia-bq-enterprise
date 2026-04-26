@@ -197,7 +197,7 @@ Ngay từ giai đoạn đầu, cần một lớp đo lường và kể câu chuy
   - [UXUI-F-M14-BIZ-001_Business_Analytics_And_ROI.md](../../../Design/UXUI_Features/UXUI-F-M14-BIZ-001_Business_Analytics_And_ROI.md)
 - Architecture / Integration Specs:
 - Research / Evidence:
-  - Front-end logic reference: `Build/Frontend_App/src/modules/insights-performance/pages/BusinessAnalyticsPage.tsx`
+  - Front-end logic reference: `Build/Lark_MIA_Web/src/modules/insights-performance/pages/BusinessAnalyticsPage.tsx`
 
 ## 15. Approval Checklist
 

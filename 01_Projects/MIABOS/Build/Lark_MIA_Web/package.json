@@ -1,0 +1,23 @@
+{
+  "name": "miabos-bq",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,magenta \"npm run dev -w @miabos/server\" \"npm run dev -w @miabos/web\"",
+    "dev:web": "npm run dev -w @miabos/web",
+    "dev:server": "npm run dev -w @miabos/server",
+    "build": "npm run build -w @miabos/server && npm run build -w @miabos/web",
+    "db:generate": "npm run db:generate -w @miabos/server",
+    "db:migrate": "npm run db:migrate -w @miabos/server",
+    "db:push": "npm run db:push -w @miabos/server",
+    "db:seed": "npm run db:seed -w @miabos/server",
+    "db:seed-crm": "npm run db:seed-crm -w @miabos/server",
+    "db:studio": "npm run db:studio -w @miabos/server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

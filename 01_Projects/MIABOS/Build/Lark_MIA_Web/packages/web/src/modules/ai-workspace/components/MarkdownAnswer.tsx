@@ -209,6 +209,25 @@ export function MarkdownAnswer({ markdown }: Props) {
               }}
             />
           ),
+          img: ({ alt, ...props }) => (
+            // Constrain to the container so wide screenshots from the bot
+            // don't break the chat layout. `height: auto` keeps the aspect
+            // ratio; `display: block` prevents extra inline whitespace.
+            <img
+              {...props}
+              alt={alt ?? ""}
+              loading="lazy"
+              style={{
+                display: "block",
+                maxWidth: "100%",
+                height: "auto",
+                borderRadius: 8,
+                margin: "10px 0",
+                border: "1px solid rgba(47,100,246,0.12)",
+                background: "#F6F9FF",
+              }}
+            />
+          ),
         }}
       >
         {markdown}

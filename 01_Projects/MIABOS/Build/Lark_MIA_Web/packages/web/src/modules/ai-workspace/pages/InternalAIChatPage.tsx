@@ -1,10 +1,4 @@
-import {
-  FormEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -16,8 +10,6 @@ import {
   RefreshCw,
   Send,
   Sparkles,
-  ThumbsDown,
-  ThumbsUp,
   Trash2,
   X,
 } from "lucide-react";
@@ -30,10 +22,8 @@ import {
 } from "@/shared/api/aiChatApi";
 import { getApiErrorMessage } from "@/shared/auth/apiClient";
 import { MarkdownAnswer } from "../components/MarkdownAnswer";
-import {
-  extractSources,
-  type ExtractedSources,
-} from "../lib/extractSources";
+import { extractSources, type ExtractedSources } from "../lib/extractSources";
+import { parseSuggestions } from "../lib/parseSuggestions";
 
 const PROMPT_CHIPS = BQ_PROMPT_CHIPS;
 const SUPPORT_ACTIONS = [
@@ -274,20 +264,15 @@ function ErrorBubble({
 
 function AnswerCard({
   message,
-  onOpenSources,
-  onAction,
-  onFeedback,
+  onUseSuggestion,
 }: {
   message: ChatMessage;
-  onOpenSources: (id: string) => void;
-  onAction: (action: string) => void;
-  onFeedback: (kind: "up" | "down") => void;
+  onUseSuggestion: (text: string) => void;
 }) {
-  const sources = useMemo(
-    () => extractSources(message.content),
+  const parsed = useMemo(
+    () => parseSuggestions(message.content),
     [message.content],
   );
-  const hasSources = sources.links.length > 0 || sources.outline.length > 0;
 
   return (
     <Card
@@ -333,7 +318,83 @@ function AnswerCard({
         </div>
       </div>
 
-      <MarkdownAnswer markdown={message.content} />
+      <MarkdownAnswer markdown={parsed.body} />
+
+      {parsed.suggestions.length > 0 ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--space-2)",
+            paddingTop: "var(--space-2)",
+            borderTop: "1px dashed rgba(47,100,246,0.16)",
+            marginTop: "var(--space-1)",
+          }}
+        >
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 500,
+              color: "#3A6381",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            }}
+          >
+            Câu hỏi gợi ý tiếp theo
+          </span>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "var(--space-2)",
+            }}
+          >
+            {parsed.suggestions.map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                onClick={() => onUseSuggestion(suggestion)}
+                className="internal-prompt-chip"
+                style={{
+                  border: "1px solid rgba(47,100,246,0.18)",
+                  cursor: "pointer",
+                  padding: "8px 14px",
+                  borderRadius: "var(--radius-pill)",
+                  background: "#F6F9FF",
+                  color: "#013652",
+                  fontFamily: "var(--font-primary)",
+                  fontSize: 13,
+                  lineHeight: 1.4,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  transition:
+                    "background 0.15s, border-color 0.15s, transform 0.1s",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background =
+                    "#ECF4FF";
+                  (e.currentTarget as HTMLButtonElement).style.borderColor =
+                    "rgba(47,100,246,0.4)";
+                  (e.currentTarget as HTMLButtonElement).style.transform =
+                    "translateY(-1px)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background =
+                    "#F6F9FF";
+                  (e.currentTarget as HTMLButtonElement).style.borderColor =
+                    "rgba(47,100,246,0.18)";
+                  (e.currentTarget as HTMLButtonElement).style.transform =
+                    "translateY(0)";
+                }}
+              >
+                <ArrowRight size={13} style={{ color: "#2F64F6" }} />
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <div
         style={{
@@ -344,7 +405,7 @@ function AnswerCard({
           paddingTop: "var(--space-2)",
         }}
       >
-        {hasSources && (
+        {/* {hasSources && (
           <Button
             variant="secondary"
             onClick={() => onOpenSources(message.id)}
@@ -364,8 +425,8 @@ function AnswerCard({
         >
           <ArrowRight size={15} />
           Tạo yêu cầu hỗ trợ
-        </Button>
-        <div
+        </Button> */}
+        {/* <div
           style={{
             display: "flex",
             gap: "var(--space-2)",
@@ -388,7 +449,7 @@ function AnswerCard({
             <ThumbsDown size={15} />
             Chưa đúng
           </Button>
-        </div>
+        </div> */}
       </div>
     </Card>
   );
@@ -684,7 +745,7 @@ export function InternalAIChatPage() {
   const activeSourceMessage = useMemo(
     () =>
       activeSourceMessageId
-        ? messages.find((m) => m.id === activeSourceMessageId) ?? null
+        ? (messages.find((m) => m.id === activeSourceMessageId) ?? null)
         : null,
     [activeSourceMessageId, messages],
   );
@@ -692,7 +753,7 @@ export function InternalAIChatPage() {
   const activeSources = useMemo<ExtractedSources | null>(
     () =>
       activeSourceMessage
-        ? extractSources(activeSourceMessage.content)
+        ? extractSources(parseSuggestions(activeSourceMessage.content).body)
         : null,
     [activeSourceMessage],
   );
@@ -840,9 +901,7 @@ export function InternalAIChatPage() {
   }
 
   async function handleDeleteSession(sessionId: string) {
-    if (
-      !window.confirm("Xoá cuộc trò chuyện này? Không thể khôi phục lại.")
-    ) {
+    if (!window.confirm("Xoá cuộc trò chuyện này? Không thể khôi phục lại.")) {
       return;
     }
     try {
@@ -862,28 +921,6 @@ export function InternalAIChatPage() {
     }
   }
 
-  function handleAction(action: string) {
-    const lower = action.toLowerCase();
-    if (lower.includes("hỏi tiếp")) {
-      focusInputWithDraft("");
-      setActionNotice("Mời anh nhập câu hỏi tiếp theo.");
-      return;
-    }
-    if (lower.includes("yêu cầu")) {
-      setActionNotice("Đã tạo yêu cầu hỗ trợ nội bộ (preview).");
-      return;
-    }
-    setActionNotice(`Đã chọn hành động: ${action}`);
-  }
-
-  function handleFeedback(kind: "up" | "down") {
-    setActionNotice(
-      kind === "up"
-        ? "Đã ghi nhận đánh giá Hữu ích."
-        : "Đã ghi nhận đánh giá Chưa đúng.",
-    );
-  }
-
   function handleRetry() {
     if (!lastPrompt) return;
     setMessages((prev) => prev.filter((m) => m.role !== "error"));
@@ -893,12 +930,6 @@ export function InternalAIChatPage() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     submitPrompt(draft);
-  }
-
-  function handleOpenSources(messageId: string) {
-    setActiveSourceMessageId(messageId);
-    const node = entryRefs.current[messageId];
-    if (node) node.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   return (
@@ -982,9 +1013,7 @@ export function InternalAIChatPage() {
               {message.role === "assistant" ? (
                 <AnswerCard
                   message={message}
-                  onOpenSources={handleOpenSources}
-                  onAction={handleAction}
-                  onFeedback={handleFeedback}
+                  onUseSuggestion={(text) => submitPrompt(text)}
                 />
               ) : null}
             </div>
@@ -1142,9 +1171,7 @@ export function InternalAIChatPage() {
 
           {sessions.length === 0 ? (
             <div style={{ color: "#3A6381", fontSize: 13 }}>
-              {isBootstrapping
-                ? "Đang tải..."
-                : "Chưa có lịch sử hội thoại."}
+              {isBootstrapping ? "Đang tải..." : "Chưa có lịch sử hội thoại."}
             </div>
           ) : (
             sessions.slice(0, 12).map((session) => {
@@ -1255,9 +1282,8 @@ export function InternalAIChatPage() {
                 <>
                   {" — "}
                   {summarizeMarkdown(
-                    [...messages]
-                      .reverse()
-                      .find((m) => m.role === "assistant")!.content,
+                    [...messages].reverse().find((m) => m.role === "assistant")!
+                      .content,
                     80,
                   )}
                 </>

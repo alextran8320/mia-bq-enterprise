@@ -325,28 +325,27 @@ function AnswerCard({
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "var(--space-2)",
-            paddingTop: "var(--space-2)",
-            borderTop: "1px dashed rgba(47,100,246,0.16)",
-            marginTop: "var(--space-1)",
+            gap: 6,
+            paddingTop: 8,
+            borderTop: "1px dashed rgba(47,100,246,0.14)",
           }}
         >
           <span
             style={{
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: 500,
-              color: "#3A6381",
+              color: "#8EB6D9",
               textTransform: "uppercase",
-              letterSpacing: "0.05em",
+              letterSpacing: "0.06em",
             }}
           >
-            Câu hỏi gợi ý tiếp theo
+            Gợi ý tiếp theo
           </span>
           <div
             style={{
               display: "flex",
               flexWrap: "wrap",
-              gap: "var(--space-2)",
+              gap: 6,
             }}
           >
             {parsed.suggestions.map((suggestion) => (
@@ -356,39 +355,38 @@ function AnswerCard({
                 onClick={() => onUseSuggestion(suggestion)}
                 className="internal-prompt-chip"
                 style={{
-                  border: "1px solid rgba(47,100,246,0.18)",
+                  border: "1px solid rgba(47,100,246,0.14)",
                   cursor: "pointer",
-                  padding: "8px 14px",
+                  padding: "4px 10px",
                   borderRadius: "var(--radius-pill)",
-                  background: "#F6F9FF",
-                  color: "#013652",
+                  background: "transparent",
+                  color: "#3A6381",
                   fontFamily: "var(--font-primary)",
-                  fontSize: 13,
-                  lineHeight: 1.4,
+                  fontSize: 12,
+                  lineHeight: 1.35,
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: 6,
-                  transition:
-                    "background 0.15s, border-color 0.15s, transform 0.1s",
+                  gap: 4,
+                  transition: "background 0.15s, border-color 0.15s, color 0.15s",
                 }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLButtonElement).style.background =
-                    "#ECF4FF";
+                    "#F6F9FF";
                   (e.currentTarget as HTMLButtonElement).style.borderColor =
-                    "rgba(47,100,246,0.4)";
-                  (e.currentTarget as HTMLButtonElement).style.transform =
-                    "translateY(-1px)";
+                    "rgba(47,100,246,0.32)";
+                  (e.currentTarget as HTMLButtonElement).style.color =
+                    "#013652";
                 }}
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLButtonElement).style.background =
-                    "#F6F9FF";
+                    "transparent";
                   (e.currentTarget as HTMLButtonElement).style.borderColor =
-                    "rgba(47,100,246,0.18)";
-                  (e.currentTarget as HTMLButtonElement).style.transform =
-                    "translateY(0)";
+                    "rgba(47,100,246,0.14)";
+                  (e.currentTarget as HTMLButtonElement).style.color =
+                    "#3A6381";
                 }}
               >
-                <ArrowRight size={13} style={{ color: "#2F64F6" }} />
+                <ArrowRight size={11} style={{ color: "#2F64F6", opacity: 0.7 }} />
                 {suggestion}
               </button>
             ))}

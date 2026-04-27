@@ -78,13 +78,15 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed, onToggleCollapse }: SidebarProps) {
   const NAV_WIDTH = collapsed ? 88 : 280;
-  const { hasAny } = usePermissions();
+  const { hasAny, role } = usePermissions();
   const allow = (perm?: string | string[]) => {
     if (!perm) return true;
     return hasAny(Array.isArray(perm) ? perm : [perm]);
   };
 
+  const STAFF_GROUPS = new Set(["AI Workspace", "Trung tâm kiến thức"]);
   const visibleGroups = GROUPS
+    .filter((g) => role !== "staff" || STAFF_GROUPS.has(g.label))
     .map((g) => ({ ...g, items: g.items.filter((i) => allow(i.perm)) }))
     .filter((g) => g.items.length > 0);
 

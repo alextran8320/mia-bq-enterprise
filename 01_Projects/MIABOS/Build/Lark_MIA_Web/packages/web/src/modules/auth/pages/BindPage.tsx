@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { authApi } from "@/shared/auth/authApi";
 import { useAuthStore } from "@/shared/auth/authStore";
 import { getApiErrorMessage } from "@/shared/auth/apiClient";
+import { roleHome } from "@/shared/auth/roleHome";
 import type { LarkProfile } from "@/shared/auth/types";
 import { Button } from "@/shared/ui";
 
 const PENDING_PROFILE_KEY = "miabos_pending_lark_profile";
-const HOME = "/analytics/executive";
 
 export function BindPage() {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ export function BindPage() {
   useEffect(() => {
     if (!profile) {
       // Nothing to bind — bounce home (or login).
-      navigate(user ? HOME : "/login", { replace: true });
+      navigate(user ? roleHome(user.role) : "/login", { replace: true });
     }
   }, [profile, user, navigate]);
 
@@ -36,7 +36,7 @@ export function BindPage() {
       const res = await authApi.bind(profile!);
       setSession(res.token, res.user);
       sessionStorage.removeItem(PENDING_PROFILE_KEY);
-      navigate(HOME, { replace: true });
+      navigate(roleHome(res.user.role), { replace: true });
     } catch (err) {
       setError(getApiErrorMessage(err, "Liên kết Lark thất bại"));
     } finally {

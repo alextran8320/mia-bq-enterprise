@@ -88,6 +88,10 @@
       <stop offset="50%" stop-color="#9B72F0"/>
       <stop offset="100%" stop-color="#F76F8E"/>
     </linearGradient>
+    <linearGradient id="metaGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0866FF"/>
+      <stop offset="100%" stop-color="#A45CF6"/>
+    </linearGradient>
   </defs>
 
   <rect width="1600" height="1820" fill="#F8FAFC"/>
@@ -96,50 +100,54 @@
   <rect x="40" y="30" width="1520" height="80" rx="14" fill="url(#titleBg)" filter="url(#shadow)"/>
   <text x="70" y="68" font-size="22" font-weight="700" fill="#FFFFFF" letter-spacing="0.5">BQ SHOES — HIGH-LEVEL ARCHITECTURE</text>
   <text x="70" y="94" font-size="14" fill="#94A3B8">AI-driven CRM &amp; Sales Platform · NestJS · Multi-channel · LLM Orchestration</text>
-  <text x="1530" y="68" font-size="12" fill="#CBD5E1" text-anchor="end">v2026-04-19</text>
-  <text x="1530" y="94" font-size="11" fill="#64748B" text-anchor="end">MIA Tech Team</text>
 
-  <!-- LAYER 1: USER INTERFACE -->
+  <!-- LAYER 1: PLATFORM -->
   <rect x="40" y="140" width="1520" height="150" rx="14" fill="url(#bgUi)" stroke="#BFDBFE" stroke-width="1"/>
   <rect x="40" y="140" width="6" height="150" rx="3" fill="#3B82F6"/>
-  <text x="64" y="170" font-size="13" font-weight="700" fill="#1D4ED8" letter-spacing="2">USER INTERFACE LAYER</text>
-  <text x="64" y="186" font-size="11" fill="#64748B">Multi-channel touchpoints · Internal &amp; Customer-facing</text>
+  <text x="64" y="170" font-size="13" font-weight="700" fill="#1D4ED8" letter-spacing="2">PLATFORM LAYER</text>
+  <text x="64" y="186" font-size="11" fill="#64748B">External platforms · Channels + Backend integrations</text>
 
   <g filter="url(#softShadow)">
-    <rect x="100" y="200" width="440" height="74" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
-    <g transform="translate(122, 221)">
-      <rect x="2" y="4" width="28" height="20" rx="2.5" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.8"/>
-      <rect x="6" y="8" width="20" height="12" rx="1" fill="#FFFFFF"/>
-      <line x1="11" y1="28" x2="21" y2="28" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/>
-      <line x1="16" y1="24" x2="16" y2="28" stroke="#2563EB" stroke-width="1.8"/>
-    </g>
-    <text x="170" y="230" font-size="14" font-weight="700" fill="#0F172A">Web Portal</text>
-    <text x="170" y="250" font-size="11" fill="#64748B">Admin · Sales · Customer Support</text>
-    <text x="170" y="265" font-size="10" fill="#94A3B8">React + TanStack + MUI</text>
+    <rect x="60" y="200" width="170" height="70" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="145" y="243" text-anchor="middle" font-size="16" font-weight="700" fill="#0F172A">Web Portal</text>
   </g>
 
   <g filter="url(#softShadow)">
-    <rect x="580" y="200" width="440" height="74" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
-    <g transform="translate(602, 221)">
-      <rect width="32" height="32" rx="7" fill="#0068FF"/>
-      <text x="16" y="21" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#FFFFFF" letter-spacing="-0.3">Zalo</text>
-    </g>
-    <text x="650" y="230" font-size="14" font-weight="700" fill="#0F172A">Zalo OA / Website</text>
-    <text x="650" y="250" font-size="11" fill="#64748B">End customers</text>
-    <text x="650" y="265" font-size="10" fill="#94A3B8">Sales advisor · Order tracking</text>
+    <rect x="244" y="200" width="170" height="70" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="329" y="243" text-anchor="middle" font-size="16" font-weight="700" fill="#0F172A">Zalo OA</text>
   </g>
 
   <g filter="url(#softShadow)">
-    <rect x="1060" y="200" width="440" height="74" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
-    <g transform="translate(1082, 221)">
-      <path d="M 16 0 C 7.16 0 0 6.63 0 14.81 C 0 19.47 2.33 23.64 5.97 26.36 V 32 L 11.42 29.00 C 12.89 29.40 14.42 29.62 16 29.62 C 24.84 29.62 32 22.99 32 14.81 C 32 6.63 24.84 0 16 0 Z" fill="#0084FF"/>
-      <path d="M 17.59 19.96 L 13.51 15.61 L 5.57 19.96 L 14.31 10.67 L 18.49 15.02 L 26.33 10.67 L 17.59 19.96 Z" fill="#FFFFFF"/>
-    </g>
-    <text x="1130" y="230" font-size="14" font-weight="700" fill="#0F172A">Facebook Messenger</text>
-    <text x="1130" y="250" font-size="11" fill="#64748B">End customers · Social commerce</text>
-    <text x="1130" y="265" font-size="10" fill="#94A3B8">Webhook driven</text>
+    <rect x="428" y="200" width="170" height="70" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="513" y="243" text-anchor="middle" font-size="16" font-weight="700" fill="#0F172A">Meta</text>
   </g>
 
+  <g filter="url(#softShadow)">
+    <rect x="612" y="200" width="170" height="70" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="697" y="243" text-anchor="middle" font-size="16" font-weight="700" fill="#0F172A">Lark</text>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="796" y="200" width="170" height="70" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="881" y="243" text-anchor="middle" font-size="16" font-weight="700" fill="#0F172A">SAP B1</text>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="980" y="200" width="170" height="70" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="1065" y="243" text-anchor="middle" font-size="16" font-weight="700" fill="#0F172A">Haravan</text>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="1164" y="200" width="170" height="70" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="1249" y="243" text-anchor="middle" font-size="16" font-weight="700" fill="#0F172A">KiotViet</text>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="1348" y="200" width="170" height="70" rx="10" fill="url(#cardWhite)" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="1433" y="243" text-anchor="middle" font-size="16" font-weight="700" fill="#0F172A">E-commerce</text>
+  </g>
+
+  <g transform="translate(0, 0)">
   <!-- LAYER 2: API GATEWAY -->
   <rect x="40" y="320" width="1520" height="100" rx="14" fill="url(#bgGw)" stroke="#FECACA" stroke-width="1"/>
   <rect x="40" y="320" width="6" height="100" rx="3" fill="#DC2626"/>
@@ -210,7 +218,6 @@
     </g>
     <text x="200" y="840" font-size="14" font-weight="700" fill="#0F172A">Gemini 2.5 Pro</text>
     <text x="200" y="858" font-size="10" fill="#134E4A">Complex tasks · Reasoning</text>
-    <text x="200" y="873" font-size="10" fill="#134E4A">P1 · P2 agents · Paid</text>
   </g>
 
   <g filter="url(#shadow)">
@@ -220,7 +227,6 @@
     </g>
     <text x="660" y="840" font-size="14" font-weight="700" fill="#0F172A">Gemini 2.5 Flash</text>
     <text x="660" y="858" font-size="10" fill="#155E75">Fast · Cheap · High-volume</text>
-    <text x="660" y="873" font-size="10" fill="#155E75">Router · P3 agent · Paid</text>
   </g>
 
   <g filter="url(#shadow)">
@@ -231,7 +237,6 @@
     </g>
     <text x="1120" y="840" font-size="14" font-weight="700" fill="#0F172A">Claude Sonnet</text>
     <text x="1120" y="858" font-size="10" fill="#64748B">Fallback provider</text>
-    <text x="1120" y="873" font-size="10" fill="#64748B">P2 agent on Gemini failure</text>
   </g>
 
   <!-- LAYER 5: KNOWLEDGE & DATA -->
@@ -242,7 +247,6 @@
   <g filter="url(#shadow)">
     <rect x="260" y="918" width="1280" height="44" rx="10" fill="#312E81"/>
     <text x="900" y="938" text-anchor="middle" font-size="13" font-weight="700" fill="#FBBF24" letter-spacing="0.5">TOOL REGISTRY (MCP)</text>
-    <text x="900" y="954" text-anchor="middle" font-size="10" fill="#C7D2FE">MCP Servers · Vercel AI SDK / Mastra · 1 server / data source · Reuse Drizzle + Zod · Type-safe · Free</text>
   </g>
 
   <g filter="url(#shadow)">
@@ -262,7 +266,7 @@
 
   <g filter="url(#softShadow)">
     <rect x="650" y="980" width="270" height="80" rx="10" fill="url(#cardWhite)" stroke="#6366F1" stroke-width="1.5"/>
-    <text x="670" y="1010" font-size="14" font-weight="700" fill="#0F172A">Redis 7.x</text>
+    <text x="670" y="1010" font-size="14" font-weight="700" fill="#0F172A">Redis</text>
     <text x="670" y="1028" font-size="10" fill="#64748B">Cache · Session · Queue</text>
     <text x="670" y="1042" font-size="10" fill="#64748B">Rate limit · Hot cache</text>
   </g>
@@ -288,64 +292,28 @@
   <text x="64" y="1156" font-size="11" fill="#64748B">Ingest from sources · Normalize · Resolve · Detect conflicts · Embed</text>
 
   <g filter="url(#softShadow)">
-    <rect x="100" y="1175" width="240" height="60" rx="10" fill="url(#cardWhite)" stroke="#EC4899" stroke-width="1.2"/>
-    <text x="115" y="1200" font-size="13" font-weight="700" fill="#0F172A">Cron Polling</text>
-    <text x="115" y="1218" font-size="10" fill="#64748B">SAP B1 · 5–15 min</text>
-    <text x="115" y="1230" font-size="9" fill="#94A3B8">Idempotent · Watermark</text>
+    <rect x="80" y="1175" width="380" height="60" rx="10" fill="url(#cardWhite)" stroke="#EC4899" stroke-width="1.2"/>
+    <text x="270" y="1210" text-anchor="middle" font-size="13" font-weight="700" fill="#0F172A">Cron Polling</text>
   </g>
 
   <g filter="url(#softShadow)">
-    <rect x="360" y="1175" width="240" height="60" rx="10" fill="url(#cardWhite)" stroke="#EC4899" stroke-width="1.2"/>
-    <text x="375" y="1200" font-size="13" font-weight="700" fill="#0F172A">Webhook Receiver</text>
-    <text x="375" y="1218" font-size="10" fill="#64748B">Haravan · KiotViet</text>
-    <text x="375" y="1230" font-size="9" fill="#94A3B8">HMAC + Idempotency</text>
-  </g>
-
-  <g filter="url(#shadow)">
-    <rect x="640" y="1175" width="280" height="60" rx="10" fill="#67E8F9" stroke="#06B6D4" stroke-width="1.5"/>
-    <text x="655" y="1200" font-size="13" font-weight="700" fill="#0F172A">Redis Streams Queue</text>
-    <text x="655" y="1218" font-size="10" fill="#0E7490">sync.* · retry · DLQ alert</text>
-    <text x="655" y="1230" font-size="9" fill="#0E7490">Exponential backoff · 5x → DLQ</text>
+    <rect x="490" y="1175" width="380" height="60" rx="10" fill="url(#cardWhite)" stroke="#EC4899" stroke-width="1.2"/>
+    <text x="680" y="1210" text-anchor="middle" font-size="13" font-weight="700" fill="#0F172A">Webhook Receiver</text>
   </g>
 
   <g filter="url(#softShadow)">
-    <rect x="950" y="1175" width="540" height="60" rx="10" fill="url(#cardWhite)" stroke="#EC4899" stroke-width="1.5"/>
-    <text x="965" y="1200" font-size="13" font-weight="700" fill="#0F172A">Worker Pool (Trigger.dev)</text>
-    <text x="965" y="1218" font-size="10" fill="#64748B">ETL Normalize · Entity Resolver (SKU/Phone) · Conflict Detector · Embedding</text>
-    <text x="965" y="1230" font-size="9" fill="#94A3B8">Output → Knowledge Graph · pgvector · PostgreSQL · Meilisearch</text>
+    <rect x="900" y="1175" width="620" height="60" rx="10" fill="url(#cardWhite)" stroke="#EC4899" stroke-width="1.5"/>
+    <text x="1210" y="1210" text-anchor="middle" font-size="13" font-weight="700" fill="#0F172A">Worker Pool</text>
   </g>
 
   <g filter="url(#softShadow)">
     <rect x="100" y="1250" width="380" height="60" rx="10" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
-    <text x="115" y="1275" font-size="12" font-weight="700" fill="#991B1B">Dead Letter Queue (DLQ)</text>
-    <text x="115" y="1292" font-size="10" fill="#7F1D1D">Alert ops on persistent failures</text>
-    <text x="115" y="1304" font-size="9" fill="#B91C1C">Manual replay · Root-cause review</text>
+    <text x="290" y="1285" text-anchor="middle" font-size="13" font-weight="700" fill="#991B1B">Dead Letter Queue (DLQ)</text>
   </g>
 
-  <g filter="url(#softShadow)">
-    <rect x="500" y="1250" width="420" height="60" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
-    <text x="515" y="1275" font-size="12" font-weight="700" fill="#92400E">Conflict Detector</text>
-    <text x="515" y="1292" font-size="10" fill="#78350F">Multi-source data reconciliation</text>
-    <text x="515" y="1304" font-size="9" fill="#B45309">SAP vs Haravan vs KiotViet · last-write-wins + audit</text>
-  </g>
 
-  <g filter="url(#softShadow)">
-    <rect x="940" y="1250" width="280" height="60" rx="10" fill="#F1F5F9" stroke="#475569" stroke-width="1.2"/>
-    <text x="955" y="1275" font-size="12" font-weight="700" fill="#0F172A">Langfuse</text>
-    <text x="955" y="1292" font-size="10" fill="#475569">LLM Observability</text>
-    <text x="955" y="1304" font-size="9" fill="#64748B">Trace · Cost · Latency</text>
-  </g>
-
-  <g filter="url(#softShadow)">
-    <rect x="1240" y="1250" width="250" height="60" rx="10" fill="#F1F5F9" stroke="#475569" stroke-width="1.2"/>
-    <text x="1255" y="1275" font-size="12" font-weight="700" fill="#0F172A">Doc Uploader</text>
-    <text x="1255" y="1292" font-size="10" fill="#475569">Lark / Excel SOP · Policy</text>
-    <text x="1255" y="1304" font-size="9" fill="#64748B">→ Embedding Worker</text>
-  </g>
-
-  <path d="M 340 1205 L 360 1205" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
-  <path d="M 600 1205 L 640 1205" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
-  <path d="M 920 1205 L 950 1205" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <path d="M 460 1205 L 490 1205" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <path d="M 870 1205 L 900 1205" fill="none" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
 
   <!-- LAYER 7: DATA SOURCES -->
   <rect x="40" y="1360" width="1520" height="140" rx="14" fill="url(#bgSrc)" stroke="#E9D5FF" stroke-width="1"/>
@@ -357,34 +325,30 @@
     <rect x="100" y="1420" width="320" height="64" rx="10" fill="url(#cardWhite)" stroke="#A855F7" stroke-width="1.5"/>
     <text x="120" y="1448" font-size="13" font-weight="700" fill="#0F172A">SAP Business One</text>
     <text x="120" y="1466" font-size="10" fill="#64748B">ERP · Read-only · Cron polling</text>
-    <text x="120" y="1478" font-size="9" fill="#94A3B8">Source-of-truth: Products, inventory, pricing, suppliers</text>
   </g>
 
   <g filter="url(#softShadow)">
     <rect x="450" y="1420" width="320" height="64" rx="10" fill="url(#cardWhite)" stroke="#A855F7" stroke-width="1.5"/>
     <text x="470" y="1448" font-size="13" font-weight="700" fill="#0F172A">KiotViet</text>
     <text x="470" y="1466" font-size="10" fill="#64748B">POS · Webhook + REST</text>
-    <text x="470" y="1478" font-size="9" fill="#94A3B8">Source-of-truth: in-store retail</text>
   </g>
 
   <g filter="url(#softShadow)">
     <rect x="800" y="1420" width="320" height="64" rx="10" fill="url(#cardWhite)" stroke="#A855F7" stroke-width="1.5"/>
     <text x="820" y="1448" font-size="13" font-weight="700" fill="#0F172A">Haravan</text>
     <text x="820" y="1466" font-size="10" fill="#64748B">E-commerce Web · Webhook</text>
-    <text x="820" y="1478" font-size="9" fill="#94A3B8">Source-of-truth: online orders</text>
   </g>
 
-  <g filter="url(#softShadow)">
-    <rect x="1150" y="1420" width="350" height="64" rx="10" fill="url(#cardWhite)" stroke="#A855F7" stroke-width="1.5"/>
-    <text x="1170" y="1448" font-size="13" font-weight="700" fill="#0F172A">Lark / Excel Documents</text>
-    <text x="1170" y="1466" font-size="10" fill="#64748B">SOP · Policy · FAQ</text>
-    <text x="1170" y="1478" font-size="9" fill="#94A3B8">Doc Uploader → Embedding Worker</text>
-  </g>
 
   <!-- INTER-LAYER ARROWS -->
-  <path d="M 320 274 L 500 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
-  <path d="M 800 274 L 800 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
-  <path d="M 1280 274 L 1100 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M 145 270 L 400 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M 329 270 L 500 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M 513 270 L 620 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M 697 270 L 740 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M 881 270 L 860 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M 1065 270 L 980 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M 1249 270 L 1100 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M 1433 270 L 1220 360" fill="none" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow)"/>
 
   <path d="M 800 410 L 800 510" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
 
@@ -415,15 +379,14 @@
 
   <!-- Workers → Stores (upward) -->
   <path d="M 1100 1175 Q 1100 1100 1070 1060" fill="none" stroke="#EC4899" stroke-width="1.4" marker-end="url(#arrowPink)"/>
-  <path d="M 1050 1175 Q 800 1100 500 1060" fill="none" stroke="#EC4899" stroke-width="1.2" marker-end="url(#arrowPink)" opacity="0.7"/>
-  <path d="M 1000 1175 Q 600 1100 215 1060" fill="none" stroke="#EC4899" stroke-width="1.2" marker-end="url(#arrowPink)" opacity="0.7"/>
-  <path d="M 1300 1175 Q 1380 1100 1370 1060" fill="none" stroke="#EC4899" stroke-width="1.2" marker-end="url(#arrowPink)" opacity="0.7"/>
+  <path d="M 950 1175 Q 750 1100 500 1060" fill="none" stroke="#EC4899" stroke-width="1.2" marker-end="url(#arrowPink)" opacity="0.7"/>
+  <path d="M 920 1175 Q 600 1100 215 1060" fill="none" stroke="#EC4899" stroke-width="1.2" marker-end="url(#arrowPink)" opacity="0.7"/>
+  <path d="M 1400 1175 Q 1400 1100 1370 1060" fill="none" stroke="#EC4899" stroke-width="1.2" marker-end="url(#arrowPink)" opacity="0.7"/>
 
   <!-- Sources → Ingestion -->
   <path d="M 260 1420 Q 220 1300 220 1235" fill="none" stroke="#A855F7" stroke-width="1.4" marker-end="url(#arrowPurple)"/>
   <path d="M 610 1420 Q 480 1300 480 1235" fill="none" stroke="#A855F7" stroke-width="1.4" marker-end="url(#arrowPurple)"/>
   <path d="M 960 1420 Q 600 1300 480 1235" fill="none" stroke="#A855F7" stroke-width="1.2" marker-end="url(#arrowPurple)" opacity="0.6"/>
-  <path d="M 1325 1420 Q 1370 1340 1370 1310" fill="none" stroke="#A855F7" stroke-width="1.4" marker-end="url(#arrowPurple)"/>
 
   <!-- LEGEND -->
   <rect x="40" y="1530" width="1520" height="270" rx="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1" filter="url(#softShadow)"/>
@@ -487,4 +450,5 @@
   <text x="850" y="1742" font-size="11" fill="#334155">④ <tspan font-weight="600">Resilient sync</tspan> — Redis Streams + retry + DLQ; webhook idempotent + HMAC; cron watermark</text>
   <text x="850" y="1760" font-size="11" fill="#334155">⑤ <tspan font-weight="600">Cost-aware LLM</tspan> — Flash for router/P3; Pro for P1/P2; Claude as fallback</text>
   <text x="850" y="1778" font-size="11" fill="#334155">⑥ <tspan font-weight="600">Observable</tspan> — Langfuse traces every LLM call (cost · latency · tool use)</text>
+  </g>
 </svg>

@@ -9,10 +9,15 @@ date: 2026-04-19
 
 ```mermaid
 graph TB
-    subgraph "USER INTERFACE LAYER"
+    subgraph "PLATFORM LAYER"
         WebPortal[Web Portal<br/>Admin · Sales · CSKH]
         ZaloOA[Zalo OA / Website<br/>Khách hàng]
-        FB[Facebook Messenger<br/>Khách hàng]
+        Meta[Meta<br/>Messenger · Instagram · Threads]
+        LarkP[Lark<br/>Internal collaboration]
+        SAPp[SAP B1<br/>ERP]
+        HaraP[Haravan<br/>E-commerce]
+        KVp[KiotViet<br/>POS]
+        ECp[E-commerce<br/>Generic platforms]
     end
 
     subgraph "API GATEWAY"
@@ -53,12 +58,12 @@ graph TB
         SAP[SAP B1<br/>ERP · Read-only]
         KV[KiotViet<br/>POS]
         Hara[Haravan<br/>Web]
-        Docs[Lark / Excel<br/>SOP · Policy]
     end
 
     WebPortal --> Gateway
     ZaloOA --> Gateway
-    FB --> Gateway
+    Meta --> Gateway
+    LarkP --> Gateway
 
     Gateway --> Router
     Router --> AgentP1
@@ -87,7 +92,7 @@ graph TB
     SAP --> Cron
     KV --> Webhook
     Hara --> Webhook
-    Docs --> Workers
+    LarkP --> Workers
 
     Cron --> Queue
     Webhook --> Queue

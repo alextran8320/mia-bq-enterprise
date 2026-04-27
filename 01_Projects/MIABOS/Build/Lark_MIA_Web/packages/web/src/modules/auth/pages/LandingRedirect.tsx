@@ -1,12 +1,12 @@
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "@/shared/auth/authStore";
 import { isInLark } from "@/shared/auth/larkSdk";
-
-const HOME = "/analytics/executive";
+import { roleHome } from "@/shared/auth/roleHome";
 
 export function LandingRedirect() {
   const token = useAuthStore((s) => s.token);
-  if (token) return <Navigate to={HOME} replace />;
+  const role = useAuthStore((s) => s.user?.role);
+  if (token) return <Navigate to={roleHome(role)} replace />;
   if (isInLark()) return <Navigate to="/lark/entry" replace />;
   return <Navigate to="/login" replace />;
 }

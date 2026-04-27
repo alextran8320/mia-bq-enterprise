@@ -4,9 +4,9 @@ import { authApi } from "@/shared/auth/authApi";
 import { useAuthStore } from "@/shared/auth/authStore";
 import { getApiErrorMessage } from "@/shared/auth/apiClient";
 import { loadLarkSdk, requestLarkCode } from "@/shared/auth/larkSdk";
+import { roleHome } from "@/shared/auth/roleHome";
 
 const PENDING_PROFILE_KEY = "miabos_pending_lark_profile";
-const HOME = "/analytics/executive";
 
 type Phase =
   | "loading-sdk"
@@ -47,7 +47,7 @@ export function LarkEntryPage() {
 
         if ("token" in result) {
           setSession(result.token, result.user);
-          navigate(HOME, { replace: true });
+          navigate(roleHome(result.user.role), { replace: true });
           return;
         }
 

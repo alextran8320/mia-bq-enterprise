@@ -4,6 +4,7 @@ import { authApi } from "@/shared/auth/authApi";
 import { useAuthStore } from "@/shared/auth/authStore";
 import { getApiErrorMessage } from "@/shared/auth/apiClient";
 import { isInLark } from "@/shared/auth/larkSdk";
+import { roleHome } from "@/shared/auth/roleHome";
 import type { LarkProfile } from "@/shared/auth/types";
 import { Button } from "@/shared/ui";
 
@@ -12,10 +13,11 @@ const PENDING_PROFILE_KEY = "miabos_pending_lark_profile";
 export function LoginPage() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const next = params.get("next") || "/analytics/executive";
+  const nextParam = params.get("next");
 
   const token = useAuthStore((s) => s.token);
   const hydrated = useAuthStore((s) => s.hydrated);
+  const role = useAuthStore((s) => s.user?.role);
   const setSession = useAuthStore((s) => s.setSession);
 
   const [email, setEmail] = useState("");
@@ -24,7 +26,7 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null);
 
   if (token && hydrated) {
-    return <Navigate to={next} replace />;
+    return <Navigate to={nextParam ?? roleHome(role)} replace />;
   }
 
   async function onSubmit(e: FormEvent) {
@@ -38,7 +40,7 @@ export function LoginPage() {
       if (pending) {
         navigate("/bind", { replace: true });
       } else {
-        navigate(next, { replace: true });
+        navigate(nextParam ?? roleHome(user.role), { replace: true });
       }
     } catch (err) {
       setError(getApiErrorMessage(err, "Đăng nhập thất bại"));
